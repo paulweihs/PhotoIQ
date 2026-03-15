@@ -1,0 +1,16 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="MetadataExtractor" Version="2.9.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PhotoIQPro.Core\PhotoIQPro.Core.csproj" />
+    <ProjectReference Include="..\PhotoIQPro.Data\PhotoIQPro.Data.csproj" />
+    <ProjectReference Include="..\PhotoIQPro.AI\PhotoIQPro.AI.csproj" />
+  </ItemGroup>
+</Project>

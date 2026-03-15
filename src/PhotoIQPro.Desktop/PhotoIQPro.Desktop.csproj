@@ -1,0 +1,20 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <OutputType>WinExe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <Nullable>enable</Nullable>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <UseWPF>true</UseWPF>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="CommunityToolkit.Mvvm" Version="8.4.0" />
+    <PackageReference Include="Microsoft.Extensions.DependencyInjection" Version="8.0.1" />
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PhotoIQPro.Core\PhotoIQPro.Core.csproj" />
+    <ProjectReference Include="..\PhotoIQPro.Data\PhotoIQPro.Data.csproj" />
+    <ProjectReference Include="..\PhotoIQPro.Services\PhotoIQPro.Services.csproj" />
+    <ProjectReference Include="..\PhotoIQPro.AI\PhotoIQPro.AI.csproj" />
+    <ProjectReference Include="..\PhotoIQPro.Common\PhotoIQPro.Common.csproj" />
+  </ItemGroup>
+</Project>
