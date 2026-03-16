@@ -18,9 +18,12 @@ public partial class MainViewModel : ObservableObject
     [ObservableProperty] private MediaFile? _selectedMediaFile;
     [ObservableProperty] private string _statusText = "Ready";
     [ObservableProperty] private int _photoCount;
+    [ObservableProperty] private ObservableCollection<string> _selectedTags = [];
 
     public bool IsEmpty => PhotoCount == 0;
     public bool HasSelection => SelectedMediaFile != null;
+    public bool HasAiDescription => !string.IsNullOrEmpty(SelectedMediaFile?.AiDescription);
+    public bool HasSelectedTags => SelectedTags.Count > 0;
 
     public MainViewModel(IMediaFileRepository repo, IImportService import)
     {
@@ -61,5 +64,23 @@ public partial class MainViewModel : ObservableObject
         // (The import happens inside the dialog, so we just need to reload)
         // TODO: Add a refresh/reload command here once the grid is populated
     }
-    partial void OnSelectedMediaFileChanged(MediaFile? value) => OnPropertyChanged(nameof(HasSelection));
+    partial void OnSelectedMediaFileChanged(MediaFile? value)
+    {
+        OnPropertyChanged(nameof(HasSelection));
+        OnPropertyChanged(nameof(HasAiDescription));
+        SelectedTags.Clear();
+        OnPropertyChanged(nameof(HasSelectedTags));
+        if (value != null)
+            _ = LoadTagsAsync(value.Id);
+    }
+
+    private async Task LoadTagsAsync(Guid id)
+    {
+        var full = await _repo.GetByIdAsync(id);
+        SelectedTags.Clear();
+        if (full?.Tags != null)
+            foreach (var tag in full.Tags.Where(t => t.IsAIGenerated).OrderByDescending(t => t.Confidence))
+                SelectedTags.Add(tag.Name);
+        OnPropertyChanged(nameof(HasSelectedTags));
+    }
 }
