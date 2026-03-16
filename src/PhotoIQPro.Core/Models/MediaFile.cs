@@ -27,6 +27,7 @@ public class MediaFile
     public bool IsFavorite { get; set; } = false;
     public bool IsRejected { get; set; } = false;
     public string? Caption { get; set; }
+    public string? AiDescription { get; set; }
     public bool IsAnalyzed { get; set; } = false;
     public DateTime? DateAnalyzed { get; set; }
     public string? ThumbnailSmall { get; set; }

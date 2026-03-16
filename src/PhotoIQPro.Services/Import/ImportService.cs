@@ -11,15 +11,17 @@ public class ImportService : IImportService
     private readonly IMediaFileRepository _repo;
     private readonly IThumbnailService _thumbs;
     private readonly ITaggingService _tagging;
+    private readonly IImageUnderstandingService _vision;
     private static readonly HashSet<string> PhotoExts = new(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".heic" };
     private static readonly HashSet<string> VideoExts = new(StringComparer.OrdinalIgnoreCase) { ".mp4", ".mov", ".avi", ".mkv", ".wmv" };
     private static readonly HashSet<string> RawExts = new(StringComparer.OrdinalIgnoreCase) { ".raw", ".cr2", ".cr3", ".nef", ".arw", ".dng" };
 
-    public ImportService(IMediaFileRepository repo, IThumbnailService thumbs, ITaggingService tagging)
+    public ImportService(IMediaFileRepository repo, IThumbnailService thumbs, ITaggingService tagging, IImageUnderstandingService vision)
     {
         _repo = repo;
         _thumbs = thumbs;
         _tagging = tagging;
+        _vision = vision;
     }
 
     public bool IsSupportedFile(string path) => PhotoExts.Contains(Path.GetExtension(path)) || VideoExts.Contains(Path.GetExtension(path)) || RawExts.Contains(Path.GetExtension(path));
@@ -53,6 +55,31 @@ public class ImportService : IImportService
                 mf.DateAnalyzed = DateTime.UtcNow;
             }
             catch { /* tagging failure must not abort the import */ }
+        }
+
+        // LLaVA understanding — generates a natural-language description and additional tags.
+        if (mf.MediaType == MediaType.Photo)
+        {
+            try
+            {
+                var understanding = await _vision.AnalyzeImageAsync(mf.FilePath, ct);
+                if (!string.IsNullOrEmpty(understanding.Description))
+                    mf.AiDescription = understanding.Description;
+                foreach (var label in understanding.Tags)
+                    mf.Tags.Add(new PhotoIQPro.Core.Models.Tag
+                    {
+                        Name = label,
+                        NormalizedName = label,
+                        Category = PhotoIQPro.Core.Models.TagCategory.General,
+                        IsAIGenerated = true
+                    });
+                if (understanding.Tags.Count > 0)
+                {
+                    mf.IsAnalyzed = true;
+                    mf.DateAnalyzed = DateTime.UtcNow;
+                }
+            }
+            catch { /* vision failure must not abort the import */ }
         }
 
         await _repo.UpdateAsync(mf);

@@ -21,6 +21,7 @@ using PhotoIQPro.Services.Drives;      //  ← NEW
 using PhotoIQPro.Services.Import;
 using PhotoIQPro.Services.Tagging;
 using PhotoIQPro.Services.Thumbnails;
+using PhotoIQPro.Services.Vision;
 
 namespace PhotoIQPro.Desktop;
 
@@ -49,6 +50,8 @@ public partial class App : Application
             sp.GetRequiredService<ClipEngine>(),
             sp.GetRequiredService<ClipTextEngine>(),
             AppSettings.ModelsPath));
+        services.AddSingleton<OllamaClient>();
+        services.AddSingleton<IImageUnderstandingService, LlavaService>();
         services.AddScoped<IImportService, ImportService>();
         services.AddSingleton<IDriveService, DriveService>();    //  ← NEW
 
