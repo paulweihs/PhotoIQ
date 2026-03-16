@@ -1,0 +1,6 @@
+# Normalize line endings to LF in the repo, CRLF on Windows checkout
+* text=auto eol=lf
+
+# Force CRLF for Windows-specific files
+*.sln text eol=crlf
+*.csproj text eol=crlf
