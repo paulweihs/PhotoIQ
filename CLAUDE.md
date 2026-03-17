@@ -58,7 +58,49 @@ PhotoIQPro.Desktop  →  PhotoIQPro.Common
 
 ## Import Pipeline
 
-`DriveService.ScanForMediaAsync()` → `ImportService.ImportFolderAsync()` (hash + EXIF + dedupe) → `ThumbnailService.GenerateThumbnailsAsync()` → `MediaFileRepository.AddAsync()`
+`DriveService.ScanForMediaAsync()` → `ImportService.ImportFolderAsync()` (hash + EXIF + dedupe) → `ThumbnailService.GenerateThumbnailsAsync()` → CLIP tagging → LLaVA vision analysis → `MediaFileRepository.AddAsync()`
+
+AI steps degrade silently — a tagging or vision failure never aborts an import.
+
+## Product Tiers
+
+| | Express | Standard |
+|---|---|---|
+| AI engine | CLIP/ONNX (CPU only) | LLaVA via Ollama (GPU) |
+| Library size | ~25,000 images | Unlimited |
+| Search | Tag-based | Full natural language |
+| Price | ~$39 | ~$79 |
+
+Upgrade prompt appears **only** when a user hits an Express ceiling — never on startup or a timer.
+
+## Non-Negotiable Rules
+
+- **Zero cloud AI calls.** All inference is local/offline (ONNX Runtime + Ollama). No Azure/Google/AWS Vision.
+- **Never modify originals.** Preprocess to a temp JPG for analysis; delete temp after. Originals are read-only.
+- **Perpetual license only.** No subscription model. No SaaS. Tiers are Express and Standard — no third tier.
+- **Never auto-delete files.** Every destructive action requires explicit user confirmation.
+- Add new interfaces in `PhotoIQPro.Core` before implementing in Services/AI.
+- Register all new services in `App.xaml.cs`. Run `dotnet build` after every meaningful change.
+- Add EF Core migrations for any schema changes — never hand-edit the `.db` file.
+
+## Build Troubleshooting
+
+OneDrive syncs this folder and causes DLL file locks during builds. If `MSB3027` errors appear:
+1. Kill any running PhotoIQ process
+2. Delete `src/PhotoIQPro.Desktop/bin/` and rebuild
+
+For XAML type resolution errors: `dotnet build --no-incremental`
+
+## Quick Reference
+
+```bash
+dotnet build --no-incremental          # full rebuild
+dotnet ef migrations add Name --project src/PhotoIQPro.Data
+del %LOCALAPPDATA%\PhotoIQPro\photoiq.db   # reset DB after schema changes
+```
+
+Model files: `%LOCALAPPDATA%\PhotoIQPro\models\` (vocab.json, merges.txt, vision ONNX, text ONNX)
+Ollama: `http://localhost:11434` — check with `curl http://localhost:11434/api/tags`
 
 ## Tech Stack
 
