@@ -4,6 +4,110 @@
         Title="PhotoIQ Pro" Height="800" Width="1400"
         WindowStartupLocation="CenterScreen"
         Background="{DynamicResource BackgroundBrush}">
+    <Window.Resources>
+
+        <!-- Active nav button: AccentBrush background, same hover -->
+        <Style x:Key="ActiveNavButtonStyle" TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a8fe0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Transparent TextBox for search bar -->
+        <Style x:Key="SearchBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="CaretBrush" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4">
+                            <ScrollViewer x:Name="PART_ContentHost"
+                                          Margin="{TemplateBinding Padding}"
+                                          VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Ghost button for icon-style actions (favorite toggle, etc.) -->
+        <Style x:Key="GhostButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#333333"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ListBox: remove default selection highlight; handled in DataTemplate -->
+        <Style x:Key="GalleryListBoxStyle" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Focusable" Value="False"/>
+        </Style>
+
+        <Style x:Key="GalleryItemContainerStyle" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <ContentPresenter/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Slider track style -->
+        <Style x:Key="ThumbnailSliderStyle" TargetType="Slider">
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+    </Window.Resources>
+
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
@@ -16,12 +120,35 @@
             <ColumnDefinition Width="280"/>
         </Grid.ColumnDefinitions>
 
-        <!-- Top Bar -->
+        <!-- ═══ Top Bar ═══ -->
         <Border Grid.Row="0" Grid.ColumnSpan="3" Background="{DynamicResource MenuBarBrush}" Padding="12,8">
             <Grid>
-                <TextBlock Text="📷 PhotoIQ Pro" FontSize="18" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" VerticalAlignment="Center"/>
-                <!-- ═══ Action Buttons (right side) ═══ -->
-                <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="📷 PhotoIQ Pro"
+                           FontSize="18" FontWeight="SemiBold"
+                           Foreground="{DynamicResource ForegroundBrush}"
+                           VerticalAlignment="Center" Margin="0,0,16,0"/>
+
+                <!-- Search box -->
+                <TextBox Grid.Column="1"
+                         Text="{Binding SearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                         Style="{StaticResource SearchBoxStyle}"
+                         MaxWidth="480" HorizontalAlignment="Stretch"
+                         VerticalAlignment="Center"
+                         Tag="Search photos, tags, descriptions…">
+                    <TextBox.Resources>
+                        <!-- Placeholder text via adorner workaround using Tag -->
+                        <Style TargetType="TextBox" BasedOn="{StaticResource SearchBoxStyle}"/>
+                    </TextBox.Resources>
+                </TextBox>
+
+                <!-- Action buttons -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="16,0,0,0">
                     <Button Content="🔍 Scan Drives"
                             Command="{Binding ScanDrivesCommand}"
                             Style="{DynamicResource PrimaryButtonStyle}"
@@ -35,45 +162,143 @@
             </Grid>
         </Border>
 
-        <!-- Left Sidebar -->
+        <!-- ═══ Left Sidebar ═══ -->
         <Border Grid.Row="1" Grid.Column="0" Background="{DynamicResource SidebarBrush}">
             <StackPanel Margin="12">
-                <TextBlock Text="LIBRARY" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" Margin="8,8,8,4"/>
-                <Button Content="🖼 All Photos" Style="{DynamicResource NavButtonStyle}"/>
-                <Button Content="⭐ Favorites" Style="{DynamicResource NavButtonStyle}"/>
-                <TextBlock Text="AI VIEWS" FontSize="11" FontWeight="SemiBold" Foreground="{DynamicResource SecondaryTextBrush}" Margin="8,16,8,4"/>
-                <Button Content="🏷️ Tags" Style="{DynamicResource NavButtonStyle}"/>
-                <Button Content="👤 People" Style="{DynamicResource NavButtonStyle}"/>
+                <TextBlock Text="LIBRARY" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           Margin="8,8,8,4"/>
+
+                <!-- All Photos: active style when IsAllPhotosActive -->
+                <Button Content="🖼  All Photos"
+                        Command="{Binding ShowAllPhotosCommand}"
+                        Margin="0,2">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsAllPhotosActive}" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Favorites: active style when IsFavoritesActive -->
+                <Button Content="⭐  Favorites"
+                        Command="{Binding ShowFavoritesCommand}"
+                        Margin="0,2">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFavoritesActive}" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <TextBlock Text="AI VIEWS" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           Margin="8,16,8,4"/>
+                <Button Content="🏷️  Tags" Style="{DynamicResource NavButtonStyle}"/>
+                <Button Content="👤  People" Style="{DynamicResource NavButtonStyle}"/>
             </StackPanel>
         </Border>
 
-        <!-- Main Content -->
+        <!-- ═══ Main Content ═══ -->
         <Border Grid.Row="1" Grid.Column="1" Background="{DynamicResource ContentBrush}">
             <Grid>
-                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center" Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
+                <!-- Empty state -->
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Visibility="{Binding IsEmpty, Converter={StaticResource BoolToVis}}">
                     <TextBlock Text="📁" FontSize="64" HorizontalAlignment="Center"/>
-                    <TextBlock Text="No photos yet" FontSize="20" FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}" HorizontalAlignment="Center" Margin="0,16,0,8"/>
-                    <TextBlock Text="Click Import to add photos or Scan Drives to find them" FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}" HorizontalAlignment="Center"/>
+                    <TextBlock Text="No photos yet" FontSize="20" FontWeight="SemiBold"
+                               Foreground="{DynamicResource ForegroundBrush}"
+                               HorizontalAlignment="Center" Margin="0,16,0,8"/>
+                    <TextBlock Text="Click Import to add photos or Scan Drives to find them"
+                               FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}"
+                               HorizontalAlignment="Center"/>
                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center" Margin="0,24,0,0">
                         <Button Content="🔍 Scan Drives"
                                 Command="{Binding ScanDrivesCommand}"
                                 Style="{DynamicResource PrimaryButtonStyle}"
-                                Padding="24,12"
-                                Margin="0,0,12,0"/>
+                                Padding="24,12" Margin="0,0,12,0"/>
                         <Button Content="Import Photos"
                                 Command="{Binding ImportCommand}"
                                 Style="{DynamicResource PrimaryButtonStyle}"
                                 Padding="24,12"/>
                     </StackPanel>
                 </StackPanel>
-                <ListBox ItemsSource="{Binding MediaFiles}" SelectedItem="{Binding SelectedMediaFile}" Background="Transparent" BorderThickness="0" ScrollViewer.HorizontalScrollBarVisibility="Disabled">
+
+                <!-- Photo grid -->
+                <ListBox x:Name="PhotoGrid"
+                         ItemsSource="{Binding MediaFiles}"
+                         SelectedItem="{Binding SelectedMediaFile}"
+                         Style="{StaticResource GalleryListBoxStyle}"
+                         ItemContainerStyle="{StaticResource GalleryItemContainerStyle}">
                     <ListBox.ItemsPanel>
-                        <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                        <ItemsPanelTemplate>
+                            <WrapPanel Margin="8"/>
+                        </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
                         <DataTemplate>
-                            <Border Width="180" Height="180" Margin="4" Background="{DynamicResource ThumbnailBgBrush}" CornerRadius="4">
-                                <Image Source="{Binding ThumbnailMedium}" Stretch="UniformToFill"/>
+                            <Border Width="{Binding DataContext.ThumbnailSize, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                    Height="{Binding DataContext.ThumbnailSize, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                    Margin="4" CornerRadius="4"
+                                    Background="{StaticResource ThumbnailBgBrush}"
+                                    Cursor="Hand">
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="BorderThickness" Value="2"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid ClipToBounds="True">
+                                    <Image Source="{Binding ThumbnailMedium}" Stretch="UniformToFill"/>
+
+                                    <!-- Hover overlay -->
+                                    <Border CornerRadius="2" Background="#40000000">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+
+                                    <!-- Badges: bottom-left -->
+                                    <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                                                Margin="5,0,0,5">
+                                        <!-- Favorite badge -->
+                                        <Border Visibility="{Binding IsFavorite, Converter={StaticResource BoolToVis}}"
+                                                Background="#CC1a1a1a" CornerRadius="3"
+                                                Padding="4,2" Margin="0,0,4,0">
+                                            <TextBlock Text="★" FontSize="11" Foreground="#FFD700"/>
+                                        </Border>
+                                        <!-- AI analyzed badge -->
+                                        <Border Visibility="{Binding IsAnalyzed, Converter={StaticResource BoolToVis}}"
+                                                Background="#CC1a1a1a" CornerRadius="3"
+                                                Padding="4,2">
+                                            <TextBlock Text="AI" FontSize="10" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource AccentBrush}"/>
+                                        </Border>
+                                    </StackPanel>
+                                </Grid>
                             </Border>
                         </DataTemplate>
                     </ListBox.ItemTemplate>
@@ -81,28 +306,105 @@
             </Grid>
         </Border>
 
-        <!-- Right Sidebar -->
+        <!-- ═══ Right Sidebar ═══ -->
         <Border Grid.Row="1" Grid.Column="2" Background="{DynamicResource SidebarBrush}">
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           Visibility="{Binding HasSelection, Converter={StaticResource BoolToVis}}">
                 <StackPanel Margin="16">
 
                     <!-- Thumbnail preview -->
-                    <Border Background="{DynamicResource ThumbnailBgBrush}" CornerRadius="4" Height="200" Margin="0,0,0,12">
+                    <Border Background="{DynamicResource ThumbnailBgBrush}" CornerRadius="4"
+                            Height="200" Margin="0,0,0,12">
                         <Image Source="{Binding SelectedMediaFile.ThumbnailLarge}" Stretch="Uniform"/>
                     </Border>
 
-                    <!-- File info -->
-                    <TextBlock Text="{Binding SelectedMediaFile.FileName}"
-                               FontWeight="SemiBold" Foreground="{DynamicResource ForegroundBrush}"
-                               TextWrapping="Wrap"/>
+                    <!-- File name + favorite toggle -->
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0"
+                                   Text="{Binding SelectedMediaFile.FileName}"
+                                   FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ForegroundBrush}"
+                                   TextWrapping="Wrap"
+                                   VerticalAlignment="Center"
+                                   Margin="0,0,8,0"/>
+                        <Button Grid.Column="1"
+                                Command="{Binding ToggleFavoriteCommand}"
+                                Style="{StaticResource GhostButtonStyle}"
+                                Padding="8,6"
+                                ToolTip="Toggle favorite">
+                            <Button.Content>
+                                <TextBlock FontSize="16">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="☆"/>
+                                            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedIsFavorite}" Value="True">
+                                                    <Setter Property="Text" Value="★"/>
+                                                    <Setter Property="Foreground" Value="#FFD700"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+
+                    <!-- Camera model -->
                     <TextBlock Text="{Binding SelectedMediaFile.CameraModel}"
-                               Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12" Margin="0,4,0,0"/>
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               FontSize="12" Margin="0,0,0,16"/>
+
+                    <!-- Metadata section -->
+                    <TextBlock Text="DETAILS" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               Margin="0,0,0,8"/>
+
+                    <!-- Date taken -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Date" FontSize="12"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedDateText}"
+                                   FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                    </Grid>
+
+                    <!-- Dimensions -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Dimensions" FontSize="12"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedDimensionsText}"
+                                   FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                    </Grid>
+
+                    <!-- File size -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="File size" FontSize="12"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedFileSizeText}"
+                                   FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                    </Grid>
 
                     <!-- AI Description -->
                     <TextBlock Text="AI DESCRIPTION" FontSize="11" FontWeight="SemiBold"
                                Foreground="{DynamicResource SecondaryTextBrush}"
-                               Margin="0,20,0,6"
+                               Margin="0,16,0,6"
                                Visibility="{Binding HasAiDescription, Converter={StaticResource BoolToVis}}"/>
                     <TextBlock Text="{Binding SelectedMediaFile.AiDescription}"
                                Foreground="{DynamicResource ForegroundBrush}"
@@ -112,7 +414,7 @@
                     <!-- AI Tags -->
                     <TextBlock Text="AI TAGS" FontSize="11" FontWeight="SemiBold"
                                Foreground="{DynamicResource SecondaryTextBrush}"
-                               Margin="0,20,0,8"
+                               Margin="0,16,0,8"
                                Visibility="{Binding HasSelectedTags, Converter={StaticResource BoolToVis}}"/>
                     <ItemsControl ItemsSource="{Binding SelectedTags}"
                                   Visibility="{Binding HasSelectedTags, Converter={StaticResource BoolToVis}}">
@@ -136,11 +438,36 @@
             </ScrollViewer>
         </Border>
 
-        <!-- Status Bar -->
-        <Border Grid.Row="2" Grid.ColumnSpan="3" Background="{DynamicResource StatusBarBrush}" Padding="12,6">
+        <!-- ═══ Status Bar ═══ -->
+        <Border Grid.Row="2" Grid.ColumnSpan="3"
+                Background="{DynamicResource StatusBarBrush}" Padding="12,6">
             <Grid>
-                <TextBlock Text="{Binding StatusText}" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12"/>
-                <TextBlock Text="{Binding PhotoCount, StringFormat='{}{0} photos'}" HorizontalAlignment="Right" Foreground="{DynamicResource SecondaryTextBrush}" FontSize="12"/>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0"
+                           Text="{Binding StatusText}"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           FontSize="12" VerticalAlignment="Center"/>
+
+                <TextBlock Grid.Column="1"
+                           Text="{Binding PhotoCount, StringFormat='{}{0} photos'}"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           FontSize="12" VerticalAlignment="Center"
+                           Margin="0,0,12,0"/>
+
+                <!-- Thumbnail size slider -->
+                <TextBlock Grid.Column="2" Text="⊞" FontSize="11"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <Slider Grid.Column="3"
+                        Value="{Binding ThumbnailSize}"
+                        Minimum="80" Maximum="280" Width="120"
+                        Style="{StaticResource ThumbnailSliderStyle}"/>
             </Grid>
         </Border>
     </Grid>
