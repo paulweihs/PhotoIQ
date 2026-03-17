@@ -20,6 +20,7 @@ using PhotoIQPro.AI.Engines;
 using PhotoIQPro.Services.Drives;      //  ← NEW
 using PhotoIQPro.Services.Import;
 using PhotoIQPro.Services.Tagging;
+using PhotoIQPro.Core.Interfaces;
 using PhotoIQPro.Services.Thumbnails;
 using PhotoIQPro.Services.Vision;
 
@@ -54,6 +55,7 @@ public partial class App : Application
         services.AddSingleton<IImageUnderstandingService, LlavaService>();
         services.AddScoped<IImportService, ImportService>();
         services.AddSingleton<IDriveService, DriveService>();    //  ← NEW
+        services.AddSingleton<IImagePreprocessor, ImagePreprocessor>();
 
         // ── ViewModels ──────────────────────────────────────────────
         services.AddTransient<MainViewModel>();

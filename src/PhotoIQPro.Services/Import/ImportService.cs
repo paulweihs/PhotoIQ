@@ -12,16 +12,18 @@ public class ImportService : IImportService
     private readonly IThumbnailService _thumbs;
     private readonly ITaggingService _tagging;
     private readonly IImageUnderstandingService _vision;
+    private readonly IImagePreprocessor _preprocessor;
     private static readonly HashSet<string> PhotoExts = new(StringComparer.OrdinalIgnoreCase) { ".jpg", ".jpeg", ".png", ".gif", ".bmp", ".tiff", ".webp", ".heic" };
     private static readonly HashSet<string> VideoExts = new(StringComparer.OrdinalIgnoreCase) { ".mp4", ".mov", ".avi", ".mkv", ".wmv" };
     private static readonly HashSet<string> RawExts = new(StringComparer.OrdinalIgnoreCase) { ".raw", ".cr2", ".cr3", ".nef", ".arw", ".dng" };
 
-    public ImportService(IMediaFileRepository repo, IThumbnailService thumbs, ITaggingService tagging, IImageUnderstandingService vision)
+    public ImportService(IMediaFileRepository repo, IThumbnailService thumbs, ITaggingService tagging, IImageUnderstandingService vision, IImagePreprocessor preprocessor)
     {
         _repo = repo;
         _thumbs = thumbs;
         _tagging = tagging;
         _vision = vision;
+        _preprocessor = preprocessor;
     }
 
     public bool IsSupportedFile(string path) => PhotoExts.Contains(Path.GetExtension(path)) || VideoExts.Contains(Path.GetExtension(path)) || RawExts.Contains(Path.GetExtension(path));
@@ -58,25 +60,30 @@ public class ImportService : IImportService
         }
 
         // LLaVA understanding — generates a natural-language description and additional tags.
+        // Non-JPEG/PNG files are converted to a temp JPEG first; the temp is deleted after.
         if (mf.MediaType == MediaType.Photo)
         {
             try
             {
-                var understanding = await _vision.AnalyzeImageAsync(mf.FilePath, ct);
-                if (!string.IsNullOrEmpty(understanding.Description))
-                    mf.AiDescription = understanding.Description;
-                foreach (var label in understanding.Tags)
-                    mf.Tags.Add(new PhotoIQPro.Core.Models.Tag
-                    {
-                        Name = label,
-                        NormalizedName = label,
-                        Category = PhotoIQPro.Core.Models.TagCategory.General,
-                        IsAIGenerated = true
-                    });
-                if (understanding.Tags.Count > 0)
+                using var prepared = await _preprocessor.PrepareAsync(mf.FilePath, ct);
+                if (prepared != null)
                 {
-                    mf.IsAnalyzed = true;
-                    mf.DateAnalyzed = DateTime.UtcNow;
+                    var understanding = await _vision.AnalyzeImageAsync(prepared.Path, ct);
+                    if (!string.IsNullOrEmpty(understanding.Description))
+                        mf.AiDescription = understanding.Description;
+                    foreach (var label in understanding.Tags)
+                        mf.Tags.Add(new PhotoIQPro.Core.Models.Tag
+                        {
+                            Name = label,
+                            NormalizedName = label,
+                            Category = PhotoIQPro.Core.Models.TagCategory.General,
+                            IsAIGenerated = true
+                        });
+                    if (understanding.Tags.Count > 0)
+                    {
+                        mf.IsAnalyzed = true;
+                        mf.DateAnalyzed = DateTime.UtcNow;
+                    }
                 }
             }
             catch { /* vision failure must not abort the import */ }
