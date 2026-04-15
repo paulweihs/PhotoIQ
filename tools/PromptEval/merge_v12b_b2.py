@@ -1,0 +1,94 @@
+import json
+
+annotations = [
+  # chunk01
+  {"id": "FE1601CC-43FD-4156-B1C2-CC6136D23B4A", "gaps": ["gender_violation", "color_specific"]},
+  {"id": "83F13182-638F-4EF2-86E6-A6097E1470A1", "gaps": ["gender_violation"]},
+  {"id": "E28DA151-11CB-4878-AA46-233CA0F2B07A", "gaps": ["gender_violation"]},
+  {"id": "F3E3578F-23BA-4FC0-A4B3-CF07B4D10EAE", "gaps": ["gender_violation"]},
+  {"id": "803DA822-9156-4C78-8024-9CF8A8649269", "gaps": ["wrong_count", "color_specific"]},  # wrong_count only; bunny ears/blue mat not clothing
+  {"id": "0C8F5DB8-118C-4802-BC94-5D3309947CE2", "gaps": ["color_specific"]},  # red tree skirt
+  {"id": "7B04B1D1-5D28-462B-B016-70A791612B83", "gaps": ["truncated", "gender_violation", "color_specific"]},
+  {"id": "717C1357-8261-4BE7-BA2D-F818D68711FC", "gaps": ["gender_violation", "color_specific"]},
+  {"id": "50DF9D65-96F7-405C-B2F6-8D60D79D51FB", "gaps": ["gender_violation"]},  # father/mother
+  {"id": "51A7C912-4708-4A9C-9555-F341A3591EC7", "gaps": ["filler_opener", "color_specific"]},
+  # chunk02
+  {"id": "7B5A93E0-2D66-413C-B3BF-8FF6E301F054", "gaps": ["filler_opener", "gender_violation", "color_specific"]},
+  {"id": "268A261F-4861-49BB-89CD-30483A58D874", "gaps": ["gender_violation", "color_specific"]},  # green shirt, silver star, pink gift
+  {"id": "240E6E60-9F2A-45C7-9D27-2CE217516A2D", "gaps": []},
+  {"id": "6C9B339B-6400-4910-B6CF-0C39096939C8", "gaps": ["truncated", "gender_violation"]},
+  {"id": "AD08C021-25E8-4935-8748-ADBA4BAF1B87", "gaps": ["truncated", "gender_violation"]},
+  {"id": "5CAF2315-786C-4640-9ED0-6E4B22383ACB", "gaps": ["hallucination", "wrong_count"]},
+  {"id": "4C49294A-1481-451F-BA4F-A9412569AD77", "gaps": []},
+  {"id": "DB8B0196-5A1C-4FD3-8990-83DCB8F23A49", "gaps": ["gender_violation", "color_specific"]},  # man, red Hawaiian shirt
+  {"id": "11D84F96-42F2-461E-986B-E18AD5E6C7C5", "gaps": ["truncated", "gender_violation", "color_specific"]},
+  {"id": "3590CB91-B148-4222-8B5B-CD7B78CFE494", "gaps": ["gender_violation", "color_specific"]},
+  # chunk03 (manually annotated from descriptions)
+  {"id": "5DD8CC35-0C0B-471B-B54C-938905DB2451", "gaps": ["gender_violation", "color_specific"]},
+  {"id": "2EA312CA-0D03-4A03-93B6-687C35A375F7", "gaps": ["gender_violation", "color_specific", "wrong_count"]},
+  {"id": "6E522929-89F4-49D4-81B4-E098ECB3BCFF", "gaps": ["gender_violation", "color_specific"]},
+  {"id": "A57128EB-5EAD-4998-86C5-5517C5AA518F", "gaps": ["truncated", "gender_violation", "color_specific"]},
+  {"id": "59E9DF35-0ABC-45DF-A8FE-DC7C06F869AD", "gaps": ["truncated", "gender_violation", "color_specific"]},
+  {"id": "8CE7C769-F554-4DE4-812A-DE5BB1F1C2DE", "gaps": ["truncated", "gender_violation", "color_specific", "hallucination"]},  # Puma brand label
+  {"id": "08F18761-8F82-4F9D-99D2-6ED97AEF4DCD", "gaps": []},  # grey stuffed bears — borderline, not clothing/hair
+  {"id": "EE4FF6B6-8644-4F0B-A3BE-AE0619D3FA5B", "gaps": []},
+  {"id": "6BECAE51-9975-4C8D-BC5A-12FD937AEFB4", "gaps": ["truncated", "gender_violation", "color_specific"]},
+  {"id": "D7892995-7AAA-466D-80E9-30414C077E7E", "gaps": ["gender_violation", "color_specific"]},
+  # chunk04
+  {"id": "3F27EDC0-9A8B-4482-ACD7-8D305E7E2059", "gaps": ["gender_violation", "color_specific"]},  # girls + pink/orange/yellow costumes
+  {"id": "9EBA4AF8-B9CE-45F4-86CE-F0A26AADE266", "gaps": ["truncated", "gender_violation", "color_specific"]},
+  {"id": "635CD5A5-81B5-41F1-92C0-A7B0072BF590", "gaps": []},
+  {"id": "B6F41B2F-92F9-4F56-ABB4-B8D3F758276F", "gaps": []},
+  {"id": "212ECA54-B994-4CA8-B674-718AC8C7E8BB", "gaps": []},
+  {"id": "3016206A-1CEB-44CC-95F8-C5DCDF4F5F13", "gaps": ["gender_violation", "color_specific"]},
+  {"id": "B2D28827-1B8F-4086-AC87-DCAFB3331EE8", "gaps": ["gender_violation", "color_specific"]},
+  {"id": "931EAC11-D22F-4E1B-8BB0-172B19D63411", "gaps": ["gender_violation", "color_specific"]},
+  {"id": "09E138A1-05B0-4675-BA07-EFD47D59B39C", "gaps": ["truncated", "color_specific"]},
+  {"id": "F80B616F-2F53-4C90-9DF8-9DFDB45DC72D", "gaps": []},
+  # chunk05
+  {"id": "B4EA9AD7-C05E-4F1A-9F40-1560D836CEAA", "gaps": ["gender_violation", "color_specific"]},
+  {"id": "73861F60-3D15-4462-84B9-A7A01DF21BC7", "gaps": ["gender_violation", "missing_landmark"]},
+  {"id": "59644B20-C946-47EF-B83B-2097EF4B3829", "gaps": ["truncated", "gender_violation", "color_specific"]},
+  {"id": "133B2439-1910-4173-B3E0-1C370B9E3986", "gaps": ["wrong_count", "color_specific"]},
+  {"id": "4D662B61-7842-49D1-ACF0-629239DEA859", "gaps": ["color_specific"]},
+  {"id": "D1622623-D810-418D-AC6B-E4502A656211", "gaps": ["gender_violation"]},
+  {"id": "F3C78BE5-5447-453F-8225-10AEA7714DB4", "gaps": ["gender_violation"]},  # girls
+  {"id": "0BAB1014-0744-4E6A-913A-7C1DD1BEB385", "gaps": ["truncated", "color_specific"]},
+  {"id": "0360C315-7D53-4051-AFF5-1E8CDD44FEB3", "gaps": ["gender_violation"]},  # woman/she — agent missed this
+  {"id": "EE4EF733-5AD1-498A-92D8-C8A9725D6245", "gaps": []},
+]
+
+gap_map = {a["id"].upper(): a["gaps"] for a in annotations}
+print(f"Annotations: {len(gap_map)}")
+
+batch_path = "C:/dev/PhotoIQPro/tools/PromptEval/batches/batch_20260411_171400.json"
+with open(batch_path) as f:
+    batch = json.load(f)
+
+photos = batch["photos"]
+print(f"Photos in batch: {len(photos)}")
+
+annotated = []
+missing = []
+for p in photos:
+    pid = p["id"].upper()
+    if pid in gap_map:
+        p = dict(p)
+        p["gaps"] = gap_map[pid]
+        p["oracle_desc"] = None
+    else:
+        missing.append(pid)
+    annotated.append(p)
+
+if missing:
+    print(f"MISSING: {missing}")
+else:
+    print("All annotated.")
+
+batch["photos"] = annotated
+batch["annotated_at"] = "2026-04-11T00:00:00Z"
+
+out = batch_path.replace(".json", "_annotated.json")
+with open(out, "w") as f:
+    json.dump(batch, f, indent=2)
+print(f"Saved: {out}")

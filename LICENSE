@@ -1,0 +1,59 @@
+PHOTOIQ PROPRIETARY SOFTWARE LICENSE
+
+Copyright (c) 2025-2026 Paul Weihs. All rights reserved.
+
+TERMS AND CONDITIONS
+
+1. OWNERSHIP
+   This software, PhotoIQ, including all source code, object code, documentation,
+   and associated materials ("Software"), is the exclusive property of Paul Weihs
+   ("Author"). All rights are reserved except as expressly granted herein.
+
+2. PERMITTED USE
+   This repository is made publicly visible for portfolio, transparency, and
+   educational reference purposes only. You may:
+   - View and read the source code
+   - Fork the repository for personal, non-commercial study only
+   - Submit issues or pull requests for consideration by the Author
+
+3. RESTRICTIONS
+   You may NOT, without prior written permission from the Author:
+   - Use this Software or any portion of it in any commercial product or service
+   - Distribute, sublicense, sell, or transfer the Software or any derivative work
+   - Deploy this Software for any production or commercial purpose
+   - Remove or alter any copyright, trademark, or proprietary notices
+   - Use the name "PhotoIQ", its logo, or branding in any derivative work
+
+4. COMMERCIAL LICENSING
+   Commercial use of PhotoIQ is available exclusively through a purchased license.
+   PhotoIQ is offered as a perpetual license product. For licensing inquiries,
+   contact: paul.weihs@gmail.com
+
+5. CONTRIBUTIONS
+   Any contribution submitted to this repository (e.g., pull requests, patches,
+   suggestions) is understood to be offered under the terms of this license, and
+   the Author retains all rights to incorporate, modify, or reject such
+   contributions at their sole discretion. Contributors assign all rights in their
+   contributions to the Author.
+
+6. NO WARRANTY
+   THE SOFTWARE IS PROVIDED "AS IS", WITHOUT WARRANTY OF ANY KIND, EXPRESS OR
+   IMPLIED, INCLUDING BUT NOT LIMITED TO THE WARRANTIES OF MERCHANTABILITY,
+   FITNESS FOR A PARTICULAR PURPOSE, AND NONINFRINGEMENT. IN NO EVENT SHALL THE
+   AUTHOR BE LIABLE FOR ANY CLAIM, DAMAGES, OR OTHER LIABILITY, WHETHER IN AN
+   ACTION OF CONTRACT, TORT, OR OTHERWISE, ARISING FROM, OUT OF, OR IN CONNECTION
+   WITH THE SOFTWARE OR THE USE OR OTHER DEALINGS IN THE SOFTWARE.
+
+7. TERMINATION
+   Any rights granted under Section 2 terminate automatically and immediately if
+   you violate any term of this license.
+
+8. GOVERNING LAW
+   This license shall be governed by and construed in accordance with the laws of
+   the State of Michigan, United States, without regard to its conflict of law
+   provisions.
+
+---
+
+For commercial licensing, partnership inquiries, or permissions beyond the scope
+of this license, contact: paul.weihs@gmail.com

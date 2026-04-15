@@ -1,0 +1,807 @@
+{
+  "batch_id": "batch_20260410_110245",
+  "prompt_version": "v12a",
+  "created_at": "2026-04-10T15:02:57.2124739Z",
+  "photos": [
+    {
+      "id": "9A9BCE70-BBDF-4A86-990C-F93D7FEEA5A6",
+      "filename": "_MG_3783.jpg",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\JPEG2\\_MG_3783.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\9a\\medium\\9a9bce70bbdf4a86990cf93d7feea5a6.jpg",
+      "llama_desc": "One adult and two children in a bed reading a book. The adult is lying on his back, holding a book titled \u0022The Night Before Christmas\u0022 and reading to the two children, who are sitting on his chest and looking at the book. The room is a bedroom with a bed, a bookshelf, and a wall with a few books and a small table."
+    },
+    {
+      "id": "E2134910-551D-4531-B05D-3603E4A6C862",
+      "filename": "IMG_2912.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\2011_08_06\\IMG_2912.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\e2\\medium\\e2134910551d4531b05d3603e4a6c862.jpg",
+      "llama_desc": "A young girl in a blue and black swimsuit... \nShe is bending down in the shallow water, holding a blue plastic net with a yellow handle, her long brown hair wet and tangled. She is wearing a blue and black swimsuit with a white stripe, and her feet are in the water, her toes wiggling. The water is murky and brown, and there are no other people in the scene."
+    },
+    {
+      "id": "946F3898-2E19-41B9-8B0F-8D5823FA481E",
+      "filename": "IMG_1783.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_06_13\\IMG_1783.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\94\\medium\\946f38982e1941b98b0f8d5823fa481e.jpg",
+      "llama_desc": "A boy in a blue and orange swimsuit. He is standing in a shallow pool with water spraying from red pipes. He is smiling and looking directly at the camera."
+    },
+    {
+      "id": "3DB61929-FD05-4A3D-8E53-41D3C6F65C71",
+      "filename": "IMG_7479.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_06_10\\IMG_7479.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\3d\\medium\\3db61929fd054a3d8e5341d3c6f65c71.jpg",
+      "llama_desc": "A girl holding a painted flower pot in a suburban neighborhood. She is standing in a front yard with a small garden bed and a sidewalk leading to a house in the background. The girl is wearing a blue t-shirt with a cartoon bulldog logo and the words \u0022I am a bulldog\u0022 printed on it."
+    },
+    {
+      "id": "6FBC474C-87A7-4065-8087-61CF30B84355",
+      "filename": "IMG_2731.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_10_17\\IMG_2731.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\6f\\medium\\6fbc474c87a74065808761cf30b84355.jpg",
+      "llama_desc": "Two people in a dark room with a green car illuminated by a spotlight. The car is positioned in the center of the room, and the two people are standing near it, possibly preparing to drive or inspecting the vehicle. The room is dimly lit, with only the car and the people in the spotlight being illuminated."
+    },
+    {
+      "id": "EDCFFEA2-C67E-4633-877E-89383F4E988A",
+      "filename": "IMG_2749_2.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_10_17\\IMG_2749_2.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ed\\medium\\edcffea2c67e4633877e89383f4e988a.jpg",
+      "llama_desc": "A group of people on a stage with a large, dark, and mysterious-looking structure in the center. The stage is lit with a mix of red, blue, and yellow lights, creating a vibrant and dynamic atmosphere. The people are moving around the stage, some of them in the foreground, others in the background, and some are even in the shadows."
+    },
+    {
+      "id": "33CF4858-84C6-4764-9988-73D7CB225F8F",
+      "filename": "IMG_1026.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_10_27\\IMG_1026.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\33\\medium\\33cf485884c64764998873d7cb225f8f.jpg",
+      "llama_desc": "A young girl in a striped orange and black shirt... \nShe is holding a large, black, paper monster with a white, toothy, pink-lipped mouth and big, white, round eyes. The monster\u0027s arms are out of the girl\u0027s hands, and its long, black, paper tail is behind her. She is sitting on a couch with a checkered, brown and tan, cushion."
+    },
+    {
+      "id": "5943D273-E45C-4C3B-A592-1669F6E30915",
+      "filename": "IMG_4534.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_07_04\\IMG_4534.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\59\\medium\\5943d273e45c4c3ba5921669f6e30915.jpg",
+      "llama_desc": "One girl and one adult celebrating a girl\u0027s eighth birthday. A girl with a birthday cake in front of her, blowing out a candle. The cake is a white, two-layered, round cake with blue and green frosting."
+    },
+    {
+      "id": "F001D297-3D24-4475-84E5-1AFA74D46094",
+      "filename": "IMG_3395.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\2011_10_28\\IMG_3395.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\f0\\medium\\f001d2973d24447584e51afa74d46094.jpg",
+      "llama_desc": "A group of children in various costumes. They are standing in a parking lot, with a brick building in the background. The children are dressed in a mix of Halloween and sports-related costumes, with some wearing costumes that are not clearly related to either."
+    },
+    {
+      "id": "C8707803-E83D-40F6-8270-18E938848DC2",
+      "filename": "_MG_5946.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210404\\_MG_5946.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\c8\\medium\\c8707803e83d40f6827018e938848dc2.jpg",
+      "llama_desc": "A young couple in a garden. The woman has long, wavy blonde hair and is smiling at the camera. The man has short, dark hair and is also smiling, with his arm around the woman\u0027s shoulders."
+    },
+    {
+      "id": "ABD5636A-0020-45E1-934D-D9FCDECEB37F",
+      "filename": "IMG_6015.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_12_12\\IMG_6015.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ab\\medium\\abd5636a002045e1934dd9fcdeceb37f.jpg",
+      "llama_desc": "One adult and three children decorating a Christmas tree in a living room. The adult is sitting on the floor, wearing a white t-shirt and jeans, and has a child on his lap. The children are standing on chairs or a table, wearing Santa hats and holding ornaments."
+    },
+    {
+      "id": "9359B0EB-C288-479A-889E-B477D3E4E69E",
+      "filename": "_MG_6811.dng",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\20220627\\_MG_6811.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\93\\medium\\9359b0ebc288479a889eb477d3e4e69e.jpg",
+      "llama_desc": "One woman standing on a rock near a pond. She is wearing a black cardigan, a white top, and light blue jeans, and has her long blonde hair tied back. She is smiling and looking directly at the camera, with her hands on her hips."
+    },
+    {
+      "id": "4C0981E9-95BB-461A-A150-D4C5EB1958FE",
+      "filename": "IMG_1644_4x6_300.jpg",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_03_23\\IMG_1644_4x6_300.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4c\\medium\\4c0981e995bb461aa150d4c5eb1958fe.jpg",
+      "llama_desc": "Three children and one adult sitting on a staircase. A boy in a black suit and green shirt sits on the left, with his right arm resting on the stairs. A girl in a yellow and pink plaid dress sits in the middle, with her hands in her lap."
+    },
+    {
+      "id": "9D48D353-8ABD-4073-A075-BAA60CC5847C",
+      "filename": "IMG_4164.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\137___12\\IMG_4164.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\9d\\medium\\9d48d3538abd4073a075baa60cc5847c.jpg",
+      "llama_desc": "The main subject is a chocolate cake with a brown, rectangular shape and a flat, smooth surface. The cake is covered in a thick layer of chocolate frosting, with a decorative border of chocolate and a few white and brown flowers on top. The cake is being held by someone\u0027s hand, with the cake\u0027s edge visible on the left side of the frame."
+    },
+    {
+      "id": "9361D533-D201-4893-9AA1-0E2FF3156762",
+      "filename": "_MG_6079.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210620\\_MG_6079.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\93\\medium\\9361d533d20148939aa10e2ff3156762.jpg",
+      "llama_desc": "A man and a young girl in a garden. The man is standing with his arm around the girl, who is leaning into him. The man has short, dark hair and is wearing a white shirt."
+    },
+    {
+      "id": "610CBB9E-87A9-4A25-9568-508181EDA5E4",
+      "filename": "IMG_4187.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\Weihs_Disney\\2011_12_18\\IMG_4187.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\61\\medium\\610cbb9e87a94a259568508181eda5e4.jpg",
+      "llama_desc": "A parade float with a large, animatronic, anthropomorphic lion\u0027s head, wearing a gold and blue costume, is being driven through a dark, night-time, urban or city environment. The lion\u0027s head is wearing a gold and blue costume, with a gold and blue cape, and a gold and blue crown."
+    },
+    {
+      "id": "F1379217-DE5E-4D25-8430-60D0687CEE10",
+      "filename": "IMG_0346.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_03_29\\IMG_0346.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\f1\\medium\\f1379217de5e4d25843060d0687cee10.jpg",
+      "llama_desc": "A coffee cup with a brown liquid residue inside. The cup is empty and has a brown, coffee-like residue at the bottom. The cup is sitting on a white surface, possibly a table or counter."
+    },
+    {
+      "id": "709A1719-57D8-4EC8-B577-1ABA784F531D",
+      "filename": "_MG_6553.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220523\\_MG_6553.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\70\\medium\\709a171957d84ec8b5771aba784f531d.jpg",
+      "llama_desc": "A woman in a black and white striped top and a woman in a black jacket. They are standing in a dark room with a woman in a black and white striped top holding a phone and a woman in a black jacket holding a yellow ribbon. The woman in a black and white striped top is wearing a black and white striped top and a black and white striped top is wearing a black and white striped top."
+    },
+    {
+      "id": "E882080B-CA6E-434A-87B3-E33CD37A83D4",
+      "filename": "_MG_6423.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220228\\_MG_6423.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\e8\\medium\\e882080bca6e434a87b3e33cd37a83d4.jpg",
+      "llama_desc": "A collection of postcards from the Swiss Alps. The postcards are arranged on a white surface, with some of them facing upwards and others lying flat. They feature various images of the Swiss Alps, including mountains, mountainside villages, and trains."
+    },
+    {
+      "id": "031F48A8-0CCB-4FCE-A350-68F38CBB6509",
+      "filename": "IMG_6930.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_04_02\\IMG_6930.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\03\\medium\\031f48a80ccb4fcea35068f38cbb6509.jpg",
+      "llama_desc": "A child\u0027s art project of a face with a mouth and a few other features. The face is made of torn and crumpled paper in various colors, including pink, green, and silver. The background is a piece of purple paper."
+    },
+    {
+      "id": "B0039BB6-A5BB-4F01-991D-1C10404F7FBB",
+      "filename": "IMG_0601.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_04_22\\IMG_0601.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\b0\\medium\\b0039bb6a5bb4f01991d1c10404f7fbb.jpg",
+      "llama_desc": "A group of children in a school setting... A man in a grey suit, blue shirt, and pink tie stands on a stage with a woman in a green and blue top, holding a large white and green banner with the words \u0022Official Michigan\u0022 and \u0022Green School\u0022 printed on it. The banner is being held up by the man and the woman, with a girl in a blue t-shirt and jeans standing on the stage, holding the other end of the banner. The children in the front row are looking up at the banner, and the man and the woman are smiling and holding the banner up for the children to see."
+    },
+    {
+      "id": "4AB8283A-9233-4E5B-B201-833023743EE1",
+      "filename": "_MG_6743.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220612\\_MG_6743.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4a\\medium\\4ab8283a92334e5bb201833023743ee1.jpg",
+      "llama_desc": "A young woman in a white graduation gown... \nShe is standing with a young man in a blue graduation gown, both smiling and holding a black graduation folder with gold lettering. The woman is wearing a gold and white sash across her gown, and the man is wearing a blue and white sash. They are standing in front of a large, brick building with a clock tower in the background."
+    },
+    {
+      "id": "85A38407-53BD-4E59-B7F7-52A3D6AE8CE2",
+      "filename": "_MG_6801.dng",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\20220627\\_MG_6801.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\85\\medium\\85a3840753bd4e59b7f752a3d6ae8ce2.jpg",
+      "llama_desc": "One woman sitting on a rock near a pond. She is wearing a black cardigan, a white top, and light blue jeans, and has her long blonde hair tied back. She is sitting with her legs crossed and her hands on the rock, looking directly at the camera with a relaxed expression."
+    },
+    {
+      "id": "6F88607B-A16B-433B-81B5-AF4157AA1B9C",
+      "filename": "CRW_8843_4x6_300.jpg",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_05_19\\CRW_8843_4x6_300.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\6f\\medium\\6f88607ba16b433b81b5af4157aa1b9c.jpg",
+      "llama_desc": "A young girl in a pink leotard stands on a red mat in a large room with blue and red mats, surrounded by a group of children and adults. She has her arms raised in the air, her hands reaching for the ceiling. The room is filled with people, including several adults and many children, all of whom are either sitting or standing on the mats."
+    },
+    {
+      "id": "6DCCDA47-B32F-416A-92A2-DB93A0E02B1E",
+      "filename": "IMG_4319.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_05_13\\IMG_4319.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\6d\\medium\\6dccda47b32f416a92a2db93a0e02b1e.jpg",
+      "llama_desc": "Two girls and one adult in a children\u0027s play area with a large, green, animatronic dinosaur. The girls are standing at the edge of a rocky, artificial landscape, with the dinosaur\u0027s head and neck visible in the foreground. The dinosaur\u0027s mouth is open, and a stream of fog or smoke is rising from its mouth."
+    },
+    {
+      "id": "2E5A165E-89F2-4022-8AA6-5EEE06B115C5",
+      "filename": "IR7A6125.JPG",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\20250901\\IR7A6125.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\2e\\medium\\2e5a165e89f240228aa65eee06b115c5.jpg",
+      "llama_desc": "A person and a few children in a garden with a large planter and a palm tree. A person is sitting on a bench, and a few children are playing in the garden. The garden is filled with a variety of plants and flowers, including a large planter with a palm tree in it."
+    },
+    {
+      "id": "0BBA693A-48EC-43EC-BD4B-94C29116326A",
+      "filename": "20240408_144240.jpg",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\Samsung Gallery\\DCIM\\Camera\\20240408_144240.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\0b\\medium\\0bba693a48ec43ecbd4b94c29116326a.jpg",
+      "llama_desc": "A sheet of white paper on a black metal table with a pattern of sunlight spots. The paper is flat and smooth, with no visible writing or marks. It is placed on a table with a metal grid pattern, and the sunlight is creating a pattern of spots on the paper."
+    },
+    {
+      "id": "901BEB26-8ABC-44F2-A15B-69F598F0B980",
+      "filename": "IMG_0053.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2005\\2005_10_31\\IMG_0053.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\90\\medium\\901beb268abc44f2a15b69f598f0b980.jpg",
+      "llama_desc": "A woman in a pink shirt and black pants sits on a couch, surrounded by children\u0027s toys and a child\u0027s birthday party. She is holding a pen and paper, writing a birthday card. The room is decorated with a child\u0027s birthday party, with a table full of food and a cake."
+    },
+    {
+      "id": "3C838EF7-FA72-458E-861F-31F4D3914ACF",
+      "filename": "IMG_9355.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2005\\2005_10_22\\CD\\IMG_9355.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\3c\\medium\\3c838ef7fa72458e861f31f4d3914acf.jpg",
+      "llama_desc": "A person and a skeleton in a living room. The person is sitting on a chair, surrounded by various objects, including a small basket of toys, a stuffed animal, and a book. The skeleton is wearing a witch\u0027s hat and a small, colorful, and sparkly broom is perched on its head."
+    },
+    {
+      "id": "17AB9B7D-FBF3-49E4-A03E-E2D2ADDE9FC3",
+      "filename": "20221217_173147.jpg",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\Samsung Gallery\\DCIM\\Camera\\20221217_173147.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\17\\medium\\17ab9b7dfbf349e4a03ee2d2adde9fc3.jpg",
+      "llama_desc": "Two people in a photo. A man and a woman are standing together, looking directly at the camera. The man is wearing a dark-colored jacket with a zipper and a hat, and the woman has long blonde hair."
+    },
+    {
+      "id": "53C90D44-1B39-4992-BB89-8EBAF98FB176",
+      "filename": "IMG_1300.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_02_28\\IMG_1300.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\53\\medium\\53c90d441b394992bb898ebaf98fb176.jpg",
+      "llama_desc": "A woman in a red and black costume, with a long, flowing red and black skirt and a black and red top, is standing on a stage or stage-like area. She is surrounded by a purple and green lighted area, and there is a red and green lighted area in the background. The woman is in the center of the image, and there is a large, dark area behind her."
+    },
+    {
+      "id": "7BAC8528-1D5C-426C-8844-6A2883F00BB1",
+      "filename": "IMG_0896.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_05_25\\IMG_0896.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\7b\\medium\\7bac85281d5c426c88446a2883f00bb1.jpg",
+      "llama_desc": "A girl in front of a school building. She stands on the sidewalk in front of a brick building with a blue sign reading \u0022Collins Elementary\u0022 and a blue banner reading \u0022Collins Elementary: Michigan Exemplary Blue Ribbon School\u0022. The building\u0027s name is also spelled out in white letters on the brick wall."
+    },
+    {
+      "id": "736E8BAB-4076-4756-AF3D-05F77E0E662B",
+      "filename": "IMG_2235.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\a\\IMG_2235.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\73\\medium\\736e8bab40764756af3d05f77e0e662b.jpg",
+      "llama_desc": "A girl in a pink and purple shirt... \nShe is holding a small potted plant with a green leafy stem and a pink flower. She is smiling and holding the plant with both hands, with her fingers digging into the soil. The plant is sitting in a small red pot with a white label."
+    },
+    {
+      "id": "561BACD8-D0B0-4AD1-84DC-5A709E962E58",
+      "filename": "IMG_2134.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\2011_04_24\\IMG_2134.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\56\\medium\\561bacd8d0b04ad184dc5a709e962e58.jpg",
+      "llama_desc": "A girl in a blue jacket... \nShe is standing on a small, green, plastic chair, reaching up to a metal, black, outdoor, decorative, plant stand. She is wearing a blue jacket with a white, fuzzy, hood, and pink, fuzzy, slippers. She is holding a white, plastic, Easter, egg-hunting, basket."
+    },
+    {
+      "id": "AB4F215B-8095-4BCB-A166-1204867FCC0D",
+      "filename": "IMG_0279.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2006\\2006_03_11\\IMG_0279.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ab\\medium\\ab4f215b80954bcba1661204867fcc0d.jpg",
+      "llama_desc": "A man in a plaid shirt... \nHe is walking on a sidewalk, guiding a young girl on a bicycle. She is wearing a pink helmet and a pink jacket, and her bike has a pink seat and handlebars. The sidewalk is lined with grass and trees, and there are a few other people and bikes in the distance."
+    },
+    {
+      "id": "787F8890-1F71-45A6-ADE9-FD7F9EDF39B7",
+      "filename": "_MG_6422.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220228\\_MG_6422.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\78\\medium\\787f88901f7145a6ade9fd7f9edf39b7.jpg",
+      "llama_desc": "A collection of postcards from the Swiss Alps. The postcards are arranged on a white surface, with some of them facing upwards and others lying flat. They feature various images of the Swiss Alps, including mountains, trains, and scenic views."
+    },
+    {
+      "id": "89484425-5672-4CA1-A22F-61229C13D634",
+      "filename": "IMG_2526.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\2011_07_04\\IMG_2526.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\89\\medium\\8948442556724ca1a22f61229c13d634.jpg",
+      "llama_desc": "A group of children in a forest. They are standing in a clearing, looking at something on the ground. One of them is wearing a red shirt."
+    },
+    {
+      "id": "368070BD-ADF7-4D04-9EAD-20D38D59D465",
+      "filename": "IMG_2180.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\a\\IMG_2180.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\36\\medium\\368070bdadf74d049ead20d38d59d465.jpg",
+      "llama_desc": "A young girl on a bicycle. She is wearing a pink helmet and riding a small bicycle with training wheels, her feet still on the ground. She is in a driveway in front of a house with a garage door."
+    },
+    {
+      "id": "266DCCA9-D999-487C-90F1-6ED5E407178D",
+      "filename": "_MG_6483.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220508\\_MG_6483.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\26\\medium\\266dcca9d999487c90f16ed5e407178d.jpg",
+      "llama_desc": "A woman and a girl embracing in a park. The woman is holding the girl close to her, with her arms around her, and the girl is smiling and looking up at her. The woman is wearing a dark grey sweater and the girl is wearing a plaid shirt."
+    },
+    {
+      "id": "41A4AFC6-F081-4C37-ACAE-B5C3BCA2D58A",
+      "filename": "_MG_6335.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20211002\\_MG_6335.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\41\\medium\\41a4afc6f0814c37acaeb5c3bca2d58a.jpg",
+      "llama_desc": "A woman in a red swimsuit is standing on a block in a swimming pool. She is wearing a white swim cap with a blue and yellow logo and has her hands on her face, covering her eyes. The pool is surrounded by a crowd of people, including other swimmers, coaches, and spectators."
+    },
+    {
+      "id": "1190BCCF-3AE3-428D-B798-F5F2235BE7B4",
+      "filename": "IMG_5268.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_09_07\\IMG_5268.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\11\\medium\\1190bccf3ae3428db798f5f2235be7b4.jpg",
+      "llama_desc": "One adult and four children in a park. A man in a red rain poncho is holding a large animal skull, while four children in rain gear and one adult in a yellow rain jacket are gathered around a table. The children are wearing raincoats in various colors, including yellow, red, and pink."
+    },
+    {
+      "id": "49D657E8-DFC4-491C-AF11-83934F3042B1",
+      "filename": "IMG_1561.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_04_27\\IMG_1561.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\49\\medium\\49d657e8dfc4491caf1183934f3042b1.jpg",
+      "llama_desc": "A woman in a white top and long, light blue skirt is standing on a stage, holding a black book and reading from it. She is standing in front of a blue curtain, and her voice is not visible. The stage is dark, and the woman\u0027s face is not visible."
+    },
+    {
+      "id": "BAD70829-E4A6-44F4-8BE0-99D6DD8DAD81",
+      "filename": "_MG_7021.dng",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\20220819\\_MG_7021.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ba\\medium\\bad70829e4a644f48be099d6dd8dad81.jpg",
+      "llama_desc": "A lone mining structure on a hillside at dusk. The structure, a tall, narrow, metal frame with a flat, open top, stands alone on a hillside, its metal frame weathered and rusted. The surrounding hillside is dry and rocky, with a few scattered, low-lying bushes."
+    },
+    {
+      "id": "69900B11-1C47-4F71-AF1E-A983D70A64C7",
+      "filename": "IMG_1499.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_04_20\\IMG_1499.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\69\\medium\\69900b111c474f71af1ea983d70a64c7.jpg",
+      "llama_desc": "A large, empty storefront with a sign reading \u0022Chuck E.\u00A0...\u0022. The sign is above a large, metal door with a sign reading \u0022Chuck E.\u00A0...\u0022. The sign is above a large, metal door with a sign reading \u0022Chuck E.\u00A0...\u0022."
+    },
+    {
+      "id": "70CF37F6-F6D4-4F41-A624-7C2C677C27D2",
+      "filename": "IMG_1791.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_08_06\\IMG_1791.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\70\\medium\\70cf37f6f6d44f41a6247c2c677c27d2.jpg",
+      "llama_desc": "A group of children sitting on top of a large stone animal sculpture in a park."
+    },
+    {
+      "id": "DB9EFDD0-15CD-4D32-8C61-21DE2C549D32",
+      "filename": "20230716_220100.jpg",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\Samsung Gallery\\DCIM\\Camera\\20230716_220100.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\db\\medium\\db9efdd015cd4d328c6121de2c549d32.jpg",
+      "llama_desc": "A large, cracked, and worn-out concrete floor with a dark brown color and a mix of small, light-colored stones and darker, darker-colored rocks. The floor is cracked and has a few large, dark brown, and lighter-colored patches, and a few small, white, and darker-colored rocks are scattered throughout. The floor is set in a dimly lit, dark, and somewhat empty space."
+    },
+    {
+      "id": "FC15C38E-D671-49F8-9494-2542E9E06D1E",
+      "filename": "IMG_0813.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2006\\2006_07_16\\IMG_0813.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\fc\\medium\\fc15c38ed67149f894942542e9e06d1e.jpg",
+      "llama_desc": "A large, purple and orange inflatable dragon with a slide and a child\u0027s face on the front, is being used as a playground for two young children. The children are playing on the slide, with one child sitting at the top of the slide and the other at the bottom, both laughing and having fun. The setting is a grassy park or playground, with a few trees and a blue truck in the background."
+    },
+    {
+      "id": "5A075B3A-FF3F-4825-871C-696C1D6901F2",
+      "filename": "IMG_1089.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_06_09\\IMG_1089.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\5a\\medium\\5a075b3aff3f4825871c696c1d6901f2.jpg",
+      "llama_desc": "A red and white striped lighthouse cake. The cake is shaped like a lighthouse, with a red and white striped body and a red and white striped top. The lighthouse is sitting on a grey plate, and there is a blue background behind it."
+    },
+    {
+      "id": "E4392A24-30E1-4766-AF47-C2FF32A57CFD",
+      "filename": "IMG_3843.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\Weihs_Disney\\2011_12_16\\IMG_3843.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\e4\\medium\\e4392a2430e14766af47c2ff32a57cfd.jpg",
+      "llama_desc": "A duck standing on a grassy bank. The duck is facing the camera, its head turned to the right, with its feathers ruffled and its tail feathers spread. The duck\u0027s body is standing on a small patch of grass, with its feet and legs visible."
+    },
+    {
+      "id": "30BECB69-4939-44D9-A1C3-96D1063F66C6",
+      "filename": "IMG_0004.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2006\\2006_01_07\\IMG_0004.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\30\\medium\\30becb69493944d9a1c396d1063f66c6.jpg",
+      "llama_desc": "A young girl in a pink party hat... She is sitting in a chair, wearing a pink party hat with a cartoon pony on it, and smiling at the camera. She has a pink shirt on and her hair is pulled back. She is sitting in a room with a chair and a table in the background."
+    },
+    {
+      "id": "73757659-2FB0-4CCA-904E-BD387472BE95",
+      "filename": "IMG_4370.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\Weihs_Disney\\2011_12_20\\IMG_4370.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\73\\medium\\737576592fb04cca904ebd387472be95.jpg",
+      "llama_desc": "Three children stand in front of a large, interactive screen displaying a cartoon character on a rainbow-colored background. The screen shows a cartoon character with wings and a rainbow-colored background, with a question \u0022What goes on top?\u0022 and a cartoon character with wings. The children are standing in front of a large, interactive screen in a children\u0027s museum or a similar environment."
+    },
+    {
+      "id": "43F2E5EB-C9D3-4905-9833-80F31443F88E",
+      "filename": "IMG_0880_4x6_300.jpg",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_10_06\\JPG\\IMG_0880_4x6_300.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\43\\medium\\43f2e5ebc9d34905983380f31443f88e.jpg",
+      "llama_desc": "Twenty children and several adults playing soccer on a grassy field. The children are running in a group, chasing a ball that is rolling across the field. The sun is shining and there are trees and a blue sky in the background."
+    },
+    {
+      "id": "6837BD24-8163-4160-82A0-33C44F34304D",
+      "filename": "IMG_0278.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2005\\2005_12_05\\IMG_0278.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\68\\medium\\6837bd248163416082a033c44f34304d.jpg",
+      "llama_desc": "A woman in a red shirt... is standing next to a table covered with a white tablecloth, surrounded by numerous gifts and presents, some of which are wrapped in colorful paper and others are in boxes with various shapes and sizes. The woman is wearing a red shirt and has long dark hair, and she is standing in a room with a brown wall and a wooden floor."
+    },
+    {
+      "id": "030425C8-3EA9-4E1E-931E-ECE85C600D85",
+      "filename": "IMG_2264.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\2011_05_22\\IMG_2264.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\03\\medium\\030425c83ea94e1e931eece85c600d85.jpg",
+      "llama_desc": "Five women and one child celebrating a woman\u0027s birthday. A woman in a black shirt with a white logo on the left breast is surrounded by four children and one woman, all smiling and leaning in to her. A single, lit candle on a slice of cake in front of the woman is the only other thing in the frame."
+    },
+    {
+      "id": "CC15FA50-A288-4269-8FA5-BB5915C132E3",
+      "filename": "IMG_4302.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_05_13\\IMG_4302.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\cc\\medium\\cc15fa50a28842698fa5bb5915c132e3.jpg",
+      "llama_desc": "Two girls and one adult standing in front of a yellow school bus. The girls are wearing paper crowns with leaves and flowers, and they are smiling and looking at the camera. The adult is standing behind them, holding a camera and smiling."
+    },
+    {
+      "id": "DE6B94DC-04C5-4F0C-80BA-C8E413FF00B5",
+      "filename": "IMG_6987.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_04_10\\IMG_6987.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\de\\medium\\de6b94dc04c54f0c80bac8e413ff00b5.jpg",
+      "llama_desc": "Five children and one adult in Easter outfits standing in front of a green railing with a backdrop of flowers and trees. The children are wearing bunny ears and holding Easter-themed items, such as a basket and a toy. The adult is holding a child and smiling."
+    },
+    {
+      "id": "A7E77B2B-0610-49DD-84DC-C33F1C8CC82A",
+      "filename": "_MG_7295.dng",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\20240630\\_MG_7295.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\a7\\medium\\a7e77b2b061049dd84dcc33f1c8cc82a.jpg",
+      "llama_desc": "A person eating a sandwich at a table in a restaurant. The table is set with a paper tray containing a sandwich cut in half, surrounded by a few potato chips and a pickle. The person is wearing a baseball cap with a bird logo on the back of it, and a shirt with a yellow and blue pattern."
+    },
+    {
+      "id": "1F42BB57-0BB0-4D5A-B102-644001C883B3",
+      "filename": "IMG_1626.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_07_23\\IMG_1626.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\1f\\medium\\1f42bb570bb04d5ab102644001c883b3.jpg",
+      "llama_desc": "A group of children in a bowling alley. They are standing in a row, smiling and holding hands, in front of a row of bowling lanes. The children are wearing various types of shoes, including bowling shoes, and some are wearing bowling-themed clothing."
+    },
+    {
+      "id": "59CA43DA-61C0-4646-8B61-470371CE486C",
+      "filename": "IMG_0914.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2006\\2006_12_17\\IMG_0914.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\59\\medium\\59ca43da61c046468b61470371ce486c.jpg",
+      "llama_desc": "A woman in a red and white Detroit Red Wings jersey holding the Stanley Cup. She is standing on a white platform, holding the trophy above her head with both hands, her arms and the cup\u0027s top end of the handle visible. The woman\u0027s hair is long and blonde, and she is wearing a red and white scarf around her neck."
+    },
+    {
+      "id": "D7CAAAB4-5A2B-4F3E-ADFB-71043395BAA5",
+      "filename": "CRW_5436.jpg",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2006\\2006_04_17\\CRW_5436.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\d7\\medium\\d7caaab45a2b4f3eadfb71043395baa5.jpg",
+      "llama_desc": "A young girl in a red and black plaid dress... \nShe is sitting at a table with a chocolate cake in front of her, surrounded by candles and a \u0022Happy Birthday\u0022 sign. She is wearing a purple \u0022Happy Birthday\u0022 headband and a big smile. The table is set with a white tablecloth and a few birthday-themed decorations."
+    },
+    {
+      "id": "7E269245-C43D-477F-A646-25C13928842E",
+      "filename": "IMG_0580.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_04_21\\IMG_0580.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\7e\\medium\\7e269245c43d477fa64625c13928842e.jpg",
+      "llama_desc": "A group of people in a darkened theater or stage. A man in a white shirt, black tie, and dark trousers stands at center, looking to the left. To his left, a man in a white rabbit costume with a pink heart on his chest is dancing, his arms out to the sides."
+    },
+    {
+      "id": "228DB15B-AD75-41E1-B0E4-6FDC9148EF7E",
+      "filename": "IMG_2386.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\a\\IMG_2386.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\22\\medium\\228db15bad7541e1b0e46fdc9148ef7e.jpg",
+      "llama_desc": "Two young girls in matching white t-shirts with a large, shiny, red, white, and blue star on the front, standing together in a lush green grassy area, with a sidewalk and a blue car in the background."
+    },
+    {
+      "id": "4CE4AA82-6BCC-49E4-933B-E6F6EBF790F7",
+      "filename": "IMG_0961.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2006\\2006_12_20\\IMG_0961.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4c\\medium\\4ce4aa826bcc49e4933be6f6ebf790f7.jpg",
+      "llama_desc": "A woman in a red coat and Santa hat is surrounded by a group of children in a room with a Christmas tree and a large American flag. She is holding a microphone and appears to be leading a holiday-themed story or song. The room is decorated with Christmas decorations and has a large window with a view of a snow-covered landscape."
+    },
+    {
+      "id": "F04CCF8E-6A2E-4FF0-9968-6BD554652882",
+      "filename": "IMG_1126_4x6_300.jpg",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_11_17\\IMG_1126_4x6_300.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\f0\\medium\\f04ccf8e6a2e4ff099686bd554652882.jpg",
+      "llama_desc": "Five women and one child in a gymnastics or dance studio, posing in front of a wall with a cornucopia of fruit and vegetables, with a white picket fence and red leaves in the background."
+    },
+    {
+      "id": "06305125-5B14-44E7-9FB5-B11224AE16F8",
+      "filename": "_MG_6215.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210925\\_MG_6215.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\06\\medium\\063051255b1444e79fb5b11224ae16f8.jpg",
+      "llama_desc": "Two people in formal attire standing together in a park-like setting. A young woman in a green dress and high heels is holding a bouquet of white flowers. A young man in a black tuxedo is standing next to her, holding her hand."
+    },
+    {
+      "id": "AC80474B-7E27-41B1-9630-66426229D259",
+      "filename": "IMG_3108.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_11_16\\IMG_3108.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ac\\medium\\ac80474b7e2741b1963066426229d259.jpg",
+      "llama_desc": "Two people in a darkened theater watching a stage show with a large, green, glowing, and spiky, flower-like, or plant-like, structure in the center of the stage."
+    },
+    {
+      "id": "952C1882-4654-41BF-B905-8E89F386F023",
+      "filename": "IMG_8448.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_09_01\\IMG_8448.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\95\\medium\\952c1882465441bfb9058e89f386f023.jpg",
+      "llama_desc": "A young girl playing in the sand on a beach. She is sitting in a sand pit, with a bucket and shovel nearby, and is throwing sand into the air. The beach is sandy and has a few sandcastles and other structures in the background."
+    },
+    {
+      "id": "B0850E43-DBB2-4BB6-9739-356627AD2A53",
+      "filename": "IMG_0023.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2005\\2005_10_31\\IMG_0023.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\b0\\medium\\b0850e43dbb24bb69739356627ad2a53.jpg",
+      "llama_desc": "A young girl in a black dress with pink flowers... \nShe is holding a bunch of purple balloons and standing in a living room with a couch, a TV, and a fireplace."
+    },
+    {
+      "id": "9FFEFD2A-E4D0-4C97-B6C0-842AB1E23CB3",
+      "filename": "IMG_0528_4x6_300.jpg",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_06_14\\IMG_0528_4x6_300.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\9f\\medium\\9ffefd2ae4d04c97b6c0842ab1e23cb3.jpg",
+      "llama_desc": "Three children and one adult in a red train car. The children are sitting in the train car, looking out the window. The train car is red and has a yellow line on the side."
+    },
+    {
+      "id": "4DB158AC-A855-4A4E-96B2-8244D73C9F18",
+      "filename": "_MG_6794.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220612\\_MG_6794.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4d\\medium\\4db158aca8554a4e96b28244d73c9f18.jpg",
+      "llama_desc": "Two young girls in white dresses crouch beside a small, blue, stone gargoyle in a garden. They are both smiling and pointing at the gargoyle, which has a gold coin in its mouth. The girls are surrounded by lush green plants and a stone path."
+    },
+    {
+      "id": "2C86EDEB-C0F3-476A-83A8-BAB73C6F2FF3",
+      "filename": "IMG_3064.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_11_04\\IMG_3064.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\2c\\medium\\2c86edebc0f3476a83a8bab73c6f2ff3.jpg",
+      "llama_desc": "One girl and one adult in a dimly lit room. The girl is standing with her weight on one leg, her other foot lifted off the floor. She is wearing a white sweater with a brown drawstring, beige pants, and white shoes with pink stripes."
+    },
+    {
+      "id": "D353436B-1EDB-4812-973C-95C546E36901",
+      "filename": "20250124_171012.jpg",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\Samsung Gallery\\DCIM\\Camera\\20250124_171012.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\d3\\medium\\d353436b1edb4812973c95c546e36901.jpg",
+      "llama_desc": "A small dog playing with a toy in a room with a window and a collection of stuffed animals. The dog is standing on its hind legs, holding a toy in its mouth, and appears to be playing with it. The room is filled with a variety of stuffed animals, including a green frog, a pink rabbit, and a brown bear, all of which are visible in the background."
+    },
+    {
+      "id": "59F5A2CB-BC7F-44A9-BAB6-B6CECEEBAAD9",
+      "filename": "IMG_4348.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\139___02\\IMG_4348.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\59\\medium\\59f5a2cbbc7f44a9bab6b6ceceebaad9.jpg",
+      "llama_desc": "The main subject is a woman, likely the birthday person, celebrating her 48th birthday. She is smiling and holding a cake with a lit candle, which is the focal point of the photo. The setting is a dining table with a red tablecloth and a cake with a \u002248\u0022 candle, indicating the age of the person."
+    },
+    {
+      "id": "3B844792-1F81-4C50-BE23-2A13E947D43F",
+      "filename": "IMG_2155.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\2011_04_24\\IMG_2155.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\3b\\medium\\3b8447921f814c50be232a13e947d43f.jpg",
+      "llama_desc": "A boy in a blue and white striped shirt... \nHe is holding a gift bag and a package of knitting needles. The gift bag is green, white, and yellow, and has a gold ribbon tied around it. The package of knitting needles is red and has a black and white label."
+    },
+    {
+      "id": "4B6A84E4-EB12-4BF5-8173-C7C893EA723F",
+      "filename": "20240718_214945.jpg",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\Samsung Gallery\\DCIM\\Camera\\20240718_214945.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4b\\medium\\4b6a84e4eb124bf58173c7c893ea723f.jpg",
+      "llama_desc": "A white envelope with a black seal and a clear plastic folder on a white wall, with a few business cards and a yellow card with a phone number and a company name."
+    },
+    {
+      "id": "0FD77D69-04D7-4EFC-AE06-94C563FC2F28",
+      "filename": "IMG_5671.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_10_22\\IMG_5671.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\0f\\medium\\0fd77d6904d74efcae0694c563fc2f28.jpg",
+      "llama_desc": "A group of children and adults sitting on the floor in a dimly lit room, all looking up at something out of frame. The children are all dressed in winter clothing, including coats, hats, and gloves. The adults are also wearing winter clothing, and some are holding or holding onto the children."
+    },
+    {
+      "id": "E326A964-CC2B-4AC9-825A-E01767DA0E7B",
+      "filename": "_MG_6989.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220817\\_MG_6989.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\e3\\medium\\e326a964cc2b4ac9825ae01767da0e7b.jpg",
+      "llama_desc": "Two men sit on a stone wall overlooking a lake. The man on the left has a shaved head and a short, white beard. He wears a white t-shirt with an American flag design and a pair of khaki shorts."
+    },
+    {
+      "id": "56E014E2-586D-4BF0-9B1E-8423E9F2D34B",
+      "filename": "IMG_8082.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_08_10\\IMG_8082.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\56\\medium\\56e014e2586d4bf09b1e8423e9f2d34b.jpg",
+      "llama_desc": "One child in a pool. A child sits in a small inflatable pool, wearing a white diaper. The child\u0027s face is wet and they are smiling."
+    },
+    {
+      "id": "E4F39A3D-64A4-4FD2-9585-CF1254C5D41E",
+      "filename": "IMG_4881.JPG",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\149___10\\IMG_4881.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\e4\\medium\\e4f39a3d64a44fd29585cf1254c5d41e.jpg",
+      "llama_desc": "Ten people and one child on a wooden platform in front of a sign reading \u0022Boarding Gate\u0022 and \u0022Departure Time 6:40\u0022. They are all dressed in Halloween costumes, with some wearing masks, and some holding bags or bags of candy. The platform is surrounded by trees and a few buildings in the background."
+    },
+    {
+      "id": "6F98D3B9-69EE-40B4-9D9B-1A55355CE7DC",
+      "filename": "IMG_4922.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2012\\2012_04_29\\IMG_4922.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\6f\\medium\\6f98d3b969ee40b49d9b1a55355ce7dc.jpg",
+      "llama_desc": "A girl in a green and blue shirt... \nShe is sitting at a table with a cupcake in front of her, lit with a single candle. The cupcake is on a white plate, and a fork and knife are on a napkin to the right. The table has a fall-themed tablecloth with leaves and acorns."
+    },
+    {
+      "id": "1CFB26E7-72F5-4CFA-879A-C10AE735E1DD",
+      "filename": "IMG_0089.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\SD1100\\2009_05_09\\IMG_0089.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\1c\\medium\\1cfb26e772f54cfa879ac10ae735e1dd.jpg",
+      "llama_desc": "One woman and one child celebrating a birthday. She is sitting at a table with a chocolate cake in front of her, a single candle lit on top. The woman is smiling and looking directly at the camera."
+    },
+    {
+      "id": "CC7836A0-559B-4C08-B4F0-183394755AB5",
+      "filename": "IMG_5945.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_12_04\\IMG_5945.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\cc\\medium\\cc7836a0559b4c08b4f0183394755ab5.jpg",
+      "llama_desc": "A young girl with long blonde hair and a wide, toothy smile. She is looking directly at the camera with her eyes, her face slightly tilted to the right."
+    },
+    {
+      "id": "9F3AB9B7-69CE-4869-8875-A3F05319B92E",
+      "filename": "IMG_0660.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_04_29\\IMG_0660.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\9f\\medium\\9f3ab9b769ce48698875a3f05319b92e.jpg",
+      "llama_desc": "A young girl in a white t-shirt with colorful designs... \nShe is making a peace sign with her hands and sticking out her tongue. She is lying on a carpeted floor, with her legs stretched out to the side."
+    },
+    {
+      "id": "685B4970-EE5A-4BA1-A74B-795E59BBE1E0",
+      "filename": "IMG_3220.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20240509_Bubba\\IMG_3220.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\68\\medium\\685b4970ee5a4ba1a74b795e59bbe1e0.jpg",
+      "llama_desc": "A woman in a red dress with a pattern of black dogs and white dots is sitting on a couch, with a small dog standing on the floor in front of her, sniffing a gift wrapped in colorful paper with a red and yellow stripe. The woman is wearing a red dress with a pattern of black dogs and white dots, and her feet are in a pair of black and white sneakers. The dog is standing on a brown and grey rug with a red and yellow stripe."
+    },
+    {
+      "id": "CA7A59D8-3AC3-4B27-95C9-207E3EA8FD5F",
+      "filename": "IMG_7257.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_05_03\\IMG_7257.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ca\\medium\\ca7a59d83ac34b2795c9207e3ea8fd5f.jpg",
+      "llama_desc": "A girl holding a large piece of red paper with a gold flower design. She is standing on a floor with a white and green tile pattern, and a few pieces of pink and black clothing are visible on the floor behind her."
+    },
+    {
+      "id": "F4C98D25-4AD9-4192-B5C3-6D8DF9064970",
+      "filename": "IMG_7557.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_06_20\\IMG_7557.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\f4\\medium\\f4c98d254ad94192b5c36d8df9064970.jpg",
+      "llama_desc": "One girl and two adults by a pool. A girl with long blonde hair and a red shirt with a flower design is standing in front of a pool, with two adults sitting in chairs nearby. The pool is surrounded by a blue tarp and a wooden fence, and a few plants are visible in the background."
+    },
+    {
+      "id": "1E506AEF-A5D6-4357-AC65-71634C0FDEEB",
+      "filename": "IMG_3392.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_12_24\\IMG_3392.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\1e\\medium\\1e506aefa5d64357ac6571634c0fdeeb.jpg",
+      "llama_desc": "One adult and five children sitting around a table for a meal. A Christmas tree is visible in the background."
+    },
+    {
+      "id": "0B3B51A3-3930-46D0-8CEC-6EAC839D37F3",
+      "filename": "IMG_1862.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_08_12\\IMG_1862.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\0b\\medium\\0b3b51a3393046d08cec6eac839d37f3.jpg",
+      "llama_desc": "A girl in a black dress... \nShe is sitting in a chair, wearing a tiara and a black dress, with a large yellow cake in front of her. The cake has six lit candles and a large \u00226\u0022 candle in the center. She is smiling and looking directly at the camera."
+    },
+    {
+      "id": "FA870A9C-15D9-4370-BD0E-8E4FA26AC2DA",
+      "filename": "IMG_1149.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_06_17\\IMG_1149.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\fa\\medium\\fa870a9c15d94370bd0e8e4fa26ac2da.jpg",
+      "llama_desc": "A young girl in a blue and black swimsuit... \nShe is standing on the edge of a shallow pool, with her arms out to the sides and her body slightly tilted to one side. Her long, dark hair is wet and her face is covered in water. She is standing on a metal grate with a series of small, round holes in it, and her feet are in the water."
+    },
+    {
+      "id": "D695E4CD-513D-45CF-AE61-9EEA482BE3D9",
+      "filename": "IMG_4352.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\Weihs_Disney\\2011_12_19\\IMG_4352.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\d6\\medium\\d695e4cd513d45cfae619eea482be3d9.jpg",
+      "llama_desc": "A man in a green t-shirt... \nHe is standing in a crowded outdoor area at night, surrounded by a large number of people. He is smiling and looking directly at the camera. The background is a dark, night sky with many colorful, large, and elaborate Christmas lights and decorations."
+    },
+    {
+      "id": "512FCA35-4A4C-44BA-885E-251B0A6D4A5A",
+      "filename": "IMG_4779.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\145___08\\IMG_4779.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\51\\medium\\512fca354a4c44ba885e251b0a6d4a5a.jpg",
+      "llama_desc": "The main subject is a group of people, specifically a family or group of friends, posing for a photo. They are sitting on a bench or a wall, with their legs and arms spread out in a relaxed position. The setting is a public park or a park-like area with a large stone or brick wall, surrounded by flowers and trees."
+    },
+    {
+      "id": "DF4A7048-1BFF-4D73-A4F0-B3F3D0270403",
+      "filename": "IMG_9729.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_12_28\\IMG_9729.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\df\\medium\\df4a70481bff4d73a4f0b3f3d0270403.jpg",
+      "llama_desc": "A young girl in a pink pajama top... \nShe is sitting on a dark floor, hugging a large grey elephant plush toy and a small grey mouse plush toy. Her long blonde hair is falling across her face."
+    },
+    {
+      "id": "606187A4-3BE0-4A28-8946-4589901D1EE7",
+      "filename": "IMG_2169.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_08_06\\IMG_2169.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\60\\medium\\606187a43be04a2889464589901d1ee7.jpg",
+      "llama_desc": "Three children in a swimming pool. They are playing in the shallow end, laughing and splashing. The pool is surrounded by a tile-lined pool deck with a few steps leading to the pool\u0027s edge."
+    },
+    {
+      "id": "9D4354F5-3DB3-4129-B250-610DA3BDD8E8",
+      "filename": "IMG_3114.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_11_16\\IMG_3114.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\9d\\medium\\9d4354f53db34129b250610da3bdd8e8.jpg",
+      "llama_desc": "A dinosaur exhibit in a museum or theme park. A large, green, animatronic dinosaur is standing on a rocky, stone-like floor, its mouth open in a loud, exaggerated roar. The dinosaur\u0027s body is covered in scaly, green skin, and its long, tail is visible behind it."
+    },
+    {
+      "id": "CEB079D2-18C6-4A0E-8B2B-25358C081BA6",
+      "filename": "IMG_0065_2.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2005\\Jakes Birthday Party\\IMG_0065_2.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ce\\medium\\ceb079d218c64a0e8b2b25358c081ba6.jpg",
+      "llama_desc": "A group of children in a bowling alley. They are standing at the end of a bowling lane, looking at the ball that has just been thrown. The lane is lined with bowling pins, and the children are watching the ball\u0027s trajectory."
+    },
+    {
+      "id": "09288560-9869-42DC-BCE9-D5F32BD31C38",
+      "filename": "IMG_3993.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\Weihs_Disney\\2011_12_17\\IMG_3993.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\09\\medium\\09288560986942dcbce9d5f32bd31c38.jpg",
+      "llama_desc": "A dark, low-angled view of a carnival or amusement park ride\u0027s interior, with a tall, white, and red-striped, multi-angled, and multi-colored, pointed, and curved, and very tall, and very narrow, and very tall, and very narrow, and very tall, and very narrow, and very tall, and very narrow, and very tall, and very narrow, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall, and very tall,"
+    },
+    {
+      "id": "1B7B200A-B7F5-449B-BE60-1C375EEF3E3C",
+      "filename": "IMG_4893.JPG",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\150___11\\IMG_4893.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\1b\\medium\\1b7b200ab7f5449bbe601c375eef3e3c.jpg",
+      "llama_desc": "Three girls and one adult at a swimming pool. They are standing on the pool\u0027s edge, smiling and looking directly at the camera. The girls are wearing swimsuits and the adult is wearing a swim coach or coach\u0027s uniform."
+    },
+    {
+      "id": "49E74EEF-E61E-4FFD-A749-51261B3E1D47",
+      "filename": "_MG_6182.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210925\\_MG_6182.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\49\\medium\\49e74eefe61e4ffda74951261b3e1d47.jpg",
+      "llama_desc": "A woman in a black dress is walking on a path. She is wearing a black dress with a white collar and a black hat. She is walking on a path with a tree on the right side."
+    },
+    {
+      "id": "4B932B43-E46D-4E3D-B6CF-2CFDBF6C0798",
+      "filename": "IMG_1326.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_06_26\\IMG_1326.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4b\\medium\\4b932b43e46d4e3db6cf2cfdbf6c0798.jpg",
+      "llama_desc": "A woman in a black sweater holding a baby boy in her arms, with a green balloon in her hand. She is sitting on a couch with a man in a white USA soccer jersey, both smiling at the camera. The background is a red wall with a picture frame above the couch."
+    },
+    {
+      "id": "62F15AAB-5A1F-49E3-B2E5-173CEC714495",
+      "filename": "_MG_6139.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210907\\_MG_6139.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\62\\medium\\62f15aab5a1f49e3b2e5173cec714495.jpg",
+      "llama_desc": "A group of men in a bar. They are sitting on stools at a bar, with some of them leaning on the bar or sitting on the bar\u0027s edge."
+    }
+  ]
+}

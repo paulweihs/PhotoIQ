@@ -1,0 +1,15 @@
+{
+  "set_at": "2026-04-11T21:12:24.8951765Z",
+  "from_run": "run_20260411_171154",
+  "gates": {
+    "missing_landmark": 0.05,
+    "wrong_count": 0.13,
+    "hallucination": 0.15,
+    "activity_inversion": 0.06,
+    "missing_subject": 0.06,
+    "truncated": 0.08,
+    "filler_opener": 0.05,
+    "formatting": 0.05,
+    "too_short": 0.06
+  }
+}

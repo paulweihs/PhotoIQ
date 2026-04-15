@@ -1,0 +1,307 @@
+{
+  "batch_id": "batch_20260402_000347",
+  "prompt_version": "v10-prod",
+  "created_at": "2026-04-02T04:03:47.4507401Z",
+  "photos": [
+    {
+      "id": "9B85267F-B414-41F1-BE5F-2FFC990174F5",
+      "filename": "IMG_4161.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\137___12\\IMG_4161.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\9b\\medium\\9b85267fb41441f1be5f2ffc990174f5.jpg",
+      "llama_desc": "The main subject is a man sitting on a couch, holding a Christmas-themed sock. He is wearing a black t-shirt with a white logo that reads \u0022Paint Studio\u0022 and has a black watch on his wrist. The setting is a living room or a similar indoor space with a couch and a wall in the background.",
+      "oracle_desc": "A young bearded man reclines on a brown leather couch, holding a Christmas-themed sock with a gingerbread man design. He wears a black t-shirt reading \"PAINT STUDIO\" and a black wristband. A floor lamp and Christmas decorations are visible in the background.",
+      "gaps": ["filler_opener"]
+    },
+    {
+      "id": "DE2DB3BF-2451-4243-924A-F6819330F114",
+      "filename": "_MG_6210.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210925\\_MG_6210.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\de\\medium\\de2db3bf24514243924af6819330f114.jpg",
+      "llama_desc": "A young woman in a green dress is being hugged by a young man in a black tuxedo. She is wearing a white flower on her wrist and has her hands on his chest. The man\u0027s bow tie is green and his shirt is white.",
+      "oracle_desc": "A teenage couple in formal prom attire pose outdoors under a tree, smiling. The young man wears a black tuxedo with a green bow tie and a white boutonniere; the young woman wears a green dress with a white wrist corsage. His arm is around her shoulders.",
+      "gaps": []
+    },
+    {
+      "id": "883FD8BB-0495-405F-98AE-2B934D58F96A",
+      "filename": "5-8-9.jpg",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20240509_Bubba\\_MG_8272 Mosaic03 WebMosaic\\mosaic\\0\\5-8-9.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\88\\medium\\883fd8bb0495405f98ae2b934d58f96a.jpg",
+      "llama_desc": "This photo features a dog lying on a bed, with its head turned to the left. The dog\u0027s fur is brown and its eyes are closed. The bed appears to be made of white or light-colored sheets, and there is a brown or tan-colored blanket or comforter on top of it.",
+      "oracle_desc": "A six-panel photo mosaic showing a small brown Yorkshire Terrier-type dog in various poses — close-up face shots, resting, wearing a bandana, and being held by a man.",
+      "gaps": ["hallucination", "missing_subject"]
+    },
+    {
+      "id": "6512C31F-EDFE-4AFB-937C-8011A9DFA6FF",
+      "filename": "_MG_5515.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20200512\\_MG_5515.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\65\\medium\\6512c31fedfe4afb937c8011a9dfa6ff.jpg",
+      "llama_desc": "The main subject of this photo is a woman in a white graduation gown, cap, and multiple colorful cords around her neck. She is smiling and looking directly at the camera. The woman has long blonde hair and is standing in front of a building with a green roof and a large window.",
+      "oracle_desc": "A young blonde woman in a white graduation cap and gown with multiple colorful honor cords and a medal stands outdoors smiling at the camera. Behind her is a brick building with a green roof and large windows.",
+      "gaps": ["filler_opener"]
+    },
+    {
+      "id": "2AD695D4-8A60-48DB-AC82-D4164358DBFF",
+      "filename": "IMG_4633.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\143___06\\IMG_4633.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\2a\\medium\\2ad695d48a6048dbac82d4164358dbff.jpg",
+      "llama_desc": "Two young women, likely friends or sisters, pose together in a park or garden setting. They are both wearing formal, long-sleeved dresses with sparkly or beaded tops and are standing in front of a tree or a large, green, leafy plant. The woman on the left has her hand on the other woman\u0027s hip, and they both have their arms around each other.",
+      "oracle_desc": "Two young women in formal prom gowns pose together outdoors in front of trees, arms around each other and smiling. One wears a silver/champagne beaded halter gown, the other a black gown with a beaded top.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "03F895DC-738C-435E-BD17-AFC3AFD80D90",
+      "filename": "_MG_6942.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220817\\_MG_6942.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\03\\medium\\03f895dc738c435ebd17afc3afd80d90.jpg",
+      "llama_desc": "The main subject of this photo is a plate of food. The food appears to be a breakfast or brunch item, consisting of a biscuit or bread-like item, a fried or egg-like item, and a creamy, yellowish- or orange- colored sauce or topping. The food is served on a white plate with a brown border, and is placed on a wooden table or table-like surface.",
+      "oracle_desc": "A biscuit sandwich split open on a white plate on a wooden table, revealing a fried egg, sausage patty, and melted cheese. A white ceramic coffee mug sits in the background.",
+      "gaps": ["filler_opener"]
+    },
+    {
+      "id": "4B58082F-E41F-41A3-B1BB-7482CAA6CD73",
+      "filename": "IMG_4196.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\137___12\\IMG_4196.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4b\\medium\\4b58082fe41f41a3b1bb7482caa6cd73.jpg",
+      "llama_desc": "The main subject of this photo is a group of four people, three women and one man, sitting on a couch in a living room. They are all holding various gifts and presents, with one woman holding a book and another holding a small gift bag. The setting is a cozy living room with a couch, a coffee table, and a window with a red curtain.",
+      "oracle_desc": "Four young people — three girls and one young man — sit together on a green couch in a living room surrounded by Christmas gifts. They smile at the camera; family photos hang on the wall behind them and a red curtained window is to the right.",
+      "gaps": ["filler_opener"]
+    },
+    {
+      "id": "A7A27DA9-1C9A-46B3-97C7-9E01EF8D3F99",
+      "filename": "_MG_6032.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210501\\_MG_6032.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\a7\\medium\\a7a27da91c9a46b397c79e01ef8d3f99.jpg",
+      "llama_desc": "A man in a blue t-shirt stands behind a long, dark wood and metal bar. He has his hands on the bar and is looking directly at the camera. The bar has a few stools in front of it, and there are several bottles and glasses on the bar.",
+      "oracle_desc": "A man in a gray-blue t-shirt stands behind a long concrete-topped bar inside what appears to be a brewery or taproom. Multiple beer tap handles line the back bar, wood-and-metal bar stools line the front, and a TV is mounted on the wall.",
+      "gaps": []
+    },
+    {
+      "id": "BFA761EF-133B-4E51-A1F3-4C01FD409783",
+      "filename": "_MG_5519.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20200512\\_MG_5519.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\bf\\medium\\bfa761ef133b4e51a1f34c01fd409783.jpg",
+      "llama_desc": "The main subject of this photo is a woman walking on a sidewalk. She is wearing a red jacket, black pants, and sunglasses, and is holding a white umbrella. The woman is walking on a sidewalk in a park or park-like setting, with grass and trees visible in the background.",
+      "oracle_desc": "A woman in an orange-red jacket and dark pants walks along a path outdoors, holding a white umbrella. The scene is brightly backlit by sunlight, with green grass and trees in the background.",
+      "gaps": ["filler_opener"]
+    },
+    {
+      "id": "435520A7-11FD-4FE0-A84D-7039D2420885",
+      "filename": "_MG_5517.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20200512\\_MG_5517.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\43\\medium\\435520a711fd4fe0a84d7039d2420885.jpg",
+      "llama_desc": "The main subject of this photo is a young woman, likely a high school or college graduate, sitting on a stone wall. She is wearing a white graduation gown, a white mortarboard, and a gold medal around her neck. Her long, blonde hair is falling down her back, and she is holding her graduation gown\u0027s tassel in her right hand.",
+      "oracle_desc": "A young blonde woman in a white graduation cap and gown with colorful honor cords and a gold medal sits on a concrete ledge outdoors, smiling. Green trees are visible behind her in what appears to be a park or campus setting.",
+      "gaps": ["filler_opener"]
+    },
+    {
+      "id": "5236B5D2-1536-4170-845A-0F96393B7C6C",
+      "filename": "IMG_4316.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\138___01\\IMG_4316.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\52\\medium\\5236b5d215364170845a0f96393b7c6c.jpg",
+      "llama_desc": "The main subject is a large, yellow banner hanging from a building. The banner reads \u0022NBA All-Star 2021\u0022 and features the NBA logo.",
+      "oracle_desc": "A large yellow vertical banner reading \"NBA ALL-STAR 2021 INDIANAPOLIS\" with the NBA and Indiana Pacers logos hangs on the exterior of a brick and glass arena building.",
+      "gaps": ["filler_opener", "missing_landmark"]
+    },
+    {
+      "id": "CE727C8A-7B96-4029-B144-AA32D8557B6F",
+      "filename": "_MG_6139.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210907\\_MG_6139.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ce\\medium\\ce727c8a7b964029b144aa32d8557b6f.jpg",
+      "llama_desc": "A group of men in a bar. They are sitting on stools at a bar, with some of them leaning on the bar or sitting on the bar\u0027s edge. They are all wearing casual, everyday clothing, with some of them wearing hats.",
+      "oracle_desc": "Five men pose together inside a bar — two seated on stools, three standing behind them. They are in casual clothing; some wear caps. The bar's tap handles and shelving are visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "C1993B72-2E77-4AF1-BFA2-EF4D33AB45FD",
+      "filename": "_MG_6233.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210925\\_MG_6233.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\c1\\medium\\c1993b722e774af1bfa2ef4d33ab45fd.jpg",
+      "llama_desc": "A man in a black tuxedo with a green bow tie... He is standing in a park with a grassy lawn and a few trees in the background. He has his hands in his pockets and is smiling at the camera.",
+      "oracle_desc": "A young man in a black tuxedo with a green bow tie and a white boutonniere stands on a grass path in a park, hands in his pockets, smiling at the camera. Leafy trees are in the background.",
+      "gaps": []
+    },
+    {
+      "id": "EB165CD3-6F18-4798-A7AB-5413AD9CF7C2",
+      "filename": "IMG_4502.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\141___04\\IMG_4502.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\eb\\medium\\eb165cd36f184798a7ab5413ad9cf7c2.jpg",
+      "llama_desc": "The main subject is a woman with long, straight hair and a bright smile. She is wearing a maroon top with a ruffled neckline and a black and yellow baseball cap with a curved brim. She is sitting on a couch with a floral patterned cushion, surrounded by a room with a stained glass lamp and a bookshelf in the background.",
+      "oracle_desc": "A teenage girl with long blonde-brown hair and a big smile sits in a chair wearing a maroon top and a black Nike baseball cap with a neon green swoosh. A stained glass lamp is visible behind her in a warmly lit indoor setting.",
+      "gaps": ["filler_opener", "hallucination"]
+    },
+    {
+      "id": "DD6140C2-2A75-456B-A3DF-F91A51256481",
+      "filename": "_MG_6008.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210411\\_MG_6008.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\dd\\medium\\dd6140c22a75456ba3dff91a51256481.jpg",
+      "llama_desc": "A woman in a gray hoodie is sitting in a chair, cradling a small brown dog. She is holding the dog in her arms, with her hands around its body, and her face is turned towards the camera. The dog\u0027s head is visible, and it appears to be looking directly at the camera.",
+      "oracle_desc": "A woman with gray hair in a gray hoodie sits in an armchair with a small red-brown terrier curled in her lap. Natural light comes through window blinds behind her.",
+      "gaps": []
+    },
+    {
+      "id": "84BD2A96-F9DE-4D57-8DD6-A2420C272140",
+      "filename": "IMG_4389.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\140___03\\IMG_4389.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\84\\medium\\84bd2a96f9de4d578dd6a2420c272140.jpg",
+      "llama_desc": "The main subject of this photo is a yellow, cube-shaped object with a metal framework, suspended from the ceiling. The object has a yellow, plastic or metal, cube-shaped body with a metal framework that appears to be made of metal or metal-like material. The object is suspended from the ceiling by a metal framework, which is made of metal or metal-like material.",
+      "oracle_desc": "A yellow cube-shaped spacecraft or satellite replica with metal framework and text labels is suspended from a ceiling. Below it, a large colorful space-themed floor mural depicting planets and celestial bodies spans the room, suggesting a science museum or space center interior.",
+      "gaps": ["filler_opener", "missing_subject"]
+    },
+    {
+      "id": "8C49AE95-DB93-4AB8-8406-08D98CF23002",
+      "filename": "IMG_4867.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\148___06\\IMG_4867.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\8c\\medium\\8c49ae95db934ab8840608d98cf23002.jpg",
+      "llama_desc": "The main subject of this photo is a group of people, likely friends or family, gathered in a festive setting. They are all wearing various Halloween-themed costumes and masks, with some of them looking directly at the camera. The setting appears to be a covered outdoor area, possibly a porch or a gazebo, with a backdrop of trees and a small wooden structure in the distance.",
+      "oracle_desc": "Seven people sit on hay bales under a covered wooden structure decorated with Halloween props — wooden monster cutouts, spider webs, and pumpkins. One person wears a fox mask and orange hoodie; the others are in everyday clothing. A date stamp reads \"06/25/2018 17:02.\"",
+      "gaps": ["filler_opener", "hallucination"]
+    },
+    {
+      "id": "BB532CDA-9493-457B-8F18-8A239CF87FCC",
+      "filename": "_MG_6214.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210925\\_MG_6214.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\bb\\medium\\bb532cda9493457b8f188a239cf87fcc.jpg",
+      "llama_desc": "A young woman in a green dress is being hugged by a young man in a black tuxedo. She is wearing a white flower on her wrist and has a green bow tie around his neck. They are standing in front of a tree with a large trunk and a green leafy background.",
+      "oracle_desc": "A young man in a black tuxedo with a green bow tie and white boutonniere stands behind a young woman in a green satin dress with a white wrist corsage. They both smile, posing in front of a large tree outdoors.",
+      "gaps": []
+    },
+    {
+      "id": "ABB80069-1734-4966-8316-DC9B62F80775",
+      "filename": "IMG_4146.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\137___12\\IMG_4146.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ab\\medium\\abb80069173449668316dc9b62f80775.jpg",
+      "llama_desc": "The main subject is a man and a girl sitting on a bed of snow. The man is bald and has a beard, and the girl has long blonde hair. They are both wearing winter clothing, including coats, hats, and gloves.",
+      "oracle_desc": "A bald bearded man and a young blonde girl pose inside a Christmas-themed sled prop display, surrounded by candy cane decorations, Christmas greenery, and a stuffed white animal. The man wears a black jacket; the girl wears a black jacket and pink socks, holding a small red gift box.",
+      "gaps": ["filler_opener", "hallucination"]
+    },
+    {
+      "id": "FB31B674-62C7-4048-BE74-D38A8DA04D0B",
+      "filename": "IMG_4257.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\138___01\\IMG_4257.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\fb\\medium\\fb31b67462c74048be74d38a8da04d0b.jpg",
+      "llama_desc": "The main subject is a man and a young boy. The man is wearing a red shirt and has a beard, while the boy is dressed in a gray suit with a bow tie. They are standing in a living room with a Christmas tree in the background.",
+      "oracle_desc": "A bearded man in a maroon shirt stands with his arm around a young boy in a gray suit with a green bow tie. A small decorated Christmas tree is visible in the lower left, with home furnishings in the background.",
+      "gaps": ["filler_opener"]
+    },
+    {
+      "id": "63980F90-CF34-4B72-A0A8-1E40956D68CD",
+      "filename": "5-7-0.jpg",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20240509_Bubba\\_MG_8272 Mosaic03 WebMosaic\\mosaic\\0\\5-7-0.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\63\\medium\\63980f90cf344b72a0a81e40956d68cd.jpg",
+      "llama_desc": "A small, brown, long-haired dog in a blue collar. The dog is looking directly at the camera, its head held high. The background is white, with a few objects in the distance.",
+      "oracle_desc": "A six-panel photo mosaic showing a small Yorkshire Terrier-type dog in various settings — standing in a yard, wearing a blue outfit in winter, being bathed in a sink, and other poses. A young girl is partially visible in one tile.",
+      "gaps": ["hallucination", "missing_subject"]
+    },
+    {
+      "id": "55CD04C5-2116-4AC4-97B4-7343C5C7BB74",
+      "filename": "IMG_4932.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\151___05\\IMG_4932.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\55\\medium\\55cd04c521164ac497b47343c5c7bb74.jpg",
+      "llama_desc": "The main subject of this photo is a group of six people, including three women and three children, posing together in a living room. The group is standing in front of a wall with a large, wooden, star-shaped decoration. The women are wearing casual, everyday clothing, and the children are dressed in casual, comfortable clothing.",
+      "oracle_desc": "Five people — four girls/women and one boy — are grouped together in a living room smiling at the camera. A large wooden star-shaped wall decoration is behind them; they are all in casual clothing.",
+      "gaps": ["filler_opener", "wrong_count"]
+    },
+    {
+      "id": "35F16EFB-CBB3-4632-8923-7B3981222649",
+      "filename": "5-20-6.jpg",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20240509_Bubba\\_MG_8272 Mosaic03 WebMosaic\\mosaic\\0\\5-20-6.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\35\\medium\\35f16efbcbb3463289237b3981222649.jpg",
+      "llama_desc": "A woman in a red dress is feeding a small dog. She is holding a food or food-like object in her hand, and the dog is standing on its hind legs, looking up at her. The woman is standing in a garden or a park, with flowers and trees in the background.",
+      "oracle_desc": "A six-panel photo mosaic showing a small Yorkshire Terrier-type dog in various settings — outdoors in a garden, wearing a pink outfit, standing on a tile floor, and near water. A person's clothing is partially visible in some tiles.",
+      "gaps": ["hallucination", "missing_subject"]
+    },
+    {
+      "id": "50545BBD-1006-4368-A81B-545D7443E93A",
+      "filename": "_MG_6954.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220817\\_MG_6954.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\50\\medium\\50545bbd10064368a81b545d7443e93a.jpg",
+      "llama_desc": "A man stands on a rock, gazing out at a vast, blue lake. He is wearing a white shirt, khaki shorts, and white shoes, and has his back to the camera.",
+      "oracle_desc": "A man in a white t-shirt and khaki shorts stands on a large granite rock in a pine forest, looking out toward a large clear blue alpine lake. Tall pine trees frame the view.",
+      "gaps": []
+    },
+    {
+      "id": "2DEB741C-F611-44C9-BAC6-7E9140BA25FC",
+      "filename": "IMG_4099.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\137___12\\IMG_4099.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\2d\\medium\\2deb741cf61144c9bac67e9140ba25fc.jpg",
+      "llama_desc": "A group of people, likely friends or family, are gathered in front of a large Christmas tree, lit with multicolored lights, in a public or park setting. The tree is tall and has a conical shape, with a wide base and a narrow top. The people are standing or sitting around the tree, some holding lights or other objects, and are smiling or looking at the camera.",
+      "oracle_desc": "A large group of approximately 18-20 people poses at night in front of a massive multicolored Christmas tree in a public setting. A domed building with ornate architecture is partially visible behind the tree.",
+      "gaps": []
+    },
+    {
+      "id": "40E77CE8-94E2-4E54-B9C4-91348BE46E29",
+      "filename": "_MG_6063.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210620\\_MG_6063.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\40\\medium\\40e77ce894e24e54b9c491348be46e29.jpg",
+      "llama_desc": "A plate of sausages. The sausages are brown and have a slightly charred, crispy appearance. They are arranged in a row on the plate, with some of them slightly overlapping.",
+      "oracle_desc": "Three large cooked sausage links on a white plate, shot in close-up. The sausages are brown with a glossy, caramelized surface and are arranged side by side.",
+      "gaps": []
+    },
+    {
+      "id": "D2BCDBF0-F273-4D72-8128-10F5997C3DC7",
+      "filename": "IMG_4540.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\141___04\\IMG_4540.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\d2\\medium\\d2bcdbf0f2734d72812810f5997c3dc7.jpg",
+      "llama_desc": "The main subject is a young woman holding a certificate. She is wearing a maroon dress with a white patterned top and has long, straight brown hair. She is standing in a formal, dimly lit room with a white tablecloth and a patterned carpet.",
+      "oracle_desc": "A young woman in a maroon sleeveless dress holds a framed certificate or award in both hands, smiling at the camera. She is standing in a banquet hall with ornate patterned carpet and decorative architectural elements.",
+      "gaps": ["filler_opener"]
+    },
+    {
+      "id": "580843B4-EBE5-461D-BE37-573E9FE2F761",
+      "filename": "_MG_5482.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20200507\\_MG_5482.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\58\\medium\\580843b4ebe5461dbe37573e9fe2f761.jpg",
+      "llama_desc": "The main subject of this photo is a young woman in a white graduation gown, cap, and multiple colorful tassels around her neck. She is holding a sign that says \u0022Congratulations\u0022 and has her hand on her hip. The setting is outside, with a tree with pink flowers in the background.",
+      "oracle_desc": "A young blonde woman in a white graduation cap and gown with colorful honor cords and a gold medal stands outdoors with her hand on her hip, smiling. A pink flowering tree is in the background, and a yard sign partially reading \"Congrats\" with a school mascot is visible beside her.",
+      "gaps": ["filler_opener", "hallucination"]
+    },
+    {
+      "id": "EB18454F-4CAC-455D-8D33-DCF57898160C",
+      "filename": "_MG_6223.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210925\\_MG_6223.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\eb\\medium\\eb18454f4cac455d8d33dcf57898160c.jpg",
+      "llama_desc": "A man in a black suit is walking with a woman in a green dress. He is holding her hand and they are walking on a path in a park. The woman\u0027s long blonde hair is blowing in the wind and she is wearing high heels.",
+      "oracle_desc": "A young couple walks hand in hand away from the camera along a paved park path. The young woman wears a short green dress and heels; the young man wears a black tuxedo. Leafy trees line both sides of the path.",
+      "gaps": []
+    },
+    {
+      "id": "F69775C2-1BBF-4AC8-9EFC-A7D021E57C42",
+      "filename": "5-8-12.jpg",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20240509_Bubba\\_MG_8272 Mosaic03 WebMosaic\\mosaic\\0\\5-8-12.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\f6\\medium\\f69775c21bbf4ac89efca7d021e57c42.jpg",
+      "llama_desc": "A dog in a red collar... \nThe dog is lying on a bed or couch, with its head on a pillow. It is wearing a red collar with a silver or metal nameplate. The dog\u0027s fur is brown and it has a long, thin, and\u00A0\u00A0[...].",
+      "oracle_desc": "A six-panel photo mosaic showing a small Yorkshire Terrier-type dog in various close-up poses — wearing a pink bow, resting on a blanket, and face shots from different angles.",
+      "gaps": ["truncated", "missing_subject"]
+    }
+  ]
+}

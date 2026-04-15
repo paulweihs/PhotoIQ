@@ -1,0 +1,108 @@
+{
+  "batch_id": "batch_20260410_110245_rerun_20260410_113207",
+  "prompt_version": "v12a",
+  "created_at": "2026-04-10T15:32:07.9286435Z",
+  "annotated_at": "2026-04-09T00:00:00.0000000Z",
+  "photos": [
+    {
+      "id": "ABD5636A-0020-45E1-934D-D9FCDECEB37F",
+      "filename": "IMG_6015.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_12_12\\IMG_6015.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ab\\medium\\abd5636a002045e1934dd9fcdeceb37f.jpg",
+      "llama_desc": "A man in a white t-shirt and blue jeans is sitting on a chair in front of a Christmas tree, surrounded by three children. The man is wearing a Santa hat and has his back to the camera, while the children are standing around him, one of them holding a Christmas ornament. The Christmas tree is decorated with lights and ornaments, and there is a red chair in the background.",
+      "oracle_desc": "A man in a white t-shirt and red Santa hat faces the camera while crouching near a decorated Christmas tree, with at least four children around him — all wearing Santa hats. One child stands on a small red chair in the foreground reaching toward the tree, while another leans against the man and two more are visible to the right. The living room setting features a lit Christmas tree with ornaments.",
+      "gaps": ["wrong_count", "hallucination"]
+    },
+    {
+      "id": "9359B0EB-C288-479A-889E-B477D3E4E69E",
+      "filename": "_MG_6811.dng",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\20220627\\_MG_6811.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\93\\medium\\9359b0ebc288479a889eb477d3e4e69e.jpg",
+      "llama_desc": "A woman in a black cardigan, white t-shirt, light blue jeans, and black and white sneakers, with long brown hair, posing in front of a tree with green leaves and a blue sky.",
+      "oracle_desc": "A young woman with long blonde hair stands smiling on a rock outdoors, wearing a black cardigan over a white top, light blue jeans, and black-and-white Converse sneakers. Dense green foliage and trees fill the background, with a hint of a water feature visible behind her. The overall lighting suggests a sunny summer afternoon.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "4C0981E9-95BB-461A-A150-D4C5EB1958FE",
+      "filename": "IMG_1644_4x6_300.jpg",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_03_23\\IMG_1644_4x6_300.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4c\\medium\\4c0981e995bb461aa150d4c5eb1958fe.jpg",
+      "llama_desc": "A boy in a black suit, green shirt, and blue tie sits on a staircase with two girls in yellow and pink gingham dresses, one holding a stuffed rabbit. The boy has spiky brown hair and is smiling at the camera. The girls have long blonde hair and are also smiling.",
+      "oracle_desc": "Three children sit together on an indoor staircase posing for the camera: a boy on the left in a black suit, green dress shirt, and blue tie, flanked by two girls in matching pink-and-orange plaid dresses. The girl on the right holds a small stuffed animal. All three are smiling, with the girls wearing their blonde hair down.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "9D48D353-8ABD-4073-A075-BAA60CC5847C",
+      "filename": "IMG_4164.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\137___12\\IMG_4164.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\9d\\medium\\9d48d3538abd4073a075baa60cc5847c.jpg",
+      "llama_desc": "A chocolate cake with a brown frosting and blue writing on top, held by someone's hand. The cake is rectangular in shape and has a gold border around it. The blue writing on top of the cake reads \"Happy 19th Birthday Jacob!\" in a cursive font.",
+      "oracle_desc": "A rectangular chocolate sheet cake with milk-chocolate frosting fills the frame, decorated with piped chocolate-frosting border scrollwork along the edges. Two chocolate rosette flowers and two white cream rosettes are arranged on the left side, and blue cursive icing reads \"Happy 19th Birthday Jacob!\" across the surface. No hands or other objects are visible in the frame.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "9361D533-D201-4893-9AA1-0E2FF3156762",
+      "filename": "_MG_6079.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20210620\\_MG_6079.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\93\\medium\\9361d533d20148939aa10e2ff3156762.jpg",
+      "llama_desc": "A man in a white polo shirt and a woman in a black t-shirt stand together in front of a green hedge. The man has short, dark hair and is wearing glasses. The woman has long, light-brown hair.",
+      "oracle_desc": "A man and a teenage girl pose closely together outdoors in front of a dense green hedge. The man wears a white polo shirt and glasses, with short salt-and-pepper hair; the girl wears a black crew-neck top and has long, light-blonde hair. Both are smiling and face the camera.",
+      "gaps": []
+    },
+    {
+      "id": "610CBB9E-87A9-4A25-9568-508181EDA5E4",
+      "filename": "IMG_4187.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\Weihs_Disney\\2011_12_18\\IMG_4187.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\61\\medium\\610cbb9e87a94a259568508181eda5e4.jpg",
+      "llama_desc": "A parade float with a large, animatronic, anthropomorphic lion's head, wearing a gold and blue costume, is being driven through a dark, night-time, urban or city environment. The lion's head is wearing a gold and blue costume, with a gold and blue cape, and a gold and blue crown.",
+      "oracle_desc": "A nighttime parade float photographed at a steep sideways angle features a large animatronic lion-like character surrounded by elaborate gold and silver metallic framework with radiating spike elements. The float is illuminated against a black sky, with blue fabric visible at the base of the structure. The rotated framing makes the full extent of the float difficult to judge.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "F1379217-DE5E-4D25-8430-60D0687CEE10",
+      "filename": "IMG_0346.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_03_29\\IMG_0346.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\f1\\medium\\f1379217de5e4d25843060d0687cee10.jpg",
+      "llama_desc": "A paper cup with a coffee or tea drink inside, viewed from above, with a red box of chocolate pieces and a white paper cup with a brown paper sleeve on a white surface. The paper cup has a green logo on its side and a brown paper sleeve with a green logo on its side. The red box of chocolate pieces has white text on its front.",
+      "oracle_desc": "A single white paper cup containing a frothy coffee drink rests on a wooden coaster on a light countertop, viewed from slightly above. The cup bears green lettering reading \"YOU.\" on its side, and a red bag — partially visible at the top of the frame — sits in the background. No second cup, paper sleeve, or box is present in the image.",
+      "gaps": ["hallucination", "wrong_count"]
+    },
+    {
+      "id": "709A1719-57D8-4EC8-B577-1ABA784F531D",
+      "filename": "_MG_6553.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220523\\_MG_6553.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\70\\medium\\709a171957d84ec8b5771aba784f531d.jpg",
+      "llama_desc": "A woman with long blonde hair, wearing a black and white striped top, a black jacket, and a gold sash with black text, is standing in front of a woman with short blonde hair, wearing a black and white striped top, a black jacket, and a gold sash with black text. The woman with long blonde hair is holding a phone in her right hand and has her left hand on her hip. The woman with short blonde hair is holding a gold sash with black text in her right hand and has her left hand on her hip.",
+      "oracle_desc": "Three people stand together on a stage in front of a projection screen and a wooden podium: an older woman on the left in a navy jacket, a young woman in the center wearing a gold honor stole over a black top, and an older man on the right in a dark green jacket. The young woman in the center appears to be a graduate being celebrated, with the two flanking figures likely family members. All three face the camera and smile.",
+      "gaps": ["hallucination", "wrong_count", "missing_subject"]
+    },
+    {
+      "id": "E882080B-CA6E-434A-87B3-E33CD37A83D4",
+      "filename": "_MG_6423.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220228\\_MG_6423.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\e8\\medium\\e882080bca6e434a87b3e33cd37a83d4.jpg",
+      "llama_desc": "A collection of postcards from the Swiss Alps. The postcards are arranged on a white surface, with some of them facing upwards and others lying flat. They feature various images of the Swiss Alps, including mountains, mountainside villages, and trains.",
+      "oracle_desc": "Approximately fifteen postcards are spread across a white surface, most featuring scenic alpine railway imagery — red trains on stone viaducts, snow-capped peaks, and mountain lakes consistent with the Glacier Express or Bernina Express routes in Switzerland. Several cards display a red train logo and the words \"Glacier Express\" or similar branding. The cards are fanned and overlapping in an informal arrangement.",
+      "gaps": []
+    },
+    {
+      "id": "031F48A8-0CCB-4FCE-A350-68F38CBB6509",
+      "filename": "IMG_6930.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_04_02\\IMG_6930.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\03\\medium\\031f48a80ccb4fcea35068f38cbb6509.jpg",
+      "llama_desc": "A child's art project featuring a white egg-shaped paper cutout with variously colored tissue paper and foil strips attached to it, on a purple background. The egg is surrounded by a few pink and green tissue paper pieces and a silver foil strip. The paper is signed with the name \"JUIQ\" in black marker at the top left corner.",
+      "oracle_desc": "A child's Easter egg art project mounts a white egg-shaped cutout onto a purple paper background, decorated with strips of pink, green, and silver foil tissue paper arranged across the egg surface. The name \"JULIO\" is written in large black marker letters at the top left of the purple backing sheet. The craft is simple and handmade, consistent with an elementary school project.",
+      "gaps": ["hallucination"]
+    }
+  ]
+}

@@ -1,0 +1,827 @@
+{
+  "run_id": "run_20260409_131229",
+  "batch_id": "batch_20260409_094534_rerun_20260409_124028",
+  "prompt_version": "v10a",
+  "photo_count": 100,
+  "scored_at": "2026-04-09T17:12:29.7046667Z",
+  "gap_rates": {
+    "missing_landmark": 0.04,
+    "wrong_count": 0.06,
+    "hallucination": 0.21,
+    "activity_inversion": 0.03,
+    "missing_subject": 0.05,
+    "truncated": 0.05,
+    "filler_opener": 0.1,
+    "formatting": 0.06,
+    "too_short": 0.04
+  },
+  "photos": [
+    {
+      "id": "996BDF15-BB12-4D0E-8FF0-B228DF9DBF2E",
+      "filename": "IMG_0205.JPG",
+      "llama_desc": "This image captures a tender moment between a woman and a young girl, posing for a photo together. The woman, with long brown hair, is dressed in a white turtleneck sweater, while the girl, with blonde hair, wears a pink shirt and a pink bow in her hair. The woman\u0027s left arm is wrapped around the girl, with her hand gently holding the girl\u0027s right hand.",
+      "oracle_desc": "A woman with dark hair in a white turtleneck holds a smiling toddler girl in a pink dress with a large pink bow in her hair. Both face the camera closely in what appears to be an indoor setting.",
+      "gaps": [
+        "filler_opener"
+      ]
+    },
+    {
+      "id": "908ECA66-F2B2-4A18-9142-E09BBCDBB755",
+      "filename": "IMG_2891.JPG",
+      "llama_desc": "This image captures a heartwarming moment of a woman and a young girl posing in front of a Halloween-themed inflatable castle. The woman, with her dark hair pulled back, is dressed in a black long-sleeved shirt and jeans, cradling the girl in her arms. The girl, with her blonde hair tied up in a bun, is wearing a vibrant red floral dress and black shoes, while holding an orange plastic bag with a jack-o-lantern design.",
+      "oracle_desc": "A woman in a black shirt holds a toddler girl in a red floral dress in front of a large Halloween inflatable haunted house display. The girl holds an orange jack-o-lantern trick-or-treat bag.",
+      "gaps": [
+        "filler_opener"
+      ]
+    },
+    {
+      "id": "64FA91FE-2C38-4D53-AE46-729069541BF3",
+      "filename": "20230921_234221.jpg",
+      "llama_desc": "This image features a bag of popcorn sitting on top of a collection of kegs, with the bag\u0027s contents spilling out onto the kegs. The bag itself is white with a purple and yellow striped design, and it appears to be made of a thin, crinkly material. The bag is positioned on top of a stack of kegs, which are arranged in a haphazard manner, with some of them partially hidden by the bag.",
+      "oracle_desc": "A white and purple-striped popcorn bag sits among a cluster of metal kegs and black containers in a cluttered indoor setting. The bag appears to be a \u0022Blimpie\u0022 or similar branded popcorn product.",
+      "gaps": [
+        "filler_opener"
+      ]
+    },
+    {
+      "id": "31E48B28-3DA5-4ED9-8459-815625A67E5A",
+      "filename": "20231024_194242.jpg",
+      "llama_desc": "This image features a small dog lying on a brown dog bed, with its head resting on the edge of the bed. The dog\u0027s fur is predominantly black, with a distinctive brown patch on its head and a long, brown tail. Its ears are perked up, and its eyes are closed.",
+      "oracle_desc": "A small Yorkshire Terrier rests its head against a brown dog bed with paw-print fabric near a white baseboard, its tan and black fur visible from a top-down angle. The dog\u0027s eyes appear closed or nearly closed.",
+      "gaps": [
+        "filler_opener",
+        "hallucination"
+      ]
+    },
+    {
+      "id": "BBAB6CA8-8ADA-423A-8E6A-90759F49DF2D",
+      "filename": "IMG_2767_2.JPG",
+      "llama_desc": "This image captures a dramatic scene from a stage production, likely a play or musical, where a large blue whale-like creature is being transported across the stage by a group of performers. The creature, with its long, curved body and large, round head, is being carried by four individuals, each wearing a different colored outfit. The performers are positioned at the far left of the image, with the creature\u0027s head and body extending across the stage.",
+      "oracle_desc": "A darkened arena or stage shows a performer in a red costume in a spotlight and a large blue prop or costume piece on the floor, with smoke or haze filling the venue. The scene appears to be from an ice show or large theatrical production.",
+      "gaps": [
+        "filler_opener",
+        "hallucination",
+        "wrong_count"
+      ]
+    },
+    {
+      "id": "BF76C76A-4D05-4E73-A644-3A496ECC8BF4",
+      "filename": "20150216_113002.jpg",
+      "llama_desc": "This photo features a small, long-haired brown dog with its mouth open, lying on a carpeted floor. The dog\u0027s fur is long and brown, with a black nose and dark eyes. Its mouth is open, revealing its teeth.",
+      "oracle_desc": "A small Yorkshire Terrier sits upright on a rug with its mouth open and tongue visible, looking upward. Sticker sheets and what appear to be small packages are visible on the floor around the dog.",
+      "gaps": [
+        "filler_opener",
+        "activity_inversion"
+      ]
+    },
+    {
+      "id": "B96F4461-A44D-4C05-8725-9BD29EE6FF18",
+      "filename": "IMG_5155.JPG",
+      "llama_desc": "This image captures a young girl holding a Crayola floor pad featuring an octopus design, with her face partially hidden behind the product. The girl is wearing a white t-shirt and blue denim shorts, and her nails are painted a deep red color. She is holding the product in front of her face, with her right hand holding the top of the product and her left hand holding the bottom.",
+      "oracle_desc": "A young girl holds up a large Crayola floor pad box featuring a purple octopus design, obscuring most of her face. A backyard pool and slide are visible behind her, and another girl in a red-and-white striped top stands to the right.",
+      "gaps": [
+        "filler_opener",
+        "missing_subject"
+      ]
+    },
+    {
+      "id": "5E964D44-BBFE-46C0-8F6E-08ADCCB0D5AA",
+      "filename": "IMG_6207.JPG",
+      "llama_desc": "This image is a close-up shot of an eye, with the pupil and iris in sharp focus. The eye is surrounded by a ring of redness, which is likely due to the use of makeup or a medical condition. The surrounding area is out of focus, creating a sense of depth and blurring the surrounding features.",
+      "oracle_desc": "An extreme close-up of a human eye with a gray-blue iris, captured slightly out of focus against warm skin tones. No redness or obvious redness around the eye is apparent.",
+      "gaps": [
+        "filler_opener",
+        "hallucination"
+      ]
+    },
+    {
+      "id": "B6378B08-E3EB-420D-B6C2-CEA0ECE682A6",
+      "filename": "20230219_165937.jpg",
+      "llama_desc": "This image features a blue and white credit card-style object with a silver metal background. The object has a blue background with a white border and a white curved line running through it. Four white arrows are arranged around the object, each pointing in a different direction.",
+      "oracle_desc": "A blue UNO reverse card sits on a metallic gray surface. The card shows the standard UNO reverse design with two curved arrows in the center and corner arrows.",
+      "gaps": [
+        "filler_opener",
+        "missing_landmark"
+      ]
+    },
+    {
+      "id": "1999BA3C-F184-40C9-A7DE-2DAB457B9F19",
+      "filename": "IMG_3673.JPG",
+      "llama_desc": "A little girl is sitting at a dressing room table, surrounded by various wigs and a mirror. She is wearing a black shirt with white stars and has her back to the camera. Her blonde hair is tied up in a ponytail.",
+      "oracle_desc": "A young blonde girl sits with her back to the camera at a Build-A-Bear style dressing room station labeled \u0022DRESSING ROOM,\u0022 with wigs and stuffed animals visible in the mirror\u0027s reflection. A green stuffed bear sits on the counter in front of her.",
+      "gaps": []
+    },
+    {
+      "id": "8C580A6B-AC24-436F-BA63-062881AD73D2",
+      "filename": "IMG_0046.JPG",
+      "llama_desc": "A group of children, likely around 10-12 years old, pose for a photo in a room with a checkered floor. The boy in the front, wearing a blue jacket with a skull pattern, kneels in the center of the group, while others stand around him. The boy to his left, wearing a black shirt with a skull design, has his hand on the boy\u0027s head.",
+      "oracle_desc": "A group of about nine tweens poses for a photo in a room with dark walls featuring a space mural and a checkered black-and-white floor. One person crouches in front while the rest stand in a loose group behind.",
+      "gaps": [
+        "wrong_count",
+        "hallucination"
+      ]
+    },
+    {
+      "id": "851E0A8A-991C-4493-AEF6-68E4C336C616",
+      "filename": "IMG_1576.JPG",
+      "llama_desc": "A group of four children, three girls and one boy, are sitting on a wooden deck, each wearing a green wristband. The girl in the back is wearing a pink and white hat, a pink and white floral shirt, and white sneakers. She is sitting on a bench with her legs crossed, her hands on her knees, and her head turned to the left.",
+      "oracle_desc": "Three children pile together on a wooden deck in a sideways-tilted photo, all wearing green wristbands and appearing to be at an outdoor venue. Two girls and a boy are visible, one wearing a pink and white hat.",
+      "gaps": [
+        "wrong_count"
+      ]
+    },
+    {
+      "id": "A6C24E2F-7CF7-4751-A9D3-69002404784D",
+      "filename": "IMG_5950.JPG",
+      "llama_desc": "A boy in a yellow hoodie is making a Christmas ornament with a woman in a black jacket at a table. The boy is holding a green ornament with a red and white patterned star on it, while the woman is holding a green ornament with a red and white patterned star on it. The table is covered with a brown paper tablecloth and has various craft supplies and materials on it, including a blue bowl, a green and red paper star, and a white paper snowflake.",
+      "oracle_desc": "A boy in a yellow hoodie and an older woman in a black top sit together at a craft table covered with a brown paper tablecloth, working on a holiday ornament project with glue, wire, and small decorative pieces. Both are smiling toward the camera.",
+      "gaps": []
+    },
+    {
+      "id": "75897DD8-D250-4184-8E35-49A2E0932957",
+      "filename": "IMG_2888.JPG",
+      "llama_desc": "A boy in a blue swim suit holds a yellow popsicle on a screened-in porch. He is shirtless and has short brown hair. He is looking at the camera with a neutral expression.",
+      "oracle_desc": "A shirtless boy in blue swim trunks holds a yellow popsicle on a covered outdoor porch. The photo is rotated 90 degrees; two other people are partially visible in the background.",
+      "gaps": [
+        "missing_subject"
+      ]
+    },
+    {
+      "id": "CDD48468-B4EF-4720-9090-4E855576D610",
+      "filename": "IMG_5946.JPG",
+      "llama_desc": "A woman in a black shirt is helping three children with their art projects at a table. The woman is standing behind a girl in an orange shirt, who is holding a small piece of paper and a marker. The girl to her left is wearing a pink shirt and has her hair in a ponytail.",
+      "oracle_desc": "A woman in a black top leans over to help three children at a craft table covered with Crayola markers, paper bags, and other art supplies. A small girl in a pink shirt stands at the left, a girl in an orange shirt works in the center, and a boy in a yellow hoodie sits at the right.",
+      "gaps": []
+    },
+    {
+      "id": "B658E424-F9D1-4499-8112-73CC7FABDF61",
+      "filename": "_MG_6745.JPG",
+      "llama_desc": "A young woman in a white graduation gown and a young man in a blue graduation gown stand together, both holding their high school graduation diplomas. The woman\u0027s gown is adorned with a gold sash and a white stole with a gold and blue cord, while the man\u0027s gown has a blue sash and a blue and white cord. Both wear graduation caps with blue and white tassels.",
+      "oracle_desc": "A young woman in a white graduation gown with gold honor cords and a young man in a blue graduation gown stand side by side outdoors on a sunny day, each holding their diploma. They are smiling at the camera with a grassy school campus visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "84992BB1-2374-4826-A1F5-C1E4F00BA21F",
+      "filename": "IMG_4048.JPG",
+      "llama_desc": "A young girl standing in front of a large, white, anthropomorphic bowling pin with a red collar and a face painted on it. The girl is wearing a pink shirt, a blue denim jacket, white shorts, and white shoes. She is standing in front of the bowling pin, which has a red collar and a face with blue eyes, a red mouth, and a few black lines for eyebrows.",
+      "oracle_desc": "A young girl in a pink shirt, blue denim jacket, and white shorts stands next to a large novelty bowling-pin mascot statue labeled \u0022Brook\u0022 outside a bowling alley. The oversized pin has a painted face with blue eyes and a red mouth.",
+      "gaps": [
+        "missing_landmark"
+      ]
+    },
+    {
+      "id": "A99DEF84-2224-463A-BCE0-F17C9BF9BD8E",
+      "filename": "IMG_3574.JPG",
+      "llama_desc": "A birthday cake with a lit candle on top, sitting on a table with a tablecloth and various party supplies. The cake is a round, white, and chocolate-flavored cake with a lit candle on top, surrounded by a white and chocolate-flavored frosting. The table is covered with a tablecloth and has various party supplies such as a birthday card, a plate, and a fork.",
+      "oracle_desc": "A round chocolate-frosted birthday cake with a single lit candle and chocolate drizzle decoration sits on a white plate on a table. Birthday cards and party items are partially visible at the edges of the frame.",
+      "gaps": []
+    },
+    {
+      "id": "30AE3E37-AE8C-4E9C-AAF3-EDBD86BA4102",
+      "filename": "IMG_0200.JPG",
+      "llama_desc": "A man in a black shirt holds up three black plates with a green and purple label on one of them. He is holding a black frying pan with a handle on the left side. He is wearing a ring on his left hand.",
+      "oracle_desc": "A smiling man in a black pinstripe shirt holds up a set of stacked black round bakeware pans with a green-and-purple labeled package, posing for the camera in a dimly lit indoor setting.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "F82EDB2A-32E6-4153-8BE3-EC8A9433CB09",
+      "filename": "_MG_5479.JPG",
+      "llama_desc": "A woman in a white graduation gown, holding a sign that says \u0022Congratulations\u0022 with a red and blue logo of a head with a feathered headdress, is smiling and looking at the camera. She is wearing a white cap and a long, multicolored, braided cord around her neck. She is holding a sign with her left hand and her right hand is on her hip.",
+      "oracle_desc": "A young woman in a white graduation gown and cap with multiple colorful honor cords stands outdoors smiling, holding a Congratulations sign featuring a Native American logo. Flowering trees are visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "A3254D7E-FC73-4062-A3E8-6198A019EF57",
+      "filename": "20240925_095324.jpg",
+      "llama_desc": "A man with a red beard and mustache, wearing a green shirt, is lying on his back with his head turned to the left. He has a red beard and mustache, and his hair is gray and curly. He is wearing a green shirt with a collar.",
+      "oracle_desc": "A close-up selfie-style shot of a middle-aged man with gray curly hair, a goatee, and blue eyes wearing an olive green shirt, photographed from slightly above in an indoor setting with a greenish-yellow wall visible behind him.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "ED7985EC-B5B6-401A-B310-E409596E2D50",
+      "filename": "IMG_1879.JPG",
+      "llama_desc": "A collection of 20\u002B dolls of various sizes and hair styles, including several with long, blonde or red hair, and others with shorter, darker hair, all sitting on a bed of patchwork quilts. The dolls are arranged in a group, with some sitting on others\u0027 laps or standing on the bed. The bed is covered with a patchwork of different patterns and colors, including a green and white gingham, a blue and white check, and a pink and white check.",
+      "oracle_desc": "A large collection of Barbie and Kelly-sized dolls arranged on a bed covered with a colorful patchwork quilt, displaying a mix of hair colors and outfits. Approximately fifteen to twenty dolls are visible in the group.",
+      "gaps": []
+    },
+    {
+      "id": "2A57E620-2B85-499D-98D2-00EF85D58F8C",
+      "filename": "20230716_144712.jpg",
+      "llama_desc": "A hand holding three $5 bills, with the bills held at an angle so that the top and bottom edges are visible. The bills are held by a person\u0027s right hand, with the thumb and index finger holding the top and bottom edges of the middle bill, and the middle and ring fingers holding the top and bottom edges of the top and bottom bills. The bills are held at an angle so that the top and bottom edges are visible, with the top edge of the middle bill being slightly higher than the top edge of the top and bottom bills.",
+      "oracle_desc": "A hand holds three US paper bills fanned out, photographed against a dark metal surface. The bills appear to be fives or singles held in a loose fan grip.",
+      "gaps": []
+    },
+    {
+      "id": "51A25597-1FFA-454C-82F6-CE62BEC56629",
+      "filename": "IMG_3372.JPG",
+      "llama_desc": "A close-up of a person\u0027s mouth, with their teeth and lips in focus. The person\u0027s mouth is open, and their teeth are visible, with a few small, round, and colorful objects (like candy or small toys) stuck between them. The person\u0027s mouth is open, and their teeth are visible, with a few small, round, and colorful objects (like candy or small toys) stuck between them. The person\u0027s lips are pink and slightly parted, and their teeth are white and straight.",
+      "oracle_desc": "A close-up shot of a child\u0027s open mouth showing teeth with colorful braces brackets, photographed in warm indoor lighting. The image is slightly out of focus.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "375357B3-8975-4E9E-ABD9-5088A55C3E81",
+      "filename": "IMG_1852.JPG",
+      "llama_desc": "A little girl in a yellow and orange striped bikini is standing in front of a birthday cake with a picture of herself on it. She is wearing a pink flowered headband and has her hair tied in a ponytail. She is holding hands with an adult who is standing behind her.",
+      "oracle_desc": "A toddler girl in an orange striped bikini stands next to a large rectangular birthday cake on an outdoor table, with an adult\u0027s hands visible at her sides steadying her. The cake has decorative design on it and two candle holders.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "4E55B41F-78D5-4665-85FB-DB4598892285",
+      "filename": "IMG_9655.JPG",
+      "llama_desc": "A young girl in an orange and white dress with a pink butterfly design, holding her arms out to the sides. She has a pacifier in her mouth and is standing in front of a blue playpen with a mesh screen. The playpen has a blue and white patterned fabric and a blue frame.",
+      "oracle_desc": "A baby girl in an orange and white dress with a pink butterfly emblem stands with both arms raised, a pink pacifier in her mouth, in front of a blue mesh playpen. She has short blonde hair and is looking toward the camera.",
+      "gaps": []
+    },
+    {
+      "id": "92D44F39-9456-4251-BEBA-05C7C0AB7197",
+      "filename": "IMG_1563.JPG",
+      "llama_desc": "A man in a dark suit, white shirt, and black shoes, with a white hairpiece, is standing on a stage with a boy in a brown sweater, white shirt, and dark pants. The man is holding a red cane and has his hand on the boy\u0027s shoulder. The boy is looking up at the man.",
+      "oracle_desc": "Two performers on a darkened theater stage \u2014 an older man in a suit with wild white hair leaning on a cane, and a boy in a brown vest and light shirt \u2014 stand in a spotlight facing each other in what appears to be a school or community play.",
+      "gaps": []
+    },
+    {
+      "id": "D27EFEA4-74A0-482C-BD60-DD7197B08F87",
+      "filename": "IMG_1044.JPG",
+      "llama_desc": "A girl in a green leafy costume, a girl in a mummy-like costume, and a girl in a black dress are playing in a school hall. The girl in the green leafy costume is wearing a green leafy costume with a green leafy headband. The girl in the mummy-like costume is wrapped in white toilet paper and has a blue and white striped shirt and blue pants.",
+      "oracle_desc": "Three children in Halloween costumes stand in a school hallway \u2014 one dressed as a tree or plant in green leaves, one wrapped in toilet paper as a mummy, and one in a black dress or witch costume. A fourth child in a dark costume is partially visible at the far right.",
+      "gaps": []
+    },
+    {
+      "id": "D8CDD615-A361-4C9D-8936-A4A7B0312BC3",
+      "filename": "IMG_1032.JPG",
+      "llama_desc": "A young girl in a white onesie with a frog pattern is holding a large stuffed tiger in her arms. She is standing in front of a darkened TV and a Sony TV box. Her father is sitting in a chair behind her, wearing a white t-shirt.",
+      "oracle_desc": "A girl in floral pajamas holds a large stuffed tiger nearly as big as herself, grinning broadly at the camera in a living room on what appears to be Christmas morning. A man in a white t-shirt is seated in a recliner behind her near a Sony TV.",
+      "gaps": []
+    },
+    {
+      "id": "C49152FC-0C44-4317-92DF-98CDE86B9DC4",
+      "filename": "IMG_4027.JPG",
+      "llama_desc": "A woman and a young girl crouch on a bowling lane, both wearing casual, comfortable clothing. The woman has long dark hair and is wearing a black t-shirt and green pants. The girl has blonde hair and is wearing a pink t-shirt and white pants.",
+      "oracle_desc": "A woman and a young blonde girl crouch together at the foul line of a bowling lane, looking at something on the floor. A bowling ball is visible on the lane and bowling pins are set at the far end.",
+      "gaps": []
+    },
+    {
+      "id": "EC85AC5F-058C-43BD-83F0-50ED40FD949F",
+      "filename": "IMG_1898.JPG",
+      "llama_desc": "A person in a darkened room is looking at a large, red and white firework exploding in the sky. The person is silhoued against the dark background, with only their face and hands visible. The firework is a large, red and white explosion of light and fire, with many small, white and red sparks flying out from the center.",
+      "oracle_desc": "A red and white firework burst explodes against a dark night sky, photographed from below with a partial silhouette of structure or wires in the lower portion of the frame. No person is clearly visible in the image.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "174A70E8-D45B-4ABD-82A5-E0A1ACDFAF30",
+      "filename": "IMG_1880.JPG",
+      "llama_desc": "A young girl with blonde hair and a pink flower in her hair, wearing a pink and purple dress, is lying on someone\u0027s lap. She is looking directly at the camera with her mouth open. The person\u0027s arm is around her, and their hand is holding her.",
+      "oracle_desc": "A toddler girl with short blonde hair and a small pink clip, wearing a light purple sleeveless top, sits in someone\u0027s lap looking up at the camera with her mouth open in a slightly concerned expression. Adults\u0027 arms and legs are visible around her but no faces.",
+      "gaps": []
+    },
+    {
+      "id": "68B62F1A-0A8A-4EFC-8B94-FE208FCC2FBD",
+      "filename": "IMG_1092.JPG",
+      "llama_desc": "A young girl in a light blue t-shirt with a red and black soccer logo, holding a white and pink soccer ball, standing on a green artificial turf field. She has long blonde hair tied in a ponytail and is wearing black and white soccer cleats. The girl is standing in front of a white wall with a sign that reads \u0022SoccerTots\u0022 and \u0022Emphasis on Fun\u0022 in red and blue letters.",
+      "oracle_desc": "A young blonde girl in a light blue soccer jersey, black shin-guard socks, and cleats holds a pink and white soccer ball on an indoor artificial turf field. A SoccerTots banner is visible on the wall behind her.",
+      "gaps": []
+    },
+    {
+      "id": "59A45B5F-75C0-4EDA-A792-0808776DD8DF",
+      "filename": "_MG_6654.JPG",
+      "llama_desc": "A young woman with long brown hair and a white hair clip in her hair, holding a phone and a tan purse, standing in front of a white brick wall. She is wearing a white top with a floral pattern and a gold necklace with a small pendant. She is holding a bouquet of red roses in her left hand.",
+      "oracle_desc": "A young woman with long dark hair wearing a white floral off-shoulder top and a tiara hair accessory holds a bouquet of red roses, looking down at them in front of a white brick wall. She appears to be dressed for a formal occasion such as a prom or graduation.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "20A835B2-47A7-401E-91D2-5EC706AA09F0",
+      "filename": "IMG_0245.JPG",
+      "llama_desc": "A man in a Santa Claus costume sitting on a chair, with two children on his lap, in front of a Christmas tree and a fireplace. The man is wearing a white beard and a red and white Santa suit. The children are both wearing red and white clothing.",
+      "oracle_desc": "A Santa Claus impersonator sits in a large chair with two young children on his lap in front of a Christmas tree and a decorative fireplace backdrop. The girl wears a white dress and the boy wears a striped shirt.",
+      "gaps": []
+    },
+    {
+      "id": "B3AD2FAF-1141-46F1-A509-238763983991",
+      "filename": "IMG_3073.JPG",
+      "llama_desc": "A man in a black pair of shorts and a man in a pair of blue and black swim trunks stand in a pool with four children in swimsuits. The man in the black shorts has his arms around two of the children, and the man in the blue and black swim trunks is holding a clear inflatable tube. The children are all wearing different swimsuits, with one girl in a pink and green swimsuit, one girl in a blue and white polka-dotted swimsuit, one boy in a blue and black swim trunks, and one girl in a blue and white polka-dotted swimsuit.",
+      "oracle_desc": "A man and a teenage boy stand in a wave pool with four young children around them, all in swimsuits. Clear inflatable inner tubes float nearby and other swimmers are visible in the background.",
+      "gaps": [
+        "wrong_count"
+      ]
+    },
+    {
+      "id": "9A24608E-9462-4B53-94C1-CF6A7E297733",
+      "filename": "IMG_4735.JPG",
+      "llama_desc": "A man with short, dark hair and a beard, wearing a black shirt, is looking directly at the camera with a neutral expression. He has a slight smile on his face, and his eyes are slightly raised. The background is dark and indistinct, but it appears to be a room or a studio.",
+      "oracle_desc": "A close-up of a young man with dark hair and light stubble, smiling slightly, photographed against a dark background that appears to be a screen or TV showing a colorful image. The shot appears to be taken from across a room.",
+      "gaps": []
+    },
+    {
+      "id": "0FA2EEC3-8419-48DF-8C5E-B39E3B044D95",
+      "filename": "IMG_3771.JPG",
+      "llama_desc": "A small, brown, long-haired dog is sleeping on a yellow, fuzzy blanket. The dog\u0027s head is buried in the blanket, and its long, brown, hair is covering its face. The dog\u0027s nose is black, and its ears are perked up.",
+      "oracle_desc": "A small Yorkshire Terrier is curled up and sleeping in a yellow fluffy blanket or towel, its tan and brown fur blending into the fabric with only part of its face and nose visible. A blue bag is partially visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "92E9CA18-492F-4C12-8B27-3126D2AC2F0D",
+      "filename": "IMG_0601.JPG",
+      "llama_desc": "A baby in a pink onesie holds a toy with a red and green ring and a purple pacifier. The baby\u0027s eyes are blue and her hair is short and fair. She is holding a soft, white, and blue blanket.",
+      "oracle_desc": "A smiling baby in a pink jacket holds a colorful ring teether toy while wrapped in a pastel blanket, looking directly at the camera with blue eyes. Baby toys and gear are visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "096AB2E0-BD80-4DCA-A4C1-7457B2877030",
+      "filename": "_MG_6881.dng",
+      "llama_desc": "A woman in a green and white checkered top is smiling and looking directly at the camera. She has long, dark hair and is standing in front of a tree or a tree-like structure. The background is dark and out of focus, but it appears to be a natural setting, possibly a forest or a park.",
+      "oracle_desc": "A young woman with long blonde hair wearing a pink headband, a light green tank top, and a green plaid mini skirt stands between two tree trunks in a park setting, smiling at the camera.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "F2EC2763-56D8-41B8-ACEB-5887B6EC5BEA",
+      "filename": "IMG_0746.JPG",
+      "llama_desc": "A plate of a slice of carrot cake and a scoop of vanilla ice cream on a wooden table. The slice of cake is cut in a triangle and has a white frosting and a red and green carrot on top. The ice cream is a pale yellow color and is served on top of the cake.",
+      "oracle_desc": "A white paper plate holds a triangular slice of carrot cake with white cream cheese frosting and a decorative carrot on top, alongside what appear to be two round cookies or biscuits, on a wooden table.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "9E53A215-4E08-459F-86B0-AE1242E8DE72",
+      "filename": "img_0743_4x6_300.jpg",
+      "llama_desc": "A small, yellow, orange, and red, crinkled, candy-like object with a face-like design on top, on a blue surface. The object has a yellow, orange, and red, crinkled, candy-like body, with a face-like design on top, made of a white, pink, and red, crinkled, candy-like material. The object is on a blue surface, with a small, white, crinkled, candy-like object in the background.",
+      "oracle_desc": "Three colorful candy sticks \u2014 yellow, orange, and pink-red \u2014 are arranged parallel on a blue surface with a small cookie or cracker topped with pink frosting balanced across them. Part of another food item is visible at the right edge.",
+      "gaps": []
+    },
+    {
+      "id": "155212CE-9964-40C0-9E94-DA757563BCEF",
+      "filename": "_MG_6696.JPG",
+      "llama_desc": "A woman in a white graduation gown, white sandals, and a white mortarboard, surrounded by multiple people in black and blue graduation gowns and caps, on a stage with a podium and a few plants. The woman is wearing a gold sash and multiple colored cords around her neck. She is shaking hands with a man in a black graduation gown and cap, who is holding a black folder.",
+      "oracle_desc": "A female graduate in a white gown with gold honor cords walks across a graduation stage, shaking hands with a faculty member in academic regalia. Other graduates in blue gowns and faculty in black robes are visible on the stage behind her.",
+      "gaps": []
+    },
+    {
+      "id": "C4B9404E-A0C1-4FEF-AA7E-5CFCBE75AF0C",
+      "filename": "_MG_7165.JPG",
+      "llama_desc": "A woman with long dark hair and a black and white striped shirt. She is smiling and looking directly at the camera. She is wearing a gold necklace with a nameplate that reads \u0022Jenna\u0022.",
+      "oracle_desc": "A young woman with long dark hair and a black and white striped blouse smiles at the camera, photographed against a bright circular ring-light background. She wears a delicate gold necklace.",
+      "gaps": []
+    },
+    {
+      "id": "2FD72993-C58F-4489-9BE9-078A991390F7",
+      "filename": "IMG_4745.JPG",
+      "llama_desc": "A young girl in a gold and black outfit stands in a dimly lit room with a dark green carpet and a patterned rug. She is wearing a gold top with a high collar and black pinstripe pants. The room is lit by several small, ornate lamps and a large, ornate chandelier.",
+      "oracle_desc": "A young girl in a shiny gold top and black pinstripe pants stands alone in a church sanctuary with a large crucifix and altar visible behind her. Candles and floral arrangements flank the altar in the softly lit space.",
+      "gaps": [
+        "missing_landmark",
+        "hallucination"
+      ]
+    },
+    {
+      "id": "83BDE206-5FA3-4F7B-8125-AB6B0C68DDF0",
+      "filename": "105_0551_RJ2_small.jpg",
+      "llama_desc": "A woman in a red dress. She is standing in front of a large, round, and colorful wheel of a game or a machine. The wheel is made of many small, individual pieces of different colors, and it is spinning.",
+      "oracle_desc": "A close-up of a large illuminated Ferris wheel shot at night, showing the colorful lit spokes and gondolas against a black sky. No person is visible in the image.",
+      "gaps": [
+        "hallucination",
+        "missing_subject"
+      ]
+    },
+    {
+      "id": "F9193E75-B7F1-4097-8E04-9F380EDBD8D9",
+      "filename": "IMG_6471.JPG",
+      "llama_desc": "A red and black gradient background with a soft, rounded, and slightly blurring effect. The red is on the top left corner and gradually fades to black. The background is empty and there are no objects or people in the image.",
+      "oracle_desc": "A nearly black photograph with a faint pink-red glow in the upper left corner, appearing to be a severely underexposed or misfired shot with no discernible subject.",
+      "gaps": []
+    },
+    {
+      "id": "A370FBFF-B4BE-4382-9FAB-1164E76B4FE5",
+      "filename": "IMG_0250.JPG",
+      "llama_desc": "A young girl with blonde hair and a yellow shirt sits at a table with a plate of cookies and a lit candle. She has a plate of cookies in front of her and a lit candle on top of one of the cookies. The table is made of wood and has a brown finish.",
+      "oracle_desc": "A young blonde girl sits at a wooden restaurant table with a colorful paper plate in front of her holding a banana with a single lit birthday candle in it. She looks toward the camera with a serious expression.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "BA75F999-B3F7-45E5-B9E9-93854C502205",
+      "filename": "IMG_0194.JPG",
+      "llama_desc": "A bee is seen through a narrow opening in a wooden board. The bee is yellow and black, with a long, thin body. It is partially hidden by a piece of wood, which is light in color and has a rough, textured surface.",
+      "oracle_desc": "A close-up, slightly blurry photograph of a dark wasp or bee with yellow markings pressed into a narrow gap between a white-painted surface and a wooden board. The insect is barely discernible due to the tight framing and shallow focus.",
+      "gaps": []
+    },
+    {
+      "id": "D427AC4A-794A-44BE-B60E-C8729416D813",
+      "filename": "IMG_2699.JPG",
+      "llama_desc": "A woman and a young girl hold up a white long-sleeed shirt with fall leaves and other shapes painted in various colors. The woman is wearing a tan and cream striped shirt, brown pants, and a gold necklace. The girl is wearing a purple shirt and dark purple pants.",
+      "oracle_desc": "A woman in a striped beige top and a young girl in a purple top proudly hold up a white long-sleeve shirt decorated with colorful hand-painted autumn leaves, standing outdoors in a parking lot.",
+      "gaps": []
+    },
+    {
+      "id": "852F0339-C755-4C62-BA43-2D21F9751440",
+      "filename": "20241013_104546.jpg",
+      "llama_desc": "A man with a silver chain around his neck. He is lying on his back, with his head and shoulders in the frame. He has a short, grey and brown beard and a well as grey and brown hair on his head.",
+      "oracle_desc": "An extreme close-up selfie of a middle-aged man\u0027s jaw and neck showing a silver chain necklace and a graying beard, with glasses partially visible at the top of the frame. The image is cropped tightly and shot from below.",
+      "gaps": []
+    },
+    {
+      "id": "53C03C22-6219-40E5-9AF6-5EA9FF78A822",
+      "filename": "_MG_7197.JPG",
+      "llama_desc": "A glass of beer on a bar counter in a dimly lit bar. The glass is filled with a golden liquid and has a white foamy head. The bar is made of a dark, shiny material and has a few stools and a few people sitting at it.",
+      "oracle_desc": "A tulip-style pint glass of golden beer with a white foam head sits on a polished metal bar top in a dimly lit craft brewery. Beer taps, menu boards, and string lights are visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "A3CBE8DB-BAED-4079-8EB7-EA5B12F5FE57",
+      "filename": "IMG_0496.JPG",
+      "llama_desc": "A boy in a white shirt and tie sits at a red table with a white and brown birthday cake in front of him. He is holding a fork and has a smile on his face. The table has a white cup with a straw and a red lamp in the background.",
+      "oracle_desc": "A young boy in a white dress shirt and striped tie sits at a red diner table smiling, with a white frosted birthday cake inscribed with his name in front of him and a Coca-Cola cup to the side. A restaurant interior with red decor is visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "1878F56C-76CF-43AB-8ABC-9B134307F147",
+      "filename": "IMG_7189.JPG",
+      "llama_desc": "A small dog, with long, brown, and slightly matted hair, peering out from under a wooden bed frame, with its head and one eye visible, looking directly at the camera. The dog\u0027s eyes are brown and its fur is slightly matted and long. The bed frame is made of wood and has a simple, old-fashioned design.",
+      "oracle_desc": "A small Yorkshire Terrier peers out from underneath a wooden dresser or bed frame, with only its face visible near floor level, looking directly at the camera. A small piece of paper is visible nearby on the carpet.",
+      "gaps": []
+    },
+    {
+      "id": "49B4BD57-9032-4B76-969A-C003AB819C6F",
+      "filename": "IMG_4851.JPG",
+      "llama_desc": "A group of people in front of a white Ferris wheel. They are standing on a wooden platform with a railing, and some of them are wearing Halloween or fall-themed clothing. The woman in the orange and black outfit is wearing a pumpkin mask.",
+      "oracle_desc": "A group of about five people pose in front of a large white Ferris wheel at what appears to be an outdoor fall festival, with the photo taken sideways. Several are wearing brightly colored jackets and one person in an orange top is visible in the foreground.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "21D1F50C-C816-49FA-8988-B16B98243D1C",
+      "filename": "IMG_1684_4x6_300.jpg",
+      "llama_desc": "A young girl in a pink and orange gingham dress sits on a couch, holding a pink and yellow spotted object. She has long blonde hair and is wearing a pink bow in her hair. She is surrounded by a yellow stuffed duck and a pink and white butterfly-shaped object.",
+      "oracle_desc": "A young girl in a pink and orange plaid dress sits on a floral sofa holding a small toy, with a yellow stuffed duck beside her and fairy wings visible to her right. She has long blonde hair and a pink hair clip.",
+      "gaps": []
+    },
+    {
+      "id": "A15D1554-0588-4D58-8761-56F5FF1B8274",
+      "filename": "IMG_4482.JPG",
+      "llama_desc": "A group of three young girls in variously colored dresses and costumes, holding a piece of paper with a drawing of various animals, in front of a green and blue background with clouds. The girls are holding a piece of paper with a drawing of various animals, including cats, dogs, and other animals. The girls are standing in front of a green and blue background with clouds.",
+      "oracle_desc": "Three girls in fairy or princess costumes \u2014 one in pink, one in purple, and one in teal \u2014 stand together holding pink and white sheets of paper in front of a cloud-painted backdrop. They appear to be at a fairy-themed birthday party or event.",
+      "gaps": []
+    },
+    {
+      "id": "1D4AE21E-F02E-4BFD-BEFF-525DF8013F0D",
+      "filename": "_MG_6842.dng",
+      "llama_desc": "A woman with long blonde hair and a black cardigan sits on a stone bench, her legs crossed and her hands on her knees. She is wearing a white shirt, blue jeans, and black and white sneakers. The woman is looking directly at the camera with a neutral expression.",
+      "oracle_desc": "A young woman with long blonde hair in a black cardigan over a white top and blue jeans sits cross-legged on a concrete surface under a decorative brick archway, smiling at the camera. A park with green trees is visible through the arch behind her.",
+      "gaps": []
+    },
+    {
+      "id": "D8D7C4CE-68B4-4387-919C-38CAEA0A7417",
+      "filename": "IMG_2099.JPG",
+      "llama_desc": "A group of people in a pool with clear water and many clear, inflated, ring-shaped, water-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride-ride",
+      "oracle_desc": "A crowded outdoor wave pool filled with swimmers floating on clear inflatable inner tubes in bright blue water. Several children and adults are visible enjoying the water park attraction.",
+      "gaps": [
+        "truncated",
+        "formatting"
+      ]
+    },
+    {
+      "id": "716F24FD-2148-4640-B15F-3A1412BB4953",
+      "filename": "CRW_8822_4x6_300.jpg",
+      "llama_desc": "A young girl in a red t-shirt and blue jeans is jumping on a blue mat in a room with a brown carpet. She is wearing red shoes and her blonde hair is tied in a ponytail. In the background, a man in an orange shirt is sitting on a chair, while a woman in a blue t-shirt is sitting on a chair behind him.",
+      "oracle_desc": "A young blonde girl in a pink-red shirt and jeans stands on a stack of blue gymnastics mats in an indoor gym space. Three adults sit in chairs along the wall behind her watching.",
+      "gaps": [
+        "activity_inversion"
+      ]
+    },
+    {
+      "id": "EB791FCB-876F-4E03-9332-3E3960BD9FD4",
+      "filename": "20240509_133555.jpg",
+      "llama_desc": "A woman with long blonde hair and a navy blue hoodie sits on the floor with her legs crossed, petting a small dog on a red and brown blanket. She is surrounded by two women, one with her hair in a ponytail and a grey sweatshirt, and another with her hair in a ponytail and a pink sweatshirt. The women are all sitting on the floor, with the woman in the navy blue hoodie petting the dog.",
+      "oracle_desc": "Three women sit on the floor around a small dog wearing a spotted outfit, gathered near a fireplace with blue-purple flame effects in a living room. They appear to be grooming or tending to the dog together.",
+      "gaps": []
+    },
+    {
+      "id": "4D4F8258-CE00-40D4-B899-10CFFF7EEFF5",
+      "filename": "IMG_1974.JPG",
+      "llama_desc": "A young girl in a green t-shirt... \nShe is holding a large piece of paper with a drawing of a screaming face, with a white face, red hair, and a black body. The background is a yellow and orange sky with blue and green water below. She is standing on a striped floor.",
+      "oracle_desc": "A girl in a green t-shirt holds up a hand-drawn crayon artwork depicting a screaming figure \u2014 an homage to Edvard Munch\u0027s The Scream \u2014 against a background of wavy yellow-orange sky and blue water. She is standing indoors on a striped floor.",
+      "gaps": [
+        "truncated",
+        "formatting"
+      ]
+    },
+    {
+      "id": "95850363-32DD-4BA3-859A-6C87BE2A6A37",
+      "filename": "IMG_4929.JPG",
+      "llama_desc": "A woman with long dark hair and a maroon top sits on a brown leather couch with a leopard print throw. She is holding a red gift-wrapped box with a red bow on top. The woman is smiling and looking directly at the camera.",
+      "oracle_desc": "A woman with long dark auburn hair in a dark maroon top sits on a brown leather couch with a leopard-print throw blanket, unwrapping or holding red tissue paper from a gift, and smiling at the camera. A date stamp in the corner reads 05/12/2019.",
+      "gaps": []
+    },
+    {
+      "id": "CB52B1C1-CDB3-484E-A667-5374926979C1",
+      "filename": "CRW_5320.jpg",
+      "llama_desc": "Two children wearing white rabbit ears with pink inner ears and blue and white bunny ears on top, standing in front of a window with vertical blinds. The girl on the left has blonde hair and is wearing a white cable-knitted sweater with a gold zipper. The boy on the right has short brown hair and is wearing a yellow sweatshirt with black letters that read \u0022LC ATHLETIC DIV\u0022 and a plaid shirt underneath.",
+      "oracle_desc": "A girl and a boy stand side by side wearing paper Easter bunny ear headbands in front of vertical blinds. The girl wears a white knit sweater and the boy wears a yellow LC Athletic sweatshirt.",
+      "gaps": []
+    },
+    {
+      "id": "5784D5B2-FCC3-4005-A37E-77AB5AE9FDF8",
+      "filename": "IMG_9381.JPG",
+      "llama_desc": "A woman and a child in snowman costumes, both with their faces through snowman-shaped cutouts, stand in front of a snowman-shaped cutout. The woman, with her face through the top snowman, has her arms outstretched and her hands in a snowball-throwing position. The child, with her face through the middle snowman, has her hands in a snowball-throwing position.",
+      "oracle_desc": "Two people \u2014 an adult and a child \u2014 poke their faces through holes in a large novelty snowman face-cutout photo board, posed outdoors at night with Christmas lights in the background. The board depicts two stacked snowmen.",
+      "gaps": [
+        "hallucination"
+      ]
+    },
+    {
+      "id": "120A6AAE-18A9-4C2D-9C3C-B28A6A5657F9",
+      "filename": "_MG_6424.dng",
+      "llama_desc": "A collection of postcards on a white surface. The postcards are arranged in a random, scattered manner, with some lying flat and others at an angle. They appear to be from different locations, with some showing mountains, others showing cities, and others showing landscapes.",
+      "oracle_desc": "A spread of travel postcards showing Alpine and Swiss landscapes \u2014 including mountain vistas, a red train on a viaduct, and the Matterhorn \u2014 laid out on a white surface. Several cards appear to feature Glacier Express or Bernina Express train imagery.",
+      "gaps": []
+    },
+    {
+      "id": "F3EC7EFF-95E1-449E-AC78-8A130A42692A",
+      "filename": "IMG_9675.JPG",
+      "llama_desc": "A darkly lit stage with a few small, animated figures in the foreground, and a few others in the background.",
+      "oracle_desc": "A large darkened arena stage features performers in colorful costumes illuminated by pink and blue spotlights, with a dark prop or set piece visible at center. The scene appears to be from an ice show or touring theatrical production.",
+      "gaps": [
+        "too_short"
+      ]
+    },
+    {
+      "id": "2BB48C78-1957-4B16-8538-5EF5E2E23DD9",
+      "filename": "IMG_0840.JPG",
+      "llama_desc": "A woman in a yellow jacket and green plaid pants is helping a young girl with a paper craft. The woman is wearing a black baseball cap and has her hands on a table with a paper craft in progress. The girl is wearing a white shirt with a floral pattern and has her hair in a ponytail with a white bow.",
+      "oracle_desc": "An older woman in a yellow jacket and plaid pants bends over a craft table to help a young girl in a white floral top work on a paper or cardboard tube project at an outdoor event. Other attendees and tents are visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "05863047-DB39-4A76-9CF6-C84397A20C4D",
+      "filename": "IMG_0925.JPG",
+      "llama_desc": "A group of children in various Halloween costumes sitting on a couch in front of a yellow and orange backdrop. The children are surrounded by a large, green, candy-shaped archway with a sign that reads \u0022Trick or Treat\u0022 in green letters.",
+      "oracle_desc": "Four children in Halloween costumes \u2014 including a witch, a monk or brown-robed figure, a girl in casual clothes, and a child in a black-and-white cow costume lying on the floor \u2014 pose in front of a candy-themed Trick or Treat backdrop. The setting appears to be an indoor Halloween event.",
+      "gaps": []
+    },
+    {
+      "id": "3AE74D0A-92E7-41EE-B704-E0D69BE75ED7",
+      "filename": "IMG_9601.JPG",
+      "llama_desc": "A table with a plate of cookies, a Christmas card, a Santa Claus figurine, and a book titled \u0022Snow Wonder Were Friends\u0022 on a dark brown table. The plate has a green rim and is covered in Christmas-themed cookies, including a red and green cookie with a Christmas tree design. The Christmas card is white with a red and green border and a Christmas tree design.",
+      "oracle_desc": "A dark wooden table holds a Christmas plate with a cookie and a cup, a handwritten note, a card, and a small stuffed Santa toy arranged as if left for Santa Claus on Christmas Eve.",
+      "gaps": []
+    },
+    {
+      "id": "19D87601-1746-4261-9CEA-820D21A82234",
+      "filename": "_MG_6983.dng",
+      "llama_desc": "A man in a red shirt standing on a rock. He is looking out at a mountainous landscape with trees and a road in the distance. He is wearing a red shirt and khaki shorts.",
+      "oracle_desc": "A man in a red shirt and khaki shorts stands on large boulders overlooking a mountainous landscape with pine trees, rock faces, and a road and parking area visible in the valley below. The sky is overcast.",
+      "gaps": []
+    },
+    {
+      "id": "61D0668B-65B3-44CB-AF4E-3BB72010D299",
+      "filename": "IMG_3652.JPG",
+      "llama_desc": "A large red banner in the dark, reading \u0022A STERLING CHRISTMAS THIS SATURDAY 5:45 P.M.-8:30 P.M. DODGE PARK\u0022 in white letters. The banner is hung over a grassy area, with a few lights in the distance.",
+      "oracle_desc": "A large red banner reading \u0022A STERLING CHRISTMAS THIS SATURDAY 5:45 P.M.-8:30 P.M. DODGE PARK\u0022 is illuminated at night, stretched across a dark outdoor area with faint lights visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "7206DE4F-66E8-4333-930A-E2CE8EF032A0",
+      "filename": "IMG_3144.JPG",
+      "llama_desc": "A man and a boy in a dimly lit, empty, tiered seating area. The man is wearing a grey t-shirt with an American flag patch on the left side of his chest and a blue and white patterned patch on the right. The boy is wearing a black t-shirt with a blue and gold design on the front.",
+      "oracle_desc": "A man and a young boy sit close together in an empty stadium or arena seating area, smiling at the camera. The man wears a gray t-shirt and the boy wears a dark shirt; empty rows of seats are visible behind them.",
+      "gaps": []
+    },
+    {
+      "id": "E0C50734-D089-4497-B456-E64E2EB3ABA5",
+      "filename": "IMG_4502.JPG",
+      "llama_desc": "A young girl in a green Christmas-themed onesie, holding a stuffed giraffe, lying on a bed with multiple other stuffed animals. She is smiling and looking directly at the camera. The bed is covered with a tan blanket and has a few other toys and a red and green Christmas-themed pillow.",
+      "oracle_desc": "A young girl in snowman-print holiday pajamas holds a stuffed giraffe toy while lying among other stuffed animals on a bed, smiling at the camera. The photo is rotated 90 degrees and Christmas decor is partially visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "159291F9-7D44-4CD7-9D58-EA282DF609CF",
+      "filename": "IMG_9973.JPG",
+      "llama_desc": "A woman in a blue shirt and glasses is holding a white card in her hand, standing in front of a blue wall with a few green stars and a green star-shaped object on the wall. She is surrounded by a red, purple, and yellow inflatable castle with a crown on top, a purple and yellow balloon, and a woman in a pink and yellow dress sitting on a yellow chair. The woman in the blue shirt is holding a white card and is surrounded by a red, purple, and yellow inflatable castle with a crown on top, a purple and yellow balloon, and a woman in a pink and yellow dress sitting on a yellow chair.",
+      "oracle_desc": "An overhead-angle view of a colorful indoor children\u0027s party venue shows an inflatable princess castle bounce house in the center with a toddler inside and party equipment and staff visible around the edges. The bright yellow and red bounce house dominates the frame.",
+      "gaps": [
+        "hallucination",
+        "wrong_count"
+      ]
+    },
+    {
+      "id": "88BE4CB6-74C7-4BE3-AA32-7DD419335A53",
+      "filename": "_MG_6909.dng",
+      "llama_desc": "A woman in a white dress. She is standing in front of a large stone column, holding a blue object in her right hand. She is wearing a white dress with a gold belt and white shoes.",
+      "oracle_desc": "A young woman in a white fit-and-flare dress and white sandals stands beside a large stone or brick column on a college campus walkway, holding a graduation tassel in her hand and smiling at the camera.",
+      "gaps": [
+        "too_short",
+        "hallucination"
+      ]
+    },
+    {
+      "id": "ECC7C5F7-AE56-4D86-8F05-6620B6900DB1",
+      "filename": "CRW_5946.jpg",
+      "llama_desc": "A boy in a black suit with a white shirt and a purple tie, standing in front of a man in a black suit with a white shirt and a black tie, and a woman in a striped green and brown top with black pants, in a church or church-like setting with a large wooden cross behind them. The boy is in the center, with the man and woman on either side of him. The man has a white hair and a white beard, and the woman has short, light brown hair.",
+      "oracle_desc": "A young boy in a dark suit and tie stands between an older man and a woman in front of a church altar with a large crucifix, yellow flowers, and candles \u2014 the setting of a First Communion or Confirmation ceremony.",
+      "gaps": []
+    },
+    {
+      "id": "B5DDEEEE-E673-4D60-A1A2-A9B147E0630E",
+      "filename": "IMG_9107.JPG",
+      "llama_desc": "A family of seven in various Halloween costumes, including a child in a cow costume, a child in a purple sequin cape, and a child in a sheep costume, standing on a sidewalk at night. The children are holding orange plastic bags and a child in a cow costume is holding an orange plastic bucket. The adults are wearing Halloween-themed costumes, including a man in a pumpkin costume and a woman in a red dress.",
+      "oracle_desc": "A group of about eight people in Halloween costumes pose outdoors at night \u2014 costumes include a lion, a vampire cape, a cow, and others \u2014 with Halloween lights and greenery visible in the background. Several children hold orange trick-or-treat bags.",
+      "gaps": []
+    },
+    {
+      "id": "3F4B7120-00A1-4389-8BA9-D3ABC2A48FF4",
+      "filename": "IMG_3687.JPG",
+      "llama_desc": "A boy in a red t-shirt holding a white paper with black text. He is holding the paper in front of his chest, with his left hand holding the top and his right hand holding the bottom. The paper appears to be a grade sheet or report.",
+      "oracle_desc": "A preteen boy in a red t-shirt stands indoors holding up a printed document \u2014 possibly a script or award \u2014 and smiling at the camera. Framed pictures are visible on the wall behind him.",
+      "gaps": []
+    },
+    {
+      "id": "55EADBCC-EAAC-4034-88E0-D18314B48E29",
+      "filename": "_MG_6886.dng",
+      "llama_desc": "A woman in a white and yellow dress. She is standing in front of a tree, her arms around its trunk. She is wearing a white and yellow dress with a white and yellow hat.",
+      "oracle_desc": "A young woman with long blonde hair in a green tank top and green plaid mini skirt stands beside a large tree trunk in a park, smiling at the camera with grass and trees in the background.",
+      "gaps": [
+        "too_short",
+        "hallucination"
+      ]
+    },
+    {
+      "id": "F11DD580-C0F3-4D36-890C-4174B3DF9C37",
+      "filename": "IMG_0180.JPG",
+      "llama_desc": "A young girl in a red and green swimsuit with a Santa Claus design, giving a thumbs-up to the camera, sits on the edge of a pool with her back to a boy in orange and yellow swim trunks and her hand on the shoulder of a girl in a purple and green one-piece swimsuit, all three children sitting on the edge of a pool with their backs to the camera. The pool\u0027s edge is made of white and black tiles with a black and white border. The pool\u0027s water is a deep blue-green color.",
+      "oracle_desc": "Three children sit on the edge of an indoor pool \u2014 a girl in a red two-piece swimsuit gives a thumbs-up toward the camera while a boy in orange trunks sits with his back turned and another girl in a purple swimsuit faces partly away. The pool water is a dark greenish-blue.",
+      "gaps": []
+    },
+    {
+      "id": "C382DD7E-9669-40ED-8A58-BA6A50E4B3E3",
+      "filename": "_MG_6749.JPG",
+      "llama_desc": "A woman in a white outfit holding a bouquet of flowers, standing with a man in a red shirt, a woman in a white blazer, and three women in white and blue outfits, all smiling and posing for a photo. The woman in the white outfit is wearing a white graduation cap and a gold medal around her neck. The man in the red shirt is wearing a dark green jacket and a red shirt.",
+      "oracle_desc": "A female graduate in a white gown and cap with gold honor cords holds a bouquet of white flowers and poses with four family members outdoors on a grassy area with a road visible behind them. The group is smiling at the camera.",
+      "gaps": []
+    },
+    {
+      "id": "3A486E09-7CCC-486A-8849-F56CAE15F522",
+      "filename": "IMG_1307.JPG",
+      "llama_desc": "A dragon-like creature with a long, serp-like body and a head with a long, pointed\u00A0...\nThe creature is made of\u00A0...\nIt has a long,\u00A0...\nThe\u00A0...\nThe\u00A0...\nThe\u00A0... is\u00A0... and\u00A0... is\u00A0... in the\u00A0... with\u00A0... and\u00A0... in the\u00A0... with\u00A0... and\u00A0...",
+      "oracle_desc": "A darkened arena or stage scene shows what appears to be a fire or flame effect spreading low across the floor, with performers visible at the edges in colorful costumes and an audience in the background. The image is quite dark with orange flame lighting dominating.",
+      "gaps": [
+        "truncated",
+        "formatting",
+        "missing_subject"
+      ]
+    },
+    {
+      "id": "D7EB55E4-00D1-4F65-83CA-4C0818EC7E51",
+      "filename": "IMG_2043.JPG",
+      "llama_desc": "A man in a white t-shirt with an American flag design, holding hands with three children in front of a black truck with a sign reading \u0022Fresh Fruit\u0022 and a basket of fruit. The man is wearing sunglasses and a white t-shirt with an American flag design, while the children are dressed in casual, summer-style clothing. The scene is set in a market or market-like setting, with a sign in the background reading \u0022Fresh Fruit\u0022 and a basket of fruit.",
+      "oracle_desc": "A tall man in a white graphic t-shirt and sunglasses stands with four children in front of a farm market produce stand, with baskets of dark fruit visible. A \u0022Fresh Fruit Cups\u0022 sign and prices are visible on the stand behind them.",
+      "gaps": [
+        "wrong_count"
+      ]
+    },
+    {
+      "id": "9B26748D-0225-4571-A7CE-C47294BED73A",
+      "filename": "IMG_0891.JPG",
+      "llama_desc": "A movie poster for \u0022Over the Hedge\u0022 featuring a large, cartoon-like image of a hedge\nA young girl in a blue and white floral dress is standing in front of the poster, looking up at it with a big smile on her face. The poster is on a wall in a dark, purple-colored room.",
+      "oracle_desc": "A large \u0022Over the Hedge\u0022 movie promotional standee fills most of the frame, featuring the animated squirrel character, with a small young girl in a floral dress visible at the bottom right standing beside it. The theater lobby wall is visible in the background.",
+      "gaps": [
+        "formatting"
+      ]
+    },
+    {
+      "id": "FD5A9A64-0D59-4A4E-B27F-96FB76C6E698",
+      "filename": "IMG_9897.JPG",
+      "llama_desc": "A young girl in a pink and gold princess costume. She is standing in front of a darkly lit and decorated house with a large, fake, orange and red-leafed tree in the background. She is wearing a pink and gold princess costume with a pink and gold crown on her head.",
+      "oracle_desc": "A young girl in a pink princess Halloween costume with a sparkly tiara stands smiling on a decorated porch or yard with Halloween fall decorations including artificial lit trees and pumpkins visible behind her.",
+      "gaps": []
+    },
+    {
+      "id": "B639439A-7DC4-4A78-91C5-369C575AB0F8",
+      "filename": "IMG_1252_4x6_300.jpg",
+      "llama_desc": "A boy in a red sweater vest. He is smiling and looking directly at the camera. He has short, spiky brown hair.",
+      "oracle_desc": "A young boy with short sandy hair wearing a red cable-knit sweater vest over a white collared shirt smiles broadly at the camera, with a blurred crowd of people visible in the background.",
+      "gaps": [
+        "too_short"
+      ]
+    },
+    {
+      "id": "8CDBC4CE-86A3-4A3E-A26B-ED9C5A4183CA",
+      "filename": "IMG_2449.JPG",
+      "llama_desc": "A man and a boy in a pool with a waterfall. The man and boy are in the pool, with the man standing and the boy sitting in the water. The pool has a waterfall in the background, with water falling from a rock-like structure.",
+      "oracle_desc": "A man and a boy stand in an indoor pool beneath a large waterfall cascading from a rock-wall feature, with two white plastic chairs visible on a ledge behind the water curtain. The space appears to be a hotel or resort pool area.",
+      "gaps": []
+    },
+    {
+      "id": "9FC3095C-8401-4CE9-B11A-8B5E9D7295C0",
+      "filename": "IMG_0889.JPG",
+      "llama_desc": "A woman in a red dress. A woman in a red dress is standing in front of a large poster of a cartoon hedge. The woman is standing in front of a large poster of a cartoon hedge.",
+      "oracle_desc": "Two people in shorts and t-shirts stand at the base of a large \u0022Over the Hedge\u0022 movie promotional standee in what appears to be a movie theater lobby, with the animated character\u0027s large illustrated face dominating the frame.",
+      "gaps": [
+        "hallucination",
+        "filler_opener"
+      ]
+    },
+    {
+      "id": "BCAFB492-DB1A-4631-9E16-E08C0688D4B7",
+      "filename": "IMG_1849.JPG",
+      "llama_desc": "A boy in a green headband and yellow and orange swim shorts is hitting a pi... with a blue and purple pi... in a backyard. He is barefoot and wearing black flip... and has a long, brown, and... hair... in a pony... on his back. He is holding the blue and purple pi... with both hands and is wearing a green headband.",
+      "oracle_desc": "A shirtless boy in yellow and orange swim trunks swings a stick at a hanging pinata in a backyard, wearing a green blindfold around his eyes. A fence and suburban yard are visible in the background.",
+      "gaps": [
+        "truncated",
+        "formatting"
+      ]
+    },
+    {
+      "id": "FB604DB4-BC05-48B6-B55A-9CCB1C31E5BC",
+      "filename": "CRW_5262.jpg",
+      "llama_desc": "A group of children in a museum exhibit. They are standing in front of a large dinosaur exhibit, with several dinosaur models and a large screen behind them. The children are all smiling and looking at the camera.",
+      "oracle_desc": "Four young children stand in front of a large dinosaur exhibit in a natural history museum, with a life-size dinosaur model and painted prehistoric backdrop visible behind them. The children smile at the camera.",
+      "gaps": []
+    },
+    {
+      "id": "4C0981E9-95BB-461A-A150-D4C5EB1958FE",
+      "filename": "IMG_1644_4x6_300.jpg",
+      "llama_desc": "A boy in a black suit, a girl in a yellow and pink plaid dress, and a girl in a yellow and pink plaid dress sit on a carpeted floor. The boy has his left hand on the girl\u0027s left shoulder and his right hand on the girl\u0027s right shoulder. The girl in the yellow and pink plaid dress on the right holds a white stuffed rabbit.",
+      "oracle_desc": "A boy in a black suit and tie sits with two girls in matching orange and pink plaid dresses on a carpeted staircase landing, with the younger girl holding a small stuffed animal. They are posed for what appears to be an Easter or formal occasion photo.",
+      "gaps": []
+    },
+    {
+      "id": "9059EC3D-D16E-4D9F-B962-C53B7D9536C4",
+      "filename": "IMG_3191.JPG",
+      "llama_desc": "A woman with short blonde hair and a woman with long dark hair sit on a green metal bench with a young boy in between them. The woman with short blonde hair has her hand on the boy\u0027s shoulder and is wearing a denim jacket over a white shirt. The woman with long dark hair is wearing a denim jacket over a white shirt and has a white lanyard around her neck.",
+      "oracle_desc": "Two women in denim jackets sit on a green metal bench outdoors flanking a young boy in a baseball cap and backpack, posing in front of a brick wall. The woman on the right wears a lanyard, suggesting a school or work context.",
+      "gaps": []
+    },
+    {
+      "id": "71A80B93-022D-4157-B816-A860FAF89008",
+      "filename": "IMG_1341.JPG",
+      "llama_desc": "A young girl in a black and white polka dot swimsuit with red and white stripes is sitting on a beach, smiling at the camera. She is holding a yellow plastic shovel in her right hand, and her left hand is in the sand. She is surrounded by a yellow bucket and a green plastic shovel, and there is a green beach umbrella and a green beach chair in the background.",
+      "oracle_desc": "A young blonde girl in a navy blue polka-dot swimsuit sits in the sand on a beach, smiling at the camera while holding a yellow sand shovel. A yellow bucket and green shovel are nearby, and a green beach umbrella is visible in the background.",
+      "gaps": []
+    },
+    {
+      "id": "C6515B51-8504-4C23-9BD6-707A59B29E0B",
+      "filename": "20230722_132154.jpg",
+      "llama_desc": "A woman holding a small brown dog. She is holding the dog in her arms, with the dog\u0027s head and one ear visible. The woman\u0027s arm is around the dog\u0027s body, and her hand is holding the dog\u0027s head.",
+      "oracle_desc": "A small Yorkshire Terrier rests its chin on a person\u0027s leg or arm while lying on a couch, looking directly at the camera with soulful brown eyes. The dog\u0027s tan and black fur and the person\u0027s skin are the main visible elements.",
+      "gaps": [
+        "missing_subject",
+        "activity_inversion"
+      ]
+    },
+    {
+      "id": "A4790552-9A18-47B4-A47C-6E87A62787F6",
+      "filename": "IMG_1248.JPG",
+      "llama_desc": "A baseball bat with a silver, long, and slender shape, pointing towards the top of the image, is seen in front of three stone tiger heads, each with a different expression, one with its mouth open, one with its mouth closed, and one with its mouth slightly open, all with their eyes closed, and all with their ears and whiskers visible, all attached to a brick wall with a blue and orange patterned border, with a blue sky and white clouds in the background.",
+      "oracle_desc": "A large silver baseball bat sculpture points skyward in front of the entrance to Comerica Park, flanked by stone tiger head sculptures mounted on brick columns. Blue sky and clouds are visible above.",
+      "gaps": [
+        "missing_landmark"
+      ]
+    },
+    {
+      "id": "F422597E-AD1B-46EC-B755-12BE638CC3BA",
+      "filename": "IMG_4122.JPG",
+      "llama_desc": "A man in a pirate costume with a white shirt and blue and white checkered vest, wearing a bandana and a fake beard, standing on a stage with a group of children holding wooden sticks. The children are all wearing different types of clothing, including t-shirts, shorts, and shoes, and are standing in a line, holding their sticks in front of them. The man is standing in front of them, holding a stick in one hand and a small wooden object in the other, with his arms outstretched.",
+      "oracle_desc": "A performer in a pirate-themed costume leads a group of about eight children on an outdoor stage or performance area at what appears to be a Disney theme park attraction, with each child holding a small wooden prop stick. The performer has arms raised in an animated pose.",
+      "gaps": []
+    },
+    {
+      "id": "F1C5866D-42C2-440C-9EB1-D6A2006AC1A5",
+      "filename": "IMG_1337.JPG",
+      "llama_desc": "A barefoot toddler in a gray t-shirt with a green dinosaur and yellow sun, blue denim shorts, and a navy blue baseball cap with a white and red Boston Red\u00A0\u2026\u00A0\u2026\u00A0\u2026\u00A0\u2026\u00A0\u2026",
+      "oracle_desc": "A barefoot toddler in a gray dinosaur t-shirt, blue jeans, and a navy baseball cap stands in sandy soil outdoors, smiling at the camera. A tree line and cloudy sky are visible in the background.",
+      "gaps": [
+        "truncated",
+        "formatting"
+      ]
+    },
+    {
+      "id": "29F31BB4-C01B-4E20-852C-BE0F9F982F29",
+      "filename": "IMG_1571.JPG",
+      "llama_desc": "A group of people on a ship\u0027s deck. A man in a white uniform with a black tie and a gold button on his left shoulder is standing in the center, surrounded by several children and a woman. The man is wearing a white hat with a black band and a gold button on the front.",
+      "oracle_desc": "A uniformed ship\u0027s officer or captain in a white uniform and cap poses with a group of children and a woman on the wooden deck of a tall ship, with the vessel\u0027s rigging and ropes visible behind them.",
+      "gaps": []
+    },
+    {
+      "id": "4ABC2FD9-2E3D-45FC-8358-DC0C813C1920",
+      "filename": "_MG_6884.JPG",
+      "llama_desc": "A woman in a white and green plaid skirt and a white tank top, with long brown hair, standing in front of a tree with a large trunk, in a grassy area with trees and a white building in the background. She is wearing white sandals and has her hands on the tree\u0027s trunk. The woman is smiling and looking directly at the camera.",
+      "oracle_desc": "A young woman with long hair in a green plaid mini skirt and light top stands between two tree trunks in a park, photographed from a low angle looking up at her. Grass and other trees are visible in the background.",
+      "gaps": []
+    }
+  ]
+}

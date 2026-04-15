@@ -1,0 +1,108 @@
+{
+  "batch_id": "batch_20260410_110245_rerun_20260410_113207",
+  "prompt_version": "v12a",
+  "created_at": "2026-04-10T15:32:07.9286435Z",
+  "annotated_at": "2026-04-10T00:00:00Z",
+  "photos": [
+    {
+      "id": "1CFB26E7-72F5-4CFA-879A-C10AE735E1DD",
+      "filename": "IMG_0089.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\SD1100\\2009_05_09\\IMG_0089.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\1c\\medium\\1cfb26e772f54cfa879ac10ae735e1dd.jpg",
+      "llama_desc": "A woman with long dark hair in a white jacket is sitting at a table with a birthday cake with two lit candles. The table is set with a white and red tablecloth and a white and red placemat. The woman is smiling and looking at the camera.",
+      "oracle_desc": "A smiling woman with shoulder-length dark hair, wearing a white jacket, sits at a wooden dining table with a small chocolate birthday cake bearing a single lit candle in front of her. The room behind her features quilted wall art and a cushioned window seat. A quilted placemat is visible on the table, but no red-and-white tablecloth is present.",
+      "gaps": ["wrong_count", "hallucination"]
+    },
+    {
+      "id": "CC7836A0-559B-4C08-B4F0-183394755AB5",
+      "filename": "IMG_5945.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_12_04\\IMG_5945.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\cc\\medium\\cc7836a0559b4c08b4f0183394755ab5.jpg",
+      "llama_desc": "A young girl with long blonde hair and a wide, toothy smile. She is looking directly at the camera with her eyes, her face is slightly tilted to the right, and her mouth is open to show her teeth. She is wearing a white and black shirt with a black collar.",
+      "oracle_desc": "A young blonde girl with fine, shoulder-length hair gives a gentle, closed-mouth smile directly at the camera against a dark blue background. Her expression is soft and relaxed rather than broadly toothy. Only her face and the top of her shirt are visible.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "9F3AB9B7-69CE-4869-8875-A3F05319B92E",
+      "filename": "IMG_0660.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_04_29\\IMG_0660.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\9f\\medium\\9f3ab9b769ce48698875a3f05319b92e.jpg",
+      "llama_desc": "A young girl in a white t-shirt with a colorful design, making a peace sign with her hands, lying on a white door. She has long brown hair and is wearing a red and white striped skirt. The door is white with a brown frame and has a window on the left.",
+      "oracle_desc": "A girl with long brown hair stands in a wide stance in front of a white interior door, raising both arms overhead to frame her face with her hands in a playful pose. She wears a white t-shirt with a colorful heart graphic and a pink-and-white striped skirt. A patterned rug is on the floor in front of the door.",
+      "gaps": ["hallucination", "activity_inversion"]
+    },
+    {
+      "id": "685B4970-EE5A-4BA1-A74B-795E59BBE1E0",
+      "filename": "IMG_3220.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20240509_Bubba\\IMG_3220.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\68\\medium\\685b4970ee5a4ba1a74b795e59bbe1e0.jpg",
+      "llama_desc": "A woman in a red dress with a pattern of black dogs and white dots is sitting on a couch with a small dog, a Yorkshire terrier, who is playing with a gift-wrapped present. The woman is wearing black socks and has her feet on a brown and grey rug. The dog is wearing a red collar and is standing on the rug, which is on a brown and grey carpet.",
+      "oracle_desc": "A Yorkshire terrier sniffs intently at a colorfully wrapped gift box sitting on a patterned area rug. Only the lower legs and feet of a person wearing red pajama pants with a dog print and black socks are visible at the top of the frame. The dog's collar is visible but no full view of a person sitting on a couch is shown.",
+      "gaps": ["hallucination", "missing_subject"]
+    },
+    {
+      "id": "CA7A59D8-3AC3-4B27-95C9-207E3EA8FD5F",
+      "filename": "IMG_7257.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_05_03\\IMG_7257.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ca\\medium\\ca7a59d83ac34b2795c9207e3ea8fd5f.jpg",
+      "llama_desc": "A young girl holding a red piece of paper with a gold flower design. She is wearing a blue and grey dress with a gold belt, pink tights, and has blonde hair. She is standing in a room with a green rug and a wall with vertical stripes.",
+      "oracle_desc": "A blonde girl holds up a large red poster or card decorated with a gold floral design, gripping it with both hands at chest height. She wears a grey dress with a gold-trimmed hem and bright pink tights, and stands on a white tile floor. The wall behind her is plain, with no visible vertical stripes.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "F4C98D25-4AD9-4192-B5C3-6D8DF9064970",
+      "filename": "IMG_7557.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_06_20\\IMG_7557.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\f4\\medium\\f4c98d254ad94192b5c36d8df9064970.jpg",
+      "llama_desc": "A young girl in a red shirt with a flower design on the front, standing in front of a pool with a blue tarp covering it, with a man in a white shirt and a man in a blue chair in the background. The girl is looking directly at the camera with a slight smile. The man in the white shirt is sitting in a chair with his back to the camera, and the man in the blue chair is sitting in a chair with his back to the camera.",
+      "oracle_desc": "A girl in a red short-sleeve top with a small flower embellishment squints and makes a pouty expression at the camera while standing on a concrete pool patio. Two adults sit in folding chairs with their backs to the camera in the middle distance, and a covered pool is visible beyond them. The girl's wet-looking hair and sun-squinting expression suggest she has been swimming.",
+      "gaps": ["activity_inversion"]
+    },
+    {
+      "id": "1E506AEF-A5D6-4357-AC65-71634C0FDEEB",
+      "filename": "IMG_3392.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_12_24\\IMG_3392.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\1e\\medium\\1e506aefa5d64357ac6571634c0fdeeb.jpg",
+      "llama_desc": "A family of five sitting around a table in a dining room. A woman in a red sweater and a man in a suit and tie are sitting at the head of the table, with a Christmas tree in the background. The table is set with plates, cups, and a Christmas-themed tablecloth.",
+      "oracle_desc": "Seven family members gather around a dining table set with a green tablecloth for a Christmas meal, including a toddler in a high chair at the far left, two young girls, an older man in the foreground, a man in a suit, and a woman in a red top. A decorated Christmas tree glows in the background alongside a chandelier. The table is set with plates, mugs, and food.",
+      "gaps": ["wrong_count"]
+    },
+    {
+      "id": "0B3B51A3-3930-46D0-8CEC-6EAC839D37F3",
+      "filename": "IMG_1862.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_08_12\\IMG_1862.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\0b\\medium\\0b3b51a3393046d08cec6eac839d37f3.jpg",
+      "llama_desc": "A girl in a black tank top with a crown on her head, sitting in a chair with a birthday cake in front of her. She is wearing a crown with a pink and silver design, and her long blonde hair is falling in her face. The cake has six lit candles and a large number 6 in the center.",
+      "oracle_desc": "A girl wearing a purple and pink tiara sits at a table and blows out candles on a rectangular birthday cake frosted in yellow, displayed in a metal baking pan. A number \"8\" candle is clearly visible among several taper candles on the cake. Her long blonde hair hangs forward as she leans toward the cake.",
+      "gaps": ["wrong_count", "hallucination"]
+    },
+    {
+      "id": "FA870A9C-15D9-4370-BD0E-8E4FA26AC2DA",
+      "filename": "IMG_1149.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_06_17\\IMG_1149.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\fa\\medium\\fa870a9c15d94370bd0e8e4fa26ac2da.jpg",
+      "llama_desc": "A young girl in a blue and black swimsuit is playing in a shallow water area. She is lying on her back, her arms and legs out ... . Her long, dark hair is ... .",
+      "oracle_desc": "A girl in a teal patterned swimsuit leans against a wet concrete surface at an outdoor splash pad or water park, her legs extended and arms spread wide in a playful pose. Other visitors and park equipment are visible in the bright background. Her dark hair is braided or pulled back.",
+      "gaps": ["activity_inversion", "truncated", "formatting"]
+    },
+    {
+      "id": "D695E4CD-513D-45CF-AE61-9EEA482BE3D9",
+      "filename": "IMG_4352.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\Weihs_Disney\\2011_12_19\\IMG_4352.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\d6\\medium\\d695e4cd513d45cfae619eea482be3d9.jpg",
+      "llama_desc": "A man in a green t-shirt with a white logo and a woman in a black and white striped shirt standing in front of a large, colorful, and lit-up Christmas or holiday display. The man is smiling and holding a camera, while the woman is looking at the camera.",
+      "oracle_desc": "A man in a green t-shirt and a woman in a black-and-white striped top pose together smiling in front of a spectacular nighttime holiday light display, with a third person partially visible behind them. The illuminated scene features colorful light structures suggesting a theme park setting. Neither person appears to be holding a camera.",
+      "gaps": ["hallucination"]
+    }
+  ]
+}

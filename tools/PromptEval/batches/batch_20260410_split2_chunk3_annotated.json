@@ -1,0 +1,109 @@
+{
+  "batch_id": "batch_20260410_110245_rerun_20260410_113207",
+  "prompt_version": "v12a",
+  "created_at": "2026-04-10T15:32:07.9286435Z",
+  "annotated_at": "2026-04-09T00:00:00.0000000Z",
+  "annotator": "claude-sonnet-4-6",
+  "photos": [
+    {
+      "id": "2C86EDEB-C0F3-476A-83A8-BAB73C6F2FF3",
+      "filename": "IMG_3064.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_11_04\\IMG_3064.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\2c\\medium\\2c86edebc0f3476a83a8bab73c6f2ff3.jpg",
+      "llama_desc": "A young girl in a white sweater, khaki pants, and white shoes with pink stripes, standing in a dimly lit room with a black wall behind her. She has long blonde hair and is wearing a white headband. She is looking directly at the camera with a neutral expression.",
+      "oracle_desc": "Young blonde girl in a white cable-knit sweater, khaki flare pants, and white-and-pink sneakers standing on a concrete floor against a dark background. She wears a thin white headband and is turned slightly sideways, smiling at the camera. An adult's leg is partially visible at the left edge of the frame.",
+      "gaps": ["activity_inversion"]
+    },
+    {
+      "id": "D353436B-1EDB-4812-973C-95C546E36901",
+      "filename": "20250124_171012.jpg",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\Samsung Gallery\\DCIM\\Camera\\20250124_171012.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\d3\\medium\\d353436b1edb4812973c95c546e36901.jpg",
+      "llama_desc": "A small, long-haired dog in front of a window with white blinds. The dog is looking up and its fur is blowing in the wind. The dog is wearing a collar with a tag.",
+      "oracle_desc": "Small black-and-tan long-haired dog, resembling a Yorkie mix, sitting indoors in front of a window with white horizontal blinds and a sheer curtain. The dog gazes upward with its collar and tag visible, surrounded by a cluster of stuffed animal toys including what appears to be a Baby Yoda plush and a giraffe. A Reese's candy package is tucked among the stuffed animals in the foreground.",
+      "gaps": ["hallucination", "missing_subject"]
+    },
+    {
+      "id": "59F5A2CB-BC7F-44A9-BAB6-B6CECEEBAAD9",
+      "filename": "IMG_4348.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\139___02\\IMG_4348.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\59\\medium\\59f5a2cbbc7f44a9bab6b6ceceebaad9.jpg",
+      "llama_desc": "A man in a blue t-shirt with a white Disney logo and a red and white card on a table. He is holding a white cake with a red and white card on top and a lit candle with a red and white number 8 and a red and white number 4. The table has a red and white tablecloth with a red and white card on it.",
+      "oracle_desc": "A woman in a navy Walt Disney World sweatshirt sits at a table with a red tablecloth, smiling in front of a small white birthday cake with lit candles forming the number 48. A decorative heart ornament hangs in the background above a dark wood hutch with glassware. A red greeting card lies on the table beside the cake.",
+      "gaps": ["hallucination", "wrong_count"]
+    },
+    {
+      "id": "3B844792-1F81-4C50-BE23-2A13E947D43F",
+      "filename": "IMG_2155.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\2011_04_24\\IMG_2155.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\3b\\medium\\3b8447921f814c50be232a13e947d43f.jpg",
+      "llama_desc": "A boy in a blue and white striped shirt holding a gift bag and a package of knitting needles. He is sitting on a wicker chair with a white wicker back and a brown cushion. The gift bag is green, yellow, and white, and the package of knitting needles is red and black.",
+      "oracle_desc": "A boy in a blue-and-white striped button-up shirt sits in a wicker chair on what appears to be a porch, holding a yellow-orange gift bag and a red-and-black package of wooden drumsticks. He looks directly at the camera with a relaxed expression. A brick wall and a fan are partially visible in the background.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "4B6A84E4-EB12-4BF5-8173-C7C893EA723F",
+      "filename": "20240718_214945.jpg",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\Samsung Gallery\\DCIM\\Camera\\20240718_214945.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4b\\medium\\4b6a84e4eb124bf58173c7c893ea723f.jpg",
+      "llama_desc": "A white refrigerator with a collection of magnets and a few pieces of paper on its door. A white envelope with a round metal seal is on top of a white paper with a black circle in the middle, which has the name \"Tenni\" written on it. A blue and a yellow business card are below the paper, with the blue one having the name \"SRC\" and the phone number \"800-521-0398\" and the yellow one having the name \"Serene Comfort\" and the phone number \"248-765-1714\".",
+      "oracle_desc": "Close-up of a white refrigerator door with a clear plastic wall-mount document tray attached to it, holding papers. Above the tray, two business card stickers are affixed — a blue SRC refrigeration card and a yellow Serene Comfort card — along with a small white card held by a round magnet. Additional items are visible at the right edge of the frame.",
+      "gaps": ["missing_subject", "hallucination"]
+    },
+    {
+      "id": "0FD77D69-04D7-4EFC-AE06-94C563FC2F28",
+      "filename": "IMG_5671.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_10_22\\IMG_5671.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\0f\\medium\\0fd77d6904d74efcae0694c563fc2f28.jpg",
+      "llama_desc": "A group of children and adults sitting on a floor, looking up at something. The children are all wearing winter clothing, including hats, coats, and scarves. The adults are also wearing winter clothing, and some are holding or holding onto the children.",
+      "oracle_desc": "A crowd of children and adults dressed in winter coats, hats, and scarves seated in tiered bleacher-style seating, with several rows of people visible stretching into the background. Two girls in blue coats occupy the foreground, one wearing a purple knit hat; a curly-haired adult woman in a black jacket sits beside them. Most subjects are looking forward or to the side rather than upward.",
+      "gaps": ["hallucination", "activity_inversion"]
+    },
+    {
+      "id": "E326A964-CC2B-4AC9-825A-E01767DA0E7B",
+      "filename": "_MG_6989.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220817\\_MG_6989.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\e3\\medium\\e326a964cc2b4ac9825ae01767da0e7b.jpg",
+      "llama_desc": "Two men sitting on a stone wall overlooking a lake. The man on the left is wearing a white t-shirt with an American flag design and has a tattooed arm. He is smiling and has a pair of sunglasses on his head.",
+      "oracle_desc": "Two tattooed men sitting side by side on a stone retaining wall with a sweeping view of a large forested lake — likely Lake Tahoe or Emerald Bay — and mountain ridges in the background under overcast skies. The man on the left wears a white graphic tee and has sunglasses resting on his forehead; the man on the right wears a light-colored button-up short-sleeve shirt. Both men are smiling at the camera.",
+      "gaps": ["missing_subject"]
+    },
+    {
+      "id": "56E014E2-586D-4BF0-9B1E-8423E9F2D34B",
+      "filename": "IMG_8082.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_08_10\\IMG_8082.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\56\\medium\\56e014e2586d4bf09b1e8423e9f2d34b.jpg",
+      "llama_desc": "A baby in a white diaper sitting in a blue and white inflatable pool. The baby is smiling and has water on its face and body. The pool is surrounded by grass and a pink and white floatie is behind the baby.",
+      "oracle_desc": "A smiling, bare-chested baby sits in shallow water inside a blue inflatable backyard pool on a sunny day, with green grass visible beyond the pool's rim. A red-and-white polka-dot inflatable ring rests behind the baby. The baby appears unclothed or minimally clothed, with no visible diaper.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "E4F39A3D-64A4-4FD2-9585-CF1254C5D41E",
+      "filename": "IMG_4881.JPG",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\149___10\\IMG_4881.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\e4\\medium\\e4f39a3d64a44fd29585cf1254c5d41e.jpg",
+      "llama_desc": "A group of people in various Halloween and fall-themed costumes, including a man in a pumpkin mask, a woman in a red and white dress, and a man in a blue and white",
+      "oracle_desc": "Nine people in Halloween costumes pose together outdoors beneath a \"Boarding Gate — Departure Time 6:40\" sign, with bare autumn trees in the background. Costumes visible include a full skeleton/skull mask, a pumpkin-head costume, a cat or fox mask, and several others wearing street clothes or partial costumes. The group is photographed on an outdoor platform or deck at what appears to be a haunted attraction.",
+      "gaps": ["truncated", "wrong_count", "missing_landmark"]
+    },
+    {
+      "id": "6F98D3B9-69EE-40B4-9D9B-1A55355CE7DC",
+      "filename": "IMG_4922.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2012\\2012_04_29\\IMG_4922.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\6f\\medium\\6f98d3b969ee40b49d9b1a55355ce7dc.jpg",
+      "llama_desc": "A girl in a green and blue shirt with a white stripe, wearing a green headband, sitting in a black chair, holding a cupcake with blue frosting and a lit candle. She is wearing glasses and has a birthday card and a fork and knife on her table. The table has a fall-themed tablecloth with leaves and acorns.",
+      "oracle_desc": "A bespectacled girl wearing a bright green and navy athletic jersey and a yellow-green headband sits in a black wood chair, holding a paper plate with a cupcake topped with blue frosting and a single lit birthday candle. She smiles at the camera with fall-themed wall decor — including a quilt-style tapestry — visible in the background. No tablecloth, fork, or knife is visible on the table surface.",
+      "gaps": ["hallucination"]
+    }
+  ]
+}

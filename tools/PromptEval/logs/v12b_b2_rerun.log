@@ -1,0 +1,60 @@
+Re-running LLaMA on 50 photos  (new prompt: v12b)
+
+  [1/50] _MG_5960.dng                        ok
+  [2/50] 20240809_135641.jpg                 ok
+  [3/50] IMG_2503.JPG                        ok
+  [4/50] IMG_6004.JPG                        ok
+  [5/50] IMG_3880.JPG                        ok
+  [6/50] IMG_3241.JPG                        ok
+  [7/50] IMG_0669.JPG                        ok
+  [8/50] IMG_4660.JPG                        ok
+  [9/50] IMG_0447.JPG                        ok
+  [10/50] IMG_4194.JPG                        ok
+  [11/50] _MG_5522.dng                        ok
+  [12/50] IMG_7194.JPG                        ok
+  [13/50] 20230512_110500.jpg                 ok
+  [14/50] IMG_1521.JPG                        ok
+  [15/50] IMG_9678.JPG                        ok
+  [16/50] IMG_4300.JPG                        ok
+  [17/50] IMG_1062_4x6_300.jpg                ok
+  [18/50] IMG_1119.JPG                        ok
+  [19/50] IMG_4498.JPG                        ok
+  [20/50] IMG_9506.JPG                        ok
+  [21/50] IMG_0240.JPG                        ok
+  [22/50] IMG_7406.JPG                        ok
+  [23/50] IMG_9460.JPG                        ok
+  [24/50] IMG_4554.JPG                        ok
+  [25/50] IMG_0294.JPG                        ok
+  [26/50] IMG_3596.JPG                        ok
+  [27/50] IMG_2663.JPG                        ok
+  [28/50] IMG_4417.JPG                        ok
+  [29/50] IMG_0198_2.JPG                      ok
+  [30/50] IMG_3554.JPG                        ok
+  [31/50] IMG_0540.JPG                        ok
+  [32/50] _MG_5944.dng                        ok
+  [33/50] IMG_0752.JPG                        empty/rejected
+  [34/50] IMG_4498.JPG                        ok
+  [35/50] IMG_2172.JPG                        ok
+  [36/50] IMG_4053.JPG                        ok
+  [37/50] IMG_4599.JPG                        ok
+  [38/50] IMG_1674.JPG                        ok
+  [39/50] IMG_2332.JPG                        ok
+  [40/50] _MG_8311.jpg                        ok
+  [41/50] IMG_4121.JPG                        ok
+  [42/50] IMG_2467.JPG                        ok
+  [43/50] IMG_0708.JPG                        ok
+  [44/50] IMG_3711.JPG                        ok
+  [45/50] IMG_4548.JPG                        ok
+  [46/50] IMG_0025.JPG                        ok
+  [47/50] IMG_7106.JPG                        ok
+  [48/50] IMG_0907.JPG                        ok
+  [49/50] 20221001_141436.jpg                 ok
+  [50/50] IMG_0963.JPG                        ok
+
+Rerun complete
+  OK     : 49
+  Failed : 1
+  Saved  : tools\PromptEval\batches\batch_20260411_171400_rerun_20260411_192615.json
+
+Next: Claude annotates the new batch, then score it:
+  dotnet run -- --score tools\PromptEval\batches\batch_20260411_171400_rerun_20260411_192615_annotated.json

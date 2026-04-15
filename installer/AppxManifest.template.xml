@@ -1,0 +1,108 @@
+<?xml version="1.0" encoding="utf-8"?>
+<!--
+  MSIX Package Manifest — PhotoIQ Pro
+  ProductId : a7f3b2c1-4e5d-4a8f-9b6c-2d1e3f4a5b6c
+  © 2026 Luminary Software. All rights reserved.
+
+  For Microsoft Store submission:
+    - Update Publisher to match your Partner Center publisher string
+      (Account settings → Organization profile → Publisher display name / CN=... form)
+    - Partner Center re-signs the package — no code-signing certificate required from you.
+
+  For sideload distribution (direct download):
+    - Use installer/install-sideload.ps1 on Windows 11 22H2+
+    - Or sign with a trusted cert and pass -SignThumbprint to build-msix.ps1
+-->
+<Package
+  xmlns="http://schemas.microsoft.com/appx/manifest/foundation/windows10"
+  xmlns:uap="http://schemas.microsoft.com/appx/manifest/uap/windows10"
+  xmlns:rescap="http://schemas.microsoft.com/appx/manifest/foundation/windows10/restrictedcapabilities"
+  IgnorableNamespaces="uap rescap">
+
+  <!--
+    {{VERSION}}      is replaced by build-msix.ps1 — e.g. 1.0.0.0
+    {{ARCHITECTURE}} is replaced by build-msix.ps1 — x64 | arm64
+  -->
+  <Identity
+    Name="LuminarySoftware.PhotoIQPro"
+    Publisher="CN=Luminary Software"
+    Version="{{VERSION}}"
+    ProcessorArchitecture="{{ARCHITECTURE}}" />
+
+  <Properties>
+    <DisplayName>PhotoIQ Pro</DisplayName>
+    <PublisherDisplayName>Luminary Software</PublisherDisplayName>
+    <Logo>Assets\StoreLogo.png</Logo>
+    <Description>AI-powered personal photo library — local, private, offline.</Description>
+  </Properties>
+
+  <Dependencies>
+    <!--
+      Windows 10 1809 (17763) is the minimum supported for MSIX sideloading.
+      Tested on Windows 11 24H2 (26100). Raise MinVersion to 22000 once
+      Windows 10 support is explicitly dropped.
+    -->
+    <TargetDeviceFamily Name="Windows.Desktop"
+                        MinVersion="10.0.17763.0"
+                        MaxVersionTested="10.0.26100.0" />
+  </Dependencies>
+
+  <Resources>
+    <Resource Language="en-US"/>
+  </Resources>
+
+  <Applications>
+    <Application
+      Id="PhotoIQPro"
+      Executable="PhotoIQPro.Desktop.exe"
+      EntryPoint="Windows.FullTrustApplication">
+
+      <uap:VisualElements
+        DisplayName="PhotoIQ Pro"
+        Description="AI-powered personal photo library — local, private, offline."
+        BackgroundColor="transparent"
+        Square150x150Logo="Assets\Square150x150Logo.png"
+        Square44x44Logo="Assets\Square44x44Logo.png">
+        <uap:DefaultTile Wide310x150Logo="Assets\Wide310x150Logo.png"
+                         Square310x310Logo="Assets\Square310x310Logo.png"/>
+        <uap:SplashScreen Image="Assets\SplashScreen.png"
+                          BackgroundColor="#1E1E2E"/>
+      </uap:VisualElements>
+
+      <Extensions>
+        <!-- File-type associations — allows double-clicking photos to open PhotoIQ Pro -->
+        <uap:Extension Category="windows.fileTypeAssociation">
+          <uap:FileTypeAssociation Name="photoiqpro-image">
+            <uap:SupportedFileTypes>
+              <uap:FileType>.jpg</uap:FileType>
+              <uap:FileType>.jpeg</uap:FileType>
+              <uap:FileType>.png</uap:FileType>
+              <uap:FileType>.heic</uap:FileType>
+              <uap:FileType>.heif</uap:FileType>
+              <uap:FileType>.webp</uap:FileType>
+              <uap:FileType>.tif</uap:FileType>
+              <uap:FileType>.tiff</uap:FileType>
+              <uap:FileType>.arw</uap:FileType>
+              <uap:FileType>.cr2</uap:FileType>
+              <uap:FileType>.cr3</uap:FileType>
+              <uap:FileType>.nef</uap:FileType>
+              <uap:FileType>.nrw</uap:FileType>
+              <uap:FileType>.orf</uap:FileType>
+              <uap:FileType>.raf</uap:FileType>
+              <uap:FileType>.rw2</uap:FileType>
+              <uap:FileType>.dng</uap:FileType>
+              <uap:FileType>.pef</uap:FileType>
+            </uap:SupportedFileTypes>
+          </uap:FileTypeAssociation>
+        </uap:Extension>
+      </Extensions>
+
+    </Application>
+  </Applications>
+
+  <Capabilities>
+    <!-- Required for any self-contained .NET desktop app running with full trust -->
+    <rescap:Capability Name="runFullTrust" />
+  </Capabilities>
+
+</Package>

@@ -1,0 +1,76 @@
+<!-- Installer header banner — 497 × 58 px (Inno Setup / NSIS standard) -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 497 58" width="497" height="58">
+  <defs>
+    <linearGradient id="bannerBg" x1="0%" y1="0%" x2="100%" y2="0%">
+      <stop offset="0%"   stop-color="#0a0e1a"/>
+      <stop offset="60%"  stop-color="#0d1830"/>
+      <stop offset="100%" stop-color="#0f2040"/>
+    </linearGradient>
+    <radialGradient id="lensGlowSm" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#60aaff" stop-opacity="0.9"/>
+      <stop offset="60%"  stop-color="#0078d4" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#004a8f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glowSm">
+      <feGaussianBlur stdDeviation="1" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="iconClipBanner">
+      <circle cx="29" cy="29" r="22"/>
+    </clipPath>
+    <!-- Subtle diagonal stripe overlay -->
+    <pattern id="stripes" x="0" y="0" width="40" height="40" patternUnits="userSpaceOnUse" patternTransform="rotate(30)">
+      <rect width="1" height="40" fill="#ffffff" opacity="0.015"/>
+    </pattern>
+  </defs>
+
+  <!-- Background -->
+  <rect width="497" height="58" fill="url(#bannerBg)"/>
+  <rect width="497" height="58" fill="url(#stripes)"/>
+
+  <!-- Accent line at bottom -->
+  <line x1="0" y1="57" x2="497" y2="57" stroke="#0078d4" stroke-width="1.5" opacity="0.8"/>
+
+  <!-- Icon -->
+  <circle cx="29" cy="29" r="22" fill="#1a2a4a" opacity="0.9"/>
+  <circle cx="29" cy="29" r="21" fill="none" stroke="#0078d4" stroke-width="1" opacity="0.5"/>
+  <g clip-path="url(#iconClipBanner)" filter="url(#glowSm)">
+    <g transform="translate(29,29)">
+      <path d="M 0,-9 Q 7.5,-6.5 9,0 Q 2,-1.5 0,-9 Z" fill="#0078d4" opacity="0.85" transform="rotate(0)"/>
+      <path d="M 0,-9 Q 7.5,-6.5 9,0 Q 2,-1.5 0,-9 Z" fill="#0078d4" opacity="0.85" transform="rotate(60)"/>
+      <path d="M 0,-9 Q 7.5,-6.5 9,0 Q 2,-1.5 0,-9 Z" fill="#0078d4" opacity="0.85" transform="rotate(120)"/>
+      <path d="M 0,-9 Q 7.5,-6.5 9,0 Q 2,-1.5 0,-9 Z" fill="#0078d4" opacity="0.85" transform="rotate(180)"/>
+      <path d="M 0,-9 Q 7.5,-6.5 9,0 Q 2,-1.5 0,-9 Z" fill="#0078d4" opacity="0.85" transform="rotate(240)"/>
+      <path d="M 0,-9 Q 7.5,-6.5 9,0 Q 2,-1.5 0,-9 Z" fill="#0078d4" opacity="0.85" transform="rotate(300)"/>
+    </g>
+  </g>
+  <circle cx="29" cy="29" r="8"  fill="url(#lensGlowSm)"/>
+  <circle cx="29" cy="29" r="5.5" fill="#0a1628" opacity="0.95"/>
+  <g transform="translate(29,29)" fill="#60aaff" filter="url(#glowSm)">
+    <polygon points="0,-3  0.7,-0.7  3,0  0.7,0.7  0,3  -0.7,0.7  -3,0  -0.7,-0.7" opacity="0.95"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="60" y="34"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="20" font-weight="300"
+        fill="#ffffff">Photo</text>
+  <text x="137" y="34"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="20" font-weight="700"
+        fill="#0078d4">IQ</text>
+
+  <!-- PRO badge -->
+  <rect x="163" y="18" width="24" height="12" rx="2" fill="#0078d4" opacity="0.15"/>
+  <rect x="163" y="18" width="24" height="12" rx="2" fill="none" stroke="#0078d4" stroke-width="0.8" opacity="0.6"/>
+  <text x="175" y="28"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="7" font-weight="600" letter-spacing="0.4"
+        fill="#0078d4" text-anchor="middle">PRO</text>
+
+  <!-- Right-side tagline -->
+  <text x="493" y="37"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="11" font-weight="300" letter-spacing="0.2"
+        fill="#3a6090" text-anchor="end">Intelligent Photo Management</text>
+</svg>

@@ -1,0 +1,109 @@
+{
+  "batch_id": "batch_20260410_110245_rerun_20260410_113207",
+  "prompt_version": "v12a",
+  "created_at": "2026-04-10T15:32:07.9286435Z",
+  "annotated_at": "2026-04-10T00:00:00.0000000Z",
+  "annotator": "claude-sonnet-4-6",
+  "photos": [
+    {
+      "id": "B0039BB6-A5BB-4F01-991D-1C10404F7FBB",
+      "filename": "IMG_0601.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_04_22\\IMG_0601.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\b0\\medium\\b0039bb6a5bb4f01991d1c10404f7fbb.jpg",
+      "llama_desc": "A man in a grey suit, blue shirt, and pink tie, holding a green and white banner with a green border, in front of a group of children and a woman in a green and blue patterned top. The man is holding the banner with both hands, while the woman is standing behind him, her hands raised in a gesture of excitement or approval. The children are sitting on the floor or on chairs, some of them looking at the man and the woman, others looking at the banner.",
+      "oracle_desc": "A man in a grey suit and pink tie stands in a school auditorium holding one end of a green 'Official Michigan Green School' banner, while a young girl in a blue shirt holds the opposite end. A woman behind the man raises one hand, and rows of children seated on the floor face the front as the audience. An American flag is visible on a pole in the background.",
+      "gaps": ["wrong_count", "missing_subject"]
+    },
+    {
+      "id": "4AB8283A-9233-4E5B-B201-833023743EE1",
+      "filename": "_MG_6743.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220612\\_MG_6743.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\4a\\medium\\4ab8283a92334e5bb201833023743ee1.jpg",
+      "llama_desc": "A young woman in a white graduation cap and gown, holding a black high school diploma cover with gold lettering, standing next to a young man in a blue graduation cap and gown, both smiling and looking at the camera. The woman has long blonde hair and is wearing a gold sash over her white gown. The man has short brown hair and is wearing a blue sash over his blue gown.",
+      "oracle_desc": "Two high school graduates in caps and gowns smile at the camera outdoors, with a clock tower visible behind them against a partly cloudy sky. The young woman on the left wears a white gown and holds a diploma cover, with honor cords draped around her neck. The young man on the right wears a navy cap and gown with a lanyard and medal.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "85A38407-53BD-4E59-B7F7-52A3D6AE8CE2",
+      "filename": "_MG_6801.dng",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\20220627\\_MG_6801.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\85\\medium\\85a3840753bd4e59b7f752a3d6ae8ce2.jpg",
+      "llama_desc": "A woman with long blonde hair sits on a stone bench in front of a pond. She is wearing a black cardigan over a white shirt, light blue jeans, and black and white sneakers. Her left leg is bent and her foot is on the bench, while her right leg is straight and her foot is on the ground.",
+      "oracle_desc": "A young woman with long blonde hair sits relaxed on a flat natural stone slab outdoors, smiling at the camera. She wears a black jacket, white top, light grey jeans, and black Converse sneakers, with one leg bent resting on the stone. A shallow creek and dense green tree canopy fill the background behind her.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "6F88607B-A16B-433B-81B5-AF4157AA1B9C",
+      "filename": "CRW_8843_4x6_300.jpg",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_05_19\\CRW_8843_4x6_300.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\6f\\medium\\6f88607ba16b433b81b5af4157aa1b9c.jpg",
+      "llama_desc": "A young girl in a pink leotard with her arms raised in a gymnastics studio. She is standing on a red mat with her arms raised above her head, her hands in a V shape. The girl is wearing a pink leotard with a pink bow at the waist.",
+      "oracle_desc": "A young girl in a pink skirted leotard stands barefoot on a red gymnastics mat with both arms raised straight overhead in a salute pose. She faces the camera in a bright gymnasium with blue floor mats and other children visible in the background. The setting appears to be a beginner gymnastics class.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "6DCCDA47-B32F-416A-92A2-DB93A0E02B1E",
+      "filename": "IMG_4319.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_05_13\\IMG_4319.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\6d\\medium\\6dccda47b32f416a92a2db93a0e02b1e.jpg",
+      "llama_desc": "A young girl with long blonde hair in a white dress is standing in front of a large, brown, rock-like structure with a hole in it, surrounded by plants and a small, green, rock-like object. The girl is looking at something in the hole, her hands on the rock. The background is a shopping mall or similar indoor space with a few benches and a sign in the distance.",
+      "oracle_desc": "A young girl with curly reddish-auburn hair leans over the edge of a large decorative rock and mist display inside a shopping mall attraction, peering down into it. The display features artificial rocks, live-looking plants, and a low mist effect rising from below. Retail storefronts and mall signage are visible in the background.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "2E5A165E-89F2-4022-8AA6-5EEE06B115C5",
+      "filename": "IR7A6125.JPG",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\20250901\\IR7A6125.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\2e\\medium\\2e5a165e89f240228aa65eee06b115c5.jpg",
+      "llama_desc": "A black wrought-iron fence with a planter full of flowers and a palm tree in a pot. The planter is black and has a decorative design on the front. It is filled with a mix of flowers, including white and purple flowers, and a palm tree in a pot.",
+      "oracle_desc": "A large ornate black decorative planter sits within a black wrought-iron stand or fence outdoors, holding a small palm-like plant and an arrangement of white and purple orchid-type flowers. The image is shot at an angle against a bright open sky. Additional patio furniture and an umbrella are partially visible in the background.",
+      "gaps": ["formatting"]
+    },
+    {
+      "id": "0BBA693A-48EC-43EC-BD4B-94C29116326A",
+      "filename": "20240408_144240.jpg",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\Samsung Gallery\\DCIM\\Camera\\20240408_144240.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\0b\\medium\\0bba693a48ec43ecbd4b94c29116326a.jpg",
+      "llama_desc": "A piece of white paper on a black metal table. The paper is flat and flatly lit, with a few small, white, round shadows cast on it from above. The table's metal mesh is visible in the background, with some of its metal bars and some of its metal meshing.",
+      "oracle_desc": "A sheet of light blue-white paper rests on a black metal mesh patio table outdoors in bright sunlight, with a dappled pattern of bright light dots projected across its surface, likely from sunlight filtering through foliage. A central brighter oval of light highlights the middle of the paper. The diamond-pattern metal mesh of the table is visible around the paper's edges.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "901BEB26-8ABC-44F2-A15B-69F598F0B980",
+      "filename": "IMG_0053.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2005\\2005_10_31\\IMG_0053.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\90\\medium\\901beb268abc44f2a15b69f598f0b980.jpg",
+      "llama_desc": "A woman in a pink shirt and black pinstripe pants sits on a dark red leather bench in front of a brick fireplace, surrounded by a child's play area. She is holding a pen and paper, writing a card for a child. A child in a black dress and pink tights sits on her lap, holding a baby doll.",
+      "oracle_desc": "A woman in a pink hoodie sits on a dark red upholstered couch near a brick fireplace at what appears to be a birthday gift-opening gathering, writing on a notepad. A toddler in a dark outfit sits beside her on the couch, holding a baby doll. Wrapped gifts, party bags, and alphabet puzzle packaging are visible nearby.",
+      "gaps": ["hallucination", "wrong_count"]
+    },
+    {
+      "id": "3C838EF7-FA72-458E-861F-31F4D3914ACF",
+      "filename": "IMG_9355.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2005\\2005_10_22\\CD\\IMG_9355.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\3c\\medium\\3c838ef7fa72458e861f31f4d3914acf.jpg",
+      "llama_desc": "A skeleton in a black witch's hat sits on a wooden chair, surrounded by various toys and objects. The skeleton's right hand is raised in a wave, while its left hand holds a small teddy bear. The chair is placed in front of a window, with a red couch to the right and a bookshelf to the left.",
+      "oracle_desc": "A full-size decorative Halloween skeleton prop wearing a black witch's hat with a crow perched on it sits in a wooden chair at a child's desk, one arm raised and the other resting with a small wand or stick. Halloween decorations, a basket, and assorted knick-knacks fill the surrounding room, with a red couch visible to the right and a bookshelf to the left. Natural light comes through a window behind the skeleton.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "17AB9B7D-FBF3-49E4-A03E-E2D2ADDE9FC3",
+      "filename": "20221217_173147.jpg",
+      "file_path": "I:\\XPS_File_Backup\\C_Drive_BKUP\\Users\\retli\\OneDrive\\Pictures\\Samsung Gallery\\DCIM\\Camera\\20221217_173147.jpg",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\17\\medium\\17ab9b7dfbf349e4a03ee2d2adde9fc3.jpg",
+      "llama_desc": "A man and a woman in a low-angled, self-taken photo. The man is wearing a dark grey or black zip-up jacket with a gold zipper and a dark grey or black beanie. The woman is wearing a green or greenish-brownish top.",
+      "oracle_desc": "A low-angle selfie shows a middle-aged man wearing glasses, a grey zip-up hoodie, and a grey beanie alongside a young blonde woman whose head leans toward him. Both look toward the camera from below, with a plain ceiling visible behind them. The casual framing and angle suggest an impromptu snapshot.",
+      "gaps": ["hallucination"]
+    }
+  ]
+}

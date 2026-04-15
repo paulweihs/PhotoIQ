@@ -1,0 +1,108 @@
+{
+  "batch_id": "batch_20260410_110245_rerun_20260410_113207",
+  "prompt_version": "v12a",
+  "created_at": "2026-04-10T15:32:07.9286435Z",
+  "annotated_at": "2026-04-09T00:00:00.0000000Z",
+  "photos": [
+    {
+      "id": "53C90D44-1B39-4992-BB89-8EBAF98FB176",
+      "filename": "IMG_1300.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_02_28\\IMG_1300.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\53\\medium\\53c90d441b394992bb898ebaf98fb176.jpg",
+      "llama_desc": "A darkly lit stage with a person in a red and black costume, possibly a performer or actor, is seen in the center of the image. The person is wearing a red and black outfit with a long, flowing red and black skirt and a red and black top. They are standing on a stage with a white or light-colored floor, and there is a small, darkly lit area to the left of the person.",
+      "oracle_desc": "A very dark, blurry outdoor night scene with a small cluster of distant figures or lights — a green point of light and a faint red glow — visible near the center of an otherwise nearly black frame. No stage, performer, or costume is discernible; the setting appears to be an open outdoor area, possibly around a campfire or bonfire at night. Heavy motion blur and extreme underexposure make most details unresolvable.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "7BAC8528-1D5C-426C-8844-6A2883F00BB1",
+      "filename": "IMG_0896.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_05_25\\IMG_0896.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\7b\\medium\\7bac85281d5c426c88446a2883f00bb1.jpg",
+      "llama_desc": "A girl in a black and white patterned tank top and blue shorts standing in front of a brick building with a blue sign reading \"Collins Elementary\" and a blue and white sign reading \"Collins Elementary Michigan Exemplary Blue Ribbon School\" and \"Collins Elementary Michigan Exemplary Blue Ribbon School\" in white letters. The girl is standing on a grey sidewalk in front of a brick building with a blue sign reading \"Collins Elementary\" and a blue and white sign reading \"Collins Elementary Michigan Exemplary Blue ... . The girl is standing on a grey sidewalk in front of a brick building with a blue sign reading \"Collins Elementary\" and a blue and white sign reading \"Coll ... .",
+      "oracle_desc": "An upward-angled shot of a large brick school building facade dominated by a blue banner reading \"Collins Elementary / Michigan Exemplary Blue Ribbon School\" and engraved lettering reading \"Bruce D. Collins Elementary School.\" A girl stands at the far right edge of the frame, small in scale relative to the building. The composition emphasizes the signage rather than the subject.",
+      "gaps": ["missing_landmark", "truncated", "formatting"]
+    },
+    {
+      "id": "736E8BAB-4076-4756-AF3D-05F77E0E662B",
+      "filename": "IMG_2235.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\a\\IMG_2235.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\73\\medium\\736e8bab40764756af3d05f77e0e662b.jpg",
+      "llama_desc": "A young girl with long blonde hair and a black bow in her hair, wearing a pink, purple, and white patterned shirt, holding a small potted plant with green leaves and pink flowers, sitting at a white table with a blue plate and a piece of paper with dirt and a plant stem.",
+      "oracle_desc": "A young blonde girl smiles at the camera while holding a small potted seedling with a bright pink flower, seated at a white table scattered with loose soil and a white paper sheet. She wears a colorful geometric-patterned shirt in shades of pink, purple, and black and has a dark hair clip rather than a bow. A blue plate sits at the edge of the table in the background.",
+      "gaps": []
+    },
+    {
+      "id": "561BACD8-D0B0-4AD1-84DC-5A709E962E58",
+      "filename": "IMG_2134.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\2011_04_24\\IMG_2134.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\56\\medium\\561bacd8d0b04ad184dc5a709e962e58.jpg",
+      "llama_desc": "A woman in a blue jacket and pink Hello Kitty-patterned pants is reaching for an object on a black metal structure in front of a brick wall. She has her back to the camera and her right hand is reaching up to grab something. Her left hand is holding a green plastic bag.",
+      "oracle_desc": "A girl in a teal hoodie and pink pajama pants climbs a black decorative iron trellis mounted against a brick house exterior, reaching upward with both hands. A second young girl is partially visible at the left edge of the frame, carrying a colorful bag. The scene appears to be an outdoor play moment on a cloudy day.",
+      "gaps": ["hallucination", "missing_subject"]
+    },
+    {
+      "id": "AB4F215B-8095-4BCB-A166-1204867FCC0D",
+      "filename": "IMG_0279.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2006\\2006_03_11\\IMG_0279.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ab\\medium\\ab4f215b80954bcba1661204867fcc0d.jpg",
+      "llama_desc": "A man in a blue and white plaid shirt, blue jeans, and white sneakers is guiding a young girl in a pink and white helmet, pink and blue jacket, blue and pink pants, and white sneakers as she rides a blue and silver bicycle on a sidewalk. The man is holding the girl's left hand and guiding her through a grassy area. The girl is wearing a pink and white helmet and a pink and blue jacket.",
+      "oracle_desc": "A man in a blue plaid flannel shirt and jeans jogs alongside a toddler riding a small balance bike on a concrete sidewalk, with his arms extended near her but not gripping her hand. The girl wears a pink helmet and a bright pink puffy jacket. Bare winter trees and a school building are visible in the background under clear afternoon light.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "787F8890-1F71-45A6-ADE9-FD7F9EDF39B7",
+      "filename": "_MG_6422.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220228\\_MG_6422.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\78\\medium\\787f88901f7145a6ade9fd7f9edf39b7.jpg",
+      "llama_desc": "A collection of postcards from the Swiss Alps. The postcards are arranged on a white surface, with some of them facing upwards and others lying flat. They feature various images of the Swiss Alps, including mountains, trains, and scenic views.",
+      "oracle_desc": "Approximately a dozen postcards featuring Swiss Alpine scenery are spread out in a fan arrangement on a white backdrop. Several cards prominently show red Rhaetian Railway trains crossing stone viaducts or ascending mountain passes, and at least one card displays the Matterhorn. The collection appears to be a curated set of Swiss railway and landscape souvenirs.",
+      "gaps": []
+    },
+    {
+      "id": "89484425-5672-4CA1-A22F-61229C13D634",
+      "filename": "IMG_2526.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\2011_07_04\\IMG_2526.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\89\\medium\\8948442556724ca1a22f61229c13d634.jpg",
+      "llama_desc": "A group of five children in white t-shirts and blue shorts, with one child in a red t-shirt, standing on a dirt path in a forest. The children are looking at something on the ground, with one child in a red t-shirt holding a small object. The background is a forest with trees and greenery.",
+      "oracle_desc": "Four children in white t-shirts and grey or khaki shorts stand clustered together on a dirt path in a wooded area, gathered around a rope hanging from a tree above them. None of the children is wearing a red shirt. The shaded forest setting with dense green foliage fills the background.",
+      "gaps": ["wrong_count", "hallucination"]
+    },
+    {
+      "id": "368070BD-ADF7-4D04-9EAD-20D38D59D465",
+      "filename": "IMG_2180.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\a\\IMG_2180.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\36\\medium\\368070bdadf74d049ead20d38d59d465.jpg",
+      "llama_desc": "A young girl in a pink and white helmet, riding a black and silver bicycle with a black seat and handlebars, on a concrete driveway in front of a white garage door. She is wearing a purple and pink tie-dyed shirt, blue jeans, and red and white sneakers. The girl's long blonde hair is tied in a ponytail and she has a pink and white helmet on her head.",
+      "oracle_desc": "A young blonde girl rides a small black balance bike on a wide concrete driveway, leaning slightly forward with her feet off the ground. She wears a pink helmet, a purple tie-dye long-sleeve shirt with a heart graphic, and blue jeans. A white two-car garage door and the corner of a brick house are visible behind her.",
+      "gaps": []
+    },
+    {
+      "id": "266DCCA9-D999-487C-90F1-6ED5E407178D",
+      "filename": "_MG_6483.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220508\\_MG_6483.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\26\\medium\\266dcca9d999487c90f16ed5e407178d.jpg",
+      "llama_desc": "A woman in a plaid shirt and a girl in a dark grey sweater are hugging in front of a tree with pink flowers. The woman is holding a phone in her hand. The background is a white building with a stone wall.",
+      "oracle_desc": "Two young women embrace and smile in front of a cherry blossom tree laden with pink blooms, with one wearing a plaid shirt and the other a grey knit sweater. Neither person is holding a phone. The image is rotated 90 degrees sideways, and a light-colored building facade is partially visible in the background.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "41A4AFC6-F081-4C37-ACAE-B5C3BCA2D58A",
+      "filename": "_MG_6335.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20211002\\_MG_6335.dng",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\41\\medium\\41a4afc6f0814c37acaeb5c3bca2d58a.jpg",
+      "llama_desc": "A group of swimmers in various swimsuits and caps, some on the starting blocks, others in the pool, with a few others in the background. The swimmers are all wearing different colored swimsuits and caps, with some wearing goggles and others not. The background is a pool with a few people in the background, including a few people in the pool and others on the poolside.",
+      "oracle_desc": "A large group of competitive female swimmers, numbering well over a dozen, stand at the starting blocks along the edge of an indoor pool, preparing for a race at what appears to be a swim meet. All athletes are at the blocks — none are yet in the water — wearing one-piece competitive suits in black, navy, red, and other colors, many with swim caps. An overhead scoreboard and sponsor banners are visible on the back wall.",
+      "gaps": ["hallucination"]
+    }
+  ]
+}

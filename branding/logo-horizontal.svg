@@ -1,0 +1,67 @@
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 80" width="480" height="80">
+  <defs>
+    <radialGradient id="bgGrad" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#1a2a4a"/>
+      <stop offset="100%" stop-color="#0a0e1a"/>
+    </radialGradient>
+    <radialGradient id="lensGlow" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#60aaff" stop-opacity="0.9"/>
+      <stop offset="60%"  stop-color="#0078d4" stop-opacity="0.6"/>
+      <stop offset="100%" stop-color="#004a8f" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glow">
+      <feGaussianBlur stdDeviation="1.5" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="iconClip">
+      <circle cx="40" cy="40" r="34"/>
+    </clipPath>
+  </defs>
+
+  <!-- Icon -->
+  <circle cx="40" cy="40" r="34" fill="url(#bgGrad)"/>
+  <circle cx="40" cy="40" r="32" fill="none" stroke="#0078d4" stroke-width="1.5" opacity="0.6"/>
+
+  <!-- Aperture blades (scaled to 40,40 center, r≈13) -->
+  <g clip-path="url(#iconClip)" filter="url(#glow)">
+    <g transform="translate(40,40)">
+      <path d="M 0,-13 Q 11,-9 13,0 Q 3,-2 0,-13 Z" fill="#0078d4" opacity="0.85" transform="rotate(0)"/>
+      <path d="M 0,-13 Q 11,-9 13,0 Q 3,-2 0,-13 Z" fill="#0078d4" opacity="0.85" transform="rotate(60)"/>
+      <path d="M 0,-13 Q 11,-9 13,0 Q 3,-2 0,-13 Z" fill="#0078d4" opacity="0.85" transform="rotate(120)"/>
+      <path d="M 0,-13 Q 11,-9 13,0 Q 3,-2 0,-13 Z" fill="#0078d4" opacity="0.85" transform="rotate(180)"/>
+      <path d="M 0,-13 Q 11,-9 13,0 Q 3,-2 0,-13 Z" fill="#0078d4" opacity="0.85" transform="rotate(240)"/>
+      <path d="M 0,-13 Q 11,-9 13,0 Q 3,-2 0,-13 Z" fill="#0078d4" opacity="0.85" transform="rotate(300)"/>
+    </g>
+  </g>
+  <circle cx="40" cy="40" r="11" fill="url(#lensGlow)"/>
+  <circle cx="40" cy="40" r="8"  fill="#0a1628" opacity="0.95"/>
+  <g transform="translate(40,40)" fill="#60aaff" filter="url(#glow)">
+    <polygon points="0,-4  0.9,-0.9  4,0  0.9,0.9  0,4  -0.9,0.9  -4,0  -0.9,-0.9" opacity="0.95"/>
+  </g>
+
+  <!-- Wordmark: Photo -->
+  <text x="88" y="48"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="30" font-weight="300" letter-spacing="-0.5"
+        fill="#ffffff">Photo</text>
+
+  <!-- Wordmark: IQ (accent blue) -->
+  <text x="210" y="48"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="30" font-weight="700" letter-spacing="-0.5"
+        fill="#0078d4">IQ</text>
+
+  <!-- Pro badge -->
+  <rect x="248" y="20" width="32" height="16" rx="3" fill="#0078d4" opacity="0.15"/>
+  <rect x="248" y="20" width="32" height="16" rx="3" fill="none" stroke="#0078d4" stroke-width="1" opacity="0.6"/>
+  <text x="264" y="32"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="9" font-weight="600" letter-spacing="0.5"
+        fill="#0078d4" text-anchor="middle">PRO</text>
+
+  <!-- Tagline -->
+  <text x="88" y="65"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="11" font-weight="400" letter-spacing="0.3"
+        fill="#5a7aa0">Intelligent Photo Management</text>
+</svg>

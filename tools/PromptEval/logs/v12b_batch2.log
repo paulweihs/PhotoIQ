@@ -1,0 +1,22 @@
+Batch generated — 50 photos  (prompt v12b)
+  File     : C:\dev\PhotoIQPro\tools\PromptEval\batches\batch_20260411_171400.json
+
+Gap categories for annotation:
+    missing_landmark
+    wrong_count
+    hallucination
+    activity_inversion
+    missing_subject
+    truncated
+    filler_opener
+    formatting
+    too_short
+    gender_violation
+    color_specific
+
+Next steps:
+  1. Claude: Read C:\dev\PhotoIQPro\tools\PromptEval\batches\batch_20260411_171400.json
+  2. For each photo: Read the image file (use thumbnail_path if file_path is a DNG),
+     write oracle_desc + gaps[]
+  3. Save annotated file as: C:\dev\PhotoIQPro\tools\PromptEval\batches\batch_20260411_171400_annotated.json
+  4. dotnet run -- --score C:\dev\PhotoIQPro\tools\PromptEval\batches\batch_20260411_171400_annotated.json

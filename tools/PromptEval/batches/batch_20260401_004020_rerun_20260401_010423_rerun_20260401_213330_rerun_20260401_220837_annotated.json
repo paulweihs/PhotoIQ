@@ -1,0 +1,308 @@
+{
+  "batch_id": "batch_20260401_004020_rerun_20260401_010423_rerun_20260401_213330_rerun_20260401_220837",
+  "prompt_version": "v11",
+  "created_at": "2026-04-02T02:08:37.4040178Z",
+  "annotated_at": "2026-04-02T02:45:00Z",
+  "photos": [
+    {
+      "id": "7A866495-4BAD-40A8-BF26-211716B326BB",
+      "filename": "IMG_4289.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\138___01\\IMG_4289.JPG",
+      "file_exists": true,
+      "llama_desc": "The image depicts a woman sitting on a bed, surrounded by various items. She is wearing a black onesie with a cat design and has her hair tied back. The woman is holding a small object in her right hand, which appears to be a pen or pencil.",
+      "oracle_desc": "A smiling woman sits on a white hotel bed wearing a black Christmas onesie covered in Santa Claus face prints. She has an HP laptop open on her lap.",
+      "gaps": ["hallucination", "filler_opener"],
+      "gap_notes": "Still says 'cat design' despite the clothing-print specificity rule — the most stubborn hallucination in the batch. Opens with banned 'The image depicts' — filler_opener regression returned at v11 (adding 6th line crosses LLaMA's rule-compliance limit)."
+    },
+    {
+      "id": "B9A70144-DDB1-436F-833C-C9D7408DCC08",
+      "filename": "IMG_4216.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\137___12\\IMG_4216.JPG",
+      "file_exists": true,
+      "llama_desc": "The image shows a young girl holding a laptop in front of a door. The girl is wearing a red sweatshirt with white text on the front, and her long blonde hair is falling over her shoulders. She is holding a gray HP laptop with a black logo on the back, and her nails are painted white.",
+      "oracle_desc": "A teen girl with long blonde-reddish hair, wearing a red sweatshirt, holds a closed HP laptop while standing. Christmas string lights visible behind her.",
+      "gaps": ["filler_opener"],
+      "gap_notes": "Opens with banned 'The image shows'. Content is otherwise accurate — HP laptop identified, standing posture implied ('holding a laptop'). Filler-opener regression: same as v9 pattern."
+    },
+    {
+      "id": "728FFC6B-CD22-4DF4-AC01-2085B9F6EECE",
+      "filename": "IMG_4764.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\145___08\\IMG_4764.JPG",
+      "file_exists": true,
+      "llama_desc": "The image shows a table with a banner that reads \"Weih's Family Reunion\" in a large, black, gothic font. The table is white and has a few items on it, including a plate and a blue folder. The banner is white with a black border and has two shields on either side of the text.",
+      "oracle_desc": "A banner reading 'Weihs Family Reunion'. Two heraldic coat-of-arms shields: left reads 'Labiau', right reads 'Ostpreußen' with an eagle.",
+      "gaps": ["filler_opener", "missing_landmark"],
+      "gap_notes": "Opens with 'The image shows' — filler_opener. IMPROVEMENT: now mentions 'two shields on either side of the text' — landmark awareness improved. But shield text ('Labiau', 'Ostpreußen') still not read — missing_landmark persists. 'A plate' likely hallucinated."
+    },
+    {
+      "id": "DEC45ECC-183B-445D-A560-C31C53557BC4",
+      "filename": "IMG_4315.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\138___01\\IMG_4315.JPG",
+      "file_exists": true,
+      "llama_desc": "The image features a photograph of the Indiana Statehouse, taken from a unique perspective through the windshield of a vehicle. The building's white stone façade is partially obscured by the windshield wiper, which is positioned in the foreground. The wiper's black rubber blade is visible, and its metal frame is reflected in the glass.",
+      "oracle_desc": "A neoclassical domed building (Indiana Statehouse) photographed through a car window. Window frame and diagonal line from the car window are prominent in the foreground.",
+      "gaps": ["filler_opener"],
+      "gap_notes": "Opens with 'The image features' — filler_opener. BEST description of this photo yet: correctly names 'Indiana Statehouse' and describes the car windshield/wiper in detail. The landmark-naming rule and car-window context are both captured. Content is excellent — only the opener is wrong."
+    },
+    {
+      "id": "294338FE-72AB-4243-B707-C7E0B9E5706E",
+      "filename": "IMG_4431.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\140___03\\IMG_4431.JPG",
+      "file_exists": true,
+      "llama_desc": "The image features a serene and expansive body of water, likely a lake or a river, with a large building or structure in the background. The water's surface is calm and peaceful, with gentle ripples and a few small waves. The surrounding landscape is characterized by a mix of trees and buildings.",
+      "oracle_desc": "The Lincoln Memorial seen small in the distance across the National Mall Reflecting Pool. Bare winter trees line both sides. Blue sky with clouds.",
+      "gaps": ["filler_opener", "missing_landmark"],
+      "gap_notes": "Opens with 'The image features' — filler_opener. REGRESSION from v10: Lincoln Memorial is no longer named (v10 correctly identified it). 'Large building or structure in the background' is vague — missing_landmark returned. The landmark-naming rule that fixed this in v10 is not being applied here in v11."
+    },
+    {
+      "id": "531A3439-71E0-4FF2-855E-A9C7DA1B64B2",
+      "filename": "_MG_6962.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220817\\_MG_6962.dng",
+      "file_exists": true,
+      "llama_desc": "The image shows a man standing on a beach, with a kayak and a boat in the water behind him. The man is standing on the sand, with his back to the camera, and is wearing a white shirt and dark pants.",
+      "oracle_desc": null,
+      "gaps": [],
+      "gap_notes": "SKIPPED — DNG file exceeds read size limit. Cannot score."
+    },
+    {
+      "id": "D406DA68-5254-4B0D-A63B-2BA63F46CC7A",
+      "filename": "IMG_4749.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\144___07\\IMG_4749.JPG",
+      "file_exists": true,
+      "llama_desc": "This image shows a family of three sitting at a table in a restaurant, enjoying a meal together. The man, who is balding and wearing an orange shirt, is sitting at the table with his wife, who has blonde hair and is wearing a dark blue shirt with orange dots. The man is holding a fork in his right hand, while his wife is holding a fork in her left hand.",
+      "oracle_desc": "Three people at a restaurant table. Older man (orange-peach shirt, balding), woman (light hair, blue floral blouse), younger man (blue plaid shirt). All smiling.",
+      "gaps": ["filler_opener", "missing_subject"],
+      "gap_notes": "Opens with 'This image shows' — filler_opener. REGRESSION: younger man in blue plaid shirt is not mentioned at all — missing_subject. v10 correctly described all three. Only two of three people described here."
+    },
+    {
+      "id": "F7A3A5CE-20A4-48CE-8AFE-CD78413DA2EA",
+      "filename": "_MG_4978.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20090901\\_MG_4978.dng",
+      "file_exists": true,
+      "llama_desc": "The image captures a serene sunset scene at a beach, with a pier or jetty stretching out into the calm waters. The sky is ablaze with a warm, golden light, gradating from a deep orange at the horizon to a soft, pale yellow towards the top.",
+      "oracle_desc": null,
+      "gaps": [],
+      "gap_notes": "SKIPPED — DNG file exceeds read size limit. Cannot score."
+    },
+    {
+      "id": "4BDEFAB0-8627-4427-9532-183E0192D8FD",
+      "filename": "IMG_4302.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\138___01\\IMG_4302.JPG",
+      "file_exists": true,
+      "llama_desc": "The image shows a screen displaying a list of names and times, likely from a swimming event. The screen is blue with white text and has a list of names and times in the center. The top of the screen has the words \"Girls 200 IM\" and \"SOUTH\" in white text.",
+      "oracle_desc": "Blue LED scoreboard: 'Girls 200 IM / SOUTH / EVENT 17 HEAT 10'. Eight swimmers listed. Sponsors 'Citizens Energy Group' and 'OneAmerica' at bottom.",
+      "gaps": ["filler_opener", "missing_landmark"],
+      "gap_notes": "Opens with 'The image shows' — filler_opener. Quotes 'Girls 200 IM' and 'SOUTH' — text-quoting working. Citizens Energy Group and OneAmerica sponsor logos still not mentioned — missing_landmark persists. No individual swimmer names quoted (regression from v10 which quoted 'Blake, Chloe')."
+    },
+    {
+      "id": "79A3BC3F-2B6B-4B13-AD6C-AF96476C2E38",
+      "filename": "_MG_5497.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20200512\\_MG_5497.JPG",
+      "file_exists": true,
+      "llama_desc": "The photo shows a young woman in a white graduation gown, cap, and multiple colorful cords around her neck. She is wearing a gold medal around her neck and has long, light-brown hair. She is smiling and looking directly at the camera.",
+      "oracle_desc": "A young woman in a white graduation cap and gown with multiple colorful honor cords and a large medallion.",
+      "gaps": ["filler_opener"],
+      "gap_notes": "Opens with 'The photo shows' — filler_opener. FIXED: now correctly mentions 'gold medal around her neck' — missing_subject resolved. Content is accurate. Only gap is the banned opener."
+    },
+    {
+      "id": "FE3A2855-0683-4FFC-B151-F0513D26818C",
+      "filename": "_MG_5468.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20200507\\_MG_5468.JPG",
+      "file_exists": true,
+      "llama_desc": "The photo shows a young woman standing in front of a yellow school bus with a white banner on the side. The woman is wearing a yellow t-shirt, blue shorts, and white sneakers, and has long brown hair. She is standing on a grassy area with her left hand on her hip and her right hand on her hip.",
+      "oracle_desc": "A young woman stands in front of a yellow school bus. Banner reads 'Congratulations Class of 2020'. 'Utica Community Schools' on bus side.",
+      "gaps": ["filler_opener", "missing_landmark"],
+      "gap_notes": "Opens with 'The photo shows' — filler_opener. REGRESSION from v10: banner text 'Congratulations Class of 2020' no longer quoted (v10 quoted it correctly). Now just says 'a white banner on the side' — missing_landmark returned. Both the text-quoting and filler rules failed simultaneously."
+    },
+    {
+      "id": "4810F13E-3C0C-4AE3-9E8E-14178011B739",
+      "filename": "IMG_4291.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\138___01\\IMG_4291.JPG",
+      "file_exists": true,
+      "llama_desc": "A woman is lying on her side in bed, her face partially hidden by a white comforter. Her long, brown hair is visible, and her face is turned away from the camera. She is lying on her side, with her head and shoulders covered by the comforter.",
+      "oracle_desc": "A person mostly buried under white hotel bedding with only their face and dark hair visible peeking out. They appear to be looking at the camera.",
+      "gaps": ["activity_inversion"],
+      "gap_notes": "No filler opener. 'Face is turned away from the camera' — the person appeared to be looking at the camera. activity_inversion persists and is slightly more inaccurate in v11 ('turned away' vs 'sleeping' in prior versions). Inherently ambiguous photo."
+    },
+    {
+      "id": "35FD5E0C-8C33-45E8-88E2-34A3597A7335",
+      "filename": "_MG_7728.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20131215\\_MG_7728.dng",
+      "file_exists": true,
+      "llama_desc": "A group of people, including a man, woman, and several children, pose for a photo in front of a large, ornate building with multiple spires and a central clock tower.",
+      "oracle_desc": null,
+      "gaps": [],
+      "gap_notes": "SKIPPED — DNG file exceeds read size limit. Cannot score."
+    },
+    {
+      "id": "194C2859-6B7F-44EF-9314-863E934870B9",
+      "filename": "_MG_5483.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20200507\\_MG_5483.dng",
+      "file_exists": true,
+      "llama_desc": "A young woman in a white graduation cap and yellow t-shirt is smiling at the camera. She has long, wavy, light-brown hair and is wearing a white, long-sleeved, buttoned-up, white jacket over her t-shirt.",
+      "oracle_desc": null,
+      "gaps": [],
+      "gap_notes": "SKIPPED — DNG file exceeds read size limit. Cannot score."
+    },
+    {
+      "id": "A6C0025A-6014-4FE6-B501-2873CE66CAD9",
+      "filename": "_MG_5511.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20200512\\_MG_5511.JPG",
+      "file_exists": true,
+      "llama_desc": "A woman in a white graduation gown, cap, and multiple colorful cords around her neck, is sitting on a black bench. She has long, light-brown hair and is wearing a white cap with a tassel on top. Her white gown has a gold medal around her neck, and she is wearing multiple colorful cords around her neck.",
+      "oracle_desc": "A young woman in a white graduation cap and gown with multiple colorful honor cords and a large medallion. She sits on a metal bench outdoors, smiling.",
+      "gaps": [],
+      "gap_notes": "FIXED (back from v10 regression): 'gold medal around her neck' correctly mentioned. Black bench noted. No filler opener. Minor: repeats 'multiple colorful cords' twice — slight redundancy but not a scoring gap."
+    },
+    {
+      "id": "FD29A313-E995-4C71-A628-64AB465FAB32",
+      "filename": "_MG_4291.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20130101\\_MG_4291.dng",
+      "file_exists": true,
+      "llama_desc": "A woman in a purple and pink patterned scarf is hugging a girl with long blonde hair. The woman is wearing a grey and black striped cardigan over a black top. The girl is wearing a black top with a white and black patterned scarf.",
+      "oracle_desc": null,
+      "gaps": [],
+      "gap_notes": "SKIPPED — DNG file exceeds read size limit. Cannot score."
+    },
+    {
+      "id": "9169CF5D-3990-4057-BF82-2DE1F0E98EF2",
+      "filename": "IMG_4443.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\140___03\\IMG_4443.JPG",
+      "file_exists": true,
+      "llama_desc": "A large stone monument with a bronze statue of a man on horseback is surrounded by several smaller statues of men. The monument is situated in a park or park-like setting, with a grassy area in front of it and several trees in the background.",
+      "oracle_desc": "A tall granite pedestal with a bronze equestrian statue of a military officer. Additional bronze allegorical figures at the base. Likely the Sherman Monument in Washington, D.C.",
+      "gaps": ["missing_landmark"],
+      "gap_notes": "No filler opener. IMPROVEMENT: 'surrounded by several smaller statues of men' — the base figures are better described than any prior version. Monument still not named (Sherman Monument / Washington DC) — missing_landmark persists. Good overall description, just missing the name."
+    },
+    {
+      "id": "E18C02F0-9D41-4F1D-98D6-6DFD716F3C4B",
+      "filename": "_MG_6300-2.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20130708\\_MG_6300-2.dng",
+      "file_exists": true,
+      "llama_desc": "A man in a red and black striped soccer jersey, a girl in an orange soccer jersey, and a girl in a blue and white soccer jersey stand with their arms crossed, facing the camera, in a grassy field.",
+      "oracle_desc": null,
+      "gaps": [],
+      "gap_notes": "SKIPPED — DNG file exceeds read size limit. Cannot score."
+    },
+    {
+      "id": "03F895DC-738C-435E-BD17-AFC3AFD80D90",
+      "filename": "_MG_6942.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220817\\_MG_6942.dng",
+      "file_exists": true,
+      "llama_desc": "A plate of food on a wooden table, with a white coffee mug in the background. The plate is white with a red border and contains a partially eaten breakfast sandwich.",
+      "oracle_desc": null,
+      "gaps": [],
+      "gap_notes": "SKIPPED — DNG file exceeds read size limit. Cannot score."
+    },
+    {
+      "id": "6C12D48A-D65E-48C7-9E32-4B62B0415AE7",
+      "filename": "IMG_4679.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\143___06\\IMG_4679.JPG",
+      "file_exists": true,
+      "llama_desc": "A family of six, including two adults and four children, pose for a photo in a lush greenery setting. The family is dressed in casual, summer-style clothing, with the adults wearing long-sleeved shirts and the children in dresses and shorts.",
+      "oracle_desc": "Six people pose outdoors for a graduation photo. A young woman in the center wears a white graduation cap and gown with a yellow sash.",
+      "gaps": ["missing_subject"],
+      "gap_notes": "No filler opener. REGRESSION from v10: graduation cap and gown on the central figure not mentioned — missing_subject returned. v10 correctly identified 'the woman in the white graduation cap and gown'. Consistent instability on this photo across versions."
+    },
+    {
+      "id": "8FA4C85D-13B4-4E51-BBCE-CB642F6A7392",
+      "filename": "IMG_3979.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\133___03\\IMG_3979.JPG",
+      "file_exists": true,
+      "llama_desc": "A group of women in various colored dresses and swim suits stand on a poolside platform, each holding a gold medal around their necks. They are standing on a platform with eight numbered steps, with a black curtain behind them.",
+      "oracle_desc": "Indoor swimming awards ceremony. Swimmers on a multi-position awards podium numbered 1-8. A 'FIRE' branded backdrop behind the podium.",
+      "gaps": ["hallucination", "missing_landmark"],
+      "gap_notes": "No filler opener. 'Each holding a gold medal around their necks' — medals not confirmed in oracle view (hallucination). 'A black curtain behind them' — the backdrop is the FIRE-branded one; the text not read. missing_landmark persists (note: IMG_4838 DID read 'Sterling Heights Fire' from a similar backdrop — inconsistent text-reading across similar photos)."
+    },
+    {
+      "id": "26A3B162-C1CF-4B39-9181-1D487E2A5BE4",
+      "filename": "IMG_4485.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\141___04\\IMG_4485.JPG",
+      "file_exists": true,
+      "llama_desc": "A young girl with long blonde hair is standing in front of a brick wall, holding a pink object in her right hand. She is wearing a dark blue, long-sleeved, patterned top with a blue and white pattern of snowflakes and the words \"I LOVE\" in white.",
+      "oracle_desc": "A teen girl with long brown hair stands in front of a brick fireplace. She wears a navy Nordic/Fair Isle patterned hoodie. Christmas string lights on the mantel, Samsung TV above.",
+      "gaps": ["hallucination", "missing_subject"],
+      "gap_notes": "No filler opener. Still says 'long blonde hair' — hallucination persists (brown hair). Back to 'brick wall' instead of 'brick fireplace' — REGRESSION from v10. Christmas lights and Samsung TV not mentioned — missing_subject. Quotes 'I LOVE' from clothing — text-quoting working."
+    },
+    {
+      "id": "EE642F67-891C-4F60-BE1D-73877960433C",
+      "filename": "IMG_4691.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\143___06\\IMG_4691.JPG",
+      "file_exists": true,
+      "llama_desc": "A red car with a dog's head sticking out of the window is seen through a dirty car window. The dog's head is brown and has long, brown hair. The car window is dirty and has a few streaks of rain on it.",
+      "oracle_desc": "Shot from outside a red car through the closed side window. A large brown dog is inside. Red car exterior and door handle visible in the frame.",
+      "gaps": ["hallucination"],
+      "gap_notes": "No filler opener. IMPROVEMENT: correctly identifies the red car and notes the viewing-through-glass element ('seen through a dirty car window'). Still says 'dog's head sticking out of the window' — window appeared closed. Partial improvement but the 'sticking out' hallucination persists."
+    },
+    {
+      "id": "D6B4DC00-AE81-4013-A2A5-7EEF382E8333",
+      "filename": "IMG_4833.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\148___06\\IMG_4833.JPG",
+      "file_exists": true,
+      "llama_desc": "A woman with long brown hair and a gray hoodie is sitting on a brown couch, holding a blue gift box and a colorful candy box. She has a brown teddy bear on her lap and is smiling at the camera.",
+      "oracle_desc": "A young woman with long brown hair sits on a brown leather couch, wearing a gray 'SOCCER' hoodie. She holds a small teal gift box in one hand and a colorful cosmetics/candy palette in the other.",
+      "gaps": ["hallucination"],
+      "gap_notes": "No filler opener. REGRESSION: 'brown teddy bear on her lap' reappears — this was absent in v10 (fixed) but is back in v11. Consistent hallucination pattern: v8.1 no teddy bear, v9 teddy bear, v10 no teddy bear, v11 teddy bear. Likely model stochasticity."
+    },
+    {
+      "id": "8B625E2F-E4DF-4A30-B734-C349723DB12E",
+      "filename": "_MG_6997.dng",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220817\\_MG_6997.dng",
+      "file_exists": true,
+      "llama_desc": "A man in a white shirt is hugging a woman in a black dress. The man is embracing the woman from behind, with his arms around her. The woman is smiling and her arms are around the man's neck.",
+      "oracle_desc": null,
+      "gaps": [],
+      "gap_notes": "SKIPPED — DNG file exceeds read size limit. Cannot score."
+    },
+    {
+      "id": "48BA5455-1F96-4794-9481-6E1EAE5B037E",
+      "filename": "IMG_4247.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\138___01\\IMG_4247.JPG",
+      "file_exists": true,
+      "llama_desc": "A family of seven, including two adults and five children, pose for a photo in front of a Christmas tree in a living room. The boy in the front is wearing a gray suit with a green bow tie, while the girl to his right has her hand on her hip.",
+      "oracle_desc": "Seven people pose for a Christmas family photo. Christmas tree in background. One boy in front wearing a gray suit with green bow tie.",
+      "gaps": [],
+      "gap_notes": "No filler opener. Correctly counts seven. Best description of this photo across all versions — correctly calls out gray suit AND green bow tie. No gaps."
+    },
+    {
+      "id": "4BFD9975-28A7-4EFE-935A-327C5F1C4EE9",
+      "filename": "_MG_6976.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220817\\_MG_6976.JPG",
+      "file_exists": true,
+      "llama_desc": "A row of black and silver cars is parked in front of a steep, rocky, and green mountainous landscape. The cars are parked in a row, with their front ends facing the camera.",
+      "oracle_desc": "A single dark-colored car parked close to a steep rocky mountain face. Only one car visible.",
+      "gaps": ["hallucination", "wrong_count"],
+      "gap_notes": "No filler opener. Still says 'row of cars' — one car only. This hallucination is fully immune to prompting. Likely a model perception issue with partially-framed single vehicle."
+    },
+    {
+      "id": "68BA6386-AB33-4D42-8D84-F0727667A10E",
+      "filename": "IMG_4838.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\148___06\\IMG_4838.JPG",
+      "file_exists": true,
+      "llama_desc": "A man in a gray shirt and black shorts is shaking hands with someone else in a gray shirt and black shorts. He is standing on a stage with a group of people behind him. There is a sign on the stage that says \"Sterling Heights Fire\" with a red heart logo.",
+      "oracle_desc": "An outdoor event or ceremony. A man with a fire department uniform patch in the foreground. A 'FIRE' branded backdrop visible behind the group.",
+      "gaps": [],
+      "gap_notes": "FIXED: 'Sterling Heights Fire' quoted verbatim from the backdrop — missing_landmark fully resolved. No filler opener. The text-quoting + landmark-naming combination worked perfectly here. No activity hallucination (no fire imagery). Best outcome for this photo."
+    },
+    {
+      "id": "06BAF0FF-19D3-4B9A-B2CC-FD3CB641FF42",
+      "filename": "IMG_4290.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\KimsCameraAsOf20210218\\138___01\\IMG_4290.JPG",
+      "file_exists": true,
+      "llama_desc": "A woman in a black onesie with a cat and Santa Claus pattern lies on a bed, holding a red and white gift-wrapped package. She is using a laptop on her lap, with a black bag and a plastic bag containing pink objects on the bed beside her.",
+      "oracle_desc": "A woman reclines on a white hotel bed wearing a dark Christmas onesie printed with Santa Claus faces. She holds a snack item with an HP laptop nearby.",
+      "gaps": ["hallucination"],
+      "gap_notes": "No filler opener. Still says 'cat and Santa Claus pattern' — cat is wrong, Santa Claus is correctly identified. Same partial progress as v10: Santa Claus now named, but 'cat' persists. The clothing-print specificity rule has not eliminated this hallucination."
+    },
+    {
+      "id": "3B04B04B-3B5A-470F-B631-665372E753D0",
+      "filename": "_MG_6945.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20220817\\_MG_6945.JPG",
+      "file_exists": true,
+      "llama_desc": "The image shows a menu board for Pine State Biscuit's Biscuit Sandwiches, with a white background and a black border. The menu is titled \"BISCUIT SANDWICHES\" and features three options: \"THE REGGIE\", \"REGGIE DELUXE\", and \"THE VEGGIE REGGIE\". Each option has a description of its ingredients and price.",
+      "oracle_desc": "A white menu board for Pine State Biscuits. Three items: 'THE REGGIE', 'REGGIE DELUXE*', 'THE VEGGIE REGGIE (V)'. Pine State Biscuits oval logo at top.",
+      "gaps": ["filler_opener"],
+      "gap_notes": "Opens with 'The image shows' — filler_opener. Content is accurate: quotes restaurant name and all three menu items verbatim, notes prices and descriptions exist. Only the banned opener is wrong."
+    }
+  ]
+}

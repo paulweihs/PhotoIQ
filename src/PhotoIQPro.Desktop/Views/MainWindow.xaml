@@ -1,0 +1,1958 @@
+<Window x:Class="PhotoIQPro.Desktop.Views.MainWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:PhotoIQPro.Desktop.Converters"
+        xmlns:behaviors="clr-namespace:PhotoIQPro.Desktop.Behaviors"
+        xmlns:wpf="clr-namespace:WpfToolkit.Controls;assembly=VirtualizingWrapPanel"
+        Title="PhotoIQ Pro" Height="800" Width="1400"
+        WindowStartupLocation="CenterScreen"
+        WindowState="Maximized"
+        Background="{DynamicResource BackgroundBrush}"
+        PreviewKeyDown="OnWindowPreviewKeyDown">
+    <Window.TaskbarItemInfo>
+        <TaskbarItemInfo ProgressState="{Binding TaskbarProgressState}"
+                         ProgressValue="{Binding TaskbarProgressValue}"/>
+    </Window.TaskbarItemInfo>
+    <Window.Resources>
+
+        <conv:IsInCollectionConverter x:Key="IsInCollection"/>
+        <conv:PathToImageSourceConverter x:Key="PathToBitmap"/>
+        <conv:GrayscaleImageConverter x:Key="GrayscaleImage"/>
+        <conv:InverseBoolConverter x:Key="InverseBool"/>
+        <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVis"/>
+        <conv:AddConverter x:Key="Add8" Amount="8"/>
+
+        <!-- Active nav button: AccentBrush background, same hover -->
+        <Style x:Key="ActiveNavButtonStyle" TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+            <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Foreground" Value="White"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="#1a8fe0"/>
+                </Trigger>
+            </Style.Triggers>
+        </Style>
+
+        <!-- Transparent TextBox for search bar -->
+        <Style x:Key="SearchBoxStyle" TargetType="TextBox">
+            <Setter Property="Background" Value="#333333"/>
+            <Setter Property="Foreground" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="Padding" Value="10,0"/>
+            <Setter Property="VerticalContentAlignment" Value="Center"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="CaretBrush" Value="{StaticResource ForegroundBrush}"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="TextBox">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                Padding="10,0,32,0"
+                                CornerRadius="4">
+                            <Grid VerticalAlignment="Center">
+                                <ScrollViewer x:Name="PART_ContentHost"
+                                              Padding="0"
+                                              Margin="0"
+                                              Focusable="false"
+                                              VerticalAlignment="Center"
+                                              HorizontalScrollBarVisibility="Hidden"
+                                              VerticalScrollBarVisibility="Hidden"/>
+                                <TextBlock x:Name="PlaceholderText"
+                                           Margin="2,0,0,0"
+                                           Text="{TemplateBinding Tag}"
+                                           Foreground="#666666"
+                                           FontSize="{TemplateBinding FontSize}"
+                                           IsHitTestVisible="False"
+                                           Visibility="Collapsed"
+                                           VerticalAlignment="Center"/>
+                            </Grid>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="Text" Value="">
+                                <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="Text" Value="{x:Null}">
+                                <Setter TargetName="PlaceholderText" Property="Visibility" Value="Visible"/>
+                            </Trigger>
+                            <Trigger Property="IsFocused" Value="True">
+                                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Banner button: ghost style tuned for dark-blue banner backgrounds.
+             White border + foreground so it reads clearly on the banner. -->
+        <Style x:Key="BannerButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="#E0E8FF"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#667BB8D4"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="10,5"/>
+            <Setter Property="FontSize" Value="12"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#33FFFFFF"/>
+                                <Setter Property="BorderBrush" Value="#AACCEE"/>
+                                <Setter Property="Foreground" Value="White"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Ghost button for icon-style actions (favorite toggle, etc.) -->
+        <Style x:Key="GhostButtonStyle" TargetType="Button">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+            <Setter Property="BorderThickness" Value="1"/>
+            <Setter Property="BorderBrush" Value="#444444"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Padding" Value="10,6"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                BorderBrush="{TemplateBinding BorderBrush}"
+                                BorderThickness="{TemplateBinding BorderThickness}"
+                                CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#333333"/>
+                                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- ListBox: remove default selection highlight; handled in DataTemplate -->
+        <Style x:Key="GalleryListBoxStyle" TargetType="ListBox">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
+            <Setter Property="Focusable" Value="False"/>
+        </Style>
+
+        <Style x:Key="GalleryItemContainerStyle" TargetType="ListBoxItem">
+            <Setter Property="Background" Value="Transparent"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="0"/>
+            <Setter Property="Margin" Value="0"/>
+            <!-- Size the container to ThumbnailSize + 8 (Border Margin="4" each side).
+                 VirtualizingWrapPanel measures each container to determine column count. -->
+            <Setter Property="Width">
+                <Setter.Value>
+                    <Binding Path="Tag" RelativeSource="{RelativeSource AncestorType=ListBox}" Converter="{StaticResource Add8}"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Height">
+                <Setter.Value>
+                    <Binding Path="Tag" RelativeSource="{RelativeSource AncestorType=ListBox}" Converter="{StaticResource Add8}"/>
+                </Setter.Value>
+            </Setter>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="ListBoxItem">
+                        <ContentPresenter/>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+
+        <!-- Selectable read-only text — looks like a TextBlock, supports Ctrl+C -->
+        <Style x:Key="SelectableText" TargetType="TextBox">
+            <Setter Property="IsReadOnly"       Value="True"/>
+            <Setter Property="Background"       Value="Transparent"/>
+            <Setter Property="BorderThickness"  Value="0"/>
+            <Setter Property="Padding"          Value="0"/>
+            <Setter Property="Foreground"       Value="{DynamicResource ForegroundBrush}"/>
+            <Setter Property="TextWrapping"     Value="Wrap"/>
+            <Setter Property="IsTabStop"        Value="False"/>
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
+            <Setter Property="SelectionBrush"   Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Cursor"           Value="IBeam"/>
+            <EventSetter Event="PreviewMouseDown" Handler="SelectableText_PreviewMouseDown"/>
+        </Style>
+
+        <!-- Path variant — NoWrap, scrolls to end on text change so filename is always visible -->
+        <Style x:Key="SelectablePathText" BasedOn="{StaticResource SelectableText}" TargetType="TextBox">
+            <Setter Property="TextWrapping"  Value="NoWrap"/>
+            <EventSetter Event="TextChanged" Handler="PathText_TextChanged"/>
+        </Style>
+
+        <!-- Slider track style -->
+        <Style x:Key="ThumbnailSliderStyle" TargetType="Slider">
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="VerticalAlignment" Value="Center"/>
+        </Style>
+
+    </Window.Resources>
+
+    <Window.InputBindings>
+        <KeyBinding Key="A"      Modifiers="Ctrl"       Command="{Binding SelectAllCommand}"/>
+        <KeyBinding Key="Escape"                        Command="{Binding ClearSelectionCommand}"/>
+        <KeyBinding Key="D"      Modifiers="Ctrl+Shift" Command="{Binding ShowOnThisDayCommand}"/>
+        <KeyBinding Key="T"      Modifiers="Ctrl+Shift" Command="{Binding ShowTagsCommand}"/>
+        <KeyBinding Key="P"      Modifiers="Ctrl+Shift" Command="{Binding ShowPeopleCommand}"/>
+    </Window.InputBindings>
+
+    <Grid>
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <RowDefinition Height="*"/>
+            <RowDefinition Height="Auto"/>
+        </Grid.RowDefinitions>
+        <Grid.ColumnDefinitions>
+            <ColumnDefinition Width="220"/>
+            <ColumnDefinition Width="*"/>
+            <ColumnDefinition Width="280"/>
+        </Grid.ColumnDefinitions>
+
+        <!-- ═══ Top Bar ═══ -->
+        <Border Grid.Row="0" Grid.ColumnSpan="3" Background="{DynamicResource MenuBarBrush}" Padding="12,8">
+            <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <TextBlock Grid.Column="0" Text="📷 PhotoIQ"
+                           FontSize="18" FontWeight="SemiBold"
+                           Foreground="{DynamicResource ForegroundBrush}"
+                           VerticalAlignment="Center" Margin="0,0,16,0"/>
+
+                <!-- Search box with clear button + Search button -->
+                <Grid Grid.Column="1" MaxWidth="540" HorizontalAlignment="Stretch" VerticalAlignment="Center">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Text input area with inline × -->
+                    <Grid Grid.Column="0">
+                        <TextBox x:Name="SearchBox"
+                                 Height="34"
+                                 TabIndex="1"
+                                 Text="{Binding PendingSearchQuery, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource SearchBoxStyle}"
+                                 Tag="Search photos, tags, descriptions…"
+                                 Padding="10,0,28,0"
+                                 AutomationProperties.Name="Search photos"
+                                 PreviewKeyDown="OnSearchBoxPreviewKeyDown"/>
+                        <!-- Clear (×) button — visible when there is pending or committed text -->
+                        <Button Content="×" Command="{Binding ClearSearchCommand}"
+                                Click="OnClearSearchClick"
+                                HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Width="24" Height="24" Margin="0,0,2,0"
+                                FontSize="16" FontWeight="Bold"
+                                Foreground="#888888" Background="Transparent"
+                                BorderThickness="0" Cursor="Hand"
+                                Focusable="False"
+                                AutomationProperties.Name="Clear search">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="Transparent">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Foreground" Value="White"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding IsSearchActive}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                    </Grid>
+
+                    <!-- Search button -->
+                    <Button Grid.Column="1" Content="Search"
+                            Command="{Binding ExecuteSearchCommand}"
+                            Height="34" Padding="14,0" Margin="6,0,0,0"
+                            Background="#0078d4" Foreground="White"
+                            BorderThickness="0" Cursor="Hand" FontSize="13"
+                            ToolTip="Search (Enter)">
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{TemplateBinding Background}" CornerRadius="4"
+                                        Padding="{TemplateBinding Padding}">
+                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                </Border>
+                                <ControlTemplate.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#1a8fe0"/>
+                                    </Trigger>
+                                    <Trigger Property="IsPressed" Value="True">
+                                        <Setter Property="Background" Value="#006bbd"/>
+                                    </Trigger>
+                                </ControlTemplate.Triggers>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+                    <!-- Semantic search badge — shown when CLIP embedding fallback was used -->
+                    <Border Background="#1A6EC6E8" BorderBrush="#406EC6E8" BorderThickness="1"
+                            CornerRadius="4" Padding="8,2" Margin="0,4,0,0"
+                            HorizontalAlignment="Left"
+                            ToolTip="Results include visually similar photos found by the AI model, beyond exact keyword matches"
+                            Visibility="{Binding IsSemanticSearch, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="⚡ Includes visually similar results"
+                                   Foreground="#6EC6E8" FontSize="11"/>
+                    </Border>
+                    <!-- Semantic unavailable hint — shown when searching but CLIP model is missing -->
+                    <Border Background="#1AF9E2AF" BorderBrush="#40F9E2AF" BorderThickness="1"
+                            CornerRadius="4" Padding="8,2" Margin="0,4,0,0"
+                            HorizontalAlignment="Left"
+                            ToolTip="Install the CLIP model files in Settings → AI Engine to enable visual similarity search"
+                            Visibility="{Binding ShowSemanticUnavailableHint, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="Visual similarity search unavailable — AI model not installed"
+                                   Foreground="#F9E2AF" FontSize="11"/>
+                    </Border>
+                </Grid>
+
+                <!-- Action buttons -->
+                <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="16,0,0,0">
+                    <!-- Re-analyze selected — only shown when HasMultiSelection -->
+                    <Button Content="{Binding ReanalyzeMultiSelectedLabel}"
+                            Command="{Binding ReanalyzeMultiSelectedCommand}"
+                            Padding="16,8"
+                            Margin="0,0,8,0">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasMultiSelection}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <!-- Remove from Library — only shown when HasMultiSelection -->
+                    <Button Content="{Binding RemoveFromLibraryLabel}"
+                            Command="{Binding RemoveFromLibraryCommand}"
+                            Padding="16,8"
+                            Margin="0,0,8,0">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                                <Setter Property="Background" Value="#444444"/>
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasMultiSelection}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <!-- Remove from Album — shown when in album view and something is selected -->
+                    <Button Content="Remove from Album"
+                            Command="{Binding RemoveFromAlbumCommand}"
+                            Padding="16,8"
+                            Margin="0,0,8,0">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                                <Setter Property="Background" Value="#555555"/>
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <MultiDataTrigger>
+                                        <MultiDataTrigger.Conditions>
+                                            <Condition Binding="{Binding IsAlbumActive}" Value="True"/>
+                                            <Condition Binding="{Binding HasAnySelected}"  Value="True"/>
+                                        </MultiDataTrigger.Conditions>
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </MultiDataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <!-- Delete Permanently — only shown when HasMultiSelection -->
+                    <Button Content="{Binding DeletePermanentlyLabel}"
+                            Command="{Binding DeletePermanentlyCommand}"
+                            Padding="16,8"
+                            Margin="0,0,8,0">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                                <Setter Property="Background" Value="#C0392B"/>
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasMultiSelection}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <!-- Add to Album — shown when any photo is selected -->
+                    <Button Content="📁 Add to Album"
+                            Command="{Binding AddToAlbumCommand}"
+                            Padding="16,8"
+                            Margin="0,0,8,0">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                                <Setter Property="Visibility" Value="Collapsed"/>
+                                <Style.Triggers>
+                                    <DataTrigger Binding="{Binding HasAnySelected}" Value="True">
+                                        <Setter Property="Visibility" Value="Visible"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
+                    <Button Content="🔍 Scan Drives"
+                            Command="{Binding ScanDrivesCommand}"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            Padding="16,8"
+                            Margin="0,0,8,0"
+                            ToolTip="Scan connected drives for photos to import"/>
+                    <Button Content="⊘ Duplicates"
+                            Command="{Binding FindDuplicatesCommand}"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            Padding="16,8"
+                            Margin="0,0,8,0"
+                            ToolTip="Find and remove duplicate or paired RAW+JPG photos"/>
+                    <Button Content="📁 Folders"
+                            Command="{Binding ImportCommand}"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            Padding="16,8"
+                            Margin="0,0,8,0"
+                            ToolTip="Import one or more folders"/>
+                    <Button Content="🖼 Files"
+                            Command="{Binding ImportFilesCommand}"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            Padding="16,8"
+                            ToolTip="Import individual photo files"/>
+                </StackPanel>
+            </Grid>
+        </Border>
+
+        <!-- ═══ Left Sidebar ═══ -->
+        <Border Grid.Row="1" Grid.Column="0" Background="{DynamicResource SidebarBrush}">
+            <StackPanel Margin="12">
+                <TextBlock Text="LIBRARY" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           Margin="8,8,8,4"/>
+
+                <!-- All Photos: active style when IsAllPhotosActive -->
+                <Button Content="🖼  All Photos"
+                        Command="{Binding ShowAllPhotosCommand}"
+                        ToolTip="Show every photo in your library"
+                        Margin="0,2">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsAllPhotosActive}" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- Favorites: active style when IsFavoritesActive -->
+                <Button Content="⭐  Favorites"
+                        Command="{Binding ShowFavoritesCommand}"
+                        ToolTip="Show photos you've starred as favorites"
+                        Margin="0,2">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsFavoritesActive}" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <!-- ── Albums section ────────────────────── -->
+                <TextBlock Text="ALBUMS" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           Margin="8,16,8,4"/>
+
+                <!-- Per-album nav buttons, generated from SidebarLibraries -->
+                <ItemsControl ItemsSource="{Binding SidebarLibraries}">
+                    <ItemsControl.ItemTemplate>
+                        <DataTemplate>
+                            <StackPanel>
+                                <!-- Empty-library placeholder: visible only when no albums exist.
+                                     Acts as a drag-drop target that auto-creates the first album. -->
+                                <Border AllowDrop="True"
+                                        Background="Transparent"
+                                        Drop="OnLibraryHeaderDrop"
+                                        DragEnter="OnLibraryHeaderDragEnter"
+                                        DragLeave="OnLibraryHeaderDragLeave"
+                                        DragOver="OnAlbumButtonDragOver"
+                                        Padding="8,4,8,4"
+                                        CornerRadius="4"
+                                        Margin="4,1"
+                                        ToolTip="Drag photos here to create the first album"
+                                        Visibility="{Binding HasAlbums,
+                                            Converter={StaticResource InverseBoolToVis}}">
+                                    <StackPanel Orientation="Horizontal">
+                                        <TextBlock Text="🖼  " FontSize="12"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <TextBlock Text="{Binding Name}" FontSize="12"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                        <TextBlock Text=" (empty)" FontSize="11"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                                   FontStyle="Italic"/>
+                                    </StackPanel>
+                                </Border>
+
+                                <!-- Album buttons — shown when the library has albums.
+                                     Library name header is intentionally omitted to reduce clutter. -->
+                                <ItemsControl ItemsSource="{Binding Children}">
+                                    <ItemsControl.ItemTemplate>
+                                        <DataTemplate>
+                                            <Button Margin="4,1" Padding="8,6"
+                                                    Command="{Binding DataContext.NavigateToAlbumSidebarCommand,
+                                                              RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    CommandParameter="{Binding}"
+                                                    ToolTip="{Binding Name}"
+                                                    AllowDrop="True"
+                                                    Drop="OnAlbumButtonDrop"
+                                                    DragEnter="OnAlbumButtonDragEnter"
+                                                    DragLeave="OnAlbumButtonDragLeave"
+                                                    DragOver="OnAlbumButtonDragOver">
+                                                <Button.Style>
+                                                    <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsActive}" Value="True">
+                                                                <Setter Property="Background" Value="#1e3a5f"/>
+                                                                <Setter Property="Foreground" Value="#89B4FA"/>
+                                                                <Setter Property="FontWeight" Value="SemiBold"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </Button.Style>
+                                                <StackPanel Orientation="Horizontal">
+                                                    <TextBlock Text="🖼  " FontSize="12"/>
+                                                    <TextBlock Text="{Binding Name}" FontSize="12"/>
+                                                    <TextBlock Text="{Binding PhotoCount, StringFormat=' ({0})'}"
+                                                               FontSize="11"
+                                                               Foreground="{DynamicResource SecondaryTextBrush}"
+                                                               Margin="2,0,0,0"/>
+                                                </StackPanel>
+                                            </Button>
+                                        </DataTemplate>
+                                    </ItemsControl.ItemTemplate>
+                                </ItemsControl>
+                            </StackPanel>
+                        </DataTemplate>
+                    </ItemsControl.ItemTemplate>
+                </ItemsControl>
+
+                <Button Content="⚙  Manage Libraries"
+                        Command="{Binding ManageLibrariesCommand}"
+                        Style="{DynamicResource NavButtonStyle}"
+                        ToolTip="Create, rename, or delete libraries and albums"
+                        Margin="0,4,0,2"/>
+
+                <TextBlock Text="AI VIEWS" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           Margin="8,16,8,4"/>
+                <Button Content="📅  On This Day"
+                        Command="{Binding ShowOnThisDayCommand}"
+                        ToolTip="See photos taken on this date in past years (Ctrl+Shift+D)">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsOnThisDayActive}" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+                <Button Content="🏷️  Tags"
+                        Command="{Binding ShowTagsCommand}"
+                        Style="{DynamicResource NavButtonStyle}"
+                        ToolTip="Browse all AI-generated tags (Ctrl+Shift+T)"/>
+                <Button Content="👤  People"
+                        Command="{Binding ShowPeopleCommand}"
+                        ToolTip="Browse detected people and name faces (Ctrl+Shift+P)">
+                    <Button.Style>
+                        <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
+                            <Style.Triggers>
+                                <DataTrigger Binding="{Binding IsPeopleActive}" Value="True">
+                                    <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                    <Setter Property="Foreground" Value="White"/>
+                                </DataTrigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
+
+                <TextBlock Text="TOOLS" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           Margin="8,16,8,4"/>
+                <Button Content="🔄  Re-analyze All"
+                        Command="{Binding ReanalyzeAllCommand}"
+                        Style="{DynamicResource NavButtonStyle}"
+                        ToolTip="Re-run AI description and tagging on every photo in the library"
+                        Margin="0,2"/>
+                <Button Style="{DynamicResource NavButtonStyle}"
+                        Command="{Binding ReanalyzeOutdatedCommand}"
+                        Margin="0,2">
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <TextBlock>
+                                <Run Text="Re-analyze photos whose descriptions used an older model or prompt version.&#x0a;"/>
+                                <Run Text="{Binding OutdatedDescriptionCount, StringFormat='{}{0} photo(s) need updating.'}"/>
+                            </TextBlock>
+                        </ToolTip>
+                    </Button.ToolTip>
+                    <StackPanel Orientation="Horizontal">
+                        <TextBlock Text="🔁  Update Outdated"/>
+                        <Border Background="#1AFFA500" CornerRadius="8" Padding="5,1"
+                                Margin="6,0,0,0" VerticalAlignment="Center"
+                                Visibility="{Binding HasOutdatedDescriptions, Converter={StaticResource BoolToVis}}">
+                            <TextBlock Text="{Binding OutdatedDescriptionCount}"
+                                       FontSize="10" Foreground="#FFA500"/>
+                        </Border>
+                    </StackPanel>
+                </Button>
+                <TextBlock Text="SETTINGS" FontSize="11" FontWeight="SemiBold"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           Margin="8,16,8,4"/>
+                <Button Content="⚙  Settings"
+                        Command="{Binding OpenSettingsCommand}"
+                        Style="{DynamicResource NavButtonStyle}"
+                        ToolTip="Configure AI models, performance, and import options"
+                        Margin="0,2"/>
+            </StackPanel>
+        </Border>
+
+        <!-- ═══ Main Content ═══ -->
+        <Border Grid.Row="1" Grid.Column="1" Background="{DynamicResource ContentBrush}">
+            <Grid>
+                <Grid.RowDefinitions>
+                    <RowDefinition Height="Auto"/>
+                    <RowDefinition Height="*"/>
+                </Grid.RowDefinitions>
+
+                <!-- ── Banners (stacked, each individually visible) ──────────── -->
+                <StackPanel Grid.Row="0">
+
+                <!-- ── Person-filter banner ──────────────────────────────────── -->
+                <Border Background="#1A2B5E44" BorderBrush="#443C7BCE" BorderThickness="0,0,0,1"
+                        Padding="14,8"
+                        Visibility="{Binding IsPersonFilterActive, Converter={StaticResource BoolToVis}}">
+                    <Grid>
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <TextBlock Text="👤" FontSize="13" Margin="0,0,8,0" VerticalAlignment="Center"/>
+                            <TextBlock Text="{Binding ActiveFilterLabel}"
+                                       FontSize="12" VerticalAlignment="Center"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        </StackPanel>
+                        <Button Content="✕  Back to all photos"
+                                Command="{Binding ClearPersonFilterCommand}"
+                                HorizontalAlignment="Right" VerticalAlignment="Center"
+                                Style="{StaticResource BannerButtonStyle}"
+                                FontSize="11" Padding="10,4"/>
+                    </Grid>
+                </Border>
+
+                <!-- ── Related-images mode banner ─────────────────────────────── -->
+                <Border Background="#1A2B5ECC" BorderBrush="#333C7BCE" BorderThickness="0,0,0,1"
+                        Padding="14,10"
+                        Visibility="{Binding IsRelatedImagesMode, Converter={StaticResource BoolToVis}}">
+                    <Grid>
+                        <Grid.RowDefinitions>
+                            <RowDefinition Height="Auto"/>
+                            <RowDefinition Height="Auto"/>
+                        </Grid.RowDefinitions>
+
+                        <!-- Row 0: warning text + exit button -->
+                        <Grid Grid.Row="0" Margin="0,0,0,8">
+                            <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="⚠" Foreground="#FFB800" FontSize="13"
+                                           Margin="0,0,8,0" VerticalAlignment="Center"/>
+                                <TextBlock FontSize="12" VerticalAlignment="Center"
+                                           Foreground="#C8D8F0">
+                                    <Run Text="Showing images related to "/>
+                                    <Run Text="{Binding RelatedAnchorPhoto.FileName, FallbackValue=''}"
+                                         FontWeight="SemiBold"
+                                         Foreground="White"/>
+                                    <Run Text="  —  photos outside this set are hidden"/>
+                                </TextBlock>
+                            </StackPanel>
+                            <Button Content="✕  Exit related view"
+                                    Command="{Binding ExitRelatedImagesModeCommand}"
+                                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                                    Style="{StaticResource BannerButtonStyle}"
+                                    FontSize="11" Padding="10,4"/>
+                        </Grid>
+
+                        <!-- Row 1: filter controls -->
+                        <Grid Grid.Row="1">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="24"/>
+                                <ColumnDefinition Width="Auto"/>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+
+                            <!-- Time controls -->
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <CheckBox Content="Within"
+                                          IsChecked="{Binding RelatedTimeEnabled}"
+                                          FontSize="11"
+                                          Foreground="#C8D8F0"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,8,0"/>
+                                <TextBox Text="{Binding RelatedTimeValue, UpdateSourceTrigger=PropertyChanged}"
+                                         Width="42"
+                                         IsEnabled="{Binding RelatedTimeEnabled}"
+                                         FontSize="12"
+                                         Padding="5,3"
+                                         VerticalContentAlignment="Center"
+                                         Margin="0,0,6,0"/>
+                                <ComboBox ItemsSource="{Binding RelatedTimeUnitNames}"
+                                          SelectedIndex="{Binding RelatedTimeUnitIndex}"
+                                          IsEnabled="{Binding RelatedTimeEnabled}"
+                                          FontSize="11"
+                                          Width="82"/>
+                            </StackPanel>
+
+                            <!-- Nearby controls -->
+                            <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                                <CheckBox Content="Nearby"
+                                          IsChecked="{Binding RelatedLocationEnabled}"
+                                          FontSize="11"
+                                          Foreground="#C8D8F0"
+                                          VerticalAlignment="Center"
+                                          Margin="0,0,8,0"
+                                          ToolTip="Requires GPS data in photo"/>
+                                <Slider Minimum="0" Maximum="5"
+                                        SmallChange="1" LargeChange="1"
+                                        IsSnapToTickEnabled="True" TickFrequency="1"
+                                        Value="{Binding RelatedDistanceStepIndex}"
+                                        IsEnabled="{Binding RelatedLocationEnabled}"
+                                        Width="110" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding RelatedDistanceLabel}"
+                                           FontSize="11"
+                                           Foreground="#C8D8F0"
+                                           VerticalAlignment="Center"
+                                           Margin="8,0,0,0" MinWidth="48"/>
+                            </StackPanel>
+
+                            <!-- Save as Album button -->
+                            <Button Grid.Column="3"
+                                    Content="📁  Save as Album"
+                                    Command="{Binding SaveRelatedAsAlbumCommand}"
+                                    Style="{StaticResource BannerButtonStyle}"
+                                    FontSize="11" Padding="10,4"
+                                    ToolTip="Create a new album from all photos in this related set"
+                                    HorizontalAlignment="Right"
+                                    Margin="0,0,8,0"/>
+
+                            <!-- Refresh button -->
+                            <Button Grid.Column="4"
+                                    Content="🔄  Refresh"
+                                    Command="{Binding RefreshRelatedImagesCommand}"
+                                    Style="{StaticResource BannerButtonStyle}"
+                                    FontSize="11" Padding="10,4"/>
+                        </Grid>
+                    </Grid>
+                </Border>
+
+                </StackPanel>
+
+                <!-- ── Gallery content (row 1) ─────────────────────────────────── -->
+                <Grid Grid.Row="1">
+                <!-- Empty state: fresh library -->
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Visibility="{Binding IsLibraryEmpty, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="📷" FontSize="64" HorizontalAlignment="Center"/>
+                    <TextBlock Text="Your library is empty" FontSize="20" FontWeight="SemiBold"
+                               Foreground="{DynamicResource ForegroundBrush}"
+                               HorizontalAlignment="Center" Margin="0,16,0,8"/>
+                    <TextBlock Text="Click + Import or Scan Drives to get started"
+                               FontSize="14" Foreground="{DynamicResource SecondaryTextBrush}"
+                               HorizontalAlignment="Center"/>
+                    <StackPanel HorizontalAlignment="Center" Margin="0,24,0,0">
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
+                            <Button Content="🔍 Scan Drives"
+                                    Command="{Binding ScanDrivesCommand}"
+                                    Style="{DynamicResource PrimaryButtonStyle}"
+                                    Padding="24,12" Margin="0,0,12,0"/>
+                            <Button Content="📁 Import Folder(s)"
+                                    Command="{Binding ImportCommand}"
+                                    Style="{DynamicResource PrimaryButtonStyle}"
+                                    Padding="24,12" Margin="0,0,8,0"/>
+                            <Button Content="🖼 Import Files"
+                                    Command="{Binding ImportFilesCommand}"
+                                    Style="{DynamicResource PrimaryButtonStyle}"
+                                    Padding="24,12"/>
+                        </StackPanel>
+                        <TextBlock Text="Scan Drives finds photos across your whole computer  ·  Import adds a specific folder or files"
+                                   FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}"
+                                   HorizontalAlignment="Center" TextWrapping="Wrap"
+                                   MaxWidth="540" Margin="0,10,0,0" TextAlignment="Center"/>
+                    </StackPanel>
+                </StackPanel>
+
+                <!-- Empty state: related images mode, no photos in range -->
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Visibility="{Binding IsRelatedNoResults, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="🔗" FontSize="48" HorizontalAlignment="Center"/>
+                    <TextBlock Text="No photos found in this range"
+                               FontSize="18" FontWeight="SemiBold"
+                               Foreground="{DynamicResource ForegroundBrush}"
+                               HorizontalAlignment="Center" Margin="0,16,0,8"/>
+                    <TextBlock Text="Try a wider time window or larger distance"
+                               FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}"
+                               HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    <Button Content="🔄  Refresh"
+                            Command="{Binding RefreshRelatedImagesCommand}"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            HorizontalAlignment="Center"
+                            Padding="20,10"/>
+                </StackPanel>
+
+                <!-- Empty state: search returned no results -->
+                <StackPanel VerticalAlignment="Center" HorizontalAlignment="Center"
+                            Visibility="{Binding HasNoResults, Converter={StaticResource BoolToVis}}">
+                    <TextBlock Text="🔍" FontSize="48" HorizontalAlignment="Center"/>
+                    <TextBlock FontSize="18" FontWeight="SemiBold"
+                               Foreground="{DynamicResource ForegroundBrush}"
+                               HorizontalAlignment="Center" Margin="0,16,0,8"
+                               Text="{Binding NoResultsMessage}"/>
+                    <TextBlock Text="Try a different tag, description, or filename"
+                               FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}"
+                               HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                    <Button Content="Clear filter"
+                            Command="{Binding ClearSearchCommand}"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            HorizontalAlignment="Center"
+                            Padding="20,10"/>
+                </StackPanel>
+
+                <!-- ── On This Day panel ── -->
+                <ScrollViewer x:Name="OnThisDayScrollViewer"
+                              VerticalScrollBarVisibility="Auto"
+                              Visibility="{Binding IsOnThisDayActive, Converter={StaticResource BoolToVis}}">
+                    <StackPanel Margin="32,28,32,32" DataContext="{Binding OnThisDay}">
+
+                        <StackPanel Orientation="Horizontal" Margin="0,0,0,8">
+                            <TextBlock Text="📅  On This Day — "
+                                       FontSize="22" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource ForegroundBrush}"/>
+                            <TextBlock Text="{Binding HeadingText}"
+                                       FontSize="22" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource AccentBrush}"/>
+                        </StackPanel>
+
+                        <!-- Loading -->
+                        <ProgressBar IsIndeterminate="True" Width="180" Height="3"
+                                     HorizontalAlignment="Left" Margin="0,16,0,0"
+                                     Foreground="{DynamicResource AccentBrush}"
+                                     Background="Transparent" BorderThickness="0"
+                                     Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
+
+                        <!-- Empty state — no memories for today -->
+                        <StackPanel HorizontalAlignment="Center" VerticalAlignment="Center"
+                                    Visibility="{Binding HasMemories, Converter={StaticResource InverseBoolToVis}}">
+                            <TextBlock Text="📅" FontSize="56" HorizontalAlignment="Center" Margin="0,0,0,16"/>
+                            <TextBlock Text="No memories yet for today"
+                                       FontSize="16" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource ForegroundBrush}"
+                                       HorizontalAlignment="Center"/>
+                            <TextBlock Margin="0,8,0,0" TextWrapping="Wrap" MaxWidth="300" TextAlignment="Center"
+                                       FontSize="12" Foreground="{DynamicResource SecondaryTextBrush}">
+                                <Run Text="Import photos with dates from previous years and they'll appear here on the same date each year."/>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <!-- Year groups -->
+                        <ItemsControl ItemsSource="{Binding Groups}" Margin="0,8,0,0">
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <StackPanel Margin="0,0,0,28">
+                                        <!-- Year heading + Save as Album -->
+                                        <Grid Margin="0,0,0,10">
+                                            <TextBlock Text="{Binding Label}"
+                                                       FontSize="15" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource ForegroundBrush}"
+                                                       VerticalAlignment="Center"/>
+                                            <Button Content="📁  Save as Album"
+                                                    Command="{Binding DataContext.SaveGroupAsAlbumCommand,
+                                                        RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                                    CommandParameter="{Binding}"
+                                                    HorizontalAlignment="Right" VerticalAlignment="Center"
+                                                    Style="{StaticResource BannerButtonStyle}"
+                                                    FontSize="11" Padding="8,3"
+                                                    ToolTip="Create a new album from this year's memories"/>
+                                        </Grid>
+                                        <!-- Horizontal strip of thumbnails -->
+                                        <ItemsControl ItemsSource="{Binding Photos}">
+                                            <ItemsControl.ItemsPanel>
+                                                <ItemsPanelTemplate>
+                                                    <WrapPanel Orientation="Horizontal"/>
+                                                </ItemsPanelTemplate>
+                                            </ItemsControl.ItemsPanel>
+                                            <ItemsControl.ItemTemplate>
+                                                <DataTemplate>
+                                                    <Border Width="140" Height="140"
+                                                            Margin="0,0,6,6"
+                                                            CornerRadius="4"
+                                                            Background="{DynamicResource SurfaceBrush}"
+                                                            ClipToBounds="True"
+                                                            Cursor="Hand"
+                                                            ToolTip="{Binding AiDescription}">
+                                                        <Border.InputBindings>
+                                                            <MouseBinding MouseAction="LeftClick"
+                                                                          Command="{Binding DataContext.DataContext.ShowOnThisDayPhotoCommand,
+                                                                              RelativeSource={RelativeSource AncestorType=ScrollViewer}}"
+                                                                          CommandParameter="{Binding}"/>
+                                                        </Border.InputBindings>
+                                                        <Image Source="{Binding ThumbnailMedium, Converter={StaticResource PathToBitmap}}"
+                                                               Stretch="UniformToFill"/>
+                                                    </Border>
+                                                </DataTemplate>
+                                            </ItemsControl.ItemTemplate>
+                                        </ItemsControl>
+                                    </StackPanel>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </StackPanel>
+                </ScrollViewer>
+
+                <!-- Photo grid -->
+                <ListBox x:Name="PhotoGrid"
+                         ItemsSource="{Binding MediaFiles}"
+                         SelectedItem="{Binding SelectedMediaFile}"
+                         Style="{StaticResource GalleryListBoxStyle}"
+                         ItemContainerStyle="{StaticResource GalleryItemContainerStyle}"
+                         Visibility="{Binding IsGalleryVisible, Converter={StaticResource BoolToVis}}"
+                         AutomationProperties.Name="Photo gallery"
+                         MouseDoubleClick="OnPhotoDoubleClick"
+                         PreviewMouseLeftButtonDown="OnPhotoGridPreviewMouseDown"
+                         PreviewMouseRightButtonDown="OnPhotoGridPreviewMouseRightButtonDown"
+                         PreviewMouseMove="OnPhotoGridPreviewMouseMove"
+                         VirtualizingPanel.IsVirtualizing="True"
+                         VirtualizingPanel.VirtualizationMode="Recycling"
+                         ScrollViewer.CanContentScroll="True"
+                         Tag="{Binding ThumbnailSize}">
+                    <ListBox.ItemsPanel>
+                        <ItemsPanelTemplate>
+                            <wpf:VirtualizingWrapPanel Margin="8"/>
+                        </ItemsPanelTemplate>
+                    </ListBox.ItemsPanel>
+                    <ListBox.ItemTemplate>
+                        <DataTemplate>
+                            <Border Width="{Binding DataContext.ThumbnailSize, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                    Height="{Binding DataContext.ThumbnailSize, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                    Margin="4" CornerRadius="4"
+                                    Background="{StaticResource ThumbnailBgBrush}"
+                                    Cursor="Hand"
+                                    Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ListBox}}"
+                                    behaviors:LazyThumbnailBehavior.Enabled="True">
+                                <Border.ContextMenu>
+                                    <!-- DataContext = MainViewModel via PlacementTarget.Tag (ContextMenu is outside the visual tree) -->
+                                    <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                        <MenuItem Header="View Full Size"    Command="{Binding OpenPhotoViewerCommand}"/>
+                                        <MenuItem Header="Open Folder in Explorer"  Command="{Binding OpenInExplorerCommand}"
+                                                  IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                        <MenuItem Header="Copy Full Path"    Command="{Binding CopyFullPathCommand}"/>
+                                        <MenuItem Header="Copy to Folder…"  Command="{Binding CopyToFolderCommand}"
+                                                  IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                        <MenuItem Header="Send To"
+                                                  IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"
+                                                  ItemsSource="{Binding SendToMenuItems}">
+                                            <MenuItem.ItemContainerStyle>
+                                                <Style TargetType="MenuItem">
+                                                    <Setter Property="Header"           Value="{Binding Header}"/>
+                                                    <Setter Property="Command"          Value="{Binding Command}"/>
+                                                    <Setter Property="CommandParameter" Value="{Binding CommandParameter}"/>
+                                                    <Style.Triggers>
+                                                        <DataTrigger Binding="{Binding IsSeparator}" Value="True">
+                                                            <Setter Property="Template">
+                                                                <Setter.Value>
+                                                                    <ControlTemplate TargetType="MenuItem">
+                                                                        <Separator/>
+                                                                    </ControlTemplate>
+                                                                </Setter.Value>
+                                                            </Setter>
+                                                        </DataTrigger>
+                                                    </Style.Triggers>
+                                                </Style>
+                                            </MenuItem.ItemContainerStyle>
+                                        </MenuItem>
+                                        <Separator/>
+                                        <MenuItem Header="Re-analyze with AI" Command="{Binding ReanalyzeSelectedCommand}"
+                                                  IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                        <MenuItem Header="Add to Favorites"  Command="{Binding ToggleFavoriteCommand}"/>
+                                        <MenuItem Header="Add to Album"      Command="{Binding AddToAlbumCommand}"/>
+                                        <Separator/>
+                                        <MenuItem Header="Add Tag…"          Command="{Binding ShowAddTagPopupCommand}"/>
+                                        <Separator/>
+                                        <MenuItem Header="Exclude this folder" Command="{Binding ExcludeFolderCommand}"
+                                                  Visibility="{Binding SelectedFolderIsExcluded, Converter={StaticResource InverseBoolToVis}}"/>
+                                        <MenuItem Header="Include this folder" Command="{Binding IncludeFolderCommand}"
+                                                  Visibility="{Binding SelectedFolderIsExcluded, Converter={StaticResource BoolToVis}}"/>
+                                        <Separator/>
+                                        <MenuItem Header="{Binding ExcludeImageLabel}"       Command="{Binding ExcludeImageCommand}"/>
+                                        <MenuItem Header="Remove from Album"          Command="{Binding RemoveFromAlbumCommand}"
+                                                  Visibility="{Binding IsAlbumActive, Converter={StaticResource BoolToVis}}"/>
+                                        <MenuItem Header="{Binding RemoveFromLibraryLabel}" Command="{Binding RemoveFromLibraryCommand}"/>
+                                        <MenuItem Header="{Binding DeletePermanentlyLabel}"  Command="{Binding DeletePermanentlyCommand}"
+                                                  Foreground="#F38BA8"/>
+                                    </ContextMenu>
+                                </Border.ContextMenu>
+                                <Border.Style>
+                                    <Style TargetType="Border">
+                                        <Setter Property="BorderThickness" Value="2"/>
+                                        <Setter Property="BorderBrush" Value="Transparent"/>
+                                        <Style.Triggers>
+                                            <!-- Bright border: the item shown in the detail panel -->
+                                            <DataTrigger Binding="{Binding IsSelected, RelativeSource={RelativeSource AncestorType=ListBoxItem}}" Value="True">
+                                                <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                                <Setter Property="BorderThickness" Value="3"/>
+                                            </DataTrigger>
+                                        </Style.Triggers>
+                                    </Style>
+                                </Border.Style>
+                                <Grid ClipToBounds="True">
+                                    <Image Stretch="UniformToFill">
+                                        <Image.Source>
+                                            <MultiBinding Converter="{StaticResource GrayscaleImage}">
+                                                <Binding Path="LoadedThumbnail"/>
+                                                <Binding Path="IsOffline"/>
+                                            </MultiBinding>
+                                        </Image.Source>
+                                    </Image>
+
+                                    <!-- Offline overlay — amber tint to make disconnected photos obvious -->
+                                    <Border Background="#BB5C3000" IsHitTestVisible="False"
+                                            Visibility="{Binding IsOffline, Converter={StaticResource BoolToVis}}">
+                                        <Border.ToolTip>
+                                            <ToolTip>
+                                                <TextBlock>
+                                                    <Run Text="Source drive offline — "/>
+                                                    <Run Text="{Binding OfflineDriveRoot}"/>
+                                                    <Run Text=": not connected.&#x0a;Reconnect to re-analyze or view full resolution."/>
+                                                </TextBlock>
+                                            </ToolTip>
+                                        </Border.ToolTip>
+                                        <TextBlock Text="⛔" FontSize="22"
+                                                   HorizontalAlignment="Center" VerticalAlignment="Center"
+                                                   IsHitTestVisible="False"/>
+                                    </Border>
+
+                                    <!-- Dim inset border: other multi-selected items (not the detail-panel item) -->
+                                    <Border CornerRadius="2" BorderThickness="3"
+                                            Background="Transparent" BorderBrush="#6089B4FA"
+                                            IsHitTestVisible="False">
+                                        <Border.Visibility>
+                                            <MultiBinding Converter="{StaticResource IsInCollection}">
+                                                <Binding/>
+                                                <Binding Path="DataContext.MultiSelectedItems"
+                                                         RelativeSource="{RelativeSource AncestorType=ListBox}"/>
+                                                <Binding Path="DataContext.MultiSelectedVersion"
+                                                         RelativeSource="{RelativeSource AncestorType=ListBox}"/>
+                                            </MultiBinding>
+                                        </Border.Visibility>
+                                    </Border>
+
+                                    <!-- Hover overlay -->
+                                    <Border CornerRadius="2" Background="#40000000">
+                                        <Border.Style>
+                                            <Style TargetType="Border">
+                                                <Setter Property="Visibility" Value="Collapsed"/>
+                                                <Style.Triggers>
+                                                    <DataTrigger Binding="{Binding IsMouseOver, RelativeSource={RelativeSource AncestorType=Border}}" Value="True">
+                                                        <Setter Property="Visibility" Value="Visible"/>
+                                                    </DataTrigger>
+                                                </Style.Triggers>
+                                            </Style>
+                                        </Border.Style>
+                                    </Border>
+
+                                    <!-- Badges: bottom-left -->
+                                    <StackPanel Orientation="Horizontal"
+                                                VerticalAlignment="Bottom" HorizontalAlignment="Left"
+                                                Margin="5,0,0,5">
+                                        <!-- Favorite badge -->
+                                        <Border Visibility="{Binding IsFavorite, Converter={StaticResource BoolToVis}}"
+                                                Background="#CC1a1a1a" CornerRadius="3"
+                                                Padding="4,2" Margin="0,0,4,0">
+                                            <TextBlock Text="★" FontSize="11" Foreground="#FFD700"/>
+                                        </Border>
+                                        <!-- AI analyzed badge -->
+                                        <Border Visibility="{Binding IsAnalyzed, Converter={StaticResource BoolToVis}}"
+                                                Background="#CC1a1a1a" CornerRadius="3"
+                                                Padding="4,2" Margin="0,0,4,0">
+                                            <TextBlock Text="AI" FontSize="10" FontWeight="SemiBold"
+                                                       Foreground="{StaticResource AccentBrush}"/>
+                                        </Border>
+                                        <!-- Vision pending badge — CLIP done, Ollama analysis queued -->
+                                        <Border Visibility="{Binding IsVisionPending, Converter={StaticResource BoolToVis}}"
+                                                Background="#CC1a1a1a" CornerRadius="3"
+                                                Padding="4,2"
+                                                ToolTip="AI description pending">
+                                            <TextBlock Text="…" FontSize="10" FontWeight="SemiBold"
+                                                       Foreground="#A6ADC8"/>
+                                        </Border>
+                                    </StackPanel>
+
+                                    <!-- Multi-select checkbox overlay: top-right corner -->
+                                    <Border VerticalAlignment="Top" HorizontalAlignment="Right"
+                                            Margin="0,5,5,0"
+                                            Background="{StaticResource AccentBrush}"
+                                            CornerRadius="3" Width="18" Height="18">
+                                        <Border.Visibility>
+                                            <MultiBinding Converter="{StaticResource IsInCollection}">
+                                                <Binding/>
+                                                <Binding Path="DataContext.MultiSelectedItems"
+                                                         RelativeSource="{RelativeSource AncestorType=ListBox}"/>
+                                                <Binding Path="DataContext.MultiSelectedVersion"
+                                                         RelativeSource="{RelativeSource AncestorType=ListBox}"/>
+                                            </MultiBinding>
+                                        </Border.Visibility>
+                                        <TextBlock Text="✓" FontSize="11" FontWeight="Bold"
+                                                   Foreground="White"
+                                                   HorizontalAlignment="Center"
+                                                   VerticalAlignment="Center"/>
+                                    </Border>
+                                </Grid>
+                            </Border>
+                        </DataTemplate>
+                    </ListBox.ItemTemplate>
+                </ListBox>
+                </Grid><!-- /inner grid row-1 -->
+            </Grid>
+        </Border>
+
+        <!-- ═══ Right Sidebar ═══ -->
+        <Border Grid.Row="1" Grid.Column="2" Background="{DynamicResource SidebarBrush}">
+            <ScrollViewer VerticalScrollBarVisibility="Auto"
+                          Visibility="{Binding HasSelection, Converter={StaticResource BoolToVis}}">
+                <StackPanel Margin="16">
+
+                    <!-- Thumbnail preview — click opens viewer; right-click shows action menu -->
+                    <Button Command="{Binding OpenPhotoViewerCommand}"
+                            Cursor="Hand" ToolTip="Open in viewer (right-click for more)"
+                            Margin="0,0,0,12">
+                        <Button.ContextMenu>
+                            <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
+                                <MenuItem Header="View Full Size"     Command="{Binding OpenPhotoViewerCommand}"/>
+                                <MenuItem Header="Open Folder in Explorer"   Command="{Binding OpenInExplorerCommand}"
+                                          IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                <MenuItem Header="Re-analyze with AI" Command="{Binding ReanalyzeSelectedCommand}"
+                                          IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                <MenuItem Header="Add to Favorites"   Command="{Binding ToggleFavoriteCommand}"/>
+                                <MenuItem Header="Add to Album"       Command="{Binding AddToAlbumCommand}"/>
+                                <MenuItem Header="Add Tag…"           Command="{Binding ShowAddTagPopupCommand}"/>
+                                <Separator/>
+                                <MenuItem Header="Copy Full Path"      Command="{Binding CopyFullPathCommand}"/>
+                                <MenuItem Header="Copy to Folder…"    Command="{Binding CopyToFolderCommand}"
+                                          IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                <MenuItem Header="Send To"
+                                          IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"
+                                          ItemsSource="{Binding SendToMenuItems}">
+                                    <MenuItem.ItemContainerStyle>
+                                        <Style TargetType="MenuItem">
+                                            <Setter Property="Header"           Value="{Binding Header}"/>
+                                            <Setter Property="Command"          Value="{Binding Command}"/>
+                                            <Setter Property="CommandParameter" Value="{Binding CommandParameter}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding IsSeparator}" Value="True">
+                                                    <Setter Property="Template">
+                                                        <Setter.Value>
+                                                            <ControlTemplate TargetType="MenuItem">
+                                                                <Separator/>
+                                                            </ControlTemplate>
+                                                        </Setter.Value>
+                                                    </Setter>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </MenuItem.ItemContainerStyle>
+                                </MenuItem>
+                                <Separator/>
+                                <MenuItem Header="Exclude this folder" Command="{Binding ExcludeFolderCommand}"
+                                          Visibility="{Binding SelectedFolderIsExcluded, Converter={StaticResource InverseBoolToVis}}"/>
+                                <MenuItem Header="Include this folder" Command="{Binding IncludeFolderCommand}"
+                                          Visibility="{Binding SelectedFolderIsExcluded, Converter={StaticResource BoolToVis}}"/>
+                                <Separator/>
+                                <MenuItem Header="{Binding RemoveFromLibraryLabel}" Command="{Binding RemoveFromLibraryCommand}"/>
+                                <MenuItem Header="{Binding DeletePermanentlyLabel}" Command="{Binding DeletePermanentlyCommand}"
+                                          Foreground="#F38BA8"/>
+                            </ContextMenu>
+                        </Button.ContextMenu>
+                        <Button.Template>
+                            <ControlTemplate TargetType="Button">
+                                <Border Background="{DynamicResource ThumbnailBgBrush}" CornerRadius="4"
+                                        Height="200">
+                                    <Image Source="{Binding SelectedMediaFile.ThumbnailLarge, Converter={StaticResource PathToBitmap}}" Stretch="Uniform"/>
+                                </Border>
+                            </ControlTemplate>
+                        </Button.Template>
+                    </Button>
+
+                    <!-- File name + favorite toggle -->
+                    <Grid Margin="0,0,0,4">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox Grid.Column="0"
+                                 Text="{Binding SelectedMediaFile.FileName, Mode=OneWay}"
+                                 Style="{StaticResource SelectableText}"
+                                 FontWeight="SemiBold"
+                                 VerticalAlignment="Center"
+                                 Margin="0,0,8,0"/>
+                        <Button Grid.Column="1"
+                                Command="{Binding ToggleFavoriteCommand}"
+                                Style="{StaticResource GhostButtonStyle}"
+                                Padding="8,6"
+                                ToolTip="Toggle favorite"
+                                AutomationProperties.Name="Toggle favorite">
+                            <Button.Content>
+                                <TextBlock FontSize="16">
+                                    <TextBlock.Style>
+                                        <Style TargetType="TextBlock">
+                                            <Setter Property="Text" Value="☆"/>
+                                            <Setter Property="Foreground" Value="{StaticResource SecondaryTextBrush}"/>
+                                            <Style.Triggers>
+                                                <DataTrigger Binding="{Binding SelectedIsFavorite}" Value="True">
+                                                    <Setter Property="Text" Value="★"/>
+                                                    <Setter Property="Foreground" Value="#FFD700"/>
+                                                </DataTrigger>
+                                            </Style.Triggers>
+                                        </Style>
+                                    </TextBlock.Style>
+                                </TextBlock>
+                            </Button.Content>
+                        </Button>
+                    </Grid>
+
+                    <!-- Camera model -->
+                    <TextBlock Text="{Binding SelectedMediaFile.CameraModel}"
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               FontSize="12" Margin="0,0,0,4"
+                               TextTrimming="CharacterEllipsis"
+                               ToolTip="{Binding SelectedMediaFile.CameraModel}"/>
+
+                    <!-- Offline warning — shown when the selected photo's drive is disconnected -->
+                    <Border Background="#331E0000" BorderBrush="#CC7A20" BorderThickness="1"
+                            CornerRadius="4" Padding="8,6" Margin="0,0,0,12"
+                            Visibility="{Binding SelectedIsOffline, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="⚠  Source drive offline — reconnect to open, edit, or delete this photo."
+                                   FontSize="11" Foreground="#CC7A20" TextWrapping="Wrap"/>
+                    </Border>
+
+                    <!-- Caption (ADR-008) — always shown when a photo is selected -->
+                    <StackPanel Margin="0,0,0,16">
+                        <!-- Header: CAPTION label + Edit button -->
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="CAPTION"
+                                       FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"
+                                       VerticalAlignment="Center"/>
+                            <Button Grid.Column="1"
+                                    Content="Edit"
+                                    FontSize="11" Padding="8,2"
+                                    Command="{Binding BeginEditCaptionCommand}"
+                                    Visibility="{Binding IsEditingCaption, Converter={StaticResource InverseBoolToVis}}"
+                                    Style="{StaticResource GhostButtonStyle}"/>
+                        </Grid>
+
+                        <!-- View mode (hidden while editing) -->
+                        <StackPanel Visibility="{Binding IsEditingCaption, Converter={StaticResource InverseBoolToVis}}">
+                            <!-- Has a caption -->
+                            <TextBox Text="{Binding DisplayCaption, Mode=OneWay}"
+                                     Style="{StaticResource SelectableText}"
+                                     FontSize="13"
+                                     Visibility="{Binding HasDisplayCaption, Converter={StaticResource BoolToVis}}"/>
+                            <!-- No caption yet — placeholder -->
+                            <TextBlock Text="Add a caption…"
+                                       FontSize="13" FontStyle="Italic" Opacity="0.45"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"
+                                       Cursor="Hand"
+                                       Visibility="{Binding HasDisplayCaption, Converter={StaticResource InverseBoolToVis}}">
+                                <TextBlock.InputBindings>
+                                    <MouseBinding MouseAction="LeftClick" Command="{Binding BeginEditCaptionCommand}"/>
+                                </TextBlock.InputBindings>
+                            </TextBlock>
+                        </StackPanel>
+
+                        <!-- Edit mode -->
+                        <TextBox Text="{Binding EditingCaptionText, UpdateSourceTrigger=PropertyChanged}"
+                                 FontSize="13"
+                                 MaxLength="200"
+                                 Padding="6,5"
+                                 Visibility="{Binding IsEditingCaption, Converter={StaticResource BoolToVis}}"
+                                 Background="{DynamicResource ThumbnailBgBrush}"
+                                 Foreground="{DynamicResource ForegroundBrush}"
+                                 BorderBrush="{DynamicResource AccentBrush}"
+                                 BorderThickness="1">
+                            <TextBox.InputBindings>
+                                <KeyBinding Key="Return" Command="{Binding SaveCaptionCommand}"/>
+                                <KeyBinding Key="Escape" Command="{Binding CancelEditCaptionCommand}"/>
+                            </TextBox.InputBindings>
+                        </TextBox>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                                    Margin="0,4,0,0"
+                                    Visibility="{Binding IsEditingCaption, Converter={StaticResource BoolToVis}}">
+                            <Button Content="Cancel"
+                                    FontSize="12" Padding="10,4" Margin="0,0,6,0"
+                                    Command="{Binding CancelEditCaptionCommand}"
+                                    Style="{DynamicResource NavButtonStyle}"/>
+                            <Button Content="Save"
+                                    FontSize="12" Padding="10,4"
+                                    Command="{Binding SaveCaptionCommand}"
+                                    Style="{DynamicResource AccentBtn}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Metadata section -->
+                    <TextBlock Text="DETAILS" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               Margin="0,0,0,8"/>
+
+                    <!-- Date taken -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Date" FontSize="12"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedDateText}"
+                                   FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                    </Grid>
+
+                    <!-- Time taken -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Time" FontSize="12"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedTimeText}"
+                                   FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                    </Grid>
+
+                    <!-- Dimensions -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="Dimensions" FontSize="12"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedDimensionsText}"
+                                   FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                    </Grid>
+
+                    <!-- File size -->
+                    <Grid Margin="0,0,0,6">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="File size" FontSize="12"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        <TextBlock Grid.Column="1" Text="{Binding SelectedFileSizeText}"
+                                   FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                    </Grid>
+
+                    <!-- File path -->
+                    <TextBlock Text="Path" FontSize="12" Margin="0,6,0,2"
+                               Foreground="{DynamicResource SecondaryTextBrush}"/>
+                    <TextBox Text="{Binding SelectedMediaFile.FilePath, Mode=OneWay}"
+                             Style="{StaticResource SelectablePathText}"
+                             FontSize="11"/>
+
+                    <!-- GPS coordinates (shown only when EXIF GPS data is present) -->
+                    <Grid Margin="0,6,0,0"
+                          Visibility="{Binding HasGps, Converter={StaticResource BoolToVis}}">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBlock Grid.Column="0" Text="GPS" FontSize="12"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   VerticalAlignment="Center"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <TextBlock Text="{Binding SelectedGpsText}"
+                                       FontSize="12" Foreground="{DynamicResource ForegroundBrush}"
+                                       VerticalAlignment="Center"/>
+                            <Button Content="Map" FontSize="10" Padding="5,1" Margin="6,0,0,0"
+                                    Command="{Binding OpenInMapsCommand}"
+                                    Style="{StaticResource GhostButtonStyle}"
+                                    ToolTip="Open location in browser maps"/>
+                        </StackPanel>
+                    </Grid>
+
+                    <!-- EXIF exposure section -->
+                    <StackPanel Visibility="{Binding HasExifData, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Text="EXPOSURE" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   Margin="0,16,0,8"/>
+
+                        <Grid Margin="0,0,0,6"
+                              Visibility="{Binding HasAperture, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Aperture" FontSize="12"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding SelectedApertureText}"
+                                       FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,6"
+                              Visibility="{Binding HasShutterSpeed, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Shutter" FontSize="12"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding SelectedShutterText}"
+                                       FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,6"
+                              Visibility="{Binding HasIso, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="ISO" FontSize="12"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding SelectedIsoText}"
+                                       FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                        </Grid>
+
+                        <Grid Margin="0,0,0,6"
+                              Visibility="{Binding HasFocalLength, Converter={StaticResource BoolToVis}}">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <TextBlock Grid.Column="0" Text="Focal length" FontSize="12"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <TextBlock Grid.Column="1" Text="{Binding SelectedFocalLengthText}"
+                                       FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                        </Grid>
+                    </StackPanel>
+
+                    <!-- Description (ADR-003) — view + inline edit mode -->
+                    <StackPanel Visibility="{Binding HasDisplayDescription, Converter={StaticResource BoolToVis}}"
+                                Margin="0,16,0,0">
+                        <!-- Header row: label + freshness badge + Edit button -->
+                        <Grid Margin="0,0,0,4">
+                            <Grid.ColumnDefinitions>
+                                <ColumnDefinition Width="*"/>
+                                <ColumnDefinition Width="Auto"/>
+                            </Grid.ColumnDefinitions>
+                            <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                                <TextBlock Text="{Binding DescriptionLabel}"
+                                           FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                <TextBlock Text="{Binding DescriptionModelLine}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"
+                                           Opacity="0.65"
+                                           Margin="6,0,0,0"
+                                           VerticalAlignment="Center"
+                                           Visibility="{Binding HasDescriptionModelLine, Converter={StaticResource BoolToVis}}"/>
+                                <!-- Freshness: current (green ✓) -->
+                                <Border Background="#1A6BCB56" CornerRadius="3" Padding="4,1"
+                                        Margin="6,0,0,0" VerticalAlignment="Center"
+                                        ToolTip="{Binding DescriptionFreshnessTooltip}"
+                                        Visibility="{Binding IsDescriptionCurrent, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="✓ current" FontSize="9" Foreground="#6BCB56"/>
+                                </Border>
+                                <!-- Freshness: stale (amber ⚠) -->
+                                <Border Background="#1AFFA500" CornerRadius="3" Padding="4,1"
+                                        Margin="6,0,0,0" VerticalAlignment="Center"
+                                        ToolTip="{Binding DescriptionFreshnessTooltip}"
+                                        Visibility="{Binding IsDescriptionStale, Converter={StaticResource BoolToVis}}">
+                                    <TextBlock Text="⚠ outdated" FontSize="9" Foreground="#FFA500"/>
+                                </Border>
+                            </StackPanel>
+                            <Button Grid.Column="1"
+                                    Content="Edit"
+                                    FontSize="11"
+                                    Padding="8,2"
+                                    Command="{Binding BeginEditDescriptionCommand}"
+                                    Visibility="{Binding IsEditingDescription, Converter={StaticResource InverseBoolToVis}}"
+                                    Style="{StaticResource GhostButtonStyle}"/>
+                        </Grid>
+
+                        <!-- View mode -->
+                        <TextBox Text="{Binding DisplayDescription, Mode=OneWay}"
+                                 Style="{StaticResource SelectableText}"
+                                 FontSize="12"
+                                 Visibility="{Binding IsEditingDescription, Converter={StaticResource InverseBoolToVis}}"/>
+
+                        <!-- Edit mode -->
+                        <TextBox x:Name="DescriptionEditBox"
+                                 Text="{Binding EditingDescriptionText, UpdateSourceTrigger=PropertyChanged}"
+                                 FontSize="12"
+                                 TextWrapping="Wrap"
+                                 AcceptsReturn="True"
+                                 MaxLength="2000"
+                                 MinHeight="80"
+                                 Padding="6"
+                                 Margin="0,0,0,6"
+                                 Visibility="{Binding IsEditingDescription, Converter={StaticResource BoolToVis}}"
+                                 Background="{DynamicResource ThumbnailBgBrush}"
+                                 Foreground="{DynamicResource ForegroundBrush}"
+                                 BorderBrush="{DynamicResource AccentBrush}"
+                                 BorderThickness="1"/>
+                        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right"
+                                    Visibility="{Binding IsEditingDescription, Converter={StaticResource BoolToVis}}">
+                            <Button Content="Cancel"
+                                    FontSize="12" Padding="10,4" Margin="0,0,6,0"
+                                    Command="{Binding CancelEditDescriptionCommand}"
+                                    Style="{DynamicResource NavButtonStyle}"/>
+                            <Button Content="Save"
+                                    FontSize="12" Padding="10,4"
+                                    Command="{Binding SaveDescriptionCommand}"
+                                    Style="{DynamicResource AccentBtn}"/>
+                        </StackPanel>
+                    </StackPanel>
+
+                    <!-- Description failed indicator -->
+                    <StackPanel Visibility="{Binding DescriptionAttemptedButFailed, Converter={StaticResource BoolToVis}}"
+                                Margin="0,16,0,0">
+                        <TextBlock Text="AI DESCRIPTION" FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   Margin="0,0,0,6"/>
+                        <TextBlock Text="⚠ No description"
+                                   FontSize="12" FontWeight="SemiBold"
+                                   Foreground="#CC6600"/>
+                        <TextBlock Text="The vision model returned no result for this photo. This can happen with unusual JPEG encodings, CMYK color profiles, or unsupported RAW formats. Re-analyze to retry."
+                                   FontSize="11"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   TextWrapping="Wrap"
+                                   Margin="0,4,0,0"/>
+                    </StackPanel>
+
+                    <!-- Tags (AI + user) -->
+                    <TextBlock Text="TAGS" FontSize="11" FontWeight="SemiBold"
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               Margin="0,16,0,8"/>
+                    <ItemsControl ItemsSource="{Binding SelectedTags}"
+                                  Visibility="{Binding HasSelectedTags, Converter={StaticResource BoolToVis}}">
+                        <ItemsControl.ItemsPanel>
+                            <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                        </ItemsControl.ItemsPanel>
+                        <ItemsControl.ItemTemplate>
+                            <DataTemplate>
+                                <!-- Tag chip: search button + × overlay -->
+                                <Grid Margin="0,0,4,4">
+                                    <Button Command="{Binding DataContext.SearchByTagCommand,
+                                                              RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding Name}"
+                                            Cursor="Hand"
+                                            ToolTip="Click to filter by this tag">
+                                        <Button.Template>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{DynamicResource ThumbnailBgBrush}"
+                                                        BorderThickness="1" CornerRadius="3"
+                                                        Padding="7,3,22,3"
+                                                        x:Name="TagBorder">
+                                                    <Border.Style>
+                                                        <Style TargetType="Border">
+                                                            <Setter Property="BorderBrush" Value="{StaticResource AccentBrush}"/>
+                                                            <Style.Triggers>
+                                                                <DataTrigger Binding="{Binding IsAIGenerated}" Value="False">
+                                                                    <Setter Property="BorderBrush" Value="#555555"/>
+                                                                </DataTrigger>
+                                                            </Style.Triggers>
+                                                        </Style>
+                                                    </Border.Style>
+                                                    <TextBlock Text="{Binding Name}" FontSize="11"
+                                                               Foreground="{DynamicResource ForegroundBrush}"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter TargetName="TagBorder" Property="Background" Value="{DynamicResource AccentBrush}"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Button.Template>
+                                    </Button>
+                                    <!-- Remove tag × -->
+                                    <Button Content="×"
+                                            Command="{Binding DataContext.RemoveTagCommand,
+                                                              RelativeSource={RelativeSource AncestorType=ItemsControl}}"
+                                            CommandParameter="{Binding}"
+                                            HorizontalAlignment="Right" VerticalAlignment="Center"
+                                            Width="18" Margin="0,0,2,0"
+                                            Background="Transparent" BorderThickness="0"
+                                            FontSize="13" FontWeight="Bold"
+                                            Foreground="#888888" Cursor="Hand"
+                                            AutomationProperties.Name="Remove tag"
+                                            ToolTip="Remove tag"/>
+                                </Grid>
+                            </DataTemplate>
+                        </ItemsControl.ItemTemplate>
+                    </ItemsControl>
+
+                    <!-- Add tag input -->
+                    <Grid Margin="0,6,0,0">
+                        <Grid.ColumnDefinitions>
+                            <ColumnDefinition Width="*"/>
+                            <ColumnDefinition Width="Auto"/>
+                        </Grid.ColumnDefinitions>
+                        <TextBox x:Name="NewTagBox"
+                                 Grid.Column="0"
+                                 Text="{Binding NewTagText, UpdateSourceTrigger=PropertyChanged}"
+                                 Style="{StaticResource SearchBoxStyle}"
+                                 Tag="Add a tag…"
+                                 Height="28" FontSize="12"
+                                 KeyDown="OnNewTagBoxKeyDown"/>
+                        <Button Grid.Column="1"
+                                Content="+"
+                                Command="{Binding AddTagCommand}"
+                                Style="{DynamicResource PrimaryButtonStyle}"
+                                Width="28" Height="28" Margin="4,0,0,0"
+                                FontSize="16" Padding="0"
+                                ToolTip="Add tag (Enter)"/>
+                    </Grid>
+
+                    <!-- All metadata expander (reads from disk on first expand) -->
+                    <Expander Margin="0,16,0,0"
+                              Expanded="AllMetadataExpander_Expanded">
+                        <Expander.Header>
+                            <TextBlock Text="ALL METADATA" FontSize="11" FontWeight="SemiBold"
+                                       Foreground="{DynamicResource SecondaryTextBrush}"/>
+                        </Expander.Header>
+                        <ItemsControl ItemsSource="{Binding AllMetadata}"
+                                      Margin="0,8,0,0">
+                            <ItemsControl.GroupStyle>
+                                <GroupStyle>
+                                    <GroupStyle.HeaderTemplate>
+                                        <DataTemplate>
+                                            <TextBlock Text="{Binding Name}"
+                                                       FontSize="10" FontWeight="SemiBold"
+                                                       Foreground="{DynamicResource SecondaryTextBrush}"
+                                                       Margin="0,8,0,2" Opacity="0.7"/>
+                                        </DataTemplate>
+                                    </GroupStyle.HeaderTemplate>
+                                </GroupStyle>
+                            </ItemsControl.GroupStyle>
+                            <ItemsControl.ItemTemplate>
+                                <DataTemplate>
+                                    <Grid Margin="0,1">
+                                        <Grid.ColumnDefinitions>
+                                            <ColumnDefinition Width="130"/>
+                                            <ColumnDefinition Width="*"/>
+                                        </Grid.ColumnDefinitions>
+                                        <TextBlock Grid.Column="0" Text="{Binding Tag}"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                                   TextTrimming="CharacterEllipsis"/>
+                                        <TextBlock Grid.Column="1" Text="{Binding Value}"
+                                                   FontSize="11"
+                                                   Foreground="{DynamicResource ForegroundBrush}"
+                                                   TextWrapping="Wrap"/>
+                                    </Grid>
+                                </DataTemplate>
+                            </ItemsControl.ItemTemplate>
+                        </ItemsControl>
+                    </Expander>
+
+                    <!-- Find Related Images -->
+                    <Button Content="🔗  Find related images"
+                            Command="{Binding FindRelatedImagesCommand}"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,16,0,0"
+                            Padding="12,8"
+                            ToolTip="Filter the gallery to photos taken at the same time or nearby location"/>
+
+                    <!-- Re-analyze button -->
+                    <Button Command="{Binding ReanalyzeSelectedCommand}"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,20,0,4"
+                            Padding="12,8"
+                            IsEnabled="{Binding IsReanalyzeSelectedEnabled}">
+                        <Button.Content>🔄  Re-analyze with AI</Button.Content>
+                    </Button>
+
+                </StackPanel>
+            </ScrollViewer>
+        </Border>
+
+        <!-- ═══ Status Bar ═══ -->
+        <Border Grid.Row="2" Grid.ColumnSpan="3"
+                Background="{DynamicResource StatusBarBrush}" Padding="12,4">
+            <StackPanel>
+
+                <!-- Progress strip — visible while any background operation is running -->
+                <Grid Visibility="{Binding Progress.IsRunning, Converter={StaticResource BoolToVis}}"
+                      Margin="0,2,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+
+                    <!-- Heading + current file -->
+                    <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center"
+                                Margin="0,0,12,0" MinWidth="160" MaxWidth="220">
+                        <TextBlock Text="{Binding Progress.Heading}"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ForegroundBrush}"
+                                   TextTrimming="CharacterEllipsis"/>
+                        <TextBlock Text="{Binding Progress.CurrentFile}"
+                                   FontSize="10"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   TextTrimming="CharacterEllipsis"/>
+                    </StackPanel>
+
+                    <!-- Progress bar -->
+                    <ProgressBar Grid.Column="1"
+                                 Value="{Binding Progress.ProgressPercent, Mode=OneWay}"
+                                 Maximum="100" Height="6"
+                                 VerticalAlignment="Center" Margin="0,0,12,0"
+                                 Foreground="{StaticResource AccentBrush}"
+                                 Background="#333333" BorderThickness="0"/>
+
+                    <!-- Status line + cancel -->
+                    <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="{Binding Progress.StatusLine}"
+                                   FontSize="10"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <Button Content="Cancel"
+                                Command="{Binding Progress.CancelOrCloseCommand}"
+                                Style="{StaticResource GhostButtonStyle}"
+                                Padding="6,1" FontSize="10"/>
+                    </StackPanel>
+                </Grid>
+
+                <!-- Finding Related Images strip -->
+                <Grid Visibility="{Binding IsFindingRelated, Converter={StaticResource BoolToVis}}"
+                      Margin="0,2,0,4">
+                    <Grid.ColumnDefinitions>
+                        <ColumnDefinition Width="Auto"/>
+                        <ColumnDefinition Width="*"/>
+                        <ColumnDefinition Width="Auto"/>
+                    </Grid.ColumnDefinitions>
+                    <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center"
+                                Margin="0,0,12,0">
+                        <ProgressBar IsIndeterminate="True" Width="80" Height="6"
+                                     Foreground="{StaticResource AccentBrush}"
+                                     Background="#333333" BorderThickness="0"
+                                     VerticalAlignment="Center" Margin="0,0,10,0"/>
+                        <TextBlock Text="Finding Related Images…"
+                                   FontSize="11" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource ForegroundBrush}"
+                                   VerticalAlignment="Center"/>
+                    </StackPanel>
+                    <Button Grid.Column="2" Content="Cancel"
+                            Command="{Binding CancelRelatedSearchCommand}"
+                            Style="{StaticResource GhostButtonStyle}"
+                            Padding="6,1" FontSize="10" VerticalAlignment="Center"/>
+                </Grid>
+
+                <!-- Regular status row -->
+                <Grid>
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+
+                <StackPanel Grid.Column="0" Orientation="Horizontal" VerticalAlignment="Center">
+                    <ProgressBar IsIndeterminate="True"
+                                 Width="80" Height="6"
+                                 Foreground="{StaticResource AccentBrush}"
+                                 Background="Transparent" BorderThickness="0"
+                                 Margin="0,0,8,0"
+                                 Visibility="{Binding IsLoading, Converter={StaticResource BoolToVis}}"/>
+                    <TextBlock Text="{Binding StatusText}"
+                               Foreground="{DynamicResource SecondaryTextBrush}"
+                               FontSize="12"/>
+                    <TextBlock Text="{Binding Metrics.BatchStatusText}"
+                               Foreground="#6fcf6f" FontSize="12" Margin="12,0,0,0"
+                               Visibility="{Binding Metrics.IsBatchRunning, Converter={StaticResource BoolToVis}}"/>
+                    <Button Content="{Binding OfflineStatusText}"
+                            Foreground="#CC7A20" FontSize="12" Margin="16,0,0,0"
+                            Background="Transparent" BorderThickness="0" Padding="0"
+                            Cursor="Hand"
+                            Visibility="{Binding HasOfflineFiles, Converter={StaticResource BoolToVis}}"
+                            ToolTip="Click for details"
+                            Click="OnOfflineStatusClick"/>
+                </StackPanel>
+
+                <!-- Selected count — shown whenever SelectedCount > 0 -->
+                <TextBlock Grid.Column="1"
+                           Text="{Binding SelectedCount, StringFormat='{}{0} selected'}"
+                           Foreground="{StaticResource AccentBrush}"
+                           FontSize="12" VerticalAlignment="Center"
+                           Margin="0,0,12,0"
+                           Visibility="{Binding HasAnyMultiSelected, Converter={StaticResource BoolToVis}}"/>
+
+                <TextBlock Grid.Column="2"
+                           Text="{Binding PhotoCountText}"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           FontSize="12" VerticalAlignment="Center"
+                           Margin="0,0,12,0"/>
+
+                <!-- Express tier usage badge -->
+                <Border Grid.Column="2" Margin="4,0,12,0"
+                        Background="#1AFFE082" BorderBrush="#44FFE082" BorderThickness="1"
+                        CornerRadius="3" Padding="6,2"
+                        Visibility="{Binding ShowExpressLimit, Converter={StaticResource BoolToVis}}"
+                        ToolTip="Express edition — upgrade for unlimited library">
+                    <TextBlock Text="{Binding ExpressLimitText}"
+                               Foreground="#FFE082" FontSize="11" VerticalAlignment="Center"/>
+                </Border>
+
+                <!-- Pending AI description count — hidden when zero -->
+                <TextBlock Grid.Column="3"
+                           Text="{Binding PendingDescriptionText}"
+                           Foreground="#C0A020"
+                           FontSize="11" VerticalAlignment="Center"
+                           Margin="0,0,12,0"
+                           Visibility="{Binding HasPendingDescriptions, Converter={StaticResource BoolToVis}}"
+                           ToolTip="Photos queued for AI description — processing in the background"/>
+
+                <!-- Vision model indicator -->
+                <TextBlock Grid.Column="4"
+                           Text="{Binding ActiveVisionModel}"
+                           Foreground="#555555"
+                           FontSize="11" VerticalAlignment="Center"
+                           Margin="0,0,12,0"
+                           ToolTip="Active vision model"/>
+
+                <TextBlock Grid.Column="5"
+                           Text="v0.2.5"
+                           Foreground="#444444"
+                           FontSize="11" VerticalAlignment="Center"
+                           Margin="0,0,12,0"/>
+
+                <!-- Thumbnail size slider -->
+                <TextBlock Grid.Column="6" Text="⊞" FontSize="11"
+                           Foreground="{DynamicResource SecondaryTextBrush}"
+                           VerticalAlignment="Center" Margin="0,0,6,0"/>
+                <Slider Grid.Column="7"
+                        Value="{Binding ThumbnailSize}"
+                        Minimum="80" Maximum="280" Width="120"
+                        Style="{StaticResource ThumbnailSliderStyle}"/>
+                </Grid><!-- end regular status row -->
+
+            </StackPanel>
+        </Border>
+
+        <!-- ── Batch tag popup ──────────────────────────────────────────────── -->
+        <Popup x:Name="AddTagPopup"
+               IsOpen="{Binding IsAddTagPopupOpen, Mode=TwoWay}"
+               Placement="Center"
+               PlacementTarget="{Binding ElementName=PhotoGrid}"
+               StaysOpen="True"
+               AllowsTransparency="True"
+               Opened="OnAddTagPopupOpened">
+            <Border Background="#1E1E2E" BorderBrush="#45475A" BorderThickness="1"
+                    CornerRadius="8" Padding="16" Width="310"
+                    SnapsToDevicePixels="True">
+                <Border.Effect>
+                    <DropShadowEffect BlurRadius="24" Opacity="0.6" ShadowDepth="6" Direction="270"/>
+                </Border.Effect>
+                <StackPanel>
+                    <TextBlock Text="{Binding AddTagPopupTitle}"
+                               FontSize="11" FontWeight="SemiBold"
+                               Foreground="#A6ADC8" Margin="0,0,0,8"/>
+
+                    <TextBox x:Name="BatchTagBox"
+                             Text="{Binding BatchTagText, UpdateSourceTrigger=PropertyChanged}"
+                             Background="#313244" Foreground="#CDD6F4"
+                             BorderBrush="#585B70" BorderThickness="1"
+                             Padding="8,6" FontSize="14"
+                             CaretBrush="#CDD6F4"
+                             PreviewKeyDown="OnBatchTagKeyDown"/>
+
+                    <!-- Autocomplete suggestions — auto-hides when empty -->
+                    <ListBox x:Name="TagSuggestionList"
+                             ItemsSource="{Binding TagSuggestions}"
+                             Background="#313244" Foreground="#CDD6F4"
+                             BorderThickness="1" BorderBrush="#45475A"
+                             MaxHeight="150" Margin="0,4,0,0"
+                             MouseLeftButtonUp="OnSuggestionClicked"
+                             Focusable="False">
+                        <ListBox.ItemContainerStyle>
+                            <Style TargetType="ListBoxItem">
+                                <Setter Property="Padding" Value="8,4"/>
+                                <Setter Property="Foreground" Value="#CDD6F4"/>
+                                <Setter Property="Background" Value="Transparent"/>
+                                <Setter Property="Cursor" Value="Hand"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#45475A"/>
+                                    </Trigger>
+                                </Style.Triggers>
+                            </Style>
+                        </ListBox.ItemContainerStyle>
+                    </ListBox>
+
+                    <TextBlock Text="Enter to add  ·  Esc to cancel"
+                               FontSize="10" Foreground="#585B70" Margin="0,10,0,0"/>
+                </StackPanel>
+            </Border>
+        </Popup>
+
+    </Grid>
+</Window>

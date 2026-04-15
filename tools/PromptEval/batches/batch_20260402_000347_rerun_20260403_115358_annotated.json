@@ -1,0 +1,218 @@
+{
+  "batch_id": "batch_20260402_000347_rerun_20260403_115358",
+  "prompt_version": "v10-prod",
+  "annotated_at": "2026-04-03T12:30:00Z",
+  "annotated_by": "claude-sonnet-4-6",
+  "photos": [
+    {
+      "id": "9B85267F-B414-41F1-BE5F-2FFC990174F5",
+      "filename": "IMG_4161.JPG",
+      "llama_desc": "A man in a black t-shirt with a white logo reading \"Paint Studio\" is holding a Christmas stocking with a gingerbread man on it. He is sitting on a couch with a red and green striped pillow behind him, and a blue and yellow book is visible on the couch beside him.",
+      "oracle_desc": "A bearded man sits in a brown leather recliner, holding up a Christmas stocking decorated with a gingerbread man and smiling at the camera. He wears a black Paint Studio t-shirt, and a solid teal pillow is visible behind him.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "DE2DB3BF-2451-4243-924A-F6819330F114",
+      "filename": "_MG_6210.dng",
+      "llama_desc": "A young woman in a green strapless gown...\n\nShe is standing with her right hand on the chest of a young man in a black tuxedo, both smiling at the camera. The woman's long blonde hair is loose and her dress has a green sash around her waist. The man's bow tie is green and matches the sash.",
+      "oracle_desc": "A young couple in prom attire pose outdoors among green trees. The young woman wears a green strapless gown with wavy blonde hair; the young man wears a black tuxedo with a green bow tie and white boutonniere. They stand close together, both smiling at the camera.",
+      "gaps": ["hallucination", "formatting"]
+    },
+    {
+      "id": "883FD8BB-0495-405F-98AE-2B934D58F96A",
+      "filename": "5-8-9.jpg",
+      "llama_desc": "A woman in a red dress... is sitting on a couch with a small dog on her lap. The woman is holding the dog and smiling at it, while the dog is looking up at her with its eyes. The woman is sitting on a couch in a living room with a TV and a bookshelf in the background.",
+      "oracle_desc": "A 2x3 photo mosaic of a Yorkshire Terrier photographed in various indoor settings, showing the dog from multiple angles including close-up face shots, wearing a bandana, and being held by a person.",
+      "gaps": ["hallucination", "missing_subject"]
+    },
+    {
+      "id": "6512C31F-EDFE-4AFB-937C-8011A9DFA6FF",
+      "filename": "_MG_5515.JPG",
+      "llama_desc": "A woman in a white graduation gown... \nShe is wearing a white mortarboard and a long white gown with a gold sash around her neck. She is holding a diploma and a medal around her neck. She is standing in front of a large building with a green roof and a white dome.",
+      "oracle_desc": "A young woman in a white graduation cap and gown smiles outdoors, wearing multiple colored honor cords and a medal around her neck, with a building featuring a copper-green roof visible in the background.",
+      "gaps": ["hallucination", "formatting"]
+    },
+    {
+      "id": "2AD695D4-8A60-48DB-AC82-D4164358DBFF",
+      "filename": "IMG_4633.JPG",
+      "llama_desc": "Two women in formal gowns standing in a park. They are posing with their hands on their hips, smiling at the camera. The woman on the left is wearing a silver gown with a sparkly top and a long, flowing skirt.",
+      "oracle_desc": "Two young women in formal prom gowns pose outdoors near trees. The woman on the left wears a silver beaded top with a long light gray skirt; the woman on the right wears a black beaded crop top with a long black skirt.",
+      "gaps": ["missing_subject"]
+    },
+    {
+      "id": "03F895DC-738C-435E-BD17-AFC3AFD80D90",
+      "filename": "_MG_6942.dng",
+      "llama_desc": "A plate of breakfast food on a wooden table. A plate of scrambled eggs, bacon, and a biscuit sits on a wooden table, with a white coffee mug in the background. The plate is partially empty, with a few remaining eggs and a crummed biscusit.",
+      "oracle_desc": "A split biscuit sandwich on a white plate on a wooden table, filled with egg and what appears to be sausage gravy, with a white ceramic coffee mug in the background.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "4B58082F-E41F-41A3-B1BB-7482CAA6CD73",
+      "filename": "IMG_4196.JPG",
+      "llama_desc": "Four young people sitting on a couch, holding gifts and smiling at the camera. They are surrounded by a few gifts and a table with a red and white polka-dotted tablecloth. The room is decorated with a few photos on the wall and a window with a red curtain.",
+      "oracle_desc": "Four young people — three girls and a young man — sit on a green couch opening Christmas gifts, smiling at the camera. Gift bags are piled in front of them and framed family photos hang on the wall behind.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "A7A27DA9-1C9A-46B3-97C7-9E01EF8D3F99",
+      "filename": "_MG_6032.JPG",
+      "llama_desc": "A man behind a long, wooden bar in a dimly lit, industrial-style pub. He stands with his hands on the counter, wearing a blue t-shirt and a black baseball cap, with a few bottles and a glass in front of him. The bar is lined with a variety of beers and a few stools are scattered around the room, but it's empty and the man is the only person in the photo.",
+      "oracle_desc": "A man in a dark t-shirt stands behind a long bar with a metal top in an empty industrial-style brewery, with many tap handles visible along the back bar and wooden stools lined up in front.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "BFA761EF-133B-4E51-A1F3-4C01FD409783",
+      "filename": "_MG_5519.JPG",
+      "llama_desc": "A woman in a red coat walking on a sidewalk. She is holding a white umbrella and wearing sunglasses. She is walking on a sidewalk with a grassy area to her left and a tree-lined street to her right.",
+      "oracle_desc": "A woman in an orange-red jacket stands on a path outdoors in very bright sunlight, holding a light-colored umbrella, with green grass and trees visible in the overexposed background.",
+      "gaps": []
+    },
+    {
+      "id": "435520A7-11FD-4FE0-A84D-7039D2420885",
+      "filename": "_MG_5517.dng",
+      "llama_desc": "A woman in a white graduation gown...\n\nShe is standing on a stone path, wearing a white graduation gown and a mortar board, holding a diploma and a medal around her neck. She is smiling and looking directly at the camera. The background is a green grassy area with trees and a blue sky.",
+      "oracle_desc": "A young woman in a white graduation cap and gown sits on a low stone wall outdoors, smiling at the camera, wearing multiple colored honor cords and a medal, with green grass and trees behind her.",
+      "gaps": ["activity_inversion", "formatting"]
+    },
+    {
+      "id": "5236B5D2-1536-4170-845A-0F96393B7C6C",
+      "filename": "IMG_4316.JPG",
+      "llama_desc": "A large, red brick building with a glass and metal roof, featuring a prominent yellow banner reading \"NBA All-Star 2021\" and \"Indianapolis\" in blue letters, with a basketball logo. The building's facade is partially visible, with a large glass window and a metal beam structure. The banner is attached to a metal beam, and a traffic light is visible in the foreground, with a red light and a \"one\" sign.",
+      "oracle_desc": "The exterior of a large red brick arena in Indianapolis, with a prominent yellow NBA All-Star 2021 banner featuring the Indiana Pacers logo, photographed from street level on an overcast day.",
+      "gaps": []
+    },
+    {
+      "id": "CE727C8A-7B96-4029-B144-AA32D8557B6F",
+      "filename": "_MG_6139.dng",
+      "llama_desc": "A group of four men sitting on a bar stool. They are all smiling and looking directly at the camera. One man is wearing a red t-shirt with a white logo on the front, another is wearing a black t-shirt with a white logo on the front, and the third man is wearing a grey t-shirt with a white logo on the front.",
+      "oracle_desc": "Five men pose together in a casual brewery setting — two standing in back, three seated in front — wearing various t-shirts and a flannel, all smiling at the camera.",
+      "gaps": ["wrong_count", "activity_inversion"]
+    },
+    {
+      "id": "C1993B72-2E77-4AF1-BFA2-EF4D33AB45FD",
+      "filename": "_MG_6233.dng",
+      "llama_desc": "A man in a black suit... \nHe is standing in a park, looking directly at the camera with a slight smile. He is wearing a green bow tie and a white shirt. The park is filled with trees and green grass, with a few people in the background.",
+      "oracle_desc": "A young man in a black tuxedo with a green bow tie and white boutonniere stands alone in a sunny park, smiling at the camera, with green trees and grass behind him.",
+      "gaps": ["hallucination", "formatting"]
+    },
+    {
+      "id": "EB165CD3-6F18-4798-A7AB-5413AD9CF7C2",
+      "filename": "IMG_4502.JPG",
+      "llama_desc": "A woman in a red dress, wearing a black and yellow baseball cap, lies on a couch, smiling at the camera. She has long, straight brown hair and is holding a white gift bag. The room is decorated with a large, ornate lamp and a bookshelf in the background.",
+      "oracle_desc": "A teenage girl in a burgundy cold-shoulder dress smiles at the camera wearing a black and neon yellow Nike cap, holding a gift bag, with a Tiffany-style lamp visible behind her in a decorated indoor space.",
+      "gaps": ["activity_inversion", "hallucination"]
+    },
+    {
+      "id": "DD6140C2-2A75-456B-A3DF-F91A51256481",
+      "filename": "_MG_6008.dng",
+      "llama_desc": "A woman in a blue sweater holding a small dog. She is sitting in a chair, with the dog nestled in her arms, looking directly at the camera with a gentle smile. The room is dimly lit, with a window in the background, and a few other chairs and a table are visible in the room.",
+      "oracle_desc": "A woman with gray hair in a gray hoodie sits in an armchair holding a small Yorkshire Terrier in her lap, smiling gently at the camera, with a window with white blinds visible behind her.",
+      "gaps": []
+    },
+    {
+      "id": "84BD2A96-F9DE-4D57-8DD6-A2420C272140",
+      "filename": "IMG_4389.JPG",
+      "llama_desc": "A yellow submarine in a museum. The submarine is suspended from the ceiling, with its propeller and other equipment visible. It is surrounded by a large, blue and yellow mural of the ocean and a sun.",
+      "oracle_desc": "A yellow gondola or observation capsule suspended from the ceiling inside a museum, with a large cosmic space-themed mural depicting planets, galaxies, and stars painted on the wall behind it and large windows to the right.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "8C49AE95-DB93-4AB8-8406-08D98CF23002",
+      "filename": "IMG_4867.JPG",
+      "llama_desc": "A group of people in Halloween costumes sitting on a bench. They are all wearing various costumes and masks, with some holding bags or bags of candy. The group is surrounded by Halloween-themed decorations, including a large pumpkin and a sign that reads \"Halloween\" in a spooky font.",
+      "oracle_desc": "Seven people of mixed ages sit on a wooden bench under a pavilion, surrounded by painted Halloween character cutouts and pumpkins. Some are wearing Halloween masks and costumes; others are in casual clothes.",
+      "gaps": ["hallucination", "wrong_count"]
+    },
+    {
+      "id": "BB532CDA-9493-457B-8F18-8A239CF87FCC",
+      "filename": "_MG_6214.JPG",
+      "llama_desc": "A young woman in a green prom dress... \nShe is standing with her arms around a young man in a black tuxedo, both smiling at the camera. The woman's long, curly blonde hair is loose and her dress is a deep green satin that falls to her knees. The man's tuxedo is black with a white shirt and a green bow tie.",
+      "oracle_desc": "A young man in a black tuxedo with a green bow tie stands behind a young woman in a green prom gown outdoors among green trees, with his arms around her from behind, both smiling at the camera. Her hair is long and wavy blonde.",
+      "gaps": ["activity_inversion", "hallucination", "formatting"]
+    },
+    {
+      "id": "ABB80069-1734-4966-8316-DC9B62F80775",
+      "filename": "IMG_4146.JPG",
+      "llama_desc": "A man and a girl in winter clothing... \nThey are sitting on a bench, smiling at the camera. The man is wearing a black coat and the girl is wearing a black coat and pink and white striped socks. The bench is decorated with Christmas decorations, including a red and white striped candy cane and a green and gold Christmas tree.",
+      "oracle_desc": "A man and a young girl stand in front of a Christmas photo display with large candy cane props and a Christmas tree, smiling at the camera. A small white fluffy dog sits at their feet.",
+      "gaps": ["activity_inversion", "missing_subject", "formatting"]
+    },
+    {
+      "id": "FB31B674-62C7-4048-BE74-D38A8DA04D0B",
+      "filename": "IMG_4257.JPG",
+      "llama_desc": "A man in a red shirt... \nHe is standing with a young boy in a grey suit, both smiling at the camera. The boy is wearing a bow tie and a white shirt. They are standing in a room with a Christmas tree in the background, decorated with ornaments and lights.",
+      "oracle_desc": "A tall young man in a burgundy polo shirt stands with a young boy in a gray suit and black bow tie, both smiling at the camera inside a home with a decorated Christmas tree visible behind them.",
+      "gaps": ["formatting"]
+    },
+    {
+      "id": "63980F90-CF34-4B72-A0A8-1E40956D68CD",
+      "filename": "5-7-0.jpg",
+      "llama_desc": "A small dog in a blue collar... \nThe dog is looking up at something out of frame to the left. Its fur is a mix of brown and white. It's wearing a blue collar with a small name tag.",
+      "oracle_desc": "A six-panel photo mosaic of a Yorkshire Terrier in various settings, including indoors at home, outdoors in snow wearing a blue garment, and close-up face shots. The dog has tan and dark brown fur typical of a Yorkie.",
+      "gaps": ["missing_subject", "hallucination", "formatting"]
+    },
+    {
+      "id": "55CD04C5-2116-4AC4-97B4-7343C5C7BB74",
+      "filename": "IMG_4932.JPG",
+      "llama_desc": "A group of six people, including three women and three children, are standing together in a living room. The women are smiling and the children are looking up at them with big smiles. The room is decorated with a large wooden star on the wall behind them.",
+      "oracle_desc": "Five people — three women, a teenage girl, and a young boy — smile together in a living room decorated with a large wooden star on the wall.",
+      "gaps": ["wrong_count"]
+    },
+    {
+      "id": "35F16EFB-CBB3-4632-8923-7B3981222649",
+      "filename": "5-20-6.jpg",
+      "llama_desc": "A woman in a red dress is standing in a shallow pool of water, holding a small dog. She is standing in a shallow pool of water, with the dog's head and her own feet in the water. The woman is standing in a shallow pool of water, with the dog's head and her own feet in the water.",
+      "oracle_desc": "A nine-panel photo mosaic of a Yorkshire Terrier in various outdoor and indoor settings, including near flowering plants, on furniture, near water, and being held by a person.",
+      "gaps": ["hallucination", "missing_subject", "formatting"]
+    },
+    {
+      "id": "50545BBD-1006-4368-A81B-545D7443E93A",
+      "filename": "_MG_6954.JPG",
+      "llama_desc": "A man in a white shirt... \nHe is standing on a rocky outcropping, looking out at a vast, blue lake. He is leaning on a tree branch, his arms outstretched, and his head is turned to the left. The lake is surrounded by tall, green trees and a few rocky outcroppings.",
+      "oracle_desc": "A man in a white shirt stands on a rocky, forested shoreline, looking out at a large blue lake with mountains visible in the distance and tall pine trees in the foreground.",
+      "gaps": ["hallucination", "formatting"]
+    },
+    {
+      "id": "2DEB741C-F611-44C9-BAC6-7E9140BA25FC",
+      "filename": "IMG_4099.JPG",
+      "llama_desc": "A group of people in front of a large Christmas tree. They are standing in a darkened outdoor setting, surrounded by festive lights and a large, lit Christmas tree. The tree is covered in colorful lights and is the central focus of the group's photo.",
+      "oracle_desc": "About fifteen people pose at night in front of a towering outdoor Christmas tree covered in colorful lights, with a large domed building visible in the background.",
+      "gaps": ["missing_landmark"]
+    },
+    {
+      "id": "40E77CE8-94E2-4E54-B9C4-91348BE46E29",
+      "filename": "_MG_6063.JPG",
+      "llama_desc": "A plate of cooked sausages. The sausages are brown and slightly charred, with a crispy, golden-brown skin. They are arranged in a neat, overlapping pattern on the plate, with a few of them slightly overlapping in the center.",
+      "oracle_desc": "Four cooked sausages on a white plate, browned from cooking, photographed close-up with a shallow depth of field against a dark background.",
+      "gaps": []
+    },
+    {
+      "id": "D2BCDBF0-F273-4D72-8128-10F5997C3DC7",
+      "filename": "IMG_4540.JPG",
+      "llama_desc": "A young woman in a maroon dress holding a certificate. She is standing in a formal room with a white tablecloth and a patterned carpet, holding a framed certificate with a blue border and a white paper inside.",
+      "oracle_desc": "A teenage girl in a burgundy cold-shoulder dress smiles and holds a framed award, standing in a carpeted banquet room with tables covered in white tablecloths behind her and a chandelier overhead.",
+      "gaps": []
+    },
+    {
+      "id": "580843B4-EBE5-461D-BE37-573E9FE2F761",
+      "filename": "_MG_5482.dng",
+      "llama_desc": "A woman in a white graduation gown...\nShe is standing in front of a building, wearing a white graduation gown and a mortarboard, with a large sign in her hand that reads \"Congratulations\". She is smiling and holding the sign up for the camera, with a few colorful graduation cords and a medal around her neck. The background is a white building with a few trees and a grassy area.",
+      "oracle_desc": "A young woman in a white graduation cap and gown stands in front of a flowering pink cherry blossom tree, smiling and holding a Congratulations sign with a school mascot logo, wearing multiple colored honor cords and a medal.",
+      "gaps": ["hallucination", "formatting"]
+    },
+    {
+      "id": "EB18454F-4CAC-455D-8D33-DCF57898160C",
+      "filename": "_MG_6223.JPG",
+      "llama_desc": "A young woman in a green dress walking with a man in a black suit. She is holding onto his arm and they are walking down a path in a park, surrounded by trees and grass. The woman's long blonde hair is blowing in the wind and she is wearing high heels.",
+      "oracle_desc": "A young couple walks away from the camera down a sunlit park path, the young woman in a green dress and the young man in a black tuxedo, with trees lining the right side of the path.",
+      "gaps": ["hallucination"]
+    },
+    {
+      "id": "F69775C2-1BBF-4AC8-9EFC-A7D021E57C42",
+      "filename": "5-8-12.jpg",
+      "llama_desc": "A small dog in a room. The dog is sitting on a bed, looking up at something with its tongue out. The room is dimly lit, with a few shadows on the walls.",
+      "oracle_desc": "A six-panel photo mosaic of a Yorkshire Terrier in various low-light indoor settings, including close-up face shots and the dog resting on blankets and bedding.",
+      "gaps": ["missing_subject"]
+    }
+  ]
+}

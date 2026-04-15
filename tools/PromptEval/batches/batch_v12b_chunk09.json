@@ -1,0 +1,87 @@
+{
+  "batch_id": "batch_20260410_110245_rerun_20260410_113207_rerun_20260411_025932",
+  "prompt_version": "v12b",
+  "created_at": "2026-04-11T06:59:32.8407547Z",
+  "photos": [
+    {
+      "id": "1CFB26E7-72F5-4CFA-879A-C10AE735E1DD",
+      "filename": "IMG_0089.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\SD1100\\2009_05_09\\IMG_0089.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\1c\\medium\\1cfb26e772f54cfa879ac10ae735e1dd.jpg",
+      "llama_desc": "One woman and one child sitting at a table with a birthday cake. The woman is smiling and holding a candle, and the child is looking at the cake with a happy expression. The table is set with a tablecloth and a few decorations, and there is a window in the background with a view of a garden."
+    },
+    {
+      "id": "CC7836A0-559B-4C08-B4F0-183394755AB5",
+      "filename": "IMG_5945.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2008\\2008_12_04\\IMG_5945.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\cc\\medium\\cc7836a0559b4c08b4f0183394755ab5.jpg",
+      "llama_desc": "One child and one adult. A young girl with long blonde hair and a big smile, wearing a white shirt with a black collar, is looking directly at the camera. The adult is standing behind her, out of the frame."
+    },
+    {
+      "id": "9F3AB9B7-69CE-4869-8875-A3F05319B92E",
+      "filename": "IMG_0660.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_04_29\\IMG_0660.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\9f\\medium\\9f3ab9b769ce48698875a3f05319b92e.jpg",
+      "llama_desc": "A young girl in a white t-shirt with colorful shapes and a red and white striped skirt, making a peace sign with her hands and a bunny ear with her finger, standing in front of a white door with a window to the left."
+    },
+    {
+      "id": "685B4970-EE5A-4BA1-A74B-795E59BBE1E0",
+      "filename": "IMG_3220.JPG",
+      "file_path": "C:\\Users\\retli\\OneDrive\\Pictures\\20240509_Bubba\\IMG_3220.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\68\\medium\\685b4970ee5a4ba1a74b795e59bbe1e0.jpg",
+      "llama_desc": "A person and a small dog are in a room with a rug and a couch. The person is sitting on the couch, and the dog is standing next to them, looking at a gift-wrapped box on the floor. The person is wearing a red dress with a pattern of small dogs, and the dog is wearing a red collar."
+    },
+    {
+      "id": "CA7A59D8-3AC3-4B27-95C9-207E3EA8FD5F",
+      "filename": "IMG_7257.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_05_03\\IMG_7257.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\ca\\medium\\ca7a59d83ac34b2795c9207e3ea8fd5f.jpg",
+      "llama_desc": "A young girl holding a large piece of red paper with a gold flower design. She is standing on one knee, holding the paper with both hands, and smiling at the camera. The room is cluttered with toys and a small table with a book and a toy car."
+    },
+    {
+      "id": "F4C98D25-4AD9-4192-B5C3-6D8DF9064970",
+      "filename": "IMG_7557.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2009\\2009_06_20\\IMG_7557.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\f4\\medium\\f4c98d254ad94192b5c36d8df9064970.jpg",
+      "llama_desc": "A young girl in a red shirt, standing in front of a pool with several adults and children in the background. The girl is smiling and looking directly at the camera, with her long blonde hair blowing in the wind. The pool is surrounded by a patio area with chairs and a few people are sitting in them, while others are swimming or playing in the pool."
+    },
+    {
+      "id": "1E506AEF-A5D6-4357-AC65-71634C0FDEEB",
+      "filename": "IMG_3392.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2007\\2007_12_24\\IMG_3392.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\1e\\medium\\1e506aefa5d64357ac6571634c0fdeeb.jpg",
+      "llama_desc": "Seven people sitting around a table in a dining room. A woman in a red sweater sits at the head of the table, with a man in a suit to her right. A boy in a white shirt and a girl in a white dress sit to the woman's left."
+    },
+    {
+      "id": "0B3B51A3-3930-46D0-8CEC-6EAC839D37F3",
+      "filename": "IMG_1862.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_08_12\\IMG_1862.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\0b\\medium\\0b3b51a3393046d08cec6eac839d37f3.jpg",
+      "llama_desc": "One child and one adult sitting at a table with a birthday cake. The child is wearing a birthday crown and a black dress, and the adult is wearing a black shirt. The table is set with a birthday cake, candles, and a few other items."
+    },
+    {
+      "id": "FA870A9C-15D9-4370-BD0E-8E4FA26AC2DA",
+      "filename": "IMG_1149.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2010\\2010_06_17\\IMG_1149.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\fa\\medium\\fa870a9c15d94370bd0e8e4fa26ac2da.jpg",
+      "llama_desc": "A child and one adult playing in a shallow pool of water at a public park. The child is wearing a blue and black swimsuit and is lying on her back, arms and legs out to the side, as she is being splashed by a water jet. The adult is standing behind her, holding a water spray nozzle."
+    },
+    {
+      "id": "D695E4CD-513D-45CF-AE61-9EEA482BE3D9",
+      "filename": "IMG_4352.JPG",
+      "file_path": "K:\\Kimpc\\ToArchive\\Weihs\\2011\\Weihs_Disney\\2011_12_19\\IMG_4352.JPG",
+      "file_exists": true,
+      "thumbnail_path": "C:\\Users\\retli\\AppData\\Local\\PhotoIQPro\\thumbnails\\d6\\medium\\d695e4cd513d45cfae619eea482be3d9.jpg",
+      "llama_desc": "Five people at a Christmas market. They are standing in front of a large, colorful, and illuminated Christmas tree, surrounded by festive lights and decorations. The people are smiling and looking at the camera, with some of them holding hands or holding a Christmas tree or a gift."
+    }
+  ]
+}

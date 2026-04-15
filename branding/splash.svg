@@ -1,0 +1,108 @@
+<!-- Splash / About screen — 480 × 300 px -->
+<svg xmlns="http://www.w3.org/2000/svg" viewBox="0 0 480 300" width="480" height="300">
+  <defs>
+    <radialGradient id="splashBg" cx="40%" cy="40%" r="70%">
+      <stop offset="0%"   stop-color="#0d1830"/>
+      <stop offset="100%" stop-color="#060a14"/>
+    </radialGradient>
+    <radialGradient id="iconBg" cx="50%" cy="40%" r="60%">
+      <stop offset="0%"   stop-color="#1a2a4a"/>
+      <stop offset="100%" stop-color="#0a0e1a"/>
+    </radialGradient>
+    <radialGradient id="lensGlowLg" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#60aaff" stop-opacity="1"/>
+      <stop offset="50%"  stop-color="#0078d4" stop-opacity="0.7"/>
+      <stop offset="100%" stop-color="#004a8f" stop-opacity="0"/>
+    </radialGradient>
+    <radialGradient id="halo" cx="50%" cy="50%" r="50%">
+      <stop offset="0%"   stop-color="#0078d4" stop-opacity="0.15"/>
+      <stop offset="100%" stop-color="#0078d4" stop-opacity="0"/>
+    </radialGradient>
+    <filter id="glowLg">
+      <feGaussianBlur stdDeviation="4" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <filter id="softGlow">
+      <feGaussianBlur stdDeviation="8" result="blur"/>
+      <feMerge><feMergeNode in="blur"/><feMergeNode in="SourceGraphic"/></feMerge>
+    </filter>
+    <clipPath id="splashIconClip">
+      <circle cx="240" cy="115" r="72"/>
+    </clipPath>
+  </defs>
+
+  <!-- Background -->
+  <rect width="480" height="300" fill="url(#splashBg)"/>
+
+  <!-- Subtle halo behind icon -->
+  <circle cx="240" cy="115" r="130" fill="url(#halo)"/>
+
+  <!-- Icon shadow ring -->
+  <circle cx="240" cy="115" r="75" fill="#0078d4" opacity="0.06"/>
+
+  <!-- Icon background -->
+  <circle cx="240" cy="115" r="72" fill="url(#iconBg)"/>
+  <circle cx="240" cy="115" r="70" fill="none" stroke="#0078d4" stroke-width="2" opacity="0.5"/>
+
+  <!-- Aperture blades -->
+  <g clip-path="url(#splashIconClip)" filter="url(#glowLg)">
+    <g transform="translate(240,115)">
+      <path d="M 0,-32 Q 27,-23 32,0 Q 7,-6 0,-32 Z" fill="#0078d4" opacity="0.9" transform="rotate(0)"/>
+      <path d="M 0,-32 Q 27,-23 32,0 Q 7,-6 0,-32 Z" fill="#0078d4" opacity="0.9" transform="rotate(60)"/>
+      <path d="M 0,-32 Q 27,-23 32,0 Q 7,-6 0,-32 Z" fill="#0078d4" opacity="0.9" transform="rotate(120)"/>
+      <path d="M 0,-32 Q 27,-23 32,0 Q 7,-6 0,-32 Z" fill="#0078d4" opacity="0.9" transform="rotate(180)"/>
+      <path d="M 0,-32 Q 27,-23 32,0 Q 7,-6 0,-32 Z" fill="#0078d4" opacity="0.9" transform="rotate(240)"/>
+      <path d="M 0,-32 Q 27,-23 32,0 Q 7,-6 0,-32 Z" fill="#0078d4" opacity="0.9" transform="rotate(300)"/>
+    </g>
+  </g>
+
+  <!-- Lens glow & body -->
+  <circle cx="240" cy="115" r="27" fill="url(#lensGlowLg)"/>
+  <circle cx="240" cy="115" r="20" fill="#060a14" opacity="0.97"/>
+
+  <!-- AI sparkle -->
+  <g transform="translate(240,115)" fill="#60aaff" filter="url(#softGlow)">
+    <polygon points="0,-10  2.5,-2.5  10,0  2.5,2.5  0,10  -2.5,2.5  -10,0  -2.5,-2.5" opacity="1"/>
+  </g>
+
+  <!-- Highlight dots on aperture ring -->
+  <g fill="#60aaff" opacity="0.6">
+    <circle cx="240" cy="44"  r="2.5"/>
+    <circle cx="302" cy="79"  r="2"/>
+    <circle cx="302" cy="151" r="2"/>
+    <circle cx="240" cy="186" r="2.5"/>
+    <circle cx="178" cy="151" r="2"/>
+    <circle cx="178" cy="79"  r="2"/>
+  </g>
+
+  <!-- Wordmark -->
+  <text x="240" y="224"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="36" font-weight="300" letter-spacing="-1"
+        fill="#ffffff" text-anchor="middle">
+    <tspan>Photo</tspan><tspan font-weight="700" fill="#0078d4">IQ</tspan>
+  </text>
+
+  <!-- PRO badge -->
+  <rect x="303" y="200" width="36" height="18" rx="3" fill="#0078d4" opacity="0.15"/>
+  <rect x="303" y="200" width="36" height="18" rx="3" fill="none" stroke="#0078d4" stroke-width="1" opacity="0.7"/>
+  <text x="321" y="213"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="9.5" font-weight="600" letter-spacing="0.6"
+        fill="#0078d4" text-anchor="middle">PRO</text>
+
+  <!-- Tagline -->
+  <text x="240" y="248"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="13" font-weight="300" letter-spacing="1.5"
+        fill="#3a6090" text-anchor="middle">INTELLIGENT PHOTO MANAGEMENT</text>
+
+  <!-- Bottom rule -->
+  <line x1="160" y1="264" x2="320" y2="264" stroke="#0078d4" stroke-width="1" opacity="0.3"/>
+
+  <!-- Version (placeholder) -->
+  <text x="240" y="285"
+        font-family="Segoe UI, -apple-system, sans-serif"
+        font-size="11" font-weight="400"
+        fill="#2a4060" text-anchor="middle">Version 1.0</text>
+</svg>
