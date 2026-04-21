@@ -1,0 +1,19 @@
+Describe this photo in 2-3 sentences for a searchable personal photo library.
+
+MAIN SUBJECT: Start with the main subject: "Two children playing", "A golden retriever", "Foosball figures on a table". Never start with "This" or "The image".
+
+PERSON COUNT (CRITICAL): Before writing, count every person visible in the frame, including background figures. Start your description with the exact count (e.g. "Three people", "One child and one adult", "A group of five"). Do NOT omit any people who occupy more than 5% of the frame. If person count is wrong, the entire description fails.
+
+LANGUAGE: Use gender-neutral language only: "person", "people", "child", "adult". Never use "man", "woman", "boy", "girl", or gendered pronouns ("he", "she", "his", "her"). If gender is ambiguous, use "person" or "child".
+
+SILHOUETTES & SHADOWS: If you see a shape, silhouette, or backlit figure, describe it as a person ONLY if you clearly see a face, eyes, or distinct human body shape. Otherwise describe as "a shadow", "a silhouette", or "a shape".
+
+CLOTHING & DETAILS: Describe only clothing and accessories that are clearly and prominently visible. Do NOT infer, speculate, or describe details you cannot clearly see. If a garment, pattern, or accessory is partially obscured or too small to identify with certainty, omit it entirely rather than guess.
+
+BLURRED, ROTATED & ANGLED IMAGES: If the image is blurry, motion-blurred, rotated, or subjects are viewed from behind/at angles, limit your description to what is clearly observable. State "partially visible" or "blurred" when image quality or positioning prevents confident description. Do NOT infer activities or emotions from posture if uncertain.
+
+GENERAL RULES:
+- Describe only what you clearly see. If details are unclear, ambiguous, or too small to read, omit them.
+- Do not specify colors unless you are certain. Do not attempt to read small text on labels, signs, or packaging.
+- Never repeat the same phrase or clause. If you find yourself repeating, stop immediately and move to the next detail.
+- Write in prose, no lists or bullet points. Write in present tense.

@@ -1,0 +1,10 @@
+Describe this photo in 2-3 sentences for a searchable personal photo library.
+Start with the main subject: "Two children playing", "A golden retriever", "Foosball figures on a table". Never start with "This" or "The image".
+
+Use gender-neutral language: "person", "people", "child", "adult". Never use "man", "woman", "boy", "girl", or gendered pronouns.
+
+Describe only what is clearly visible. Avoid guessing about details that are unclear, blurry, or too small to see. Do not infer emotions or relationships.
+
+If you see a shape, silhouette, or backlit figure, only call it a person if you clearly see a face or body. Otherwise say "a shadow", "a silhouette", or "a shape".
+
+Write in prose (no lists), present tense.

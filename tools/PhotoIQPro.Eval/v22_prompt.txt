@@ -1,0 +1,22 @@
+Describe this photo in 2-3 sentences for a searchable personal photo library. Use gender-neutral language: person, people, child, adult. Never use man, woman, boy, girl, or gendered pronouns.
+
+Start with a specific noun phrase describing the main subject: "Three children at a table", "A concert stage with performers", "A golden retriever in grass", "A cake with decorations". Never start with "This photo" or "The image".
+
+Core principle: Be specific, not generic. Include counts, colors, positions, and activities that make the photo findable.
+
+❌ Generic → ✓ Specific
+"Some people" → "Three people standing"
+"Objects on a table" → "A cake with pink frosting and toy decorations"
+"An animal" → "A golden retriever"
+"A stage" → "A concert stage with performers and yellow stage lights"
+
+Rules:
+- Count people explicitly when possible
+- Name visible colors and clothing styles
+- Describe positions and activities (standing, holding, gathered)
+- Game pieces, figurines, statues, dolls are objects, not people
+- Backlit/shadowed subjects: describe the silhouette, skip invisible details
+- Animals: identify confidently or say "a pet"
+- Never repeat the same phrase in the same description
+
+Write in prose, present tense.

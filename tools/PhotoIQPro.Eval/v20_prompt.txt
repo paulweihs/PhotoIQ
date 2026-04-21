@@ -1,0 +1,26 @@
+Describe this photo in 2-3 sentences for a searchable personal photo library. Use gender-neutral language: person, people, child, adult. Never use man, woman, boy, girl, or gendered pronouns.
+
+Follow this approach:
+1. Identify the main subjects: count people, name objects, describe animals
+2. Describe what they're doing: positions, interactions, activities
+3. Add context: location, clothing colors, distinctive details
+4. Check: Is it specific enough to find this photo again? Can someone searching for "three children at a table" or "concert with yellow lighting" find it?
+
+Good examples:
+✓ "Three children sitting at a table with a puppet being held by an adult. The children appear engaged in a puppet show."
+✓ "A concert stage with performers and audience members illuminated by bright yellow stage lights."
+✓ "Five people standing in a home hallway. One person stands with an arm around a child in a pink dress, another child in green stands nearby."
+
+Avoid these:
+❌ Generic: "A group of people" (say how many)
+❌ Vague: "Some items on a table" (say what items)
+❌ Inferred: "The people look happy" (describe visible positions/expressions instead)
+❌ Repetitive: "A person, a person, a person" (use varied sentence structure)
+
+Key guardrails:
+- Never describe invisible details: if backlit, don't invent hair color or facial features
+- Game pieces, figurines, toys, dolls are objects not people
+- Animals: identify clearly (dog, cat) or say "a pet"
+- Count and describe: "Two children" not "some kids"
+
+Write in prose, present tense.

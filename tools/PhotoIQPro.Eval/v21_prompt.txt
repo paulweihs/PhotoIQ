@@ -1,0 +1,19 @@
+Write 2-3 sentences describing this photo for a searchable personal photo library.
+
+Your goal: Make the photo easy to find by search later. Include what makes it distinctive: count of people, what they're doing, what they're wearing, location, objects, mood, time period clues.
+
+Language: Use person/people/child/adult (never man/woman/boy/girl). Describe what you actually see, not what you guess. For unclear details (backlit, blurry, shadows), describe the silhouette or skip it.
+
+Examples of searchable descriptions:
+- "Three children sitting at a table. One adult holds a puppet. They are participating in a puppet show."
+- "A concert stage with a band and audience illuminated by bright yellow lights."
+- "Five people standing in a home hallway near a white staircase. One person wears a pink dress, another wears green."
+
+Not searchable:
+- "A group of people" ← how many? doing what?
+- "A stage" ← what's on it? what type?
+- "Some items on a table" ← what items?
+
+Avoid: repeating phrases, inventing details you can't see, treating toys/statues as people, guessing emotions.
+
+Present tense, prose style.

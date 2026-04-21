@@ -78,8 +78,10 @@ internal static class TextNormalizer
 
     /// <summary>
     /// Returns <c>true</c> when the text exhibits model-degeneration patterns:
-    /// a word dominates &gt;40% of output, text exceeds 500 words,
-    /// or any 5-word n-gram repeats more than twice.
+    /// - Text exceeds 500 words (safety cap)
+    /// - A single word dominates >40% of output (token collapse)
+    /// - Any 5-word n-gram appears 3+ times (repetition loop)
+    /// - Any 3-word n-gram appears 4+ times (stuttering degeneration)
     /// </summary>
     internal static bool IsRepetitionLoop(string text)
     {
@@ -90,15 +92,31 @@ internal static class TextNormalizer
         var dominant = words.GroupBy(w => w.ToLowerInvariant()).Max(g => g.Count());
         if (dominant > words.Length * 0.4) return true;
 
+        // 5-word n-gram repetition (catches "The image shows ... The image shows ... The image shows ...")
+        // Requires 3+ occurrences to trigger, allowing legitimate phrase reuse.
         if (words.Length >= 15)
         {
-            var ngrams = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            var ngrams5 = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
             for (int i = 0; i <= words.Length - 5; i++)
             {
                 string ngram = string.Join(' ', words, i, 5);
-                ngrams.TryGetValue(ngram, out int count);
-                if (count + 1 > 2) return true;
-                ngrams[ngram] = count + 1;
+                ngrams5.TryGetValue(ngram, out int count);
+                if (count + 1 > 2) return true;  // Original threshold: 3+ occurrences
+                ngrams5[ngram] = count + 1;
+            }
+        }
+
+        // 3-word n-gram repetition (catches stuttering like "long, and often, long, and often...")
+        // More aggressive: catches degeneration with shorter phrases.
+        if (words.Length >= 9)
+        {
+            var ngrams3 = new Dictionary<string, int>(StringComparer.OrdinalIgnoreCase);
+            for (int i = 0; i <= words.Length - 3; i++)
+            {
+                string ngram = string.Join(' ', words, i, 3);
+                ngrams3.TryGetValue(ngram, out int count);
+                if (count + 1 > 3) return true;  // 4+ occurrences for 3-word phrases
+                ngrams3[ngram] = count + 1;
             }
         }
 

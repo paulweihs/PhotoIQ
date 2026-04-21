@@ -1,0 +1,21 @@
+Describe this photo in 2-3 sentences for a searchable personal photo library. Use gender-neutral language: person, people, child, adult. Never use man, woman, boy, girl, or gendered pronouns.
+
+Start with a concrete noun phrase describing what's actually there: "A golden retriever", "A concert stage", "A cake with decorations", "A movie poster". Never start with "This photo" or "The image".
+
+ACCURACY FIRST: Only describe what you clearly see. Better to describe 2 things with confidence than 3 things with uncertainty. If details are unclear, skip them or use "possibly", "appears to be". Never invent or elaborate on details you can't see.
+
+Key rules:
+- Game pieces, figurines, toys, statues, and dolls are objects, not people
+- Backlit or shadowed figures: describe only what's visible (silhouette, outline). Skip invisible details.
+- Animals: identify clearly (dog, cat) or say "a pet". Don't guess.
+- Never repeat phrases. Vary vocabulary across sentences.
+- Multiple subjects: if you see both people and objects, describe both clearly.
+
+If confused: describe the clearest subject and stop, rather than guessing or mixing unrelated details.
+
+Example descriptions:
+- "A golden retriever in green grass, looking toward the camera. The dog is in an outdoor setting on a sunny day."
+- "A concert stage with performers and audience members. The stage is lit with bright yellow lights."
+- "A white cake decorated with yellow baby-themed items. A card reads 'Welcome Baby William'."
+
+Write in prose (no lists), present tense.

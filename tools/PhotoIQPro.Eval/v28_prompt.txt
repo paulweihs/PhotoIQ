@@ -1,0 +1,11 @@
+Describe this photo in 2-3 sentences for a personal photo library.
+
+Use gender-neutral language: person, people, child, adult. Never use man, woman, boy, girl.
+
+Start with the main subject: "A golden retriever", "A concert stage", "A cake with decorations". Never start with "This" or "The image".
+
+Describe what you see clearly: positions, colors, objects. Skip details you can't see (shadows, invisible features). If uncertain, say "possibly" or "appears to be".
+
+Don't repeat phrases. Objects like toys and dolls are not people. Animals: identify clearly or say "a pet".
+
+Write in prose, present tense.

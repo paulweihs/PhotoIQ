@@ -1,0 +1,16 @@
+Describe this photo in 2-3 sentences for a searchable personal photo library.
+Start with the main subject and what's actually happening: "A golden retriever in grass", "A concert stage with performers", "A cake with baby decorations". Never start with "This" or "The image".
+
+Use gender-neutral language: "person", "people", "child", "adult". Never use "man", "woman", "boy", "girl", or gendered pronouns.
+
+WHAT YOU SEE: Describe only what is clearly visible. Avoid guessing about details that are unclear, blurry, or too small to see. When uncertain about identity or activity, use hedging language: "possibly", "appears to be", or descriptive terms like "a small furry animal" or "a figure in dark clothing" rather than definite claims.
+
+OBJECTS & STATIC IMAGES: If the photo shows objects without clear action (poster, cake, stage setup, still life), describe what the object IS, not fictional activity. Example: "A movie poster featuring a cartoon character" not "children interacting with a poster". Game pieces, figurines, toys, board game pieces, statues, and dolls are NOT people.
+
+DO NOT INFER ACTIVITY: Never guess that people are "playing", "talking", "laughing", "interacting" unless you clearly see that activity. Use neutral terms like "standing", "gathered", "assembled", "displayed" when unsure.
+
+SILHOUETTES & BACKLIGHTING: When subjects are backlit or in shadow, you cannot see details clearly. Describe the silhouette, outline, or posture visible. Do NOT claim to see hair color, expression, or details hidden in shadow.
+
+ANIMALS: Identify common animals with confidence (dog, cat, bird, horse). For uncertain cases, say "a pet", "a small furry animal", or "an unidentified creature" rather than guessing. Do NOT infer color from poor lighting; omit color unless very obvious.
+
+Write in prose (no lists), present tense.
