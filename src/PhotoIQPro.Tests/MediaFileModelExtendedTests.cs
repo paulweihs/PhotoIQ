@@ -7,6 +7,7 @@ namespace PhotoIQPro.Tests;
 
 // ── INotifyPropertyChanged ────────────────────────────────────────────────────
 
+/// <summary>Tests for MediaFile INotifyPropertyChanged implementation.</summary>
 public class MediaFilePropertyChangedTests
 {
     private static MediaFile MakeFile() => new()
@@ -117,6 +118,7 @@ public class MediaFilePropertyChangedTests
 
 // ── Default values ────────────────────────────────────────────────────────────
 
+/// <summary>Tests for MediaFile default property values on initialization.</summary>
 public class MediaFileDefaultValueTests
 {
     private static MediaFile New() => new() { FilePath = "f", FileName = "f", Extension = ".jpg" };
@@ -182,6 +184,7 @@ public class MediaFileDefaultValueTests
 
 // ── Derived / computed properties ─────────────────────────────────────────────
 
+/// <summary>Tests for MediaFile computed/derived properties (IsVisionPending, OfflineDriveRoot).</summary>
 public class MediaFileDerivedPropertyTests
 {
     [Theory]
@@ -209,6 +212,7 @@ public class MediaFileDerivedPropertyTests
 
 // ── AnalysisStatus / MediaType enum contract ──────────────────────────────────
 
+/// <summary>Tests for AnalysisStatus and MediaType enum values and contracts.</summary>
 public class PhotoEnumTests
 {
     [Fact]
@@ -244,6 +248,7 @@ public class PhotoEnumTests
 
 // ── AppSettings constants guard ───────────────────────────────────────────────
 
+/// <summary>Tests for AppSettings constants and vision analysis prompts.</summary>
 public class AppSettingsConstantsTests
 {
     [Fact]

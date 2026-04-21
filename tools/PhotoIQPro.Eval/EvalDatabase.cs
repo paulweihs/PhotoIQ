@@ -490,6 +490,253 @@ public sealed class EvalDatabase : IDisposable
         );
     }
 
+    // ── Prompt optimization schema + queries ──────────────────────────────────
+
+    /// <summary>
+    /// Creates tables for tracking prompt optimization iterations.
+    /// </summary>
+    public void EnsurePromptOptSchema()
+    {
+        using var cmd = _conn.CreateCommand();
+
+        // Track each optimization run and its results
+        cmd.CommandText =
+            """
+            CREATE TABLE IF NOT EXISTS prompt_opt_runs (
+                id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id           TEXT    NOT NULL UNIQUE,
+                prompt           TEXT    NOT NULL,
+                model            TEXT    NOT NULL,
+                image_count      INTEGER NOT NULL,
+                avg_similarity   REAL    NOT NULL,
+                min_similarity   REAL    NOT NULL,
+                max_similarity   REAL    NOT NULL,
+                accepted         INTEGER NOT NULL DEFAULT 0,
+                notes            TEXT,
+                created_at       TEXT    NOT NULL
+            )
+            """;
+        cmd.ExecuteNonQuery();
+
+        // Per-image similarity scores for each run
+        cmd.CommandText =
+            """
+            CREATE TABLE IF NOT EXISTS prompt_opt_scores (
+                id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                run_id           TEXT    NOT NULL,
+                file_name        TEXT    NOT NULL,
+                claude_desc      TEXT    NOT NULL,
+                ollama_desc      TEXT    NOT NULL,
+                similarity       REAL    NOT NULL,
+                created_at       TEXT    NOT NULL
+            )
+            """;
+        cmd.ExecuteNonQuery();
+    }
+
+    public void InsertPromptOptRun(
+        string runId,
+        string prompt,
+        string model,
+        int imageCount,
+        double avgSim,
+        double minSim,
+        double maxSim,
+        bool accepted,
+        string? notes = null)
+    {
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText =
+            """
+            INSERT INTO prompt_opt_runs
+                (run_id, prompt, model, image_count, avg_similarity, min_similarity, max_similarity, accepted, notes, created_at)
+            VALUES
+                ($runId, $prompt, $model, $count, $avg, $min, $max, $accepted, $notes, $at)
+            """;
+        cmd.Parameters.AddWithValue("$runId", runId);
+        cmd.Parameters.AddWithValue("$prompt", prompt);
+        cmd.Parameters.AddWithValue("$model", model);
+        cmd.Parameters.AddWithValue("$count", imageCount);
+        cmd.Parameters.AddWithValue("$avg", avgSim);
+        cmd.Parameters.AddWithValue("$min", minSim);
+        cmd.Parameters.AddWithValue("$max", maxSim);
+        cmd.Parameters.AddWithValue("$accepted", accepted ? 1 : 0);
+        cmd.Parameters.AddWithValue("$notes", (object?)notes ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("$at", DateTime.UtcNow.ToString("o"));
+        cmd.ExecuteNonQuery();
+    }
+
+    public void InsertPromptOptScore(
+        string runId,
+        string fileName,
+        string claudeDesc,
+        string ollamaDesc,
+        double similarity)
+    {
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText =
+            """
+            INSERT INTO prompt_opt_scores
+                (run_id, file_name, claude_desc, ollama_desc, similarity, created_at)
+            VALUES
+                ($runId, $file, $claude, $ollama, $sim, $at)
+            """;
+        cmd.Parameters.AddWithValue("$runId", runId);
+        cmd.Parameters.AddWithValue("$file", fileName);
+        cmd.Parameters.AddWithValue("$claude", claudeDesc);
+        cmd.Parameters.AddWithValue("$ollama", ollamaDesc);
+        cmd.Parameters.AddWithValue("$sim", similarity);
+        cmd.Parameters.AddWithValue("$at", DateTime.UtcNow.ToString("o"));
+        cmd.ExecuteNonQuery();
+    }
+
+    public bool AcceptPromptOptRun(string runId)
+    {
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText = "UPDATE prompt_opt_runs SET accepted = 1 WHERE run_id = $id";
+        cmd.Parameters.AddWithValue("$id", runId);
+        return cmd.ExecuteNonQuery() > 0;
+    }
+
+    public List<(string FileName, string ClaudeDesc, string OllamaDesc, double Similarity)> GetPromptOptScores(string runId)
+    {
+        var results = new List<(string, string, string, double)>();
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText =
+            """
+            SELECT file_name, claude_desc, ollama_desc, similarity
+            FROM prompt_opt_scores
+            WHERE run_id = $runId
+            ORDER BY similarity
+            """;
+        cmd.Parameters.AddWithValue("$runId", runId);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+        {
+            results.Add((
+                reader.GetString(0),
+                reader.GetString(1),
+                reader.GetString(2),
+                reader.GetDouble(3)
+            ));
+        }
+        return results;
+    }
+
+    // ── Reference corpus schema + queries ─────────────────────────────────────
+
+    /// <summary>
+    /// Creates the reference_corpus table if it does not already exist.
+    /// Each row is one image described by Claude Code — the gold-standard for prompt testing.
+    /// </summary>
+    public void EnsureCorpusSchema()
+    {
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText =
+            """
+            CREATE TABLE IF NOT EXISTS reference_corpus (
+                id               INTEGER PRIMARY KEY AUTOINCREMENT,
+                file_name        TEXT    NOT NULL UNIQUE,
+                file_path        TEXT    NOT NULL,
+                image_used       TEXT    NOT NULL,
+                photo_year       INTEGER,
+                claude_description TEXT  NOT NULL,
+                generated_by     TEXT    NOT NULL DEFAULT 'claude-code',
+                created_at       TEXT    NOT NULL
+            )
+            """;
+        cmd.ExecuteNonQuery();
+    }
+
+    /// <summary>Inserts one corpus entry. Silently ignores duplicates (UNIQUE on file_name).</summary>
+    public bool InsertCorpusEntry(
+        string fileName,
+        string filePath,
+        string imageUsed,
+        int?   photoYear,
+        string description,
+        string generatedBy = "claude-code")
+    {
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText =
+            """
+            INSERT OR IGNORE INTO reference_corpus
+                (file_name, file_path, image_used, photo_year, claude_description, generated_by, created_at)
+            VALUES
+                ($name, $path, $image, $year, $desc, $by, $at)
+            """;
+        cmd.Parameters.AddWithValue("$name",  fileName);
+        cmd.Parameters.AddWithValue("$path",  filePath);
+        cmd.Parameters.AddWithValue("$image", imageUsed);
+        cmd.Parameters.AddWithValue("$year",  (object?)photoYear ?? DBNull.Value);
+        cmd.Parameters.AddWithValue("$desc",  description);
+        cmd.Parameters.AddWithValue("$by",    generatedBy);
+        cmd.Parameters.AddWithValue("$at",    DateTime.UtcNow.ToString("o"));
+        return cmd.ExecuteNonQuery() == 1;
+    }
+
+    /// <summary>Returns the set of file_name values already in the corpus (for deduplication).</summary>
+    public HashSet<string> GetCorpusFileNames()
+    {
+        var set = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText = "SELECT file_name FROM reference_corpus";
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read()) set.Add(reader.GetString(0));
+        return set;
+    }
+
+    /// <summary>Returns total count and per-decade breakdown.</summary>
+    public (int Total, List<(int Decade, int Count)> ByDecade) GetCorpusStats()
+    {
+        var byDecade = new List<(int, int)>();
+        using var cmd = _conn.CreateCommand();
+
+        cmd.CommandText = "SELECT COUNT(*) FROM reference_corpus";
+        int total = Convert.ToInt32(cmd.ExecuteScalar());
+
+        cmd.CommandText =
+            """
+            SELECT (photo_year / 10) * 10 AS decade, COUNT(*) AS cnt
+            FROM reference_corpus
+            WHERE photo_year IS NOT NULL
+            GROUP BY decade
+            ORDER BY decade
+            """;
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+            byDecade.Add((reader.GetInt32(0), reader.GetInt32(1)));
+
+        return (total, byDecade);
+    }
+
+    /// <summary>
+    /// Returns a random sample of N corpus entries for use in prompt testing.
+    /// </summary>
+    public List<CorpusEntry> GetCorpusSample(int count)
+    {
+        var results = new List<CorpusEntry>(count);
+        using var cmd = _conn.CreateCommand();
+        cmd.CommandText =
+            """
+            SELECT file_name, file_path, image_used, photo_year, claude_description
+            FROM reference_corpus
+            ORDER BY RANDOM()
+            LIMIT $count
+            """;
+        cmd.Parameters.AddWithValue("$count", count);
+        using var reader = cmd.ExecuteReader();
+        while (reader.Read())
+            results.Add(new CorpusEntry(
+                FileName:    reader.GetString(0),
+                FilePath:    reader.GetString(1),
+                ImageUsed:   reader.GetString(2),
+                PhotoYear:   reader.IsDBNull(3) ? null : reader.GetInt32(3),
+                Description: reader.GetString(4)
+            ));
+        return results;
+    }
+
     public void Dispose()
     {
         if (_disposed) return;
@@ -509,6 +756,14 @@ public record ClaudeEvalRow(
 );
 
 public record ClaudeGateRates(double G1, double G2, double G3, double G4, double G5);
+
+public record CorpusEntry(
+    string  FileName,
+    string  FilePath,
+    string  ImageUsed,
+    int?    PhotoYear,
+    string  Description
+);
 
 /// <summary>Per-photo per-model aggregate for one run (averaged across 3 passes).</summary>
 public record PhotoModelSummary(

@@ -100,7 +100,8 @@ public class ClipTaggingServiceFilterTests
     [Fact]
     public void OutdoorOnlyTags_NotSuppressed_WhenOutdoorScoreHigher()
     {
-        // outdoor > indoor → isIndoor = false → OutdoorOnlyTags are NOT suppressed
+        // outdoor > indoor → isIndoor = false → OutdoorOnlyTags are NOT suppressed.
+        // Use 8 tags (+ outdoor anchor = 9) to stay within MaxTagsPerImage = 10.
         var allScores = WithContext(
             indoorScore:  0.10f,
             outdoorScore: 0.50f,
@@ -111,17 +112,13 @@ public class ClipTaggingServiceFilterTests
             Score("lake",      TagCategory.Scene, 0.30f),
             Score("river",     TagCategory.Scene, 0.30f),
             Score("forest",    TagCategory.Scene, 0.30f),
-            Score("mountains", TagCategory.Scene, 0.30f),
-            Score("park",      TagCategory.Scene, 0.30f),
-            Score("street",    TagCategory.Scene, 0.30f),
-            Score("city",      TagCategory.Scene, 0.30f),
-            Score("sunset",    TagCategory.Scene, 0.30f)
+            Score("mountains", TagCategory.Scene, 0.30f)
         );
 
         var results = ClipTaggingService.ApplyFilters(allScores);
         var labels  = results.Select(r => r.Label).ToHashSet();
 
-        // All twelve OutdoorOnlyTags exceed the base threshold (0.22) and are outdoor.
+        // All eight OutdoorOnlyTags exceed the base threshold (0.22) and are outdoor.
         Assert.Contains("rain",      labels);
         Assert.Contains("snow",      labels);
         Assert.Contains("beach",     labels);
@@ -130,10 +127,6 @@ public class ClipTaggingServiceFilterTests
         Assert.Contains("river",     labels);
         Assert.Contains("forest",    labels);
         Assert.Contains("mountains", labels);
-        Assert.Contains("park",      labels);
-        Assert.Contains("street",    labels);
-        Assert.Contains("city",      labels);
-        Assert.Contains("sunset",    labels);
     }
 
     // ── 3. Occasion (Event) threshold = 0.32 ────────────────────────────────

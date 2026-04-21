@@ -5,6 +5,7 @@ namespace PhotoIQPro.Tests;
 
 // ── Tag model ─────────────────────────────────────────────────────────────────
 
+/// <summary>Tests for the Tag model: properties, defaults, and initialization.</summary>
 public class TagModelTests
 {
     private static Tag Make(string name = "landscape") => new()
@@ -112,6 +113,7 @@ public class TagModelTests
 
 // ── TagCategory enum ──────────────────────────────────────────────────────────
 
+/// <summary>Tests for the TagCategory enum and its values.</summary>
 public class TagCategoryEnumTests
 {
     [Fact]
@@ -143,6 +145,7 @@ public class TagCategoryEnumTests
 
 // ── Library model ─────────────────────────────────────────────────────────────
 
+/// <summary>Tests for the Library model: properties, defaults, and album hierarchy.</summary>
 public class LibraryModelTests
 {
     private static Library Make(string name = "My Library") => new() { Name = name };
@@ -191,6 +194,7 @@ public class LibraryModelTests
 
 // ── Album model ───────────────────────────────────────────────────────────────
 
+/// <summary>Tests for the Album model: properties, defaults, and photo collection.</summary>
 public class AlbumModelTests
 {
     private static Album Make(string name = "Paris Trip") => new()
@@ -256,6 +260,7 @@ public class AlbumModelTests
 
 // ── ExclusionRule model ───────────────────────────────────────────────────────
 
+/// <summary>Tests for the ExclusionRule model: folder/path exclusion rules.</summary>
 public class ExclusionRuleModelTests
 {
     [Fact]
@@ -307,6 +312,7 @@ public class ExclusionRuleModelTests
 
 // ── Face model ────────────────────────────────────────────────────────────────
 
+/// <summary>Tests for the Face model: detection results, embeddings, and person linking.</summary>
 public class FaceModelTests
 {
     private static Face Make() => new() { MediaFileId = Guid.NewGuid() };
@@ -390,6 +396,7 @@ public class FaceModelTests
 
 // ── Person model ──────────────────────────────────────────────────────────────
 
+/// <summary>Tests for the Person model: identified people, face counts, and embeddings.</summary>
 public class PersonModelTests
 {
     private static Person Make() => new();
@@ -477,6 +484,7 @@ public class PersonModelTests
 
 // ── AnalysisMetric model ──────────────────────────────────────────────────────
 
+/// <summary>Tests for the AnalysisMetric model: performance metrics and timing data.</summary>
 public class AnalysisMetricModelTests
 {
     private static AnalysisMetric Make() => new() { PhotoId = Guid.NewGuid() };

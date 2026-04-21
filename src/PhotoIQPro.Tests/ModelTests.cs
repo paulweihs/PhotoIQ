@@ -3,6 +3,7 @@ using PhotoIQPro.Core.Models;
 
 namespace PhotoIQPro.Tests;
 
+/// <summary>Tests for the MediaFile model: defaults and initialization.</summary>
 public class MediaFileTests
 {
     [Fact]

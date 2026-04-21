@@ -8,10 +8,24 @@ using PhotoIQPro.Desktop.ViewModels;
 
 namespace PhotoIQPro.Desktop.Views;
 
+/// <summary>
+/// The main application window containing the photo gallery, detail panel, and library sidebar.
+/// </summary>
+/// <remarks>
+/// Handles:
+/// - Gallery navigation via keyboard (arrow keys, Enter to open viewer)
+/// - Multi-selection with Ctrl+click and Shift+click, single-click to clear
+/// - Drag-drop of photos onto albums and libraries in the sidebar
+/// - Device change notifications (drives connected/disconnected) to update offline status
+/// - Search box and tag editor keyboard shortcuts
+/// - Double-click to open photo viewer
+///
+/// The DataContext is set to MainViewModel via App.Services dependency injection.
+/// </remarks>
 public partial class MainWindow : Window
 {
-    private const int WM_DEVICECHANGE          = 0x0219;
-    private const int DBT_DEVICEARRIVAL        = 0x8000;
+    private const int WM_DEVICECHANGE = 0x0219;
+    private const int DBT_DEVICEARRIVAL = 0x8000;
     private const int DBT_DEVICEREMOVECOMPLETE = 0x8004;
 
     private HwndSource? _hwndSource;
@@ -146,16 +160,36 @@ public partial class MainWindow : Window
             vm.SelectAllCommand.Execute(null);
             e.Handled = true;
         }
-        else if (e.Key == Key.Right || e.Key == Key.Down)
+        else if (e.Key == Key.Right)
         {
             vm.NavigateNextCommand.Execute(null);
             if (PhotoGrid.SelectedItem != null) PhotoGrid.ScrollIntoView(PhotoGrid.SelectedItem);
             e.Handled = true;
         }
-        else if (e.Key == Key.Left || e.Key == Key.Up)
+        else if (e.Key == Key.Left)
         {
             vm.NavigatePreviousCommand.Execute(null);
             if (PhotoGrid.SelectedItem != null) PhotoGrid.ScrollIntoView(PhotoGrid.SelectedItem);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Down || e.Key == Key.Up)
+        {
+            // Jump a full row: calculate how many items fit across the panel width.
+            // Item container = ThumbnailSize + 8 (4px margin each side).
+            // Subtract the vertical scrollbar width since the wrap panel can't use that space.
+            double itemWidth = vm.ThumbnailSize + 8;
+            double panelWidth = Math.Max(itemWidth,
+                PhotoGrid.ActualWidth - System.Windows.SystemParameters.VerticalScrollBarWidth);
+            int columns = Math.Max(1, (int)(panelWidth / itemWidth));
+            int offset  = e.Key == Key.Down ? columns : -columns;
+            vm.NavigateByOffsetCommand.Execute(offset);
+            if (PhotoGrid.SelectedItem != null) PhotoGrid.ScrollIntoView(PhotoGrid.SelectedItem);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Return || e.Key == Key.Enter)
+        {
+            if (vm.SelectedMediaFile != null)
+                vm.OpenPhotoViewerCommand.Execute(null);
             e.Handled = true;
         }
     }

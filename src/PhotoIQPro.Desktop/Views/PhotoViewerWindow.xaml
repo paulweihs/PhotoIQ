@@ -166,7 +166,11 @@
         </Button>
 
         <!-- ═══ Image area ═══ -->
-        <Grid Grid.Column="0" Background="#0D0D12">
+        <Grid Grid.Column="0" Background="#0D0D12"
+              MouseWheel="OnImageMouseWheel"
+              MouseDown="OnImageMouseDown"
+              MouseMove="OnImageMouseMove"
+              MouseUp="OnImageMouseUp">
             <Grid.ContextMenu>
                 <!-- DataContext = PhotoViewerViewModel; commands are delegated from MainViewModel -->
                 <ContextMenu DataContext="{Binding PlacementTarget.DataContext, RelativeSource={RelativeSource Self}}">
@@ -213,13 +217,15 @@
             <!-- Full-res photo — loaded async in VM to avoid blocking the UI thread.
                  Scroll wheel zooms; Ctrl+0 resets. RenderTransformOrigin centres the scale. -->
             <Image x:Name="ViewerImage"
-                   Source="{Binding CurrentImage}"
+                   Source="{Binding CurrentImage, TargetNullValue={x:Null}}"
                    Stretch="Uniform"
                    RenderOptions.BitmapScalingMode="HighQuality"
-                   RenderTransformOrigin="0.5,0.5"
-                   MouseWheel="OnImageMouseWheel">
+                   RenderTransformOrigin="0.5,0.5">
                 <Image.RenderTransform>
-                    <ScaleTransform x:Name="ImageScale"/>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="ImageScale"/>
+                        <TranslateTransform x:Name="ImageTranslate"/>
+                    </TransformGroup>
                 </Image.RenderTransform>
             </Image>
 
@@ -228,7 +234,10 @@
                     IsHitTestVisible="True"
                     RenderTransformOrigin="0.5,0.5">
                 <Canvas.RenderTransform>
-                    <ScaleTransform x:Name="FaceOverlayScale"/>
+                    <TransformGroup>
+                        <ScaleTransform x:Name="FaceOverlayScale"/>
+                        <TranslateTransform x:Name="FaceOverlayTranslate"/>
+                    </TransformGroup>
                 </Canvas.RenderTransform>
             </Canvas>
 

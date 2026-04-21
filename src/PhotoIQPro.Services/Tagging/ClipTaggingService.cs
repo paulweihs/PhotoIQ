@@ -5,6 +5,27 @@ using PhotoIQPro.Core.Models;
 
 namespace PhotoIQPro.Services.Tagging;
 
+/// <summary>
+/// Applies CLIP-based tag suggestions to photos using pre-computed tag embeddings.
+/// </summary>
+/// <remarks>
+/// CLIP (Contrastive Language-Image Pre-training) embeds images and natural language text into
+/// the same vector space. This service:
+/// 1. Encodes a photo as a 512D ONNX embedding (ViT-B/32 backbone)
+/// 2. Compares it against pre-computed embeddings for ~500 scene/object/activity/color/event tags
+/// 3. Returns tags where the cosine similarity exceeds a category-specific threshold
+///
+/// Category-specific confidence thresholds prevent false positives:
+/// - Scene/Object/Style/Color: 0.22 — reliable CLIP recognitions
+/// - Activity: 0.26 — higher bar to avoid ghost tags (e.g. "eating" from couch photos)
+/// - Event/Occasion: 0.32 — unambiguous markers only (no seasonal clothing false-positives)
+///
+/// Special logic filters outdoor-only tags (rain, beach, ocean) when the Indoor/Outdoor
+/// resolver determines the photo is indoors, preventing hallucinations (bathtub water → "rain").
+///
+/// Tags are capped at 10 per image to avoid noise. Initialization is atomic via SemaphoreSlim
+/// to handle concurrent requests during startup.
+/// </remarks>
 public sealed class ClipTaggingService : ITaggingService
 {
     private readonly ClipEngine _imageEncoder;
@@ -49,6 +70,12 @@ public sealed class ClipTaggingService : ITaggingService
     ];
     private const int   MaxTagsPerImage             = 10;
 
+    /// <summary>
+    /// Initializes a new instance of the ClipTaggingService.
+    /// </summary>
+    /// <param name="imageEncoder">CLIP image encoder (ViT-B/32 via ONNX Runtime).</param>
+    /// <param name="textEncoder">CLIP text encoder for embedding tag vocabulary prompts.</param>
+    /// <param name="modelsPath">Directory containing the CLIP tokenizer files (vocab.json, merges.txt).</param>
     public ClipTaggingService(ClipEngine imageEncoder, ClipTextEngine textEncoder, string modelsPath)
     {
         _imageEncoder = imageEncoder;
@@ -56,9 +83,24 @@ public sealed class ClipTaggingService : ITaggingService
         _modelsPath = modelsPath;
     }
 
-    // True only after a successful init with both models + tokenizer files present.
+    /// <summary>
+    /// Gets a value indicating whether CLIP tagging is available and ready to use.
+    /// </summary>
+    /// <remarks>
+    /// True only if both the image and text models have initialized successfully AND
+    /// the tag vocabulary embeddings have been pre-computed.
+    /// </remarks>
     public bool IsAvailable => _tagEmbeddings != null && _imageEncoder.IsInitialized;
 
+    /// <summary>
+    /// Initializes the CLIP tagging service by loading models and pre-computing tag embeddings.
+    /// </summary>
+    /// <remarks>
+    /// Safe to call multiple times; subsequent calls are no-ops due to SemaphoreSlim gating.
+    /// If any step fails (missing models, I/O error, etc.), tagging degrades gracefully to unavailable.
+    /// The image encoder is required; text encoder and tokenizer are optional (silent failures).
+    /// </remarks>
+    /// <param name="ct">Cancellation token.</param>
     public async Task InitializeAsync(CancellationToken ct = default)
     {
         await _initLock.WaitAsync(ct);

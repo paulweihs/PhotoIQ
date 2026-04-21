@@ -8,6 +8,7 @@ using Xunit;
 
 namespace PhotoIQPro.Tests;
 
+/// <summary>Tests for the "On This Day" feature: anniversary date matching and filtering.</summary>
 public class OnThisDayViewModelTests
 {
     private static MediaFile Photo(int year, int month, int day, int hour = 12)

@@ -31,9 +31,9 @@ public sealed class FaceRecognitionService : IFaceRecognitionService
     public FaceRecognitionService(IServiceScopeFactory scopeFactory)
         => _scopeFactory = scopeFactory;
 
-    public void InvalidateCache()
+    public async Task InvalidateCacheAsync()
     {
-        _cacheLock.Wait();
+        await _cacheLock.WaitAsync();
         try { _cache = null; }
         finally { _cacheLock.Release(); }
     }
@@ -81,7 +81,7 @@ public sealed class FaceRecognitionService : IFaceRecognitionService
                 };
                 await personRepo.CreateAsync(newPerson);
                 await personRepo.LinkFaceToPersonAsync(face.Id, newPerson.Id, 1.0);
-                InvalidateCache(); // new person means cache must refresh
+                await InvalidateCacheAsync(); // new person means cache must refresh
             }
         }
         catch (OperationCanceledException) { throw; }

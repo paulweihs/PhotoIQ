@@ -4,11 +4,33 @@ using PhotoIQPro.Core.Models;
 
 namespace PhotoIQPro.Data.Repositories;
 
+/// <summary>
+/// Repository for Person (face recognition identity) persistence and queries.
+/// </summary>
+/// <remarks>
+/// People represent recognized identities in face detection. A Person may be:
+/// - IsNamed: user has assigned a name (e.g., "Alice") or the name was imported from metadata
+/// - UnNamed: auto-generated person for clustered faces not yet identified (e.g., "Person #1")
+/// - Invisible: created during face merging but marked for deletion without losing face records
+///
+/// Each Person has an AverageEmbedding (computed from all their face embeddings) used for matching
+/// new detected faces to existing identities. The repository handles CRUD + embedding lookups and
+/// face linkage (assigning detected faces to Person identities with confidence scores).
+/// </remarks>
 public class PersonRepository : IPersonRepository
 {
     private readonly PhotoIQContext _ctx;
+    /// <summary>Initializes a new instance of the PersonRepository.</summary>
+    /// <param name="ctx">The PhotoIQContext for database access.</param>
     public PersonRepository(PhotoIQContext ctx) => _ctx = ctx;
 
+    /// <summary>Creates a new Person (identity) in the database.</summary>
+    /// <remarks>
+    /// Typically called when a new face cluster is identified or when a user manually creates a person.
+    /// The caller should populate IsNamed and AverageEmbedding as appropriate.
+    /// </remarks>
+    /// <param name="person">The Person entity to create.</param>
+    /// <returns>The created Person (with ID populated from the database).</returns>
     public async Task<Person> CreateAsync(Person person)
     {
         _ctx.People.Add(person);
@@ -16,6 +38,9 @@ public class PersonRepository : IPersonRepository
         return person;
     }
 
+    /// <summary>Updates an existing Person's metadata (name, embeddings, visibility, etc.).</summary>
+    /// <remarks>Sets DateModified to UTC now before saving.</remarks>
+    /// <param name="person">The Person entity with updated fields (must be already attached to context or have correct ID).</param>
     public async Task UpdateAsync(Person person)
     {
         person.DateModified = DateTime.UtcNow;
@@ -23,15 +48,33 @@ public class PersonRepository : IPersonRepository
         await _ctx.SaveChangesAsync();
     }
 
+    /// <summary>Gets a person by ID (regardless of visibility state).</summary>
+    /// <param name="id">The Person ID.</param>
+    /// <returns>The Person entity, or null if not found.</returns>
     public async Task<Person?> GetByIdAsync(Guid id)
         => await _ctx.People.FirstOrDefaultAsync(p => p.Id == id);
 
+    /// <summary>Gets all visible persons (both named and unnamed), sorted by name.</summary>
+    /// <remarks>Invisible persons (marked for deletion) are excluded.</remarks>
+    /// <returns>All visible Person entities in name order.</returns>
     public async Task<IReadOnlyList<Person>> GetAllAsync()
         => await _ctx.People.Where(p => p.IsVisible).OrderBy(p => p.Name).ToListAsync();
 
+    /// <summary>Gets all visible persons that have been explicitly named by the user.</summary>
+    /// <remarks>Excludes unnamed persons (auto-generated clusters like "Person #1").</remarks>
+    /// <returns>All named, visible Person entities in name order.</returns>
     public async Task<IReadOnlyList<Person>> GetAllNamedAsync()
         => await _ctx.People.Where(p => p.IsNamed && p.IsVisible).OrderBy(p => p.Name).ToListAsync();
 
+    /// <summary>
+    /// Gets all persons with computed average face embeddings (for face recognition matching).
+    /// </summary>
+    /// <remarks>
+    /// Returns only persons whose AverageEmbedding is populated. These embeddings are used by the
+    /// face recognition service to match newly detected faces to known identities via cosine similarity.
+    /// Uses AsNoTracking for efficiency (no change tracking needed for read-only embedding data).
+    /// </remarks>
+    /// <returns>A list of (PersonId, AverageEmbedding) tuples for matching.</returns>
     public async Task<IReadOnlyList<(Guid PersonId, byte[] Embedding)>> GetAllEmbeddingsAsync()
     {
         var rows = await _ctx.People
@@ -42,6 +85,14 @@ public class PersonRepository : IPersonRepository
         return rows.Select(r => (r.Id, r.AverageEmbedding!)).ToList();
     }
 
+    /// <summary>Links a detected face to a person identity with a confidence score.</summary>
+    /// <remarks>
+    /// Called after the face recognition engine matches a face to a person. Silently succeeds
+    /// even if the face is not found (idempotent).
+    /// </remarks>
+    /// <param name="faceId">The Face ID to link.</param>
+    /// <param name="personId">The Person ID to link to.</param>
+    /// <param name="confidence">Confidence score (0-1) from the face recognition model.</param>
     public async Task LinkFaceToPersonAsync(Guid faceId, Guid personId, double confidence)
     {
         var face = await _ctx.Faces.FirstOrDefaultAsync(f => f.Id == faceId);
@@ -51,6 +102,14 @@ public class PersonRepository : IPersonRepository
         await _ctx.SaveChangesAsync();
     }
 
+    /// <summary>Finds a person by normalized name, or creates one if not found.</summary>
+    /// <remarks>
+    /// Used when importing faces with metadata tags (e.g., EXIF Person keywords) or when the user
+    /// manually names a person. The normalized name ensures consistent deduplication regardless of case.
+    /// </remarks>
+    /// <param name="name">The display name (e.g., "Alice").</param>
+    /// <param name="normalizedName">The normalized name for deduplication (e.g., "alice").</param>
+    /// <returns>The existing Person with this normalized name, or a newly created one.</returns>
     public async Task<Person> FindOrCreateByNameAsync(string name, string normalizedName)
     {
         var existing = await _ctx.People

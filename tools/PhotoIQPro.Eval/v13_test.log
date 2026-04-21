@@ -1,0 +1,37 @@
+
+╔════════════════════════════════════════════════════════════════╗
+║ Prompt Optimization Test
+║ Oracle: reference_corpus (Claude Code)  |  Test: llama3.2-vision
+║ Run ID: 2026-04-17T04-44-51
+╚════════════════════════════════════════════════════════════════╝
+
+[1/2] Sampling 10 images from PhotoIQ library...
+[Sampler] 55 photos selected across 3 decades.
+      → 10 images sampled (stratified by decade)
+
+[2/2] Generating test descriptions (Ollama) and comparing...
+      10/10 → avg sim: 0.199
+
+╔════════════════════════════════════════════════════════════════╗
+║ Results:
+║   Tested:         10 images
+║   Avg similarity: 0.199 (0.0-1.0, higher is better)
+║   Min similarity: 0.080
+║   Max similarity: 0.291
+║   Time:           2.8 min
+║
+║ Worst matches (improve prompt logic for these):
+║   354ed0d2f4d54efc8d263e76dc1a2f0a.jpg 0.080
+║   17c5fbd45a5e4c96b956a870e965981d.jpg 0.085
+║   dd6140c22a75456ba3dff91a51256481.jpg 0.161
+║
+║ Best matches (prompt working well):
+║   b58b43190a6b42e19deac00b1d54a48d.jpg 0.252
+║   c41fd5623e5d413598adfa4631735325.jpg 0.264
+║   4012da77a10749c7b06b261453c83aaa.jpg 0.291
+╚════════════════════════════════════════════════════════════════╝
+
+Run ID: 2026-04-17T04-44-51
+To accept this prompt: dotnet run -- --accept-prompt 2026-04-17T04-44-51
+To try a new prompt: dotnet run -- --optimize-prompt 300 --prompt "new prompt"
+

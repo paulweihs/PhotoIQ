@@ -3,6 +3,7 @@ using PhotoIQPro.Common;
 
 namespace PhotoIQPro.Tests;
 
+/// <summary>Tests for the FormatUtilities.FormatFileSize method.</summary>
 public class FormatUtilitiesTests
 {
     [Theory]
@@ -16,6 +17,7 @@ public class FormatUtilitiesTests
         => Assert.Equal(expected, FormatUtilities.FormatFileSize(bytes));
 }
 
+/// <summary>Tests for DateTime extension methods: GetHolidayName, IsUsaThanksgiving.</summary>
 public class DateTimeExtensionsTests
 {
     [Theory]
@@ -51,6 +53,7 @@ public class DateTimeExtensionsTests
     }
 }
 
+/// <summary>Tests for SupportedFormats extension collections (PhotoExtensions, RawExtensions, etc.).</summary>
 public class SupportedFormatsTests
 {
     [Theory]

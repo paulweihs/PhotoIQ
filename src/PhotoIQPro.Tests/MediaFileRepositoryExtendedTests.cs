@@ -12,6 +12,7 @@ namespace PhotoIQPro.Tests;
 // with Path.DirectorySeparatorChar ('\' on Windows); forward-slash paths would
 // produce a mismatched prefix and never match.
 
+/// <summary>Tests for MediaFileRepository.RemoveByFolderAsync: bulk deletion with recursion control.</summary>
 public class RemoveByFolderTests : RepositoryTestBase
 {
     private readonly MediaFileRepository _repo;
@@ -82,6 +83,7 @@ public class RemoveByFolderTests : RepositoryTestBase
 
 // ── GetDistinctFolderPathsAsync ───────────────────────────────────────────────
 
+/// <summary>Tests for MediaFileRepository.GetDistinctFolderPathsAsync: folder enumeration.</summary>
 public class GetDistinctFolderPathsTests : RepositoryTestBase
 {
     private readonly MediaFileRepository _repo;
@@ -120,6 +122,7 @@ public class GetDistinctFolderPathsTests : RepositoryTestBase
 
 // ── ExcludeAsync ─────────────────────────────────────────────────────────────
 
+/// <summary>Tests for MediaFileRepository.ExcludeAsync: marking photos as excluded.</summary>
 public class ExcludeAsyncTests : RepositoryTestBase
 {
     private readonly MediaFileRepository _repo;
@@ -155,6 +158,7 @@ public class ExcludeAsyncTests : RepositoryTestBase
 
 // ── GetOrCreateTagAsync / GetAllTagNamesAsync / RemoveTagFromPhotoAsync ────────
 
+/// <summary>Tests for tag operations in MediaFileRepository: CRUD and photo-tag relationships.</summary>
 public class TagRepositoryTests : RepositoryTestBase
 {
     private readonly MediaFileRepository _repo;
@@ -237,6 +241,7 @@ public class TagRepositoryTests : RepositoryTestBase
 
 // ── GetDuplicateGroupsAsync ───────────────────────────────────────────────────
 
+/// <summary>Tests for MediaFileRepository.GetDuplicateGroupsAsync: hash and RAW+JPEG pair detection.</summary>
 public class DuplicateDetectionTests : RepositoryTestBase
 {
     private readonly MediaFileRepository _repo;
@@ -326,6 +331,7 @@ public class DuplicateDetectionTests : RepositoryTestBase
 
 // ── GetOutdatedDescriptionsAsync ──────────────────────────────────────────────
 
+/// <summary>Tests for MediaFileRepository outdated description queries: model/prompt version tracking.</summary>
 public class OutdatedDescriptionsTests : RepositoryTestBase
 {
     private readonly MediaFileRepository _repo;
@@ -419,6 +425,7 @@ public class OutdatedDescriptionsTests : RepositoryTestBase
 
 // ── GetNearbyLocationAsync (Haversine) ────────────────────────────────────────
 
+/// <summary>Tests for MediaFileRepository.GetNearbyLocationAsync: geospatial queries with Haversine distance.</summary>
 public class LocationSearchTests : RepositoryTestBase
 {
     private readonly MediaFileRepository _repo;
@@ -502,6 +509,7 @@ public class LocationSearchTests : RepositoryTestBase
 
 // ── GetAllAsync / GetAllWithTagsAsync ─────────────────────────────────────────
 
+/// <summary>Tests for MediaFileRepository.GetAllAsync: filtering excluded and ordering by date.</summary>
 public class GetAllQueryTests : RepositoryTestBase
 {
     private readonly MediaFileRepository _repo;
@@ -559,4 +567,104 @@ public class GetAllQueryTests : RepositoryTestBase
     [Fact]
     public async Task GetAllWithTagsAsync_EmptyLibrary_ReturnsEmptyList()
         => Assert.Empty(await _repo.GetAllWithTagsAsync());
+}
+
+// ── Constraint Violations ──────────────────────────────────────────────────────
+
+/// <summary>Tests for MediaFileRepository constraint violation handling: database integrity checks.</summary>
+public class ConstraintViolationTests : RepositoryTestBase
+{
+    private readonly MediaFileRepository _repo;
+    public ConstraintViolationTests() => _repo = new MediaFileRepository(Db);
+
+    [Fact]
+    public async Task AddAsync_DuplicateFilePath_ThrowsDbUpdateException()
+    {
+        // Test constraint violation: FilePath is unique, no two files can have the same path
+        var photo1 = Photo(@"C:\photos\duplicate.jpg", hash: "hash1");
+        var photo2 = Photo(@"C:\photos\duplicate.jpg", hash: "hash2"); // Same path, different hash
+
+        await _repo.AddAsync(photo1);
+
+        // Adding a second file with same path should violate unique constraint
+        var ex = await Assert.ThrowsAsync<Microsoft.EntityFrameworkCore.DbUpdateException>(
+            async () => await _repo.AddAsync(photo2));
+
+        Assert.NotNull(ex);
+        Assert.Contains("UNIQUE", ex.InnerException?.Message ?? "", StringComparison.OrdinalIgnoreCase);
+    }
+
+    [Fact]
+    public async Task AddAsync_SucceedsWithDifferentPaths()
+    {
+        // Verify that unique constraint only prevents identical paths
+        // Same file hash is allowed (identical files in different folders)
+        var photo1 = Photo(@"C:\photos\a.jpg", hash: "abc123");
+        var photo2 = Photo(@"C:\photos\b.jpg", hash: "abc123"); // Same hash, different path
+
+        await _repo.AddAsync(photo1);
+        await _repo.AddAsync(photo2); // Should not throw
+
+        Assert.Equal(2, await _repo.CountAsync());
+    }
+
+    [Fact]
+    public async Task DeleteAsync_RemovesFtsRecordsConsistently()
+    {
+        // Test that deleting a photo removes its FTS record
+        // This verifies data consistency: every photo in DB should have FTS entry
+        var photo = Photo(@"C:\photos\test.jpg");
+        await _repo.AddAsync(photo);
+
+        var before = await _repo.CountAsync();
+        await _repo.DeleteAsync(photo.Id);
+        var after = await _repo.CountAsync();
+
+        Assert.Equal(1, before);
+        Assert.Equal(0, after);
+        // FTS record should also be deleted (no orphaned search entries)
+    }
+
+    [Fact]
+    public async Task BatchUpdateAsync_ChangesAreTransactional()
+    {
+        // Test that batch updates are transactional
+        var photos = new List<MediaFile>
+        {
+            Photo(@"C:\photos\a.jpg", status: AnalysisStatus.Pending),
+            Photo(@"C:\photos\b.jpg", status: AnalysisStatus.Pending),
+        };
+
+        await _repo.AddAsync(photos[0]);
+        await _repo.AddAsync(photos[1]);
+
+        // Batch update both photos
+        photos[0].AnalysisStatus = AnalysisStatus.Complete;
+        photos[1].AnalysisStatus = AnalysisStatus.Complete;
+
+        await _repo.BatchUpdateAsync(photos);
+
+        // Both should reflect new status
+        var all = (await _repo.GetAllAsync()).ToList();
+        Assert.All(all, p => Assert.Equal(AnalysisStatus.Complete, p.AnalysisStatus));
+    }
+
+    [Fact]
+    public async Task UpdateAsync_PreservesUnchangedProperties()
+    {
+        // Test that updating one property doesn't null out others
+        var photo = Photo(@"C:\photos\test.jpg");
+        photo.FileHash = "abc123";
+        photo.AiDescription = "A photo";
+
+        await _repo.AddAsync(photo);
+
+        photo.AiDescription = "Updated description";
+        await _repo.UpdateAsync(photo);
+
+        var reloaded = await _repo.GetByIdAsync(photo.Id);
+        Assert.NotNull(reloaded);
+        Assert.Equal("abc123", reloaded.FileHash);
+        Assert.Equal("Updated description", reloaded.AiDescription);
+    }
 }

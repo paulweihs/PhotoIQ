@@ -1,3 +1,5 @@
+using MetadataExtractor;
+using MetadataExtractor.Formats.Exif;
 using Sdcb.LibRaw;
 using SixLabors.ImageSharp;
 using SixLabors.ImageSharp.PixelFormats;
@@ -52,8 +54,35 @@ public class ThumbnailService : IThumbnailService
         ".x3f",               // Sigma
     };
 
+    /// <summary>
+    /// Initializes a new instance of the ThumbnailService.
+    /// </summary>
+    /// <remarks>
+    /// The service generates and caches thumbnail images at three standard sizes: 150px (Small), 400px (Medium),
+    /// and 800px (Large). Thumbnails are stored in the LocalApplicationData directory by default
+    /// (%LOCALAPPDATA%\PhotoIQPro\thumbnails\) with a two-character subdirectory for hashing.
+    /// </remarks>
+    /// <param name="basePath">Optional base path for thumbnail storage. If null, defaults to LocalApplicationData\PhotoIQPro\thumbnails.</param>
     public ThumbnailService(string? basePath = null) => _basePath = basePath ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PhotoIQPro", "thumbnails");
 
+    /// <summary>
+    /// Generates and caches thumbnail images at all three standard sizes for a media file.
+    /// </summary>
+    /// <remarks>
+    /// This method handles both standard image formats (JPEG, PNG, GIF, TIFF) via ImageSharp, and proprietary
+    /// RAW formats (CR3, ARW, DNG, etc.) via LibRaw with Windows Imaging Component (WIC) fallback.
+    ///
+    /// The process includes:
+    /// 1. Loading the image (raw or standard format)
+    /// 2. Reading and applying EXIF Orientation tag (uses MetadataExtractor for non-RAW to handle legacy encodings)
+    /// 3. Capturing image dimensions in the MediaFile
+    /// 4. Generating three JPEG thumbnails: 150px (Small), 400px (Medium), 800px (Large)
+    ///
+    /// Paths are stored in MediaFile.ThumbnailSmall/Medium/Large for later retrieval via GetThumbnailPath().
+    /// </remarks>
+    /// <param name="mf">The MediaFile to generate thumbnails for. Dimensions and thumbnail paths will be populated.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>ThumbnailResult with Success=true if all thumbnails were generated; false if an error occurred.</returns>
     public async Task<ThumbnailResult> GenerateThumbnailsAsync(MediaFile mf, CancellationToken ct = default)
     {
         try
@@ -72,9 +101,24 @@ public class ThumbnailService : IThumbnailService
             using (img)
             {
                 // Apply the EXIF Orientation tag before anything else.
-                // Cameras/phones store rotation in metadata rather than rotating pixels;
-                // without this, portrait-mode photos load sideways or upside-down.
-                img.Mutate(x => x.AutoOrient());
+                // For non-RAW files we use MetadataExtractor to read the orientation tag,
+                // which is more reliable than ImageSharp's built-in AutoOrient() for old
+                // camera files (e.g. Canon EOS 10D 2005-era JPEGs with EXIF 2.2 encoding).
+                // If MetadataExtractor finds no tag we fall back to AutoOrient().
+                if (!RawExts.Contains(ext))
+                {
+                    var orientation = ReadJpegExifOrientation(mf.FilePath);
+                    if (orientation != 1)
+                        ApplyExifOrientation(img, orientation);
+                    else
+                        img.Mutate(x => x.AutoOrient()); // covers cases MetadataExtractor misses
+                }
+                else
+                {
+                    // RAW: LibRaw already applies rotation during demosaic.
+                    // AutoOrient() catches any residual EXIF in the preview image.
+                    img.Mutate(x => x.AutoOrient());
+                }
                 mf.Width  = img.Width;
                 mf.Height = img.Height;
                 var s = await GenThumb(img, mf.Id, ThumbnailSize.Small, ct);
@@ -87,13 +131,24 @@ public class ThumbnailService : IThumbnailService
         catch (Exception ex) { return new ThumbnailResult(false, null, null, null, ex.Message); }
     }
 
+    /// <summary>
+    /// Resolves the full file path for a thumbnail image based on media file ID and size.
+    /// </summary>
+    /// <remarks>
+    /// Thumbnails are stored with a two-character subdirectory hierarchy for load distribution.
+    /// For example: C:\...\photoiq\thumbnails\ab\small\abcdef....jpg
+    /// This method constructs the expected path; it does not verify that the file exists.
+    /// </remarks>
+    /// <param name="id">The MediaFile ID (GUID).</param>
+    /// <param name="size">The thumbnail size (Small=150px, Medium=400px, Large=800px).</param>
+    /// <returns>Full file path where the thumbnail is (or should be) stored.</returns>
     public string GetThumbnailPath(Guid id, ThumbnailSize size) => Path.Combine(_basePath, id.ToString("N")[..2], size.ToString().ToLower(), $"{id:N}.jpg");
 
     private async Task<string> GenThumb(Image img, Guid id, ThumbnailSize size, CancellationToken ct)
     {
         var path = GetThumbnailPath(id, size);
         var dir = Path.GetDirectoryName(path);
-        if (dir != null) Directory.CreateDirectory(dir);
+        if (dir != null) System.IO.Directory.CreateDirectory(dir);
         using var thumb = img.Clone(x => x.Resize(new ResizeOptions { Size = new Size((int)size, (int)size), Mode = ResizeMode.Max }));
         await thumb.SaveAsJpegAsync(path, ct);
         return path;
@@ -151,6 +206,46 @@ public class ThumbnailService : IThumbnailService
         // Priority 4 — ImageSharp fallback. Returns the embedded thumbnail if nothing else works.
         AppLog.Vision($"ThumbnailService: all RAW paths failed for {fileName}, using ImageSharp (may be low-res)");
         return await Image.LoadAsync(filePath, ct);
+    }
+
+    /// <summary>
+    /// Reads the EXIF Orientation tag from a JPEG (or any MetadataExtractor-supported format).
+    /// Returns 1 (normal) if no orientation tag is found or on any error.
+    /// Values: 1=normal, 2=flip-H, 3=180°, 4=flip-V, 5=transpose, 6=90°CW, 7=transverse, 8=270°CW.
+    /// </summary>
+    private static ushort ReadJpegExifOrientation(string filePath)
+    {
+        try
+        {
+            var dirs = ImageMetadataReader.ReadMetadata(filePath);
+            var ifd0 = dirs.OfType<ExifIfd0Directory>().FirstOrDefault();
+            if (ifd0 != null && ifd0.TryGetInt32(ExifDirectoryBase.TagOrientation, out var o) && o >= 1 && o <= 8)
+                return (ushort)o;
+        }
+        catch { /* treat as normal orientation */ }
+        return 1;
+    }
+
+    /// <summary>
+    /// Applies an EXIF orientation value to an ImageSharp image in-place.
+    /// Maps EXIF Orientation 1–8 to the correct combination of rotation and flip.
+    /// </summary>
+    private static void ApplyExifOrientation(Image img, ushort orientation)
+    {
+        img.Mutate(ctx =>
+        {
+            switch (orientation)
+            {
+                case 2: ctx.Flip(FlipMode.Horizontal); break;
+                case 3: ctx.Rotate(RotateMode.Rotate180); break;
+                case 4: ctx.Flip(FlipMode.Vertical); break;
+                case 5: ctx.Rotate(RotateMode.Rotate90); ctx.Flip(FlipMode.Horizontal); break;
+                case 6: ctx.Rotate(RotateMode.Rotate90); break;
+                case 7: ctx.Rotate(RotateMode.Rotate270); ctx.Flip(FlipMode.Horizontal); break;
+                case 8: ctx.Rotate(RotateMode.Rotate270); break;
+                // case 1 and anything else: no-op
+            }
+        });
     }
 
     /// <summary>

@@ -16,7 +16,7 @@ public interface IFaceRecognitionService
     /// Invalidates the in-memory embedding cache so the next call to IdentifyFaceAsync
     /// reloads from the DB. Call after a user names or merges a person.
     /// </summary>
-    void InvalidateCache();
+    Task InvalidateCacheAsync();
 }
 
 /// <summary>Classification of how confidently a face was matched to a person.</summary>

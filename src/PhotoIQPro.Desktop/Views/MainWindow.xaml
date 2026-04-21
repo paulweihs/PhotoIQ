@@ -649,6 +649,11 @@
                         </Border>
                     </StackPanel>
                 </Button>
+                <Button Content="🖼  Regenerate Thumbnails"
+                        Command="{Binding RegenerateThumbnailsCommand}"
+                        Style="{DynamicResource NavButtonStyle}"
+                        ToolTip="Re-generate all thumbnails from original files. Fixes orientation issues without re-running AI analysis."
+                        Margin="0,2"/>
                 <TextBlock Text="SETTINGS" FontSize="11" FontWeight="SemiBold"
                            Foreground="{DynamicResource SecondaryTextBrush}"
                            Margin="8,16,8,4"/>
@@ -793,6 +798,237 @@
                                     FontSize="11" Padding="10,4"/>
                         </Grid>
                     </Grid>
+                </Border>
+
+                <!-- ── Sort bar ─────────────────────────────────────────────────── -->
+                <Border Background="#0A000000" BorderBrush="#1AFFFFFF" BorderThickness="0,0,0,1"
+                        Padding="12,5">
+                    <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <TextBlock Text="SORT" FontSize="10" FontWeight="SemiBold"
+                                   Foreground="{DynamicResource SecondaryTextBrush}"
+                                   VerticalAlignment="Center" Margin="0,0,10,0"/>
+
+                        <!-- Sort button template defined inline; one per field -->
+                        <Button Command="{Binding SortByDateTakenCommand}" Margin="0,0,4,0"
+                                ToolTip="Sort by date photo was taken. Click again to reverse direction. Participates in multi-level sort.">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
+                                    <Setter Property="Padding" Value="8,3"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#22FFFFFF"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DateTakenSortActive}" Value="True">
+                                            <Setter Property="Background" Value="#1A89B4FA"/>
+                                            <Setter Property="BorderBrush" Value="#8089B4FA"/>
+                                            <Setter Property="Foreground" Value="#89B4FA"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Date" FontSize="11" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding DateTakenSortLabel}" FontSize="10"
+                                           VerticalAlignment="Center" Margin="3,0,0,0"
+                                           Visibility="{Binding DateTakenSortActive, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding SortByCameraCommand}" Margin="0,0,4,0"
+                                ToolTip="Sort by camera model. Click again to reverse. Becomes secondary when another sort is active.">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
+                                    <Setter Property="Padding" Value="8,3"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#22FFFFFF"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding CameraSortActive}" Value="True">
+                                            <Setter Property="Background" Value="#1A89B4FA"/>
+                                            <Setter Property="BorderBrush" Value="#8089B4FA"/>
+                                            <Setter Property="Foreground" Value="#89B4FA"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Camera" FontSize="11" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding CameraSortLabel}" FontSize="10"
+                                           VerticalAlignment="Center" Margin="3,0,0,0"
+                                           Visibility="{Binding CameraSortActive, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding SortByFileNameCommand}" Margin="0,0,4,0"
+                                ToolTip="Sort by file name alphabetically.">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
+                                    <Setter Property="Padding" Value="8,3"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#22FFFFFF"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FileNameSortActive}" Value="True">
+                                            <Setter Property="Background" Value="#1A89B4FA"/>
+                                            <Setter Property="BorderBrush" Value="#8089B4FA"/>
+                                            <Setter Property="Foreground" Value="#89B4FA"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Name" FontSize="11" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding FileNameSortLabel}" FontSize="10"
+                                           VerticalAlignment="Center" Margin="3,0,0,0"
+                                           Visibility="{Binding FileNameSortActive, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding SortByFileSizeCommand}" Margin="0,0,4,0"
+                                ToolTip="Sort by file size.">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
+                                    <Setter Property="Padding" Value="8,3"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#22FFFFFF"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding FileSizeSortActive}" Value="True">
+                                            <Setter Property="Background" Value="#1A89B4FA"/>
+                                            <Setter Property="BorderBrush" Value="#8089B4FA"/>
+                                            <Setter Property="Foreground" Value="#89B4FA"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Size" FontSize="11" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding FileSizeSortLabel}" FontSize="10"
+                                           VerticalAlignment="Center" Margin="3,0,0,0"
+                                           Visibility="{Binding FileSizeSortActive, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </Button>
+
+                        <Button Command="{Binding SortByDateImportedCommand}" Margin="0,0,4,0"
+                                ToolTip="Sort by date added to library.">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Background" Value="Transparent"/>
+                                    <Setter Property="BorderBrush" Value="#33FFFFFF"/>
+                                    <Setter Property="BorderThickness" Value="1"/>
+                                    <Setter Property="Foreground" Value="{DynamicResource SecondaryTextBrush}"/>
+                                    <Setter Property="Padding" Value="8,3"/>
+                                    <Setter Property="Cursor" Value="Hand"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}"
+                                                        BorderBrush="{TemplateBinding BorderBrush}"
+                                                        BorderThickness="{TemplateBinding BorderThickness}"
+                                                        CornerRadius="3" Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#22FFFFFF"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding DateImportedSortActive}" Value="True">
+                                            <Setter Property="Background" Value="#1A89B4FA"/>
+                                            <Setter Property="BorderBrush" Value="#8089B4FA"/>
+                                            <Setter Property="Foreground" Value="#89B4FA"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="Imported" FontSize="11" VerticalAlignment="Center"/>
+                                <TextBlock Text="{Binding DateImportedSortLabel}" FontSize="10"
+                                           VerticalAlignment="Center" Margin="3,0,0,0"
+                                           Visibility="{Binding DateImportedSortActive, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </Button>
+                    </StackPanel>
                 </Border>
 
                 </StackPanel>

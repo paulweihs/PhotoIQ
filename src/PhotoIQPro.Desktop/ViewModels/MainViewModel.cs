@@ -1,5 +1,6 @@
 using System.Collections.ObjectModel;
 using System.Diagnostics;
+using System.Runtime.InteropServices;
 using PhotoIQPro.Common;
 using static PhotoIQPro.Common.FormatUtilities;
 using System.IO;
@@ -14,6 +15,9 @@ using System.Windows;
 namespace PhotoIQPro.Desktop.ViewModels;
 
 public enum GalleryView { AllPhotos, Favorites, Album, People, OnThisDay }
+
+/// <summary>Fields by which the main gallery can be sorted.</summary>
+public enum GallerySortField { DateTaken, FileName, FileSize, DateImported, Camera }
 
 /// <summary>Tag data displayed in the detail panel. Includes Id so remove is possible without a DB lookup.</summary>
 public record TagViewModel(Guid Id, string Name, bool IsAIGenerated);
@@ -38,10 +42,140 @@ public sealed class SendToMenuItem
 
 internal static class NativeMethods
 {
-    [System.Runtime.InteropServices.DllImport("user32.dll", CharSet = System.Runtime.InteropServices.CharSet.Auto)]
+    [DllImport("user32.dll", CharSet = CharSet.Auto)]
     internal static extern int SystemParametersInfo(int uAction, int uParam, string lpvParam, int fuWinIni);
+
+    // ── Simple MAPI ─────────────────────────────────────────────────────────
+    // Opens the user's default mail client with a pre-attached file via Simple MAPI.
+    // Works with Outlook, Thunderbird, Windows Mail, and any MAPI-compliant client.
+
+    // ── SHOpenWithDialog ────────────────────────────────────────────────────
+    // Shows the Windows "Open With" picker (the same dialog as Explorer's right-click menu).
+    // More reliable than shell verb "openwith" or rundll32 OpenAs_RunDLL on Windows 10/11.
+
+    [DllImport("shell32.dll", CharSet = CharSet.Unicode, SetLastError = true)]
+    private static extern int SHOpenWithDialog(IntPtr hwndParent, ref OpenAsInfo oai);
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Unicode)]
+    private struct OpenAsInfo
+    {
+        [MarshalAs(UnmanagedType.LPWStr)] public string? pcszFile;
+        [MarshalAs(UnmanagedType.LPWStr)] public string? pcszClass;
+        public int oaifInFlags;
+    }
+
+    // OAIF_ALLOW_REGISTRATION = 0x1  (shows "Always use this app" checkbox)
+    // OAIF_EXEC              = 0x4  (opens the file with the chosen app immediately)
+    private const int OAIF_ALLOW_REGISTRATION = 0x1;
+    private const int OAIF_EXEC               = 0x4;
+
+    internal static void ShowOpenWithDialog(IntPtr hwnd, string filePath)
+    {
+        var oai = new OpenAsInfo
+        {
+            pcszFile     = filePath,
+            pcszClass    = null,
+            oaifInFlags  = OAIF_ALLOW_REGISTRATION | OAIF_EXEC,
+        };
+        SHOpenWithDialog(hwnd, ref oai);
+        // Return value: S_OK (0) or E_CANCELLED (0x800704C7) — both are fine to ignore.
+    }
+
+    // ── Simple MAPI ─────────────────────────────────────────────────────────
+    // Opens the user's default mail client with a pre-attached file via Simple MAPI.
+    // Works with Outlook, Thunderbird, Windows Mail, and any MAPI-compliant client.
+
+    [DllImport("MAPI32.DLL", CharSet = CharSet.Ansi)]
+    private static extern int MAPISendMail(IntPtr session, IntPtr hwnd,
+        ref MapiMessage message, int flags, int reserved);
+
+    private const int MAPI_LOGON_UI = 0x00000001;  // prompt for logon if needed
+    private const int MAPI_DIALOG   = 0x00000008;  // show compose window before sending
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    private struct MapiMessage
+    {
+        public int    Reserved;
+        public string? Subject;
+        public string? NoteText;
+        public string? MessageType;
+        public string? DateReceived;
+        public string? ConversationID;
+        public int    Flags;
+        public IntPtr Originator;
+        public int    RecipCount;
+        public IntPtr Recips;
+        public int    FileCount;
+        public IntPtr Files;
+    }
+
+    [StructLayout(LayoutKind.Sequential, CharSet = CharSet.Ansi)]
+    private struct MapiFileDesc
+    {
+        public int    Reserved;
+        public int    Flags;
+        public int    Position;
+        [MarshalAs(UnmanagedType.LPStr)] public string Path;
+        [MarshalAs(UnmanagedType.LPStr)] public string FileName;
+        public IntPtr FileType;
+    }
+
+    /// <summary>
+    /// Opens the default mail client with <paramref name="filePath"/> pre-attached.
+    /// Throws on failure (caller wraps in try/catch).
+    /// </summary>
+    internal static void MapiSendFile(string filePath, string subject)
+    {
+        var fileDesc = new MapiFileDesc
+        {
+            Reserved = 0, Flags = 0, Position = -1,
+            Path     = filePath,
+            FileName = System.IO.Path.GetFileName(filePath),
+            FileType = IntPtr.Zero,
+        };
+
+        IntPtr pFile = Marshal.AllocHGlobal(Marshal.SizeOf<MapiFileDesc>());
+        try
+        {
+            Marshal.StructureToPtr(fileDesc, pFile, false);
+            var msg = new MapiMessage
+            {
+                Subject   = subject,
+                FileCount = 1,
+                Files     = pFile,
+            };
+            int result = MAPISendMail(IntPtr.Zero, IntPtr.Zero, ref msg, MAPI_DIALOG | MAPI_LOGON_UI, 0);
+            // 0 = SUCCESS, 1 = USER_ABORT (user closed dialog) — both are fine.
+            // Anything else is a MAPI error code.
+            if (result > 1)
+                throw new InvalidOperationException($"MAPISendMail returned error code {result}.");
+        }
+        finally
+        {
+            Marshal.FreeHGlobal(pFile);
+        }
+    }
 }
 
+/// <summary>
+/// Main ViewModel for the photo gallery window, managing the library, filtering, search, and bulk operations.
+/// </summary>
+/// <remarks>
+/// This ViewModel is responsible for:
+/// - Loading and displaying the photo library with sorting/filtering (by view, search, favorites, etc.)
+/// - Managing multi-select for bulk operations (re-analyze, exclude, delete, re-generate thumbnails, backfill EXIF)
+/// - Integrating with the tag system (viewing, adding, removing tags; auto-generating from CLIP/LLaVA)
+/// - Synchronizing EXIF metadata and thumbnails during imports
+/// - Tracking import progress and offering resumable imports
+/// - Enforcing Express tier library limits and offering upgrade prompts
+/// - Managing folder watches and exclusion rules
+///
+/// Each database operation creates a fresh DbContext scope to prevent change-tracker leaks and
+/// race conditions with background tasks. UI state is wrapped with MVVM Community Toolkit's
+/// @ObservableProperty for efficient change notifications.
+///
+/// Multi-select is toggled via Ctrl+Click (ToggleSelection) and ranged via Shift+Click (SelectRange).
+/// </remarks>
 public partial class MainViewModel : ObservableObject, IDisposable
 {
     // Each DB operation creates its own short-lived scope so that:
@@ -66,11 +200,17 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private bool _initialLoadDone;
     [ObservableProperty] private int _photoCount;
     [ObservableProperty] private int _totalLibraryCount;
+    /// <summary>Gets the text shown in the toolbar displaying the current photo count.</summary>
+    /// <remarks>
+    /// Shows "X of Y photos" when search is active; "X photos" when viewing the full library.
+    /// </remarks>
     public string PhotoCountText => IsSearchActive
         ? $"{PhotoCount:N0} of {TotalLibraryCount:N0} photos"
         : $"{PhotoCount:N0} photos";
 
+    /// <summary>Gets a value indicating whether Express tier library limit is enforced.</summary>
     public bool   ShowExpressLimit   => UserPreferences.Current.IsExpressMode;
+    /// <summary>Gets the Express tier library limit status text (e.g., "Express · 12345 / 25000").</summary>
     public string ExpressLimitText   =>
         $"Express  ·  {TotalLibraryCount:N0} / {PhotoIQPro.Common.AppSettings.ExpressLibraryLimit:N0}";
     [ObservableProperty] private ObservableCollection<TagViewModel> _selectedTags = [];
@@ -95,6 +235,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private int _relatedDistanceStepIndex = UserPreferences.Current.RelatedDistanceStepIndex;
 
     private readonly HashSet<Guid> _relatedPhotoIds = [];
+    private CancellationTokenSource _relatedRefreshCts = new();
 
     private static readonly int[]    _distStepsMeters   = [100, 500, 1000, 5000, 10000, 50000];
     private static readonly string[] _distMetricLabels  = ["100 m", "500 m", "1 km", "5 km", "10 km", "50 km"];
@@ -117,18 +258,45 @@ public partial class MainViewModel : ObservableObject, IDisposable
     {
         UserPreferences.Current.RelatedTimeValue = Math.Max(1, value);
         UserPreferences.Current.Save();
+        ScheduleRelatedRefresh();
     }
 
     partial void OnRelatedTimeUnitIndexChanged(int value)
     {
         UserPreferences.Current.RelatedTimeUnitIndex = value;
         UserPreferences.Current.Save();
+        ScheduleRelatedRefresh();
     }
 
     partial void OnRelatedDistanceStepIndexChanged(int value)
     {
         UserPreferences.Current.RelatedDistanceStepIndex = value;
         UserPreferences.Current.Save();
+        ScheduleRelatedRefresh();
+    }
+
+    /// <summary>
+    /// Debounces slider/control changes in the related-images panel.
+    /// Waits 300 ms after the last change before re-running the query, so rapid
+    /// slider drags don't hammer the database on every tick.
+    /// </summary>
+    private void ScheduleRelatedRefresh()
+    {
+        if (!IsRelatedImagesMode) return;
+        try { _relatedRefreshCts.Cancel(); } catch { /* Already cancelled or disposed */ }
+        try { _relatedRefreshCts.Dispose(); } catch { /* Already disposed */ }
+        _relatedRefreshCts = new CancellationTokenSource();
+        var ct = _relatedRefreshCts.Token;
+        _ = Task.Run(async () =>
+        {
+            try
+            {
+                await Task.Delay(300, ct);
+                await System.Windows.Application.Current.Dispatcher.InvokeAsync(
+                    () => RefreshRelatedImagesCommand.Execute(null));
+            }
+            catch (OperationCanceledException) { /* superseded by a newer change */ }
+        });
     }
 
     private static int TimeValueToMinutes(int value, RelatedTimeUnit unit) => unit switch
@@ -303,23 +471,33 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty] private double _taskbarProgressValue;
 
     // ── Multi-selection ──────────────────────────────────────────────────────
+    /// <summary>Gets the collection of selected photos (multi-select via Ctrl+Click, Shift+Click).</summary>
     public ObservableCollection<MediaFile> MultiSelectedItems { get; } = [];
     private MediaFile? _selectionAnchor;
-    // Increments on every collection change so IsInCollection MultiBindings re-evaluate.
-    // ObservableCollection never raises PropertyChanged for the property itself, only
-    // CollectionChanged — so bindings that need to react to membership changes need this.
+    /// <summary>
+    /// Gets a version number incremented whenever the multi-selection changes.
+    /// Used to force MultiBinding re-evaluation in XAML (ObservableCollection only raises CollectionChanged, not PropertyChanged).
+    /// </summary>
     public int MultiSelectedVersion { get; private set; }
+    /// <summary>Gets the count of currently selected items.</summary>
     public int SelectedCount => MultiSelectedItems.Count;
+    /// <summary>Gets a value indicating whether at least one item is selected.</summary>
     public bool HasAnyMultiSelected => MultiSelectedItems.Count > 0;
+    /// <summary>Gets a value indicating whether multiple items are selected.</summary>
     public bool HasMultiSelection => MultiSelectedItems.Count > 1;
+    /// <summary>Gets the label for the "Re-analyze selected" button, including the count.</summary>
     public string ReanalyzeMultiSelectedLabel  => $"Re-analyze selected ({SelectedCount})";
+    /// <summary>Gets the context menu label for excluding photo(s), adjusting grammar for single vs. multiple.</summary>
     public string ExcludeImageLabel => HasMultiSelection
         ? $"Exclude {SelectedCount} Images" : "Exclude this Image";
+    /// <summary>Gets the context menu label for removing photo(s) from library.</summary>
     public string RemoveFromLibraryLabel => HasMultiSelection
         ? $"Remove {SelectedCount} from Library" : "Remove from Library";
+    /// <summary>Gets the context menu label for permanently deleting photo(s).</summary>
     public string DeletePermanentlyLabel => HasMultiSelection
         ? $"Delete {SelectedCount} Photos Permanently" : "Delete Permanently";
 
+    /// <summary>Gets a value indicating whether any item is selected (single selection or multi-select).</summary>
     public bool HasAnySelected      => HasAnyMultiSelected || SelectedMediaFile != null;
     public bool IsReanalyzeSelectedEnabled => !SelectedIsOffline;
     // ── Person / tag filter mode ─────────────────────────────────────────────
@@ -485,6 +663,158 @@ public partial class MainViewModel : ObservableObject, IDisposable
     public bool IsOnThisDayActive  => ActiveView == GalleryView.OnThisDay;
     public bool IsGalleryVisible   => ActiveView is not GalleryView.OnThisDay;
 
+    // ── Gallery sort ─────────────────────────────────────────────────────────
+    // Sort history: index 0 = primary (most recently activated), index 1 = secondary, etc.
+    // Clicking a field already in history promotes it to primary and toggles direction if
+    // it was already primary. New fields default to descending for dates/size, ascending otherwise.
+
+    private List<(GallerySortField Field, bool Descending)> _sortHistory = [];
+
+    // Per-field label bound to sort buttons: "" when not active; "↓" / "↑" when primary;
+    // "2↓" / "2↑" etc. when secondary or lower.
+    public string DateTakenSortLabel    => GetSortLabel(GallerySortField.DateTaken);
+    public string FileNameSortLabel     => GetSortLabel(GallerySortField.FileName);
+    public string FileSizeSortLabel     => GetSortLabel(GallerySortField.FileSize);
+    public string DateImportedSortLabel => GetSortLabel(GallerySortField.DateImported);
+    public string CameraSortLabel       => GetSortLabel(GallerySortField.Camera);
+
+    // True when the field participates in the current sort (drives button highlight in XAML).
+    public bool DateTakenSortActive    => IsSortActive(GallerySortField.DateTaken);
+    public bool FileNameSortActive     => IsSortActive(GallerySortField.FileName);
+    public bool FileSizeSortActive     => IsSortActive(GallerySortField.FileSize);
+    public bool DateImportedSortActive => IsSortActive(GallerySortField.DateImported);
+    public bool CameraSortActive       => IsSortActive(GallerySortField.Camera);
+
+    private string GetSortLabel(GallerySortField field)
+    {
+        var idx = _sortHistory.FindIndex(e => e.Field == field);
+        if (idx < 0) return "";
+        var arrow = _sortHistory[idx].Descending ? "↓" : "↑";
+        // Show rank number only when more than one sort field is active.
+        return _sortHistory.Count > 1 ? $"{idx + 1}{arrow}" : arrow;
+    }
+
+    private bool IsSortActive(GallerySortField field)
+        => _sortHistory.Any(e => e.Field == field);
+
+    [RelayCommand] private void SortByDateTaken()    => ApplySortFieldAsync(GallerySortField.DateTaken);
+    [RelayCommand] private void SortByFileName()     => ApplySortFieldAsync(GallerySortField.FileName);
+    [RelayCommand] private void SortByFileSize()     => ApplySortFieldAsync(GallerySortField.FileSize);
+    [RelayCommand] private void SortByDateImported() => ApplySortFieldAsync(GallerySortField.DateImported);
+    [RelayCommand] private void SortByCamera()       => ApplySortFieldAsync(GallerySortField.Camera);
+
+    private void ApplySortFieldAsync(GallerySortField field)
+    {
+        var idx = _sortHistory.FindIndex(e => e.Field == field);
+        if (idx == 0)
+        {
+            // Already primary: toggle direction.
+            _sortHistory[0] = (_sortHistory[0].Field, !_sortHistory[0].Descending);
+        }
+        else if (idx > 0)
+        {
+            // Already in history but not primary: move to front, keep direction.
+            var entry = _sortHistory[idx];
+            _sortHistory.RemoveAt(idx);
+            _sortHistory.Insert(0, entry);
+        }
+        else
+        {
+            // New field: prepend with a sensible default direction.
+            bool defaultDesc = field is GallerySortField.DateTaken
+                                     or GallerySortField.DateImported
+                                     or GallerySortField.FileSize;
+            _sortHistory.Insert(0, (field, defaultDesc));
+        }
+
+        PersistSortHistory();
+        NotifySortPropertiesChanged();
+        ReSortGallery();
+    }
+
+    /// <summary>
+    /// Reorders the current MediaFiles in-memory using the active sort history.
+    /// Does NOT hit the database — used by sort button clicks so the response is instant.
+    /// A full LoadAsync() is still called whenever data changes (imports, search, etc.),
+    /// and ApplySortOrder() is applied there too, so the sort is always consistent.
+    /// </summary>
+    private void ReSortGallery()
+    {
+        var prevSelectedId = SelectedMediaFile?.Id;
+        var sorted = ApplySortOrder(MediaFiles.ToList(), _sortHistory).ToList();
+        MediaFiles = new ObservableCollection<MediaFile>(sorted);
+        if (prevSelectedId.HasValue)
+            SelectedMediaFile = MediaFiles.FirstOrDefault(m => m.Id == prevSelectedId.Value);
+    }
+
+    private void PersistSortHistory()
+    {
+        UserPreferences.Current.GallerySortHistory = _sortHistory
+            .Select(e => $"{e.Field}:{(e.Descending ? "desc" : "asc")}")
+            .ToList();
+        UserPreferences.Current.Save();
+    }
+
+    private void NotifySortPropertiesChanged()
+    {
+        OnPropertyChanged(nameof(DateTakenSortLabel));
+        OnPropertyChanged(nameof(FileNameSortLabel));
+        OnPropertyChanged(nameof(FileSizeSortLabel));
+        OnPropertyChanged(nameof(DateImportedSortLabel));
+        OnPropertyChanged(nameof(CameraSortLabel));
+        OnPropertyChanged(nameof(DateTakenSortActive));
+        OnPropertyChanged(nameof(FileNameSortActive));
+        OnPropertyChanged(nameof(FileSizeSortActive));
+        OnPropertyChanged(nameof(DateImportedSortActive));
+        OnPropertyChanged(nameof(CameraSortActive));
+    }
+
+    private static IEnumerable<MediaFile> ApplySortOrder(
+        IEnumerable<MediaFile> source,
+        List<(GallerySortField Field, bool Descending)> history)
+    {
+        if (history.Count == 0) return source;
+
+        IOrderedEnumerable<MediaFile> sorted;
+        var first = history[0];
+        sorted = first.Descending
+            ? source.OrderByDescending(m => SortKey(m, first.Field))
+            : source.OrderBy(m => SortKey(m, first.Field));
+
+        for (int i = 1; i < history.Count; i++)
+        {
+            var e = history[i];
+            sorted = e.Descending
+                ? sorted.ThenByDescending(m => SortKey(m, e.Field))
+                : sorted.ThenBy(m => SortKey(m, e.Field));
+        }
+        return sorted;
+    }
+
+    private static IComparable SortKey(MediaFile m, GallerySortField field) => field switch
+    {
+        GallerySortField.FileName     => (IComparable)m.FileName,
+        GallerySortField.FileSize     => (IComparable)m.FileSize,
+        GallerySortField.DateImported => (IComparable)m.DateImported,
+        // Null camera: "\uFFFF" sorts to end ascending, beginning descending — acceptable trade-off.
+        GallerySortField.Camera       => (IComparable)(m.CameraModel ?? m.CameraMake ?? "\uFFFF"),
+        _                             => (IComparable)(m.DateTaken ?? m.DateImported),
+    };
+
+    private static List<(GallerySortField Field, bool Descending)> LoadSortHistory()
+    {
+        var result = new List<(GallerySortField, bool)>();
+        foreach (var entry in UserPreferences.Current.GallerySortHistory)
+        {
+            var parts = entry.Split(':');
+            if (parts.Length == 2 && Enum.TryParse<GallerySortField>(parts[0], out var field))
+                result.Add((field, parts[1] == "desc"));
+        }
+        if (result.Count == 0)
+            result.Add((GallerySortField.DateTaken, true));
+        return result;
+    }
+
     public ImportProgressViewModel Progress { get; }
 
     public MainViewModel(IServiceScopeFactory scopeFactory, MetricsViewModel metrics,
@@ -496,6 +826,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         _semanticSearch = semanticSearch;
         Progress        = progress;
         _folderWatcher  = folderWatcher;
+        _sortHistory    = LoadSortHistory();
         Progress.PropertyChanged += (_, e) =>
         {
             if (e.PropertyName == nameof(ImportProgressViewModel.IsRunning))
@@ -627,19 +958,37 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     public void Dispose()
     {
-        if (_healTimer != null)
+        try
         {
-            _healTimer.Stop();
-            if (_healTimerTick != null)
-                _healTimer.Tick -= _healTimerTick;
-            _healTimer = null;
+            if (_healTimer != null)
+            {
+                _healTimer.Stop();
+                if (_healTimerTick != null)
+                    _healTimer.Tick -= _healTimerTick;
+                _healTimer = null;
+            }
+            _visionWorkerCts.Cancel();
+            _faceWorkerCts.Cancel();
+            // Do not dispose these CTS instances. Workers hold the tokens and may still be
+            // mid-await; disposing while in use throws ObjectDisposedException. Cancel() is
+            // sufficient — the workers exit on the next iteration.
+            _relatedRefreshCts.Cancel();
+            // Do not dispose _relatedRefreshCts — it may still be in use by background tasks.
+
+            _loadCts.Cancel();
+            // Delay disposal of _loadCts to ensure no pending operations try to access it.
+            _ = Task.Delay(100).ContinueWith(_ =>
+            {
+                try { _loadCts.Dispose(); }
+                catch { /* Already disposed or error during shutdown */ }
+            });
+
+            _folderWatcher.Stop();
         }
-        _visionWorkerCts.Cancel();
-        _faceWorkerCts.Cancel();
-        // Do not dispose these CTS instances. Workers hold the tokens and may still be
-        // mid-await; disposing while in use throws ObjectDisposedException. Cancel() is
-        // sufficient — the workers exit on the next iteration.
-        _folderWatcher.Stop();
+        catch (Exception ex)
+        {
+            AppLog.Error($"Error during MainViewModel.Dispose: {ex}");
+        }
     }
 
     /// <summary>
@@ -671,8 +1020,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private async Task LoadAsync()
     {
         // Cancel any in-flight load so stale results never overwrite a newer query.
-        _loadCts.Cancel();
-        _loadCts.Dispose();
+        try { _loadCts.Cancel(); } catch { /* Already cancelled or disposed */ }
+        try { _loadCts.Dispose(); } catch { /* Already disposed */ }
         _loadCts = new CancellationTokenSource();
         var ct = _loadCts.Token;
 
@@ -730,13 +1079,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             else
             {
                 IsSemanticSearch = false;
-                photos = ActiveView switch
-                {
-                    GalleryView.Favorites when true => await WithRepo(r => r.GetFavoritesAsync()),
-                    GalleryView.Album when ActiveAlbumId.HasValue =>
-                        await WithLibRepo(r => r.GetPhotosByAlbumAsync(ActiveAlbumId.Value)),
-                    _ => await WithRepo(r => r.GetAllAsync())
-                };
+                photos = await GetGalleryViewPhotosAsync();
             }
 
             // In related-images mode with an active search, intersect the search results
@@ -754,7 +1097,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             ct.ThrowIfCancellationRequested();
 
             var prevSelectedId = SelectedMediaFile?.Id;
-            var photoList = photos is List<MediaFile> pl ? pl : photos.ToList();
+            var photoList = ApplySortOrder(photos, _sortHistory).ToList();
             MediaFiles = new ObservableCollection<MediaFile>(photoList);
             PhotoCount = photoList.Count;
             TotalLibraryCount = IsSearchActive ? await WithRepo(r => r.CountAsync()) : PhotoCount;
@@ -775,13 +1118,14 @@ public partial class MainViewModel : ObservableObject, IDisposable
                 // leaving stale data from the old entity.
                 SelectedMediaFile = fresh;
             }
-            OnPropertyChanged(nameof(IsEmpty));
-            OnPropertyChanged(nameof(IsLibraryEmpty));
-            OnPropertyChanged(nameof(HasNoResults));
-            OnPropertyChanged(nameof(IsRelatedNoResults));
-            OnPropertyChanged(nameof(IsSearchActive));
-            OnPropertyChanged(nameof(ShowSemanticUnavailableHint));
-            OnPropertyChanged(nameof(NoResultsMessage));
+            NotifyPropertiesChanged(
+                nameof(IsEmpty),
+                nameof(IsLibraryEmpty),
+                nameof(HasNoResults),
+                nameof(IsRelatedNoResults),
+                nameof(IsSearchActive),
+                nameof(ShowSemanticUnavailableHint),
+                nameof(NoResultsMessage));
         }
         catch (OperationCanceledException)
         {
@@ -811,6 +1155,17 @@ public partial class MainViewModel : ObservableObject, IDisposable
             System.Threading.Tasks.TaskScheduler.Default);
     }
 
+    private async Task<IEnumerable<MediaFile>> GetGalleryViewPhotosAsync()
+    {
+        return ActiveView switch
+        {
+            GalleryView.Favorites => await WithRepo(r => r.GetFavoritesAsync()),
+            GalleryView.Album when ActiveAlbumId.HasValue =>
+                await WithLibRepo(r => r.GetPhotosByAlbumAsync(ActiveAlbumId.Value)),
+            _ => await WithRepo(r => r.GetAllAsync())
+        };
+    }
+
     /// <summary>
     /// Runs offline detection, the outdated-description count, and vision queue
     /// population after the gallery is already visible and interactive.
@@ -823,9 +1178,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
         // network or removable drives. Run on a thread-pool thread to keep the UI free.
         var offlineCount = await Task.Run(() => MarkOfflineFiles(snapshot));
         OfflineCount = offlineCount;
-        OnPropertyChanged(nameof(HasOfflineFiles));
-        OnPropertyChanged(nameof(OfflineStatusText));
-        OnPropertyChanged(nameof(SelectedIsOffline));
+        NotifyPropertiesChanged(
+            nameof(HasOfflineFiles),
+            nameof(OfflineStatusText),
+            nameof(SelectedIsOffline));
 
         // Outdated-description count — full table scan without a covering index;
         // queries asynchronously but still holds the method open. Keep deferred.
@@ -984,18 +1340,11 @@ public partial class MainViewModel : ObservableObject, IDisposable
                     await System.Windows.Application.Current.Dispatcher.InvokeAsync(() =>
                     {
                         var existing = MediaFiles.FirstOrDefault(m => m.Id == photoId);
-                        var idx = existing != null ? MediaFiles.IndexOf(existing) : -1;
-                        if (idx >= 0)
+                        if (existing != null)
                         {
-                            // Already visible — update in place.
                             var wasSelected = SelectedMediaFile?.Id == photoId;
-                            updated.LoadedThumbnail = existing!.LoadedThumbnail;
-                            MediaFiles[idx] = updated;
-                            if (wasSelected)
-                            {
-                                SelectedMediaFile = updated;
-                                RefreshDescriptionProperties();
-                            }
+                            RefreshItemInPlace(updated, source: existing);
+                            if (wasSelected) RefreshDescriptionProperties();
                         }
                         else if (MatchesCurrentView(updated))
                         {
@@ -1097,12 +1446,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     partial void OnActiveViewChanged(GalleryView value)
     {
-        OnPropertyChanged(nameof(IsAllPhotosActive));
-        OnPropertyChanged(nameof(IsFavoritesActive));
-        OnPropertyChanged(nameof(IsAlbumActive));
-        OnPropertyChanged(nameof(IsPeopleActive));
-        OnPropertyChanged(nameof(IsOnThisDayActive));
-        OnPropertyChanged(nameof(IsGalleryVisible));
+        NotifyPropertiesChanged(
+            nameof(IsAllPhotosActive),
+            nameof(IsFavoritesActive),
+            nameof(IsAlbumActive),
+            nameof(IsPeopleActive),
+            nameof(IsOnThisDayActive),
+            nameof(IsGalleryVisible));
         if (value is not GalleryView.OnThisDay) _ = LoadAsync();
     }
 
@@ -1446,7 +1796,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
             Title       = "Select folders to import",
             Multiselect = true,
         };
-        if (dlg.ShowDialog() != true || dlg.FolderNames.Length == 0) return;
+
+        bool? result = null;
+        try
+        {
+            var activeWindow = GetActiveWindow();
+            result = dlg.ShowDialog(activeWindow);
+        }
+        catch (Exception ex)
+        {
+            StatusText = $"Failed to open folder dialog: {ex.Message}";
+            AppLog.Error($"ImportAsync dialog error: {ex}");
+            return;
+        }
+
+        if (result != true || dlg.FolderNames.Length == 0) return;
 
         AttachTaskbar(Progress);
         AttachPhotoCallback(Progress);
@@ -1476,7 +1840,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
                           $"|Photos ({photoExts})|{photoExts}" +
                           $"|RAW Files ({rawExts})|{rawExts}",
         };
-        if (dlg.ShowDialog() != true || dlg.FileNames.Length == 0) return;
+
+        bool? result = null;
+        try
+        {
+            var activeWindow = GetActiveWindow();
+            result = dlg.ShowDialog(activeWindow);
+        }
+        catch (Exception ex)
+        {
+            StatusText = $"Failed to open file dialog: {ex.Message}";
+            AppLog.Error($"ImportFilesAsync dialog error: {ex}");
+            return;
+        }
+
+        if (result != true || dlg.FileNames.Length == 0) return;
 
         AttachTaskbar(Progress);
         AttachPhotoCallback(Progress);
@@ -1578,7 +1956,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     // ── Re-analyze ───────────────────────────────────────────────────────────
 
+    // Single-photo re-analyze: stays enabled while running so the user can prioritize
+    // a photo into the vision queue mid-operation (ReanalyzeSelectedAsync handles this internally).
     private bool CanRunReanalyze() => !SelectedIsOffline;
+
+    // Bulk operations: disabled while any operation is running — they can't be queued behind
+    // an in-progress job and silently do nothing, which confused users into thinking they'd started a run.
+    private bool CanRunBulkReanalyze() => !Progress.IsRunning;
 
     [RelayCommand(CanExecute = nameof(CanRunReanalyze))]
     private async Task ReanalyzeSelectedAsync()
@@ -1659,7 +2043,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand(CanExecute = nameof(CanRunReanalyze))]
     private async Task ReanalyzeAllAsync()
     {
-        if (Progress.IsRunning) return;
+        if (Progress.IsRunning)
+        {
+            var stopConfirm = MessageBox.Show(
+                $"\"{Progress.Heading}\" is currently running.\n\nStop it and re-analyze all photos instead?",
+                "Re-analyze All",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question,
+                MessageBoxResult.No);
+
+            if (stopConfirm != MessageBoxResult.Yes) return;
+
+            Progress.ForceCancel();
+            while (Progress.IsRunning)
+                await Task.Delay(100);
+        }
         // M-8: use total library count, not PhotoCount which reflects the current filtered view.
         var totalCount = await WithRepo(r => r.CountAsync());
         var result = System.Windows.MessageBox.Show(
@@ -1692,7 +2090,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ClearTaskbar();
         Metrics.ClearBatchStatus();
         StatusText = Progress.ResultMessage;
-        await LoadAsync();
+        await RefreshAfterBulkReanalysisAsync();
     }
 
     // ── Multi-select commands ────────────────────────────────────────────────
@@ -1870,6 +2268,41 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private void AttachMetrics(ImportProgressViewModel vm)
         => vm.OnBatchTick = text => Metrics.BatchStatusText = text;
 
+    /// <summary>
+    /// Replaces <paramref name="target"/> at its current index using the indexer (Replace notification)
+    /// to keep the WPF container alive (thumbnail stays loaded). Optionally transfers the pre-loaded
+    /// thumbnail from <paramref name="source"/> when swapping in a fresh DB entity. Restores selection
+    /// if the replaced item was selected.
+    /// </summary>
+    private void RefreshItemInPlace(MediaFile target, MediaFile? source = null)
+    {
+        var idx = MediaFiles.IndexOf(source ?? target);
+        if (idx < 0) return;
+
+        if (source != null)
+            target.LoadedThumbnail = source.LoadedThumbnail;
+
+        MediaFiles[idx] = target;
+
+        if (SelectedMediaFile?.Id == target.Id)
+            SelectedMediaFile = target;
+    }
+
+    /// <summary>
+    /// Lightweight post-bulk-reanalysis refresh. AttachPhotoCallback has already updated all
+    /// analyzed photos in MediaFiles in-place — no DB round-trip needed for gallery content.
+    /// Recalculates derived counts without the cost of a full ObservableCollection rebuild.
+    /// </summary>
+    private async Task RefreshAfterBulkReanalysisAsync()
+    {
+        PendingDescriptionCount = MediaFiles.Count(m => m.AnalysisStatus == AnalysisStatus.VisionPending);
+        OutdatedDescriptionCount = await WithRepo(r => r.CountOutdatedDescriptionsAsync(
+            UserPreferences.Current.VisionModelName, AppSettings.CurrentPromptVersion));
+        OnPropertyChanged(nameof(IsEmpty));
+        OnPropertyChanged(nameof(IsLibraryEmpty));
+        OnPropertyChanged(nameof(PhotoCountText));
+    }
+
     private void AttachPhotoCallback(ImportProgressViewModel vm)
     {
         vm.OnPhotoAnalyzed = analyzed =>
@@ -1878,15 +2311,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
             {
                 var existing = MediaFiles.FirstOrDefault(m => m.Id == analyzed.Id);
                 if (existing != null)
-                {
-                    var idx = MediaFiles.IndexOf(existing);
-                    if (idx >= 0)
-                    {
-                        analyzed.LoadedThumbnail = existing.LoadedThumbnail;
-                        MediaFiles[idx] = analyzed;
-                        if (SelectedMediaFile?.Id == analyzed.Id) SelectedMediaFile = analyzed;
-                    }
-                }
+                    RefreshItemInPlace(analyzed, source: existing);
                 else if (MatchesCurrentView(analyzed))
                 {
                     // New photo imported — only add if it would appear under the current view/filter.
@@ -1958,7 +2383,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
     }
 
 
-    [RelayCommand(CanExecute = nameof(CanRunReanalyze))]
+    [RelayCommand(CanExecute = nameof(CanRunBulkReanalyze))]
     private async Task ReanalyzeOutdatedAsync()
     {
         if (Progress.IsRunning) return;
@@ -1986,8 +2411,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         ClearTaskbar();
         Metrics.ClearBatchStatus();
         StatusText = Progress.ResultMessage;
-        OutdatedDescriptionCount = 0; // will be recalculated on next LoadAsync
-        await LoadAsync();
+        await RefreshAfterBulkReanalysisAsync();
     }
 
     [RelayCommand]
@@ -2004,6 +2428,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
         if (SelectedMediaFile == null && MediaFiles.Count > 0) { SelectedMediaFile = MediaFiles[0]; return; }
         var idx = MediaFiles.IndexOf(SelectedMediaFile!);
         if (idx >= 0 && idx < MediaFiles.Count - 1) SelectedMediaFile = MediaFiles[idx + 1];
+    }
+
+    /// <summary>
+    /// Moves selection by <paramref name="offset"/> items (positive = forward, negative = backward).
+    /// Used by Up/Down arrow keys to jump a full row at a time — the column count is calculated
+    /// in the code-behind from the live panel width and passed here as the offset magnitude.
+    /// </summary>
+    [RelayCommand]
+    private void NavigateByOffset(int offset)
+    {
+        if (MediaFiles.Count == 0) return;
+        if (SelectedMediaFile == null) { SelectedMediaFile = MediaFiles[0]; return; }
+        var idx  = MediaFiles.IndexOf(SelectedMediaFile);
+        var next = Math.Clamp(idx + offset, 0, MediaFiles.Count - 1);
+        if (next != idx) SelectedMediaFile = MediaFiles[next];
     }
 
     [RelayCommand]
@@ -2043,6 +2482,14 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     // ── Send To submenu ──────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Shows a warning dialog for Send To / file-operation failures.
+    /// Prefer this over StatusText for errors that require immediate user attention
+    /// (e.g. missing app, unsupported format) so they are not silently missed.
+    /// </summary>
+    private static void ShowWarning(string message, string title = "PhotoIQ Pro")
+        => MessageBox.Show(message, title, MessageBoxButton.OK, MessageBoxImage.Warning);
+
     /// <summary>Flat list of items for the dynamic "Send To" submenu (email, print, wallpaper, open-with, external editors).</summary>
     public ObservableCollection<SendToMenuItem> SendToMenuItems { get; } = [];
 
@@ -2067,9 +2514,19 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private void SendToEmail()
     {
         var path = SelectedMediaFile?.FilePath;
-        if (path == null) return;
-        Process.Start(new System.Diagnostics.ProcessStartInfo($"mailto:?subject=Photo&body={Uri.EscapeDataString(path)}")
-            { UseShellExecute = true });
+        if (path == null || !File.Exists(path)) return;
+        try
+        {
+            // Use Simple MAPI to compose a new email with the photo pre-attached.
+            // MAPI_DIALOG opens the user's default mail client (Outlook, Thunderbird, Windows Mail…)
+            // with a compose window so the user can review before sending.
+            NativeMethods.MapiSendFile(path, Path.GetFileNameWithoutExtension(path));
+        }
+        catch (Exception ex)
+        {
+            AppLog.Error($"SendToEmail (MAPI) failed: {ex.GetType().Name}: {ex.Message}");
+            ShowWarning("Could not open your email client.\n\nMake sure a mail app (Outlook, Thunderbird, Windows Mail, etc.) is installed and set as your default.", "Send to Email");
+        }
     }
 
     [RelayCommand(CanExecute = nameof(CanFileOp))]
@@ -2079,13 +2536,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
         if (path == null || !File.Exists(path)) return;
         try
         {
-            Process.Start(new System.Diagnostics.ProcessStartInfo
+            Process.Start(new ProcessStartInfo
                 { FileName = path, Verb = "print", UseShellExecute = true });
         }
         catch (Exception ex)
         {
             AppLog.Error($"SendToPrint failed for '{path}': {ex.GetType().Name}: {ex.Message}");
-            StatusText = "No print handler found for this file type.";
+            ShowWarning("Windows could not find a print handler for this file type.\n\nTry opening the photo in another app first, then print from there.", "Print");
         }
     }
 
@@ -2094,8 +2551,24 @@ public partial class MainViewModel : ObservableObject, IDisposable
     {
         var path = SelectedMediaFile?.FilePath;
         if (path == null || !File.Exists(path)) return;
-        // SPI_SETDESKWALLPAPER = 0x0014, SPIF_UPDATEINIFILE|SPIF_SENDCHANGE = 3
-        NativeMethods.SystemParametersInfo(0x0014, 0, path, 3);
+
+        // Windows only accepts JPEG/PNG/BMP as wallpaper; RAW/DNG files are rejected silently.
+        // Fall back to the pre-generated large thumbnail which is already a JPEG.
+        var wallpaperPath = path;
+        var ext = Path.GetExtension(path).TrimStart('.').ToLowerInvariant();
+        if (!PhotoIQPro.Common.SupportedFormats.JpegExtensions.Contains(ext))
+        {
+            var thumb = SelectedMediaFile!.ThumbnailLarge ?? SelectedMediaFile.ThumbnailMedium;
+            if (thumb == null || !File.Exists(thumb))
+            {
+                ShowWarning("Windows only supports JPEG, PNG, or BMP files as desktop wallpaper.\n\nRe-analyze this photo to generate a JPEG thumbnail that can be used instead.", "Set as Desktop Wallpaper");
+                return;
+            }
+            wallpaperPath = thumb;
+        }
+
+        // SPI_SETDESKWALLPAPER = 0x0014, SPIF_UPDATEINIFILE | SPIF_SENDCHANGE = 3
+        NativeMethods.SystemParametersInfo(0x0014, 0, wallpaperPath, 3);
     }
 
     [RelayCommand(CanExecute = nameof(CanFileOp))]
@@ -2105,16 +2578,17 @@ public partial class MainViewModel : ObservableObject, IDisposable
         if (path == null || !File.Exists(path)) return;
         try
         {
-            // rundll32 OpenAs_RunDLL always shows the Windows "Open With" picker,
-            // even for file types that have no registered association (e.g. .CRW, .ARW).
-            // The shell verb "openwith" only works when an association already exists.
-            Process.Start(new System.Diagnostics.ProcessStartInfo("rundll32.exe")
-                { Arguments = $"shell32.dll,OpenAs_RunDLL \"{path}\"", UseShellExecute = false });
+            // SHOpenWithDialog is the proper Win32 API for the "Open With" picker.
+            // It works for all file types including unregistered RAW formats and is
+            // more reliable than the shell verb "openwith" or rundll32 OpenAs_RunDLL.
+            var hwnd = new System.Windows.Interop.WindowInteropHelper(
+                Application.Current.MainWindow).Handle;
+            NativeMethods.ShowOpenWithDialog(hwnd, path);
         }
         catch (Exception ex)
         {
-            AppLog.Error($"SendToOpenWith failed for '{path}': {ex.GetType().Name}: {ex.Message}");
-            StatusText = "Could not open the 'Open With' dialog.";
+            AppLog.Error($"SendToOpenWith failed: {ex.GetType().Name}: {ex.Message}");
+            ShowWarning("Could not open the 'Open With' dialog.\n\nTry right-clicking the file in Windows Explorer instead.", "Open With");
         }
     }
 
@@ -2317,7 +2791,21 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [RelayCommand]
     private async Task RegenerateThumbnailsAsync()
     {
-        if (Progress.IsRunning) return;
+        if (Progress.IsRunning)
+        {
+            var stopConfirm = MessageBox.Show(
+                $"\"{Progress.Heading}\" is currently running.\n\nStop it and regenerate all thumbnails instead?",
+                "Regenerate Thumbnails",
+                MessageBoxButton.YesNo,
+                MessageBoxImage.Question,
+                MessageBoxResult.No);
+
+            if (stopConfirm != MessageBoxResult.Yes) return;
+
+            Progress.ForceCancel();
+            while (Progress.IsRunning)
+                await Task.Delay(100);
+        }
 
         Action<MediaFile> onDone = updated =>
         {
@@ -2496,17 +2984,7 @@ public partial class MainViewModel : ObservableObject, IDisposable
         await WithRepo(r => r.UpdateAsync(target));
         OnPropertyChanged(nameof(SelectedIsFavorite));
 
-        // Refresh the item's bindings in-place using the Replace notification.
-        // Using the indexer keeps the existing container alive (thumbnail stays loaded).
-        // Remove+Insert would destroy the container, blank the thumbnail, and — more
-        // critically — trigger SelectionChanged, which changes SelectedMediaFile to the
-        // adjacent item before the Insert can put the original back.
-        var idx = MediaFiles.IndexOf(target);
-        if (idx >= 0)
-        {
-            MediaFiles[idx] = target;   // Replace notification; container is NOT recreated
-            SelectedMediaFile = target; // Restore selection (Replace may deselect the item)
-        }
+        RefreshItemInPlace(target);
 
         // Remove from view if browsing Favorites and just un-favorited.
         if (ActiveView == GalleryView.Favorites && !target.IsFavorite)
@@ -2528,6 +3006,19 @@ public partial class MainViewModel : ObservableObject, IDisposable
     partial void OnSelectedMediaFileChanged(MediaFile? value)
     {
         _selectionAnchor = value;
+        InvalidateSelectionDependentProperties();
+        InvalidateDescriptionAndCaption();
+        InvalidateExifProperties();
+        SelectedTags.Clear();
+        OnPropertyChanged(nameof(HasSelectedTags));
+        AllMetadata.Clear();
+        _allMetadataLoaded = false;
+        LoadSelectionAsync(value);
+    }
+
+    private void InvalidateSelectionDependentProperties()
+    {
+        // Selection state properties
         OnPropertyChanged(nameof(HasSelection));
         OnPropertyChanged(nameof(HasAnySelected));
         OnPropertyChanged(nameof(SelectedIsOffline));
@@ -2535,30 +3026,43 @@ public partial class MainViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(SelectedFolderIsExcluded));
         OnPropertyChanged(nameof(HasAiDescription));
         OnPropertyChanged(nameof(DescriptionAttemptedButFailed));
+    }
+
+    private void InvalidateDescriptionAndCaption()
+    {
+        // Reset edit modes
         IsEditingDescription = false;
-        RefreshDescriptionProperties();  // always call directly — setter has equality guard
+        RefreshDescriptionProperties();  // setter has equality guard
         IsEditingCaption = false;
         RefreshCaptionProperties();
+    }
+
+    private void InvalidateExifProperties()
+    {
+        // EXIF metadata display
         OnPropertyChanged(nameof(SelectedDateText));
         OnPropertyChanged(nameof(SelectedTimeText));
         OnPropertyChanged(nameof(SelectedDimensionsText));
         OnPropertyChanged(nameof(SelectedFileSizeText));
         OnPropertyChanged(nameof(SelectedIsFavorite));
+        // Camera settings
         OnPropertyChanged(nameof(SelectedApertureText));
         OnPropertyChanged(nameof(SelectedShutterText));
         OnPropertyChanged(nameof(SelectedIsoText));
         OnPropertyChanged(nameof(SelectedFocalLengthText));
+        // EXIF presence flags
         OnPropertyChanged(nameof(HasAperture));
         OnPropertyChanged(nameof(HasShutterSpeed));
         OnPropertyChanged(nameof(HasIso));
         OnPropertyChanged(nameof(HasFocalLength));
         OnPropertyChanged(nameof(HasExifData));
+        // GPS
         OnPropertyChanged(nameof(HasGps));
         OnPropertyChanged(nameof(SelectedGpsText));
-        SelectedTags.Clear();
-        OnPropertyChanged(nameof(HasSelectedTags));
-        AllMetadata.Clear();
-        _allMetadataLoaded = false;
+    }
+
+    private void LoadSelectionAsync(MediaFile? value)
+    {
         if (value != null)
         {
             _ = LoadTagsAsync(value.Id);
@@ -2738,6 +3242,13 @@ public partial class MainViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(HasOfflineFiles));
         OnPropertyChanged(nameof(OfflineStatusText));
         OnPropertyChanged(nameof(SelectedIsOffline));
+    }
+
+    /// <summary>Notifies UI that multiple dependent properties have changed.</summary>
+    private void NotifyPropertiesChanged(params string[] propertyNames)
+    {
+        foreach (var name in propertyNames)
+            OnPropertyChanged(name);
     }
 
     private static int MarkOfflineFiles(IEnumerable<MediaFile> files)

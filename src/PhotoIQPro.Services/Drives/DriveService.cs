@@ -17,6 +17,14 @@ public class DriveService : IDriveService
 
     // ── Default Exclusions ──────────────────────────────────────────────
 
+    /// <summary>
+    /// Gets a list of default folder names to exclude from media scans.
+    /// </summary>
+    /// <remarks>
+    /// This list includes Windows system folders (Windows, Program Files, System Volume Information),
+    /// user application data (AppData), development folders (.git, node_modules, bin, obj),
+    /// and cache directories (thumbnails, .cache, Thumbs.db). Users can add additional custom exclusions.
+    /// </remarks>
     public IReadOnlyList<string> DefaultExclusions { get; } = new List<string>
     {
         // Windows system
@@ -57,6 +65,14 @@ public class DriveService : IDriveService
 
     // ── GetAvailableDrives ──────────────────────────────────────────────
 
+    /// <summary>
+    /// Enumerates all drives currently connected and ready.
+    /// </summary>
+    /// <remarks>
+    /// This method queries the system for mounted drives and returns metadata for each one
+    /// (name, volume label, type, capacity, free space). Offline or not-ready drives are excluded.
+    /// </remarks>
+    /// <returns>An enumerable of DriveInfoDto objects for all available drives.</returns>
     public IEnumerable<DriveInfoDto> GetAvailableDrives()
     {
         return DriveInfo.GetDrives()
@@ -70,6 +86,15 @@ public class DriveService : IDriveService
                 d.IsReady));
     }
 
+    /// <summary>
+    /// Gets drive information for the drive containing a given file path.
+    /// </summary>
+    /// <remarks>
+    /// This method extracts the drive root from the path (e.g., "C:" from "C:\Users\...") and returns
+    /// the corresponding DriveInfoDto if the drive is currently connected and ready.
+    /// </remarks>
+    /// <param name="path">A file or folder path.</param>
+    /// <returns>DriveInfoDto if the drive is found and ready; null if the path is invalid or the drive is offline.</returns>
     public DriveInfoDto? GetDriveForPath(string path)
     {
         var root = Path.GetPathRoot(path);
@@ -87,6 +112,23 @@ public class DriveService : IDriveService
 
     // ── ScanForMediaAsync ───────────────────────────────────────────────
 
+    /// <summary>
+    /// Scans a directory for supported media files (photos, RAW, video).
+    /// </summary>
+    /// <remarks>
+    /// This method recursively (optionally) enumerates all directories under the given path and collects
+    /// supported files (extensions in SupportedFormats.AllExtensions). Folder names matching the exclusion list
+    /// are skipped, along with their contents. The scan runs on a thread pool thread to avoid blocking the UI.
+    ///
+    /// Progress is reported periodically as folders are scanned. The scan gracefully skips inaccessible
+    /// directories (permission denied, etc.) and continues.
+    /// </remarks>
+    /// <param name="path">Root path to scan (folder path).</param>
+    /// <param name="recursive">If true, recursively scan all subfolders; if false, scan only the root folder.</param>
+    /// <param name="excludedFolders">List of folder names to skip (case-insensitive). Combined with DefaultExclusions.</param>
+    /// <param name="progress">Optional progress reporter showing folders scanned and files found so far.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>ScanResult with lists of found files, elapsed time, and whether the scan completed fully.</returns>
     public async Task<ScanResult> ScanForMediaAsync(
         string path,
         bool recursive,

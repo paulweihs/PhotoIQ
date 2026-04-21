@@ -19,11 +19,28 @@ using PhotoIQPro.Services.Search;
 
 namespace PhotoIQPro.Desktop;
 
+/// <summary>
+/// The WPF application entry point and dependency injection container setup.
+/// </summary>
+/// <remarks>
+/// Responsibilities:
+/// - Build and configure the dependency injection service container (all repositories, services, ViewModels, Views)
+/// - Initialize the SQLite database on first run (schema creation, migrations)
+/// - Download CLIP AI models on first run via ClipModelDownloadService
+/// - Show a splash screen during initialization
+/// - Run the SetupWindow to check Ollama availability before showing the main window
+/// - Launch background FTS index rebuild after UI is responsive
+/// - Handle unhandled exceptions gracefully
+/// - Coordinate clean shutdown (wait for FTS rebuild to finish, dispose OllamaClient)
+///
+/// The Services property is the global IServiceProvider accessed throughout the application.
+/// </remarks>
 public partial class App : Application
 {
+    /// <summary>The global dependency injection service provider, built on application startup.</summary>
     public static IServiceProvider Services { get; private set; } = null!;
 
-    // Held so OnExit can wait for it to finish cleanly before process teardown.
+    /// <summary>Tracks the background FTS index rebuild task so OnExit can wait for it to complete safely.</summary>
     private Task _ftsRebuildTask = Task.CompletedTask;
 
     protected override void OnExit(ExitEventArgs e)

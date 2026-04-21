@@ -34,6 +34,25 @@ public sealed class ImagePreprocessor : IImagePreprocessor
     private static readonly HashSet<string> ImageSharpFormats = new(StringComparer.OrdinalIgnoreCase)
         { ".jpg", ".jpeg", ".png", ".bmp", ".gif", ".tif", ".tiff", ".webp" };
 
+    /// <summary>
+    /// Prepares an image for vision model analysis, converting to JPEG and resizing if needed.
+    /// </summary>
+    /// <remarks>
+    /// For natively-supported formats (JPEG, PNG, WebP, BMP, GIF, TIFF): returns the original path if
+    /// dimensions are within the vision model limit (1024px max). Otherwise resizes and converts to JPEG.
+    ///
+    /// For RAW/DNG/CR2/NEF/ARW formats:
+    /// 1. Tries RawPreviewExtractor to pull the embedded JPEG preview (fast, no codec needed)
+    /// 2. Falls back to LibRaw demosaic if preview is too small or extraction fails
+    /// 3. Uses WIC (Windows Imaging Component) as last resort for CR3/ISOBMFF if available
+    /// 4. Returns null if all methods fail
+    ///
+    /// Temp files created during conversion are marked for cleanup (PreparedImage.IsTemp = true).
+    /// The original file is never modified.
+    /// </remarks>
+    /// <param name="filePath">Full path to the image file to prepare.</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>A PreparedImage with the path to a vision-suitable image, or null if all conversion methods failed.</returns>
     public async Task<PreparedImage?> PrepareAsync(string filePath, CancellationToken ct = default)
     {
         var ext = Path.GetExtension(filePath);

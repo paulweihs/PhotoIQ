@@ -3,6 +3,7 @@ using Microsoft.EntityFrameworkCore;
 using PhotoIQPro.Common;
 using PhotoIQPro.Core.Interfaces;
 using PhotoIQPro.Core.Models;
+using PhotoIQPro.Data.Helpers;
 
 namespace PhotoIQPro.Data.Repositories;
 
@@ -12,14 +13,47 @@ namespace PhotoIQPro.Data.Repositories;
 // fixed SQL strings with no user input, or where the values are guaranteed injection-safe
 // by type (e.g. GUIDs formatted for a variable-length IN clause).
 
+/// <summary>
+/// EF Core repository for MediaFile persistence and queries.
+/// </summary>
+/// <remarks>
+/// This repository handles all CRUD operations on MediaFile entities, including:
+/// - Single-file lookups (GetByIdAsync)
+/// - Bulk operations (BatchUpdateAsync, RemoveByFolderAsync)
+/// - Filtered queries (GetByPathAsync, GetByHashAsync, GetFavoritesAsync, GetUnanalyzedAsync)
+/// - Full-text search via the MediaFilesSearch SQLite FTS5 virtual table
+/// - Exclusion logic (marking files as IsExcluded without deleting them)
+///
+/// All write operations (Add, Update, Delete) automatically sync the FTS index so searches
+/// reflect the current state of the library. Failed writes clear the change tracker to prevent
+/// state contamination on the shared context instance.
+/// </remarks>
 public class MediaFileRepository : IMediaFileRepository
 {
     private readonly PhotoIQContext _context;
+    /// <summary>Initializes a new instance of the MediaFileRepository.</summary>
+    /// <param name="context">The PhotoIQContext for database access.</param>
     public MediaFileRepository(PhotoIQContext context) => _context = context;
 
+    /// <summary>Gets a single MediaFile by ID, with all associated tags eagerly loaded.</summary>
+    /// <param name="id">The MediaFile ID.</param>
+    /// <returns>The MediaFile with its Tags collection, or null if not found.</returns>
     public async Task<MediaFile?> GetByIdAsync(Guid id) => await _context.MediaFiles.Include(m => m.Tags).FirstOrDefaultAsync(m => m.Id == id);
+    /// <summary>Gets all non-excluded MediaFiles in the library, sorted by date taken (descending).</summary>
+    /// <remarks>Excluded files are filtered out. Files are ordered by DateTaken if available, else DateImported.</remarks>
+    /// <returns>A list of all active MediaFiles.</returns>
     public async Task<IEnumerable<MediaFile>> GetAllAsync() => await _context.MediaFiles.Where(m => !m.IsExcluded).OrderByDescending(m => m.DateTaken ?? m.DateImported).ToListAsync();
 
+    /// <summary>
+    /// Adds a new MediaFile to the library and syncs the full-text search index.
+    /// </summary>
+    /// <remarks>
+    /// The file is inserted into the main MediaFiles table and immediately added to the
+    /// MediaFilesSearch FTS5 virtual table for full-text search. Failed writes are caught and
+    /// the change tracker is cleared to prevent state contamination.
+    /// </remarks>
+    /// <param name="entity">The MediaFile to add.</param>
+    /// <returns>The added MediaFile (with any database-generated fields populated).</returns>
     public async Task<MediaFile> AddAsync(MediaFile entity)
     {
         await _context.MediaFiles.AddAsync(entity);
@@ -39,6 +73,14 @@ public class MediaFileRepository : IMediaFileRepository
         return entity;
     }
 
+    /// <summary>
+    /// Updates an existing MediaFile and syncs the full-text search index.
+    /// </summary>
+    /// <remarks>
+    /// Sets DateModified to the current UTC time before saving. The FTS index is then updated
+    /// to reflect any changes to searchable fields (FileName, Description, tags).
+    /// </remarks>
+    /// <param name="entity">The MediaFile to update (must be already attached to the context).</param>
     public async Task UpdateAsync(MediaFile entity)
     {
         entity.DateModified = DateTime.UtcNow;
@@ -55,6 +97,15 @@ public class MediaFileRepository : IMediaFileRepository
         await UpsertFtsAsync(entity);
     }
 
+    /// <summary>
+    /// Updates multiple MediaFiles in a single batch, then syncs the full-text search index.
+    /// </summary>
+    /// <remarks>
+    /// All files are assigned the same DateModified timestamp. The batch is persisted in a single
+    /// SaveChangesAsync call to minimize database roundtrips, then each file's FTS entry is updated.
+    /// This is more efficient than calling UpdateAsync individually.
+    /// </remarks>
+    /// <param name="files">A list of MediaFiles to update.</param>
     public async Task BatchUpdateAsync(IReadOnlyList<MediaFile> files)
     {
         if (files.Count == 0) return;
@@ -77,17 +128,32 @@ public class MediaFileRepository : IMediaFileRepository
             await UpsertFtsAsync(f);
     }
 
+    /// <summary>
+    /// Permanently deletes a MediaFile and removes it from the full-text search index.
+    /// </summary>
+    /// <remarks>
+    /// This is a hard delete — the file is completely removed from the library and cannot be recovered.
+    /// The FTS index is also cleaned up. If the file is not found, the operation is silently skipped.
+    /// </remarks>
+    /// <param name="id">The MediaFile ID to delete.</param>
     public async Task DeleteAsync(Guid id)
     {
         var e = await _context.MediaFiles.FindAsync(id);
         if (e == null) return;
         _context.MediaFiles.Remove(e);
         await _context.SaveChangesAsync();
-        // ExecuteSqlAsync(FormattableString) — {id} becomes a parameterized @p0.
-        await _context.Database.ExecuteSqlAsync(
-            $"DELETE FROM MediaFilesSearch WHERE media_file_id = {id.ToString()}");
+        await FtsQueryHelper.DeleteSingleAsync(_context.Database, id);
     }
 
+    /// <summary>
+    /// Marks a MediaFile as excluded (hidden from the library) without deleting it.
+    /// </summary>
+    /// <remarks>
+    /// Excluded files remain in the database but are filtered out of GetAllAsync and search results.
+    /// Users can manually un-exclude them later. The FTS index is also cleaned so excluded files
+    /// don't appear in full-text searches.
+    /// </remarks>
+    /// <param name="id">The MediaFile ID to exclude.</param>
     public async Task ExcludeAsync(Guid id)
     {
         var e = await _context.MediaFiles.FindAsync(id);
@@ -95,13 +161,26 @@ public class MediaFileRepository : IMediaFileRepository
         e.IsExcluded = true;
         await _context.SaveChangesAsync();
         // Remove from FTS so it doesn't appear in search results.
-        // ExecuteSqlAsync(FormattableString) — {id} becomes a parameterized @p0.
-        await _context.Database.ExecuteSqlAsync(
-            $"DELETE FROM MediaFilesSearch WHERE media_file_id = {id.ToString()}");
+        await FtsQueryHelper.DeleteSingleAsync(_context.Database, id);
     }
 
+    /// <summary>Gets the total count of non-excluded MediaFiles in the library.</summary>
+    /// <remarks>Excluded files are not counted. Used to enforce the Express tier library limit.</remarks>
+    /// <returns>The count of active MediaFiles.</returns>
     public async Task<int> CountAsync() => await _context.MediaFiles.CountAsync(m => !m.IsExcluded);
 
+    /// <summary>
+    /// Removes all MediaFiles in a folder (with optional recursive deletion).
+    /// </summary>
+    /// <remarks>
+    /// If includeSubfolders is false, only files directly in the folder are deleted; nested paths are skipped.
+    /// If true, all files whose FilePath starts with the folder prefix are deleted.
+    /// Folder paths are normalized to ensure "C:\Foo" doesn't match "C:\FooBar".
+    /// The FTS index is also updated in batches (chunked to avoid SQLite's variable limit).
+    /// </remarks>
+    /// <param name="folderPath">Full path to the folder whose files should be removed.</param>
+    /// <param name="includeSubfolders">If true, recursively delete files in subfolders; if false, delete only top-level files.</param>
+    /// <returns>The number of files deleted.</returns>
     public async Task<int> RemoveByFolderAsync(string folderPath, bool includeSubfolders)
     {
         // Normalise: ensure the prefix ends with a separator so "C:\Foo" never matches "C:\FooBar".
@@ -131,19 +210,8 @@ public class MediaFileRepository : IMediaFileRepository
         _context.MediaFiles.RemoveRange(toDelete);
         await _context.SaveChangesAsync();
 
-        // Batch-delete from the FTS index. GUIDs contain only [0-9a-f-] so formatting them
-        // into a SQL IN list is injection-safe by type. We can't use ExecuteSqlAsync's
-        // FormattableString parameterization here because EF Core maps each {x} to a single
-        // @pN — it cannot expand a variable-length collection into multiple parameters.
-        // Chunk to stay under SQLite's default SQLITE_LIMIT_VARIABLE_NUMBER (999).
-        foreach (var chunk in toDelete.Chunk(900))
-        {
-            var idList = string.Join(",", chunk.Select(mf => $"'{mf.Id}'"));
-#pragma warning disable EF1002 // GUIDs contain only [0-9a-f-] — injection-safe by type; FormattableString cannot expand variable-length collections
-            await _context.Database.ExecuteSqlRawAsync(
-                $"DELETE FROM MediaFilesSearch WHERE media_file_id IN ({idList})");
-#pragma warning restore EF1002
-        }
+        // Batch-delete from the FTS index using helper (handles chunking and parameterization).
+        await FtsQueryHelper.DeleteBatchAsync(_context.Database, toDelete.Select(mf => mf.Id));
 
         return toDelete.Count;
     }
@@ -152,7 +220,10 @@ public class MediaFileRepository : IMediaFileRepository
     public async Task<MediaFile?> GetByHashAsync(string fileHash) => await _context.MediaFiles.FirstOrDefaultAsync(m => m.FileHash == fileHash);
     public async Task<IEnumerable<MediaFile>> GetFavoritesAsync() => await _context.MediaFiles.Where(m => m.IsFavorite && !m.IsExcluded).ToListAsync();
     public async Task<IEnumerable<MediaFile>> GetUnanalyzedAsync(int limit = 100) => await _context.MediaFiles.Where(m => !m.IsAnalyzed && !m.IsExcluded).Take(limit).ToListAsync();
-    public async Task<IEnumerable<MediaFile>> GetVisionPendingAsync() => await _context.MediaFiles.Where(m => m.AnalysisStatus == AnalysisStatus.VisionPending && !m.IsExcluded).ToListAsync();
+    public async Task<IEnumerable<MediaFile>> GetVisionPendingAsync() => await _context.MediaFiles
+        .Include(m => m.Tags)
+        .Where(m => m.AnalysisStatus == AnalysisStatus.VisionPending && !m.IsExcluded)
+        .ToListAsync();
     public async Task<IReadOnlyList<Guid>> GetVisionPendingIdsAsync() => await _context.MediaFiles.Where(m => m.AnalysisStatus == AnalysisStatus.VisionPending && !m.IsExcluded).Select(m => m.Id).ToListAsync();
 
     public async Task<IReadOnlyList<string>> GetDistinctFolderPathsAsync()
@@ -296,6 +367,11 @@ public class MediaFileRepository : IMediaFileRepository
         return R * 2 * Math.Atan2(Math.Sqrt(a), Math.Sqrt(1 - a));
     }
 
+    /// <summary>
+    /// Gets all non-excluded media files with related tags eagerly loaded.
+    /// Use for reanalysis workflows that need to filter tags (e.g., strip AI-generated tags).
+    /// GetAllAsync() (without tags) is available at line 45 for gallery UI without tag overhead.
+    /// </summary>
     public async Task<IEnumerable<MediaFile>> GetAllWithTagsAsync()
         => await _context.MediaFiles
             .Include(m => m.Tags)
@@ -305,7 +381,6 @@ public class MediaFileRepository : IMediaFileRepository
 
     public async Task<IEnumerable<MediaFile>> GetOutdatedDescriptionsAsync(string currentModel, string currentPromptVersion)
         => await _context.MediaFiles
-            .Include(m => m.Tags)
             .Where(m => !m.IsExcluded
                      && m.IsAnalyzed
                      && m.AiDescription != null
@@ -394,7 +469,7 @@ public class MediaFileRepository : IMediaFileRepository
         // DELETE is a single auto-committed statement — holds the write lock for milliseconds.
         // Previously this ran inside one Serializable transaction that held the lock for the
         // entire rebuild (minutes on large libraries), blocking every other writer with SQLITE_BUSY.
-        await _context.Database.ExecuteSqlRawAsync("DELETE FROM MediaFilesSearch");
+        await FtsQueryHelper.ClearAllAsync(_context.Database);
 
         const int chunkSize = 1000;
         int offset = 0;
@@ -433,7 +508,6 @@ public class MediaFileRepository : IMediaFileRepository
                 .Where(t => t.MediaFiles.Any(mf => mf.Id == m.Id))
                 .ToListAsync();
 
-        var id          = m.Id.ToString();
         var tagText     = string.Join(" ", tags.Select(t => t.Name));
         var filename    = Path.GetFileNameWithoutExtension(m.FileName);
         var camera      = $"{m.CameraMake ?? ""} {m.CameraModel ?? ""}".Trim();
@@ -445,13 +519,8 @@ public class MediaFileRepository : IMediaFileRepository
             ? m.UserDescription
             : m.AiDescription ?? "";
 
-        // Both calls use ExecuteSqlAsync(FormattableString) — each {placeholder} becomes a
-        // separate parameterized @pN value. The INSERT is safe even when description or
-        // tagText contain quotes, newlines, or FTS5 query operators.
-        await _context.Database.ExecuteSqlAsync(
-            $"DELETE FROM MediaFilesSearch WHERE media_file_id = {id}");
-        await _context.Database.ExecuteSqlAsync(
-            $"INSERT INTO MediaFilesSearch(media_file_id, description, tags, filename, camera, date_text, folder) VALUES ({id},{description},{tagText},{filename},{camera},{dateText},{folder})");
+        // Upsert into FTS index (handles both delete and insert with parameterized safety).
+        await FtsQueryHelper.UpsertAsync(_context.Database, m.Id, description, tagText, filename, camera, dateText, folder);
     }
 
     /// <summary>
@@ -606,12 +675,25 @@ public class MediaFileRepository : IMediaFileRepository
 
     public async Task<IReadOnlyDictionary<string, int>> GetTagPhotoCountsAsync()
     {
-        var rows = await _context.Tags
+        // Query 1: single JOIN + GROUP BY — one row per tag with non-excluded photos.
+        var counts = await _context.MediaFiles
+            .Where(m => !m.IsExcluded)
+            .SelectMany(m => m.Tags)
             .Where(t => t.Name != null)
-            .Select(t => new { t.Name, Count = t.MediaFiles.Count(m => !m.IsExcluded) })
+            .GroupBy(t => t.Name!)
+            .Select(g => new { Name = g.Key, Count = g.Count() })
             .AsNoTracking()
             .ToListAsync();
-        return rows.ToDictionary(x => x.Name!, x => x.Count);
+
+        // Query 2: all tag names (cheap — no join, ensures zero-count tags are included).
+        var allTagNames = await _context.Tags
+            .Where(t => t.Name != null)
+            .Select(t => t.Name!)
+            .AsNoTracking()
+            .ToListAsync();
+
+        var countMap = counts.ToDictionary(x => x.Name, x => x.Count);
+        return allTagNames.ToDictionary(name => name, name => countMap.GetValueOrDefault(name, 0));
     }
 
     public async Task RemoveTagFromPhotoAsync(Guid photoId, Guid tagId)

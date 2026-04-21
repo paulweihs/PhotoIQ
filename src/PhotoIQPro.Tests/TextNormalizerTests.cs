@@ -5,6 +5,7 @@ namespace PhotoIQPro.Tests;
 
 // ── NeutraliseGender ─────────────────────────────────────────────────────────
 
+/// <summary>Tests for TextNormalizer.NeutraliseGender: gender-neutral pronoun and noun replacement.</summary>
 public class NeutraliseGenderTests
 {
     // Nouns — singular
@@ -130,6 +131,7 @@ public class NeutraliseGenderTests
 
 // ── StripFillerOpener ────────────────────────────────────────────────────────
 
+/// <summary>Tests for TextNormalizer.StripFillerOpener: removing opening filler words.</summary>
 public class StripFillerOpenerTests
 {
     // Pattern 1 verb variants
@@ -192,6 +194,7 @@ public class StripFillerOpenerTests
 
 // ── IsRepetitionLoop ─────────────────────────────────────────────────────────
 
+/// <summary>Tests for TextNormalizer.IsRepetitionLoop: detecting repetitive sentence patterns.</summary>
 public class IsRepetitionLoopTests
 {
     // Short text gates
@@ -270,6 +273,7 @@ public class IsRepetitionLoopTests
 
 // ── TrimToCompleteSentences ──────────────────────────────────────────────────
 
+/// <summary>Tests for TextNormalizer.TrimToCompleteSentences: truncating text at sentence boundaries.</summary>
 public class TrimToCompleteSentencesTests
 {
     // Note: the 15-char minimum means each kept sentence must be > 15 chars.
@@ -361,6 +365,7 @@ public class TrimToCompleteSentencesTests
 
 // ── FlattenNewlines ──────────────────────────────────────────────────────────
 
+/// <summary>Tests for TextNormalizer.FlattenNewlines: converting newlines to spaces.</summary>
 public class FlattenNewlinesTests
 {
     // General newline — missing punctuation → period inserted

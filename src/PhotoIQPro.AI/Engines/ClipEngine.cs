@@ -7,6 +7,19 @@ using SixLabors.ImageSharp.Processing;
 
 namespace PhotoIQPro.AI.Engines;
 
+/// <summary>
+/// CLIP vision model encoder for computing image embeddings via ONNX Runtime.
+/// </summary>
+/// <remarks>
+/// CLIP (Contrastive Language-Image Pre-training) embeds images and text into a 512D shared vector space,
+/// enabling zero-shot classification and semantic search. This engine handles:
+/// - Model loading (clip-vit-base-patch32-vision.onnx from %LOCALAPPDATA%\PhotoIQPro\models\)
+/// - Image preprocessing: resize to 224×224 (crop if needed), ImageNet normalization
+/// - ONNX inference: runs on CPU via Microsoft.ML.OnnxRuntime
+/// - Embedding normalization: L2-normalized 512D float vector output
+///
+/// Initialization is async and runs on the thread pool to avoid blocking the UI (takes 5–30s on first load).
+/// </remarks>
 public class ClipEngine : IDisposable
 {
     private InferenceSession? _session;
@@ -15,9 +28,28 @@ public class ClipEngine : IDisposable
     private static readonly float[] Mean = [0.48145466f, 0.4578275f, 0.40821073f];
     private static readonly float[] Std = [0.26862954f, 0.26130258f, 0.27577711f];
 
+    /// <summary>
+    /// Initializes a new instance of the ClipEngine.
+    /// </summary>
+    /// <remarks>
+    /// The ONNX model is not loaded until InitializeAsync is called. This allows dependency injection
+    /// without blocking on model I/O during app startup.
+    /// </remarks>
+    /// <param name="path">Optional custom path to the models directory. If null, defaults to %LOCALAPPDATA%\PhotoIQPro\models.</param>
     public ClipEngine(string? path = null) => _modelsPath = path ?? Path.Combine(Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData), "PhotoIQPro", "models");
+
+    /// <summary>Gets a value indicating whether the ONNX model has been successfully loaded and initialized.</summary>
     public bool IsInitialized => _session != null;
 
+    /// <summary>
+    /// Loads and initializes the CLIP vision model from the ONNX file.
+    /// </summary>
+    /// <remarks>
+    /// This method runs on the thread pool to avoid blocking the caller (model loading is CPU-bound and takes 5–30 seconds).
+    /// Safe to call multiple times; if already initialized, the old session is disposed and replaced.
+    /// Throws FileNotFoundException if the ONNX model file is not found.
+    /// </remarks>
+    /// <exception cref="FileNotFoundException">Thrown if clip-vit-base-patch32-vision.onnx is not found in the models directory.</exception>
     public async Task InitializeAsync()
     {
         var modelPath = Path.Combine(_modelsPath, "clip-vit-base-patch32-vision.onnx");
@@ -30,6 +62,19 @@ public class ClipEngine : IDisposable
         _session = newSession;
     }
 
+    /// <summary>
+    /// Computes a 512D L2-normalized image embedding using CLIP vision encoder.
+    /// </summary>
+    /// <remarks>
+    /// The image is resized to 224×224 (center-cropped if necessary), normalized using ImageNet statistics
+    /// (mean and standard deviation), and then passed through the CLIP ViT-B/32 model.
+    /// The output embedding is L2-normalized to unit length for cosine similarity comparisons.
+    ///
+    /// Requires InitializeAsync to have been called first. Throws InvalidOperationException if not initialized.
+    /// </remarks>
+    /// <param name="imagePath">Full path to the image file (any format readable by SixLabors.ImageSharp).</param>
+    /// <returns>A 512-element float array representing the normalized image embedding.</returns>
+    /// <exception cref="InvalidOperationException">Thrown if InitializeAsync has not been called.</exception>
     public async Task<float[]> GetImageEmbeddingAsync(string imagePath)
     {
         if (_session == null) throw new InvalidOperationException("Not initialized");
@@ -90,5 +135,6 @@ public class ClipEngine : IDisposable
         return new DenseTensor<float>(data, [1, 3, Size, Size]);
     }
 
+    /// <summary>Disposes the ONNX InferenceSession and releases GPU/CPU resources.</summary>
     public void Dispose() => _session?.Dispose();
 }

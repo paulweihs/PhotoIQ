@@ -49,6 +49,43 @@ internal static class TextNormalizer
         return text;
     }
 
+    /// <summary>
+    /// Enforces gender neutrality by replacing possessive/objective forms and additional gendered terms.
+    /// Complements NeutraliseGender with more aggressive pattern matching for edge cases.
+    /// Handles: hers, his (possessive), hers (objective), theirs, actress/actor, waiter/waitress.
+    /// </summary>
+    internal static string EnforceGenderNeutrality(string text)
+    {
+        static string Subst(string s, string pattern, string replacement) =>
+            Regex.Replace(s, pattern, m =>
+                char.IsUpper(m.Value[0])
+                    ? char.ToUpperInvariant(replacement[0]) + replacement[1..]
+                    : replacement,
+                RegexOptions.IgnoreCase);
+
+        // Possessive forms (hers, his as pronouns)
+        text = Subst(text, @"\bhers\b", "theirs");
+        text = Subst(text, @"\bhis\b", "theirs");
+
+        // Occupational/role gendering: actress/actor → performer, waiter/waitress → server
+        text = Subst(text, @"\bactresses\b", "performers");
+        text = Subst(text, @"\bactress\b", "performer");
+        text = Subst(text, @"\bactors\b", "performers");
+        text = Subst(text, @"\bactor\b", "performer");
+        text = Subst(text, @"\bwaitresses\b", "servers");
+        text = Subst(text, @"\bwaitress\b", "server");
+        text = Subst(text, @"\bwaiters\b", "servers");
+        text = Subst(text, @"\bwaiter\b", "server");
+
+        // Additional pronouns that might slip through initial pass
+        text = Subst(text, @"\bmother\b", "parent");
+        text = Subst(text, @"\bfather\b", "parent");
+        text = Subst(text, @"\bsister\b", "sibling");
+        text = Subst(text, @"\bbrother\b", "sibling");
+
+        return text;
+    }
+
     // ── Filler-opener stripping ──────────────────────────────────────────────
 
     /// <summary>

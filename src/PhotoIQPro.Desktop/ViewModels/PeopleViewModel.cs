@@ -70,7 +70,7 @@ public partial class PeopleViewModel : ObservableObject
         await _personRepo.UpdateAsync(person);
 
         card.ApplyName(name);
-        _recognition.InvalidateCache();
+        await _recognition.InvalidateCacheAsync();
     }
 
     [RelayCommand]
@@ -81,7 +81,7 @@ public partial class PeopleViewModel : ObservableObject
     {
         await _personRepo.HideAsync(card.PersonId);
         People.Remove(card);
-        _recognition.InvalidateCache();
+        await _recognition.InvalidateCacheAsync();
         UpdateStatus();
     }
 
@@ -127,7 +127,7 @@ public partial class PeopleViewModel : ObservableObject
         IsMergeMode = false;
 
         await _personRepo.MergeIntoAsync(source.PersonId, target.PersonId);
-        _recognition.InvalidateCache();
+        await _recognition.InvalidateCacheAsync();
 
         People.Remove(source);
         target.PhotoCount = await _personRepo.GetPhotoCountAsync(target.PersonId);

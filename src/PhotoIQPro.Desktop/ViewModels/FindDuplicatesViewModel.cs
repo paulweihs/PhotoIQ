@@ -32,22 +32,38 @@ public partial class FindDuplicatesViewModel : ObservableObject
     {
         IsScanning = true;
         StatusText = "Scanning…";
-        foreach (var g in Groups) g.SelectionChanged -= RefreshCounts;
-        Groups.Clear();
+        ClearAndUnsubscribe();
 
         var duplicates = await _repo.GetDuplicateGroupsAsync();
+        PopulateGroupsWithListeners(duplicates);
+
+        StatusText = BuildScanResultMessage(Groups.Count);
+        IsScanning = false;
+        RefreshCounts();
+    }
+
+    private void ClearAndUnsubscribe()
+    {
+        foreach (var g in Groups)
+            g.SelectionChanged -= RefreshCounts;
+        Groups.Clear();
+    }
+
+    private void PopulateGroupsWithListeners(IEnumerable<DuplicateGroup> duplicates)
+    {
         foreach (var group in duplicates)
         {
             var vm = new DuplicateGroupViewModel(group);
             vm.SelectionChanged += RefreshCounts;
             Groups.Add(vm);
         }
+    }
 
-        StatusText = Groups.Count == 0
+    private string BuildScanResultMessage(int groupCount)
+    {
+        return groupCount == 0
             ? "No duplicates found."
-            : $"Found {Groups.Count} group{(Groups.Count == 1 ? "" : "s")} — select files to delete.";
-        IsScanning = false;
-        RefreshCounts();
+            : $"Found {groupCount} group{(groupCount == 1 ? "" : "s")} — select files to delete.";
     }
 
     private void RefreshCounts()
@@ -58,28 +74,17 @@ public partial class FindDuplicatesViewModel : ObservableObject
         OnPropertyChanged(nameof(HasMarked));
     }
 
-    [RelayCommand(CanExecute = nameof(HasMarked))]
-    private async Task DeleteMarkedAsync()
+    private string BuildDeleteConfirmMessage(List<DuplicateFileViewModel> toDelete)
     {
-        var toDelete = Groups
-            .SelectMany(g => g.Files)
-            .Where(f => f.IsMarkedForDeletion)
-            .ToList();
-
-        if (toDelete.Count == 0) return;
-
         var sizeText = FormatFileSize(toDelete.Sum(f => f.File.FileSize));
         var names = string.Join("\n", toDelete.Take(8).Select(f => $"  • {f.FileName}"));
         if (toDelete.Count > 8) names += $"\n  … and {toDelete.Count - 8} more";
+        return $"Permanently delete {toDelete.Count} file{(toDelete.Count == 1 ? "" : "s")} ({sizeText}) from disk?\n\n{names}\n\nThis cannot be undone.";
+    }
 
-        var msg = $"Permanently delete {toDelete.Count} file{(toDelete.Count == 1 ? "" : "s")} ({sizeText}) from disk?\n\n{names}\n\nThis cannot be undone.";
-        var result = System.Windows.MessageBox.Show(
-            msg, "Confirm Delete",
-            System.Windows.MessageBoxButton.YesNo,
-            System.Windows.MessageBoxImage.Warning);
-
-        if (result != System.Windows.MessageBoxResult.Yes) return;
-
+    private async Task<(int Deleted, List<string> FailedNames)> DeleteFilesAsync(
+        List<DuplicateFileViewModel> toDelete)
+    {
         int deleted = 0;
         var failedNames = new List<string>();
         foreach (var item in toDelete)
@@ -99,17 +104,39 @@ public partial class FindDuplicatesViewModel : ObservableObject
                 failedNames.Add(item.FileName);
             }
         }
+        return (deleted, failedNames);
+    }
 
+    private string BuildDeleteResultMessage(int deleted, List<string> failedNames)
+    {
         if (failedNames.Count > 0)
         {
             var sample = string.Join(", ", failedNames.Take(3));
             var more   = failedNames.Count > 3 ? $" and {failedNames.Count - 3} more" : "";
-            StatusText = $"Deleted {deleted} file{(deleted == 1 ? "" : "s")} — {failedNames.Count} could not be removed ({sample}{more}). They may be open in another application.";
+            return $"Deleted {deleted} file{(deleted == 1 ? "" : "s")} — {failedNames.Count} could not be removed ({sample}{more}). They may be open in another application.";
         }
-        else
-        {
-            StatusText = $"Deleted {deleted} file{(deleted == 1 ? "" : "s")}.";
-        }
+        return $"Deleted {deleted} file{(deleted == 1 ? "" : "s")}.";
+    }
+
+    [RelayCommand(CanExecute = nameof(HasMarked))]
+    private async Task DeleteMarkedAsync()
+    {
+        var toDelete = Groups
+            .SelectMany(g => g.Files)
+            .Where(f => f.IsMarkedForDeletion)
+            .ToList();
+
+        if (toDelete.Count == 0) return;
+
+        var result = System.Windows.MessageBox.Show(
+            BuildDeleteConfirmMessage(toDelete), "Confirm Delete",
+            System.Windows.MessageBoxButton.YesNo,
+            System.Windows.MessageBoxImage.Warning);
+
+        if (result != System.Windows.MessageBoxResult.Yes) return;
+
+        var (deleted, failedNames) = await DeleteFilesAsync(toDelete);
+        StatusText = BuildDeleteResultMessage(deleted, failedNames);
         await ScanAsync();
     }
 

@@ -31,11 +31,23 @@ public sealed class FaceService : IFaceService
         _recognition = recognition;
     }
 
+    /// <summary>Gets a value indicating whether face detection is available (engine initialized).</summary>
     public bool IsAvailable => _engine.IsInitialized;
 
+    /// <summary>Initializes the face detection engine (loads UltraFace and ArcFace models).</summary>
     public async Task InitializeAsync(CancellationToken ct = default)
         => await _engine.InitializeAsync();
 
+    /// <summary>
+    /// Detects and recognizes faces in a photo, persisting results to the database.
+    /// </summary>
+    /// <remarks>
+    /// Skips videos and very small images (&lt;80×80). Prefers thumbnail over original for speed.
+    /// Returns false if face detection is unavailable or the file is not found.
+    /// </remarks>
+    /// <param name="mf">The MediaFile to analyze (Width/Height and FilePath must be populated).</param>
+    /// <param name="ct">Cancellation token.</param>
+    /// <returns>True if faces were detected and persisted; false if skipped or unavailable.</returns>
     public async Task<bool> DetectFacesAsync(MediaFile mf, CancellationToken ct = default)
     {
         if (!IsAvailable) return false;

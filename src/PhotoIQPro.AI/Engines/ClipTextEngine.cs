@@ -3,6 +3,16 @@ using Microsoft.ML.OnnxRuntime.Tensors;
 
 namespace PhotoIQPro.AI.Engines;
 
+/// <summary>
+/// CLIP text encoder for computing text embeddings via ONNX Runtime.
+/// </summary>
+/// <remarks>
+/// Encodes natural language text (tag vocabulary prompts) into 512D vectors in the same space as ClipEngine's image embeddings.
+/// This enables cosine similarity comparisons for zero-shot tag classification. The text model accepts token sequences
+/// (up to 77 tokens) and returns either pooled embeddings (for classification) or full sequence outputs.
+///
+/// The model file (clip-vit-base-patch32-text.onnx) is optional; if missing, IsModelAvailable returns false and tagging degrades gracefully.
+/// </remarks>
 public sealed class ClipTextEngine : IDisposable
 {
     private InferenceSession? _session;
@@ -11,12 +21,30 @@ public sealed class ClipTextEngine : IDisposable
     private string? _outputName;
     private bool _outputIsPooled;
 
+    /// <summary>
+    /// Initializes a new instance of the ClipTextEngine.
+    /// </summary>
+    /// <remarks>
+    /// The ONNX model is not loaded until InitializeAsync is called. The model path is computed but not validated here.
+    /// </remarks>
+    /// <param name="modelsPath">The directory containing clip-vit-base-patch32-text.onnx.</param>
     public ClipTextEngine(string modelsPath) =>
         _modelPath = Path.Combine(modelsPath, "clip-vit-base-patch32-text.onnx");
 
+    /// <summary>Gets a value indicating whether the ONNX model file exists on disk.</summary>
+    /// <remarks>If false, tagging functionality is unavailable but the app continues normally.</remarks>
     public bool IsModelAvailable => File.Exists(_modelPath);
+    /// <summary>Gets a value indicating whether the model has been successfully loaded and initialized.</summary>
     public bool IsInitialized => _session != null;
 
+    /// <summary>
+    /// Loads and initializes the CLIP text model from the ONNX file.
+    /// </summary>
+    /// <remarks>
+    /// Automatically detects input and output layer names from the model metadata. If the model file does not exist,
+    /// silently returns without initializing (for graceful degradation when the text encoder is optional).
+    /// Runs on the thread pool to avoid blocking.
+    /// </remarks>
     public async Task InitializeAsync()
     {
         if (!File.Exists(_modelPath)) return;
@@ -57,6 +85,15 @@ public sealed class ClipTextEngine : IDisposable
         _outputIsPooled = outputIsPooled;
     }
 
+    /// <summary>
+    /// Computes 512D embeddings for a batch of tokenized text sequences.
+    /// </summary>
+    /// <remarks>
+    /// Accepts tokenized text (up to 77 tokens per sequence). Returns embeddings in the same vector space as CLIP image embeddings.
+    /// If not initialized or input is empty, returns an empty array.
+    /// </remarks>
+    /// <param name="tokenBatches">Jagged array of token IDs, one sequence per row (each up to 77 tokens).</param>
+    /// <returns>Batch of 512D float arrays, one per input sequence.</returns>
     public Task<float[][]> GetTextEmbeddingsAsync(int[][] tokenBatches)
     {
         if (_session == null || _inputName == null || _outputName == null || tokenBatches.Length == 0)

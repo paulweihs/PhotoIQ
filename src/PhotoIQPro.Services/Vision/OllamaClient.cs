@@ -25,6 +25,14 @@ public sealed class OllamaClient : IDisposable
     // Exposed as a constant so callers (e.g. SettingsViewModel test) can reference the same value.
     public const int VisionTimeoutSeconds = 120;
 
+    /// <summary>
+    /// Initializes a new instance of the OllamaClient.
+    /// </summary>
+    /// <remarks>
+    /// Defaults to the standard Ollama localhost endpoint (http://127.0.0.1:11434).
+    /// HTTP timeout is set to 120 seconds to accommodate slow CPU-only vision analysis.
+    /// </remarks>
+    /// <param name="baseUrl">The base URL of the Ollama server (e.g., http://localhost:11434 for remote access).</param>
     public OllamaClient(string baseUrl = "http://127.0.0.1:11434")
     {
         _baseUrl = baseUrl.TrimEnd('/');

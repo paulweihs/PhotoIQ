@@ -44,6 +44,13 @@ public class UserPreferences
     /// <summary>User-configured external editors shown in the Send To submenu.</summary>
     public List<ExternalEditorEntry> ExternalEditors { get; set; } = [];
 
+    /// <summary>
+    /// Gallery sort history, most-recent sort first.
+    /// Each entry is "FieldName:asc" or "FieldName:desc".
+    /// Valid field names: DateTaken, FileName, FileSize, DateImported, Camera.
+    /// </summary>
+    public List<string> GallerySortHistory { get; set; } = ["DateTaken:desc"];
+
     public static UserPreferences Load()
     {
         try

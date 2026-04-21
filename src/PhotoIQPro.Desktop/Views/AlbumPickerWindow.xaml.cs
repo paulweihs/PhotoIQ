@@ -4,17 +4,40 @@ using PhotoIQPro.Core.Models;
 
 namespace PhotoIQPro.Desktop.Views;
 
+/// <summary>
+/// Dialog window for selecting an album to add photos to, or creating a new album.
+/// </summary>
+/// <remarks>
+/// Users can either:
+/// 1. Select an existing album from a list (organized by library/album hierarchy)
+/// 2. Create a new album in an existing library
+/// 3. Create a new album in a brand-new library (both created together)
+///
+/// The dialog returns results via properties:
+/// - SelectedAlbumId/SelectedAlbumName: if an existing album was selected
+/// - IsNewAlbum/NewAlbumName/NewAlbumLibraryId/NewLibraryName: if a new album was created
+///
+/// DialogResult=true indicates success; false if the user cancelled.
+/// </remarks>
 public partial class AlbumPickerWindow : Window
 {
-    // Result when picking an existing album.
-    public Guid?  SelectedAlbumId   { get; private set; }
+    /// <summary>The ID of the selected existing album (null if creating new).</summary>
+    public Guid? SelectedAlbumId { get; private set; }
+
+    /// <summary>The display name of the selected existing album (library / album format).</summary>
     public string SelectedAlbumName { get; private set; } = "";
 
-    // Result when creating a new album.
-    public bool   IsNewAlbum        { get; private set; }
-    public string NewAlbumName      { get; private set; } = "";
-    public Guid?  NewAlbumLibraryId { get; private set; }   // null → also create a new library
-    public string NewLibraryName    { get; private set; } = "";
+    /// <summary>True if the user chose to create a new album; false if selecting an existing one.</summary>
+    public bool IsNewAlbum { get; private set; }
+
+    /// <summary>The name of the new album to create (if IsNewAlbum=true).</summary>
+    public string NewAlbumName { get; private set; } = "";
+
+    /// <summary>The library ID for the new album (null if NewLibraryName should also be created).</summary>
+    public Guid? NewAlbumLibraryId { get; private set; }
+
+    /// <summary>The name of the new library to create (if NewAlbumLibraryId=null).</summary>
+    public string NewLibraryName { get; private set; } = "";
 
     private record AlbumItem(Guid Id, string AlbumName);
 

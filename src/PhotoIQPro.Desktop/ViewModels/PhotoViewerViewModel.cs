@@ -1,6 +1,7 @@
 using System.Collections.ObjectModel;
 using System.IO;
 using System.Windows.Input;
+using System.Windows.Media;
 using System.Windows.Media.Imaging;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
@@ -11,6 +12,22 @@ using static PhotoIQPro.Common.FormatUtilities;
 
 namespace PhotoIQPro.Desktop.ViewModels;
 
+/// <summary>
+/// ViewModel for the photo detail viewer window (double-click to open full-screen viewer).
+/// </summary>
+/// <remarks>
+/// Manages photo navigation (next/previous), image loading/caching, tag display, face detection visualization,
+/// and delegated commands (favorite, exclude, delete, etc.) that invoke MainViewModel handlers.
+///
+/// Key features:
+/// - Image loading with decode semaphore to prevent concurrent load storms
+/// - CancellationToken management for cancelling in-flight image loads
+/// - Face rectangle overlay with click-to-person-jump navigation
+/// - Panning and zooming (handled in code-behind PhotoViewerWindow.xaml.cs)
+/// - EXIF metadata extraction and formatting
+/// - Keyboard shortcuts (arrow keys, Escape to close)
+/// - Context menu integration for file operations (copy, explorer, exclude, delete, etc.)
+/// </remarks>
 public partial class PhotoViewerViewModel : ObservableObject
 {
     private readonly IMediaFileRepository _repo;
@@ -30,8 +47,10 @@ public partial class PhotoViewerViewModel : ObservableObject
     public event Action?       RequestClose;
     public event Action<Guid>? RequestShowPerson;   // raised when user clicks a named face box
 
+    /// <summary>Gets a value indicating whether the current photo has detected faces.</summary>
     public bool HasFaces => Faces.Count > 0;
 
+    /// <summary>Navigates to the person detail view if the clicked face has an identified person.</summary>
     [RelayCommand]
     private void JumpToPerson(FaceItemViewModel face)
     {
@@ -40,7 +59,10 @@ public partial class PhotoViewerViewModel : ObservableObject
     }
 
     // ── Delegated commands — set by MainViewModel before ShowDialog() ─────────
-    /// <summary>Invoked when the viewer navigates to a new photo, so MainViewModel can sync its selection.</summary>
+    /// <summary>
+    /// Invoked when the viewer navigates to a new photo, so MainViewModel can sync its single-selection state.
+    /// </summary>
+    /// <remarks>Set by MainViewModel before the viewer window opens.</remarks>
     public Action<MediaFile>? PhotoChanged { get; set; }
 
     public ICommand? OpenInExplorerCommand      { get; set; }
@@ -80,6 +102,9 @@ public partial class PhotoViewerViewModel : ObservableObject
     public string CameraText      => BuildCameraText();
     public string ExifLine        => BuildExifLine();
 
+    /// <summary>Initializes a new instance of the PhotoViewerViewModel.</summary>
+    /// <param name="repo">Repository for loading full photo details and managing metadata.</param>
+    /// <param name="personRepo">Repository for resolving face person identities.</param>
     public PhotoViewerViewModel(IMediaFileRepository repo, IPersonRepository personRepo)
     {
         _repo       = repo;
@@ -88,6 +113,15 @@ public partial class PhotoViewerViewModel : ObservableObject
 
     // ── Public entry point ────────────────────────────────────────────────────
 
+    /// <summary>
+    /// Opens the viewer with a photo list and starts at the specified index.
+    /// </summary>
+    /// <remarks>
+    /// Called by MainViewModel.ShowPhotoViewer before the viewer window opens.
+    /// Triggers an async load of the first photo's details and image.
+    /// </remarks>
+    /// <param name="photos">The list of MediaFiles to browse through.</param>
+    /// <param name="startIndex">The index of the initial photo to display.</param>
     public void Open(IReadOnlyList<MediaFile> photos, int startIndex)
     {
         _photos = photos;
@@ -216,6 +250,7 @@ public partial class PhotoViewerViewModel : ObservableObject
                     b.DecodePixelWidth = 1600;
                     b.CacheOption      = BitmapCacheOption.OnLoad;
                     b.CreateOptions    = BitmapCreateOptions.IgnoreImageCache;
+                    b.Rotation         = ReadExifRotation(path);
                     b.EndInit();
                     b.Freeze();
                     return (object?)b;
@@ -304,6 +339,48 @@ public partial class PhotoViewerViewModel : ObservableObject
         if (Current.ISO.HasValue)                            parts.Add($"ISO {Current.ISO}");
         if (Current.FocalLength.HasValue)                    parts.Add($"{Current.FocalLength:F0}mm");
         return string.Join("  ·  ", parts);
+    }
+
+    /// <summary>
+    /// Reads the EXIF Orientation tag from a JPEG (or any WIC-supported format) using the
+    /// lightweight WPF BitmapDecoder — no full pixel decode, just metadata.
+    /// Maps EXIF values to WPF Rotation so BitmapImage.Rotation corrects the display without
+    /// a second decode pass or a TransformedBitmap wrapper.
+    ///
+    /// EXIF orientation values:
+    ///   1 = normal, 3 = 180°, 6 = 90° CW (camera held rotated left), 8 = 270° CW (rotated right).
+    ///   Flip variants (2/4/5/7) are not correctable via BitmapImage.Rotation alone; they are
+    ///   extremely rare in practice (no consumer camera produces them) and are left as-is.
+    /// </summary>
+    private static Rotation ReadExifRotation(string path)
+    {
+        try
+        {
+            using var stream = File.OpenRead(path);
+            var decoder = BitmapDecoder.Create(
+                stream,
+                BitmapCreateOptions.IgnoreColorProfile,
+                BitmapCacheOption.None);           // None = don't keep pixels in memory
+
+            if (decoder.Frames.Count == 0) return Rotation.Rotate0;
+            if (decoder.Frames[0].Metadata is not BitmapMetadata meta) return Rotation.Rotate0;
+
+            // "System.Photo.Orientation" is the Windows Shell property that exposes the EXIF tag.
+            var raw = meta.GetQuery("System.Photo.Orientation");
+            ushort orientation = raw is ushort u ? u : (raw is uint ui ? (ushort)ui : (ushort)1);
+
+            return orientation switch
+            {
+                3 => Rotation.Rotate180,
+                6 => Rotation.Rotate90,
+                8 => Rotation.Rotate270,
+                _ => Rotation.Rotate0,
+            };
+        }
+        catch
+        {
+            return Rotation.Rotate0;
+        }
     }
 
 }

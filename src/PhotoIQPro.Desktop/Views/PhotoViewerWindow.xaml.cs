@@ -15,6 +15,9 @@ public partial class PhotoViewerWindow : Window
     private const double MinZoom  = 0.5;
     private const double MaxZoom  = 5.0;
 
+    private Point _panStartPoint;
+    private bool _isPanning = false;
+
     private readonly SolidColorBrush _faceKnownBrush   = new(Color.FromArgb(0xFF, 0x89, 0xB4, 0xFA)); // accent blue
     private readonly SolidColorBrush _faceUnknownBrush = new(Color.FromArgb(0xAA, 0xFF, 0xFF, 0xFF)); // dim white
     private readonly SolidColorBrush _labelBgBrush     = new(Color.FromArgb(0xCC, 0x1E, 0x1E, 0x2E));
@@ -179,6 +182,51 @@ public partial class PhotoViewerWindow : Window
         ImageScale.ScaleY        = 1.0;
         FaceOverlayScale.ScaleX  = 1.0;
         FaceOverlayScale.ScaleY  = 1.0;
+        ImageTranslate.X         = 0.0;
+        ImageTranslate.Y         = 0.0;
+        FaceOverlayTranslate.X   = 0.0;
+        FaceOverlayTranslate.Y   = 0.0;
+    }
+
+    // ── Panning ──────────────────────────────────────────────────────────
+
+    private void OnImageMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (_zoom > 1.0 && e.ChangedButton == MouseButton.Middle && e.ButtonState == MouseButtonState.Pressed)
+        {
+            _isPanning = true;
+            _panStartPoint = e.GetPosition(ViewerImage);
+            ViewerImage.CaptureMouse();
+            ViewerImage.Cursor = Cursors.Hand;
+            e.Handled = true;
+        }
+    }
+
+    private void OnImageMouseMove(object sender, MouseEventArgs e)
+    {
+        if (!_isPanning) return;
+
+        Point currentPoint = e.GetPosition(ViewerImage);
+        double deltaX = currentPoint.X - _panStartPoint.X;
+        double deltaY = currentPoint.Y - _panStartPoint.Y;
+
+        ImageTranslate.X += deltaX;
+        ImageTranslate.Y += deltaY;
+        FaceOverlayTranslate.X += deltaX;
+        FaceOverlayTranslate.Y += deltaY;
+
+        _panStartPoint = currentPoint;
+    }
+
+    private void OnImageMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        if (_isPanning)
+        {
+            _isPanning = false;
+            ViewerImage.ReleaseMouseCapture();
+            ViewerImage.Cursor = Cursors.Arrow;
+            e.Handled = true;
+        }
     }
 
     private void PathText_TextChanged(object sender, TextChangedEventArgs e)
