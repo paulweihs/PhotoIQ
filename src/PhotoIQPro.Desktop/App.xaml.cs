@@ -145,6 +145,7 @@ public partial class App : Application
             new FaceDetectionEngine(AppSettings.ModelsPath));
         services.AddSingleton<IFaceRecognitionService, FaceRecognitionService>();
         services.AddScoped<IFaceService, FaceService>();
+        services.AddSingleton<IFaceModelDownloadService, FaceModelDownloadService>();
         services.AddSingleton<IFolderWatcherService, FolderWatcherService>();
 
         // ── ViewModels ────────────────────────────────────────────────────────
@@ -380,6 +381,38 @@ public partial class App : Application
             }
         }
 
+        // Download face detection models if missing
+        var faceModelDownloader = new FaceModelDownloadService();
+        if (!faceModelDownloader.AreModelsInstalled())
+        {
+            try
+            {
+                splash.SetStatus("Checking face detection models…");
+                await foreach (var progress in faceModelDownloader.EnsureModelsAsync())
+                {
+                    var faceProgress = progress as FaceDownloadProgress;
+                    if (faceProgress != null)
+                    {
+                        switch (faceProgress.Stage)
+                        {
+                            case FaceDownloadStage.Checking:
+                            case FaceDownloadStage.Downloading:
+                                splash.SetStatus(faceProgress.Message);
+                                break;
+                            case FaceDownloadStage.Error:
+                                splash.SetStatus(faceProgress.Message.Split('\n')[0]);
+                                await Task.Delay(2000);
+                                break;
+                        }
+                    }
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.Error($"Face model download failed: {ex.GetType().Name}: {ex.Message}");
+            }
+        }
+
         // Pre-warm CLIP models while the splash is still visible.
         // InferenceSession() can take 5–30 s; doing it here prevents the main window
         // from showing a spinning cursor after first paint.
@@ -388,6 +421,13 @@ public partial class App : Application
         {
             if (Services.GetRequiredService<ITaggingService>() is ClipTaggingService cts)
                 await cts.InitializeAsync();
+        }
+        catch { /* model files may not be installed — degraded mode, not a startup failure */ }
+
+        // Initialize face detection engine if models are available
+        try
+        {
+            await Services.GetRequiredService<FaceDetectionEngine>().InitializeAsync();
         }
         catch { /* model files may not be installed — degraded mode, not a startup failure */ }
 
