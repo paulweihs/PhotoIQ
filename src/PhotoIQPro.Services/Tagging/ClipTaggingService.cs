@@ -178,10 +178,13 @@ public sealed class ClipTaggingService : ITaggingService
     /// </summary>
     internal static IReadOnlyList<TagPrediction> ApplyFilters(IList<TagPrediction> allScores)
     {
+        // Build O(1) lookup dictionary to avoid repeated linear searches
+        var scoresByLabel = allScores.ToDictionary(p => p.Label, p => p.Confidence);
+
         // Resolve indoor/outdoor using raw (pre-threshold) scores so the loser is
         // suppressed even when only one of them crosses the threshold.
-        var indoorScore  = allScores.FirstOrDefault(p => p.Label == "indoor")?.Confidence  ?? 0f;
-        var outdoorScore = allScores.FirstOrDefault(p => p.Label == "outdoor")?.Confidence ?? 0f;
+        var indoorScore  = scoresByLabel.TryGetValue("indoor", out var indoor) ? indoor : 0f;
+        var outdoorScore = scoresByLabel.TryGetValue("outdoor", out var outdoor) ? outdoor : 0f;
         var isIndoor     = indoorScore >= outdoorScore;
         var suppressIndoorOutdoor = (indoorScore > 0 || outdoorScore > 0)
             ? (isIndoor ? "outdoor" : "indoor")

@@ -30,8 +30,9 @@ namespace PhotoIQPro.Desktop.ViewModels;
 /// </remarks>
 public partial class PhotoViewerViewModel : ObservableObject
 {
-    private readonly IMediaFileRepository _repo;
-    private readonly IPersonRepository    _personRepo;
+    private readonly IMediaFileRepository   _repo;
+    private readonly IPersonRepository      _personRepo;
+    private readonly IFaceRecognitionService _faceRecognitionService;
     private IReadOnlyList<MediaFile> _photos = [];
     private int _index;
     private CancellationTokenSource _imageCts      = new();
@@ -46,6 +47,7 @@ public partial class PhotoViewerViewModel : ObservableObject
 
     public event Action?       RequestClose;
     public event Action<Guid>? RequestShowPerson;   // raised when user clicks a named face box
+    public event Action<(Guid PersonId, string PersonName)>? RequestFaceReview;   // raised after inline face assignment to show bulk review dialog
 
     /// <summary>Gets a value indicating whether the current photo has detected faces.</summary>
     public bool HasFaces => Faces.Count > 0;
@@ -105,10 +107,12 @@ public partial class PhotoViewerViewModel : ObservableObject
     /// <summary>Initializes a new instance of the PhotoViewerViewModel.</summary>
     /// <param name="repo">Repository for loading full photo details and managing metadata.</param>
     /// <param name="personRepo">Repository for resolving face person identities.</param>
-    public PhotoViewerViewModel(IMediaFileRepository repo, IPersonRepository personRepo)
+    /// <param name="faceRecognitionService">Service for invalidating face embedding cache after manual assignments.</param>
+    public PhotoViewerViewModel(IMediaFileRepository repo, IPersonRepository personRepo, IFaceRecognitionService faceRecognitionService)
     {
-        _repo       = repo;
-        _personRepo = personRepo;
+        _repo                     = repo;
+        _personRepo               = personRepo;
+        _faceRecognitionService   = faceRecognitionService;
     }
 
     // ── Public entry point ────────────────────────────────────────────────────
@@ -203,6 +207,40 @@ public partial class PhotoViewerViewModel : ObservableObject
         Current.FacesReviewed = true;
         await _repo.MarkFacesReviewedAsync(Current.Id);
     }
+
+    // ── Public helpers for face tagging UI ────────────────────────────────────
+
+    /// <summary>Returns all named persons for the type-ahead dropdown in face assignment popup.</summary>
+    public Task<IReadOnlyList<Person>> GetAllNamedPersonsAsync()
+        => _personRepo.GetAllNamedAsync();
+
+    /// <summary>Returns faces auto-linked to a person in unreviewed photos, ordered by confidence (highest first).</summary>
+    public Task<IReadOnlyList<(Face Face, MediaFile Photo)>> GetUnconfirmedFacesForPersonAsync(Guid personId)
+        => _repo.GetUnconfirmedFacesForPersonAsync(personId);
+
+    /// <summary>Assigns a face to a person by name, triggering cache invalidation and review dialog.</summary>
+    public async Task AssignFacePersonAsync(FaceItemViewModel face, string name)
+    {
+        if (string.IsNullOrWhiteSpace(name)) return;
+        var trimmed    = name.Trim();
+        var normalized = trimmed.ToLowerInvariant();
+        var person = await _personRepo.FindOrCreateByNameAsync(trimmed, normalized);
+        await _personRepo.LinkFaceToPersonAsync(face.FaceId, person.Id, 1.0);
+        face.UpdateAssignment(person.Id, trimmed);
+        await _faceRecognitionService.InvalidateCacheAsync();
+        RequestFaceReview?.Invoke((person.Id, trimmed));
+    }
+
+    /// <summary>Unlinks a face from its auto-assigned person (used in review dialog "No" button).</summary>
+    public async Task UnlinkFaceAsync(Guid faceId)
+    {
+        await _repo.UnlinkFaceFromPersonAsync(faceId);
+        await _faceRecognitionService.InvalidateCacheAsync();
+    }
+
+    /// <summary>Marks a photo's faces as reviewed so the initial prompt doesn't appear again.</summary>
+    public Task MarkFacesReviewedAsync(Guid photoId)
+        => _repo.MarkFacesReviewedAsync(photoId);
 
     // ── Internal ──────────────────────────────────────────────────────────────
 

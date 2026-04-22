@@ -51,6 +51,13 @@ public interface IMediaFileRepository : IRepository<MediaFile>
     Task<IEnumerable<MediaFile>> SearchByEmbeddingAsync(float[] queryEmbedding, float minScore = 0.18f, int topN = 50);
 
     /// <summary>
+    /// Returns up to <paramref name="topN"/> photos visually similar to <paramref name="sourceId"/>,
+    /// ordered by descending CLIP cosine similarity. The source photo itself is excluded.
+    /// Returns empty if the source photo has no CLIP embedding.
+    /// </summary>
+    Task<IEnumerable<MediaFile>> FindSimilarAsync(Guid sourceId, float minScore = 0.18f, int topN = 25);
+
+    /// <summary>
     /// Returns the full file path of every imported photo. Used by Scan Drives to identify
     /// which found files are already in the library without loading full entities.
     /// </summary>
@@ -119,6 +126,12 @@ public interface IMediaFileRepository : IRepository<MediaFile>
     /// <summary>Persists a newly detected Face row (no PersonId yet).</summary>
     Task AddFaceAsync(Face face);
 
+    /// <summary>Batch persists multiple detected faces in a single database operation.</summary>
+    Task BatchAddFacesAsync(IEnumerable<Face> faces);
+
+    /// <summary>Gets multiple faces by their IDs without N+1 queries.</summary>
+    Task<IReadOnlyList<Face>> GetFacesByIdsAsync(IEnumerable<Guid> faceIds);
+
     /// <summary>Returns all faces for a photo, with Person eagerly loaded.</summary>
     Task<IReadOnlyList<Face>> GetFacesForPhotoAsync(Guid mediaFileId);
 
@@ -130,6 +143,12 @@ public interface IMediaFileRepository : IRepository<MediaFile>
 
     /// <summary>Returns the distinct MediaFile IDs of all photos that have at least one face linked to <paramref name="personId"/>.</summary>
     Task<IReadOnlyList<Guid>> GetFacePhotoIdsForPersonAsync(Guid personId);
+
+    /// <summary>Returns faces auto-linked to personId in photos where FacesReviewed=false, ordered by IdentificationConfidence descending.</summary>
+    Task<IReadOnlyList<(Face Face, MediaFile Photo)>> GetUnconfirmedFacesForPersonAsync(Guid personId, int limit = 50);
+
+    /// <summary>Unlinks a face from its person — sets PersonId and IdentificationConfidence to null.</summary>
+    Task UnlinkFaceFromPersonAsync(Guid faceId);
 
     /// <summary>
     /// Returns non-excluded photos taken on the same month+day as <paramref name="date"/>

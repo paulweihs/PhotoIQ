@@ -58,6 +58,8 @@ public interface ISemanticSearchService
     /// <summary>True if the CLIP text model file exists on disk (checked without initialization).</summary>
     bool IsModelAvailable { get; }
     Task<IReadOnlyList<MediaFile>> SearchAsync(string query, int topN = 50);
+    /// <summary>Finds photos visually similar to the given photo, using its stored CLIP embedding.</summary>
+    Task<IReadOnlyList<MediaFile>> FindSimilarAsync(Guid sourceMediaFileId, int topN = 25);
 }
 
 public record TagPrediction(string Label, TagCategory Category, float Confidence);

@@ -4,6 +4,7 @@ using System.Windows.Controls;
 using System.Windows.Input;
 using System.Windows.Media;
 using System.Windows.Shapes;
+using PhotoIQPro.Core.Models;
 using PhotoIQPro.Desktop.ViewModels;
 
 namespace PhotoIQPro.Desktop.Views;
@@ -22,6 +23,9 @@ public partial class PhotoViewerWindow : Window
     private readonly SolidColorBrush _faceUnknownBrush = new(Color.FromArgb(0xAA, 0xFF, 0xFF, 0xFF)); // dim white
     private readonly SolidColorBrush _labelBgBrush     = new(Color.FromArgb(0xCC, 0x1E, 0x1E, 0x2E));
     private readonly SolidColorBrush _labelFgBrush     = new(Color.FromArgb(0xFF, 0xCD, 0xD6, 0xF4));
+
+    private FaceItemViewModel? _pendingFace;
+    private List<Person> _allNamedPersons = [];
 
     public PhotoViewerWindow(PhotoViewerViewModel vm)
     {
@@ -50,6 +54,15 @@ public partial class PhotoViewerWindow : Window
 
         // Redraw on resize so boxes stay aligned when the window is resized.
         FaceOverlayCanvas.SizeChanged += (_, _) => RedrawFaceOverlay();
+
+        // Wire up face review event — show dialog with Yes/No/Skip for auto-recognized faces
+        vm.RequestFaceReview += async args =>
+        {
+            var candidates = await vm.GetUnconfirmedFacesForPersonAsync(args.PersonId);
+            if (candidates.Count == 0) return;
+            var dialog = new FaceReviewDialog(candidates, args.PersonName, vm) { Owner = this };
+            dialog.ShowDialog();
+        };
     }
 
     // ── Face overlay ──────────────────────────────────────────────────────────
@@ -93,7 +106,7 @@ public partial class PhotoViewerWindow : Window
             string label       = isNamed ? face.MatchedName! : "Unknown";
             var    strokeBrush = isNamed ? _faceKnownBrush : _faceUnknownBrush;
 
-            // Bounding box rectangle.
+            // Bounding box rectangle — all faces are now interactive (click to rename/assign).
             var rect = new Rectangle
             {
                 Width           = w,
@@ -101,13 +114,13 @@ public partial class PhotoViewerWindow : Window
                 Stroke          = strokeBrush,
                 StrokeThickness = 2,
                 Fill            = Brushes.Transparent,
-                Cursor          = isNamed ? Cursors.Hand : Cursors.Arrow,
-                ToolTip         = isNamed ? $"Show all photos of {label}" : "Unknown person",
+                Opacity         = 0.0,  // hidden until hover
+                Cursor          = Cursors.Hand,
+                ToolTip         = "Click to name this person",
                 IsHitTestVisible = true,
                 Tag             = face,
             };
-            if (isNamed)
-                rect.MouseLeftButtonDown += FaceRect_Click;
+            rect.MouseLeftButtonDown += FaceRect_AnyClick;
 
             Canvas.SetLeft(rect, left);
             Canvas.SetTop(rect,  top);
@@ -126,12 +139,12 @@ public partial class PhotoViewerWindow : Window
                 Background    = _labelBgBrush,
                 CornerRadius  = new CornerRadius(3),
                 Child         = tb,
-                IsHitTestVisible = isNamed,
-                Cursor        = isNamed ? Cursors.Hand : Cursors.Arrow,
+                Opacity       = 0.0,  // hidden until hover
+                IsHitTestVisible = true,
+                Cursor        = Cursors.Hand,
                 Tag           = face,
             };
-            if (isNamed)
-                labelBorder.MouseLeftButtonDown += FaceRect_Click;
+            labelBorder.MouseLeftButtonDown += FaceRect_AnyClick;
 
             double labelY = top + h + 3;
             // If label would clip below canvas, show it above the box instead.
@@ -143,14 +156,106 @@ public partial class PhotoViewerWindow : Window
         }
     }
 
-    private void FaceRect_Click(object sender, MouseButtonEventArgs e)
+    // ── Hover show/hide ───────────────────────────────────────────────────────
+
+    private void FaceOverlay_MouseEnter(object sender, MouseEventArgs e)
     {
-        if (sender is FrameworkElement fe && fe.Tag is FaceItemViewModel face)
+        foreach (UIElement child in FaceOverlayCanvas.Children)
+            child.Opacity = 1.0;
+    }
+
+    private void FaceOverlay_MouseLeave(object sender, MouseEventArgs e)
+    {
+        if (FaceNamePopup.IsOpen) return;  // keep visible while popup is open
+        foreach (UIElement child in FaceOverlayCanvas.Children)
+            child.Opacity = 0.0;
+    }
+
+    // ── Face click → popup ─────────────────────────────────────────────────────
+
+    private async void FaceRect_AnyClick(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not FrameworkElement fe || fe.Tag is not FaceItemViewModel face) return;
+        await OpenFacePopupAsync(face, fe);
+        e.Handled = true;
+    }
+
+    private async void SidebarFaceThumbnail_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not FrameworkElement fe || fe.Tag is not FaceItemViewModel face) return;
+        await OpenFacePopupAsync(face, fe);
+        e.Handled = true;
+    }
+
+    private async Task OpenFacePopupAsync(FaceItemViewModel face, FrameworkElement anchor)
+    {
+        _pendingFace = face;
+        var vm = (PhotoViewerViewModel)DataContext;
+        _allNamedPersons = (await vm.GetAllNamedPersonsAsync()).ToList();
+
+        // Populate combo with all names; pre-fill if already named
+        FaceNameCombo.ItemsSource = _allNamedPersons.Select(p => p.Name).ToList();
+        FaceNameCombo.Text = face.MatchedName ?? "";
+        FacePopupTitle.Text = face.IsNamed ? $"Rename \"{face.MatchedName}\"" : "Who is this?";
+
+        // Position popup below the anchor element in screen coordinates
+        var screenPt = anchor.PointToScreen(new Point(0, anchor.ActualHeight + 4));
+        FaceNamePopup.HorizontalOffset = screenPt.X;
+        FaceNamePopup.VerticalOffset   = screenPt.Y;
+        FaceNamePopup.IsOpen           = true;
+        FaceNameCombo.Focus();
+    }
+
+    // ── Type-ahead filtering ───────────────────────────────────────────────────
+
+    private void FaceNameCombo_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)
+        {
+            _ = SaveFacePopupAsync();
+            e.Handled = true;
+            return;
+        }
+        if (e.Key == Key.Escape) { FaceNameCancel_Click(sender, e); return; }
+
+        // After any other key, filter dropdown options
+        Dispatcher.InvokeAsync(() =>
+        {
+            var text = FaceNameCombo.Text;
+            var filtered = _allNamedPersons
+                .Select(p => p.Name)
+                .Where(n => n != null && n.Contains(text, StringComparison.OrdinalIgnoreCase))
+                .ToList();
+            FaceNameCombo.ItemsSource   = filtered;
+            FaceNameCombo.IsDropDownOpen = filtered.Count > 0 && text.Length > 0;
+        });
+    }
+
+    // ── Save / Cancel ──────────────────────────────────────────────────────────
+
+    private async void FaceNameSave_Click(object sender, RoutedEventArgs e)
+        => await SaveFacePopupAsync();
+
+    private async Task SaveFacePopupAsync()
+    {
+        if (_pendingFace == null) return;
+        var name = FaceNameCombo.Text.Trim();
+        var face = _pendingFace;
+        _pendingFace = null;
+        FaceNamePopup.IsOpen = false;
+
+        if (!string.IsNullOrWhiteSpace(name))
         {
             var vm = (PhotoViewerViewModel)DataContext;
-            vm.JumpToPersonCommand.Execute(face);
-            e.Handled = true;
+            await vm.AssignFacePersonAsync(face, name);
+            RedrawFaceOverlay();  // refresh box color + label
         }
+    }
+
+    private void FaceNameCancel_Click(object sender, RoutedEventArgs e)
+    {
+        FaceNamePopup.IsOpen = false;
+        _pendingFace = null;
     }
 
     // ── Zoom ─────────────────────────────────────────────────────────────────

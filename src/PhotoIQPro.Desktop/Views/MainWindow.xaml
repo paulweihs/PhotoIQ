@@ -258,7 +258,7 @@
                                  TabIndex="1"
                                  Text="{Binding PendingSearchQuery, UpdateSourceTrigger=PropertyChanged}"
                                  Style="{StaticResource SearchBoxStyle}"
-                                 Tag="Search photos, tags, descriptions…"
+                                 Tag="Search tags, descriptions, or describe a scene…"
                                  Padding="10,0,28,0"
                                  AutomationProperties.Name="Search photos"
                                  PreviewKeyDown="OnSearchBoxPreviewKeyDown"/>
@@ -323,6 +323,15 @@
                             </ControlTemplate>
                         </Button.Template>
                     </Button>
+                    <!-- Search progress indicator — shown while CLIP inference is running -->
+                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,4,0,0"
+                                Visibility="{Binding ShowSearchProgress, Converter={StaticResource BoolToVis}}">
+                        <ProgressBar IsIndeterminate="True" Width="40" Height="3"
+                                     Foreground="{StaticResource AccentBrush}"
+                                     Background="Transparent" BorderThickness="0"
+                                     VerticalAlignment="Center" Margin="0,0,6,0"/>
+                        <TextBlock Text="Searching with AI…" Foreground="#888888" FontSize="11" VerticalAlignment="Center"/>
+                    </StackPanel>
                     <!-- Semantic search badge — shown when CLIP embedding fallback was used -->
                     <Border Background="#1A6EC6E8" BorderBrush="#406EC6E8" BorderThickness="1"
                             CornerRadius="4" Padding="8,2" Margin="0,4,0,0"
@@ -340,6 +349,16 @@
                             Visibility="{Binding ShowSemanticUnavailableHint, Converter={StaticResource BoolToVis}}">
                         <TextBlock Text="Visual similarity search unavailable — AI model not installed"
                                    Foreground="#F9E2AF" FontSize="11"/>
+                    </Border>
+                    <!-- Similarity search badge — shown when viewing similar photos -->
+                    <Border Background="#1A9B59D6" BorderBrush="#409B59D6" BorderThickness="1"
+                            CornerRadius="4" Padding="8,2" Margin="0,4,0,0" HorizontalAlignment="Left"
+                            ToolTip="Gallery filtered to photos visually similar to the selected photo"
+                            Visibility="{Binding IsSimilaritySearch, Converter={StaticResource BoolToVis}}">
+                        <TextBlock Foreground="#9B59D6" FontSize="11">
+                            <Run Text="Similar to: "/>
+                            <Run Text="{Binding SimilaritySourceName}"/>
+                        </TextBlock>
                     </Border>
                 </Grid>
 
@@ -1093,9 +1112,20 @@
                                Foreground="{DynamicResource ForegroundBrush}"
                                HorizontalAlignment="Center" Margin="0,16,0,8"
                                Text="{Binding NoResultsMessage}"/>
+                    <!-- Empty state hints — shown based on search mode -->
+                    <TextBlock Text="No matches found — try describing a scene, like 'sunset at the beach'"
+                               FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}"
+                               HorizontalAlignment="Center" Margin="0,0,0,20"
+                               Visibility="{Binding IsSemanticAvailable, Converter={StaticResource BoolToVis}}"/>
                     <TextBlock Text="Try a different tag, description, or filename"
                                FontSize="13" Foreground="{DynamicResource SecondaryTextBrush}"
-                               HorizontalAlignment="Center" Margin="0,0,0,20"/>
+                               HorizontalAlignment="Center" Margin="0,0,0,20">
+                        <TextBlock.Visibility>
+                            <Binding Path="IsSemanticAvailable" Converter="{StaticResource BoolToVis}">
+                                <Binding.ConverterParameter>Inverse</Binding.ConverterParameter>
+                            </Binding>
+                        </TextBlock.Visibility>
+                    </TextBlock>
                     <Button Content="Clear filter"
                             Command="{Binding ClearSearchCommand}"
                             Style="{DynamicResource PrimaryButtonStyle}"
@@ -1258,6 +1288,8 @@
                                         <Separator/>
                                         <MenuItem Header="Re-analyze with AI" Command="{Binding ReanalyzeSelectedCommand}"
                                                   IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                        <MenuItem Header="Find similar photos" Command="{Binding FindSimilarCommand}"
+                                                  Visibility="{Binding SelectedHasEmbedding, Converter={StaticResource BoolToVis}}"/>
                                         <MenuItem Header="Add to Favorites"  Command="{Binding ToggleFavoriteCommand}"/>
                                         <MenuItem Header="Add to Album"      Command="{Binding AddToAlbumCommand}"/>
                                         <Separator/>
@@ -1417,6 +1449,8 @@
                                           IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
                                 <MenuItem Header="Re-analyze with AI" Command="{Binding ReanalyzeSelectedCommand}"
                                           IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                <MenuItem Header="Find similar photos" Command="{Binding FindSimilarCommand}"
+                                          Visibility="{Binding SelectedHasEmbedding, Converter={StaticResource BoolToVis}}"/>
                                 <MenuItem Header="Add to Favorites"   Command="{Binding ToggleFavoriteCommand}"/>
                                 <MenuItem Header="Add to Album"       Command="{Binding AddToAlbumCommand}"/>
                                 <MenuItem Header="Add Tag…"           Command="{Binding ShowAddTagPopupCommand}"/>
@@ -1943,12 +1977,22 @@
                         </ItemsControl>
                     </Expander>
 
+                    <!-- Find Similar Photos -->
+                    <Button Content="Find similar photos"
+                            Command="{Binding FindSimilarCommand}"
+                            Style="{DynamicResource PrimaryButtonStyle}"
+                            HorizontalAlignment="Stretch"
+                            Margin="0,16,0,0"
+                            Padding="12,8"
+                            ToolTip="Find photos that look visually similar, using AI"
+                            Visibility="{Binding SelectedHasEmbedding, Converter={StaticResource BoolToVis}}"/>
+
                     <!-- Find Related Images -->
                     <Button Content="🔗  Find related images"
                             Command="{Binding FindRelatedImagesCommand}"
                             Style="{DynamicResource PrimaryButtonStyle}"
                             HorizontalAlignment="Stretch"
-                            Margin="0,16,0,0"
+                            Margin="0,8,0,0"
                             Padding="12,8"
                             ToolTip="Filter the gallery to photos taken at the same time or nearby location"/>
 

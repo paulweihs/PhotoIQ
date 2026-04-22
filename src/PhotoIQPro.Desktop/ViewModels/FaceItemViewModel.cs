@@ -10,7 +10,7 @@ namespace PhotoIQPro.Desktop.ViewModels;
 public partial class FaceItemViewModel : ObservableObject
 {
     public Guid    FaceId        { get; }
-    public Guid?   PersonId      { get; private set; }
+    public Guid?   PersonId      { get; set; }
     public string? ThumbnailPath { get; }
 
     // Normalized coordinates (0–1) relative to the source image.
@@ -21,7 +21,7 @@ public partial class FaceItemViewModel : ObservableObject
     public double FaceHeight { get; }
 
     /// <summary>Name of the recognised person, or null if unrecognised.</summary>
-    public string? MatchedName { get; }
+    [ObservableProperty] private string? _matchedName;
 
     /// <summary>Editable name — pre-filled with the matched name so users can correct it.</summary>
     [ObservableProperty] private string _nameInput;
@@ -33,11 +33,19 @@ public partial class FaceItemViewModel : ObservableObject
         FaceId        = face.Id;
         PersonId      = face.PersonId;
         ThumbnailPath = face.ThumbnailPath;
-        MatchedName   = personName;
+        _matchedName  = personName;
         _nameInput    = personName ?? "";
         X             = face.X;
         Y             = face.Y;
         FaceWidth     = face.Width;
         FaceHeight    = face.Height;
+    }
+
+    /// <summary>Updates the person assignment after user-provided name is saved.</summary>
+    public void UpdateAssignment(Guid personId, string name)
+    {
+        PersonId    = personId;
+        MatchedName = name;
+        NameInput   = name;
     }
 }

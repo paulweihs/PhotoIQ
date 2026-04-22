@@ -237,6 +237,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
     private readonly HashSet<Guid> _relatedPhotoIds = [];
     private CancellationTokenSource _relatedRefreshCts = new();
 
+    // ── Similarity search mode ──────────────────────────────────────────────────
+    // When active the gallery shows only photos visually similar to a source photo.
+    private Guid? _similaritySourceId;
+
     private static readonly int[]    _distStepsMeters   = [100, 500, 1000, 5000, 10000, 50000];
     private static readonly string[] _distMetricLabels  = ["100 m", "500 m", "1 km", "5 km", "10 km", "50 km"];
     private static readonly string[] _distImperialLabels = ["330 ft", "0.3 mi", "0.6 mi", "3 mi", "6 mi", "31 mi"];
@@ -340,6 +344,38 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     private bool CanFindRelatedImages() => SelectedMediaFile != null;
 
+    [RelayCommand(CanExecute = nameof(CanFindSimilar))]
+    private async Task FindSimilarAsync()
+    {
+        if (SelectedMediaFile == null) return;
+        var sourceId   = SelectedMediaFile.Id;
+        var sourceName = SelectedMediaFile.FileName;
+
+        _similaritySourceId  = sourceId;
+        SimilaritySourceName = sourceName;
+        PendingSearchQuery   = $"Similar: {sourceName}";
+        SearchQuery          = PendingSearchQuery;
+        IsSimilaritySearch   = true;
+        IsSemanticSearch     = false;
+
+        IsLoading = true;
+        try
+        {
+            var results = await _semanticSearch.FindSimilarAsync(sourceId);
+            var sorted  = ApplySortOrder(results, _sortHistory).ToList();
+            MediaFiles  = new ObservableCollection<MediaFile>(sorted);
+            PhotoCount  = sorted.Count;
+            TotalLibraryCount = await WithRepo(r => r.CountAsync());
+            OnPropertyChanged(nameof(PhotoCountText));
+            OnPropertyChanged(nameof(HasNoResults));
+            SelectedMediaFile = MediaFiles.FirstOrDefault(m => m.Id == sourceId)
+                             ?? MediaFiles.FirstOrDefault();
+        }
+        finally { IsLoading = false; }
+    }
+
+    private bool CanFindSimilar() => SelectedHasEmbedding && !IsSimilaritySearch;
+
     [RelayCommand]
     private async Task ExitRelatedImagesModeAsync()
     {
@@ -431,8 +467,15 @@ public partial class MainViewModel : ObservableObject, IDisposable
     [ObservableProperty] private string _pendingSearchQuery = "";
     private CancellationTokenSource _loadCts = new();
     [ObservableProperty] private double _thumbnailSize = 180;
-    [ObservableProperty] private bool _isLoading;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(ShowSearchProgress))]
+    private bool _isLoading;
     [ObservableProperty] private bool _isSemanticSearch;
+    [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasNoResults))]
+    [NotifyPropertyChangedFor(nameof(IsLibraryEmpty))]
+    private bool _isSimilaritySearch;
+    [ObservableProperty] private string _similaritySourceName = "";
     [ObservableProperty] private int _offlineCount;
     [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(HasPendingDescriptions))]
@@ -520,12 +563,14 @@ public partial class MainViewModel : ObservableObject, IDisposable
         await LoadAsync();
     }
 
-    public bool IsLibraryEmpty      => PhotoCount == 0 && string.IsNullOrWhiteSpace(SearchQuery) && !IsRelatedImagesMode && !IsPersonFilterActive;
-    public bool HasNoResults        => PhotoCount == 0 && !string.IsNullOrWhiteSpace(SearchQuery) && !IsRelatedImagesMode && !IsPersonFilterActive;
+    public bool IsLibraryEmpty      => PhotoCount == 0 && string.IsNullOrWhiteSpace(SearchQuery) && !IsRelatedImagesMode && !IsPersonFilterActive && !IsSimilaritySearch;
+    public bool HasNoResults        => PhotoCount == 0 && !string.IsNullOrWhiteSpace(SearchQuery) && !IsRelatedImagesMode && !IsPersonFilterActive && !IsSimilaritySearch;
     public bool IsRelatedNoResults  => IsRelatedImagesMode && PhotoCount == 0;
     public bool IsSearchActive               => !string.IsNullOrWhiteSpace(SearchQuery);
     public bool IsSemanticAvailable          => _semanticSearch.IsModelAvailable;
     public bool ShowSemanticUnavailableHint  => IsSearchActive && !IsSemanticAvailable;
+    public bool ShowSearchProgress           => IsLoading && IsSearchActive;
+    public bool SelectedHasEmbedding         => SelectedMediaFile?.ClipEmbeddingBytes != null && IsSemanticAvailable;
     public string NoResultsMessage  => $"No photos found for \"{SearchQuery}\"";
     // Legacy alias kept for any existing bindings
     public bool IsEmpty => PhotoCount == 0;
@@ -1019,6 +1064,10 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
     private async Task LoadAsync()
     {
+        // Do not overwrite similarity search results from background reloads.
+        // Similarity mode is exited only by ClearSearchAsync or explicit navigation.
+        if (IsSimilaritySearch) return;
+
         // Cancel any in-flight load so stale results never overwrite a newer query.
         try { _loadCts.Cancel(); } catch { /* Already cancelled or disposed */ }
         try { _loadCts.Dispose(); } catch { /* Already disposed */ }
@@ -2167,6 +2216,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
     {
         PendingSearchQuery = "";
         SearchQuery        = "";
+        _similaritySourceId = null;
+        IsSimilaritySearch  = false;
+        SimilaritySourceName = "";
         await LoadAsync();
     }
 
@@ -3026,6 +3078,8 @@ public partial class MainViewModel : ObservableObject, IDisposable
         OnPropertyChanged(nameof(SelectedFolderIsExcluded));
         OnPropertyChanged(nameof(HasAiDescription));
         OnPropertyChanged(nameof(DescriptionAttemptedButFailed));
+        OnPropertyChanged(nameof(SelectedHasEmbedding));
+        FindSimilarCommand.NotifyCanExecuteChanged();
     }
 
     private void InvalidateDescriptionAndCaption()
@@ -3288,6 +3342,9 @@ public partial class MainViewModel : ObservableObject, IDisposable
 
         // Semantic search cannot be evaluated in-memory — skip live adds.
         if (IsSemanticSearch) return false;
+
+        // Similarity search cannot be evaluated in-memory — skip live adds.
+        if (IsSimilaritySearch) return false;
 
         // Simple text match across FTS-indexed fields.
         var q = SearchQuery.Trim();

@@ -90,4 +90,23 @@ public sealed class SemanticSearchService : ISemanticSearchService
         var results = await repo.SearchByEmbeddingAsync(embeddings[0], topN: topN);
         return [..results];
     }
+
+    /// <summary>
+    /// Finds photos visually similar to a given photo using its stored CLIP embedding.
+    /// </summary>
+    /// <remarks>
+    /// Uses the stored CLIP embedding bytes from the source photo to search for similar photos.
+    /// This method does not require the text encoder to be initialized (embeddings are precomputed).
+    /// Returns empty if the source photo has no CLIP embedding.
+    /// </remarks>
+    /// <param name="sourceMediaFileId">The ID of the photo to find similar matches for.</param>
+    /// <param name="topN">Maximum number of results to return (default 25).</param>
+    /// <returns>Up to topN MediaFiles ranked by visual similarity to the source photo, highest first.</returns>
+    public async Task<IReadOnlyList<MediaFile>> FindSimilarAsync(Guid sourceMediaFileId, int topN = 25)
+    {
+        using var scope = _scopeFactory.CreateScope();
+        var repo = scope.ServiceProvider.GetRequiredService<IMediaFileRepository>();
+        var results = await repo.FindSimilarAsync(sourceMediaFileId, topN: topN);
+        return [..results];
+    }
 }

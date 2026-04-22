@@ -26,6 +26,9 @@ public interface IPersonRepository
     /// <summary>Links a Face to a Person and records the identification confidence.</summary>
     Task LinkFaceToPersonAsync(Guid faceId, Guid personId, double confidence);
 
+    /// <summary>Batch links multiple faces to the same person with the same confidence score in a single operation.</summary>
+    Task BatchLinkFacesToPersonAsync(IEnumerable<Guid> faceIds, Guid personId, double confidence);
+
     /// <summary>
     /// Finds an existing named Person whose NormalizedName matches <paramref name="normalizedName"/>,
     /// or creates a new named Person. Returns the Person.

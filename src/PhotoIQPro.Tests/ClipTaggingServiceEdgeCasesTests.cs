@@ -82,7 +82,8 @@ public class ClipTaggingServiceEdgeCasesTests
         // Verifies floating-point precision doesn't cause off-by-one errors
 
         // This documents expected behavior for borderline confidence scores
-        Assert.NotNull(dotProductValue);
+        // dotProductValue is a double and will be properly compared with threshold in actual usage
+        Assert.True(dotProductValue >= 0.0 && dotProductValue <= 1.0, "Test data should be in valid confidence range");
     }
 
     [Fact]

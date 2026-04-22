@@ -102,6 +102,22 @@ public class PersonRepository : IPersonRepository
         await _ctx.SaveChangesAsync();
     }
 
+    /// <summary>Batch links multiple faces to the same person with the same confidence score.</summary>
+    /// <remarks>
+    /// More efficient than calling LinkFaceToPersonAsync in a loop. Single database operation.
+    /// Silently succeeds even if some faces don't exist.
+    /// </remarks>
+    public async Task BatchLinkFacesToPersonAsync(IEnumerable<Guid> faceIds, Guid personId, double confidence)
+    {
+        var ids = faceIds.ToList();
+        if (ids.Count == 0) return;
+        await _ctx.Faces
+            .Where(f => ids.Contains(f.Id))
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(f => f.PersonId,                 personId)
+                .SetProperty(f => f.IdentificationConfidence, confidence));
+    }
+
     /// <summary>Finds a person by normalized name, or creates one if not found.</summary>
     /// <remarks>
     /// Used when importing faces with metadata tags (e.g., EXIF Person keywords) or when the user

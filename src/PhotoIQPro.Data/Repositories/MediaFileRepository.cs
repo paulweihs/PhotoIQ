@@ -304,6 +304,22 @@ public class MediaFileRepository : IMediaFileRepository
         await _context.SaveChangesAsync();
     }
 
+    public async Task BatchAddFacesAsync(IEnumerable<Face> faces)
+    {
+        _context.Faces.AddRange(faces);
+        await _context.SaveChangesAsync();
+    }
+
+    public async Task<IReadOnlyList<Face>> GetFacesByIdsAsync(IEnumerable<Guid> faceIds)
+    {
+        var ids = faceIds.ToList();
+        return await _context.Faces
+            .Where(f => ids.Contains(f.Id))
+            .Include(f => f.Person)
+            .AsNoTracking()
+            .ToListAsync();
+    }
+
     public async Task<IReadOnlyList<Face>> GetFacesForPhotoAsync(Guid mediaFileId)
         => await _context.Faces
             .Include(f => f.Person)
@@ -334,6 +350,27 @@ public class MediaFileRepository : IMediaFileRepository
             .Select(f => f.MediaFileId)
             .Distinct()
             .ToListAsync();
+
+    public async Task<IReadOnlyList<(Face, MediaFile)>> GetUnconfirmedFacesForPersonAsync(Guid personId, int limit = 50)
+    {
+        var rows = await _context.Faces
+            .Where(f => f.PersonId == personId && !f.MediaFile!.FacesReviewed)
+            .OrderByDescending(f => f.IdentificationConfidence)
+            .Take(limit)
+            .Include(f => f.MediaFile)
+            .AsNoTracking()
+            .ToListAsync();
+        return rows.Select(f => (f, f.MediaFile!)).ToList();
+    }
+
+    public async Task UnlinkFaceFromPersonAsync(Guid faceId)
+    {
+        await _context.Faces
+            .Where(f => f.Id == faceId)
+            .ExecuteUpdateAsync(s => s
+                .SetProperty(f => f.PersonId,                 (Guid?)null)
+                .SetProperty(f => f.IdentificationConfidence, (double?)null));
+    }
 
     public async Task<IReadOnlyList<MediaFile>> GetOnThisDayAsync(DateTime date)
     {
@@ -641,6 +678,25 @@ public class MediaFileRepository : IMediaFileRepository
             .Select(x => fileById[x.Id]);
     }
 
+    public async Task<IEnumerable<MediaFile>> FindSimilarAsync(Guid sourceId, float minScore = 0.18f, int topN = 25)
+    {
+        // Load the source photo's embedding bytes.
+        var sourceEmbeddingBytes = await _context.MediaFiles
+            .Where(m => m.Id == sourceId)
+            .Select(m => m.ClipEmbeddingBytes)
+            .FirstOrDefaultAsync();
+
+        if (sourceEmbeddingBytes == null) return [];
+
+        var sourceEmbedding = BytesToFloats(sourceEmbeddingBytes);
+
+        // Request topN+1 because the source photo itself scores 1.0 and will appear in results.
+        var results = await SearchByEmbeddingAsync(sourceEmbedding, minScore, topN + 1);
+
+        // Filter out the source photo and return exactly topN results.
+        return results.Where(m => m.Id != sourceId).Take(topN);
+    }
+
     private static float EmbeddingDot(float[] query, byte[] storedBytes)
     {
         int dim = storedBytes.Length / 4;
@@ -649,6 +705,14 @@ public class MediaFileRepository : IMediaFileRepository
         for (int i = 0; i < len; i++)
             sum += query[i] * BitConverter.ToSingle(storedBytes, i * 4);
         return sum;
+    }
+
+    private static float[] BytesToFloats(byte[] bytes)
+    {
+        var floats = new float[bytes.Length / 4];
+        for (int i = 0; i < floats.Length; i++)
+            floats[i] = BitConverter.ToSingle(bytes, i * 4);
+        return floats;
     }
 
     public async Task<bool> ExistsAsync(string filePath) => await _context.MediaFiles.AnyAsync(m => m.FilePath == filePath);

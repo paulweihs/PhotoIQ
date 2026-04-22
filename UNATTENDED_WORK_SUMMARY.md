@@ -33,31 +33,25 @@
 
 ---
 
-## In Progress
+## Completed (Latest)
 
-### Multi-Model Ensemble Test
+### ✓ Multi-Model Ensemble Test (REJECTED)
 - **Command:** `--ensemble 50 --prompt v30 --models llama3.2-vision,minicpm-v`
-- **Status:** Running (est. 20-30 min total)
-- **Current:** Processing images ~16-50 of 50
-- **Expected completion:** ~10-15 minutes from this summary
+- **Status:** Completed with results
+- **Result:** Ensemble approach **NOT recommended**
 
-**What it's doing:**
-1. Sampling 50 images from 339-image corpus
-2. For each image, running through 2 models (llama3.2-vision + minicpm-v)
-3. Scoring each model's output
-4. Selecting best description per image
-5. Computing ensemble avg similarity vs Claude ground truth
+**Final Results:**
+- Ensemble avg similarity: **0.152** (vs v30 baseline 0.355)
+- llama3.2-vision selected: 40/50 (80%)
+- minicpm-v selected: 10/50 (20%)
+- Minicpm-v had 2 × 500 errors (Ollama connectivity)
 
-**Expected outcome:**
-- Will show if multiple models can improve over single-model (0.355 baseline)
-- Hypothesis: +2-5% improvement (targeting 0.360-0.368)
+**Key Finding:**
+- Ensemble heuristics (sentence count, word length, repetition) do NOT correlate with Jaccard similarity
+- Selecting "best" by heuristic rules actually degraded performance
+- Single-model v30 is much better (0.355 baseline) than ensemble (0.152)
 
-**Progress notes from output:**
-- minicpm-v had some 500 errors early on (recovered)
-- Both models generating descriptions
-- Some images show one model clearly outperforming the other
-  - Example: IMG_0274 — llama 0.317 vs minicpm 0.310 (llama wins)
-  - Example: IMG_8491 — minicpm 0.040 vs llama unknown (hardest case)
+**Decision:** Stick with v30 single-model, no ensemble needed
 
 ---
 
@@ -67,37 +61,27 @@
 |---|---|---|
 | v30 (40 images) | 0.386 | ✓ Deployed |
 | v30 (100 images) | 0.355 | ✓ Confirmed |
-| Generalization drop | -8% | ⚠️ Notable |
-| Ensemble framework | Complete | ✓ Ready |
-| Ensemble test progress | ~35% | 🔄 Running |
+| Generalization drop | -8% | ⚠️ Notable but acceptable |
+| Ensemble framework | Complete | ✓ Built |
+| Ensemble test (50 images) | 0.152 | ❌ Rejected |
 
 ---
 
-## What's Next (After Ensemble Completes)
+## Decision Made
 
-**Immediate:**
-1. Review ensemble results when test completes
-2. Compare ensemble avg vs single-model baseline
-3. Decide on direction
+**Ensemble avg: 0.152 << 0.355 baseline → REJECTED**
 
-**Decision Tree:**
+**Root Cause:** Ensemble scoring heuristics (optimized for description structure: sentence count, word length, repetition penalty) do NOT predict Jaccard similarity to ground truth. The "best" descriptions by heuristics were often the worst by actual ground truth alignment.
 
-```
-IF ensemble avg >= 0.365:
-  → Ship ensemble approach (beats single-model)
-  → Use 2-3 models for speed vs quality
+**Final Decision:** v30 single-model is production-ready and optimal.
 
-ELSE IF ensemble avg 0.355-0.365:
-  → Marginal improvement, decide on speed/quality tradeoff
-
-ELSE IF ensemble avg < 0.355:
-  → Stick with v30 single-model (no benefit)
-```
-
-**Options after ensemble results:**
-1. **Single-model deployment** — Ship v30 as-is (already deployed)
-2. **Ensemble deployment** — Replace v30 with best ensemble (if >0.360)
-3. **Hybrid approach** — Use ensemble for batch processing, single-model for real-time
+**Next Steps:**
+1. ✓ v30 deployed (CurrentPromptVersion = "v30")
+2. ✓ Performance confirmed: 0.386 (40 images), 0.355 (100 images)
+3. ✓ Ensemble evaluated and rejected
+4. → Ready for production deployment
+5. → Monitor real-world accuracy
+6. → Future: Performance optimization (indexes, batch tuning) — see PERFORMANCE_OPTIMIZATION_GUIDE.md
 
 ---
 

@@ -20,7 +20,7 @@ public class ImportService : IImportService
     private readonly IAnalysisMetricRepository  _metrics;
     private readonly IFaceService               _faces;
 
-    private const int AnalysisBatchSize = 5;
+    private const int AnalysisBatchSize = 10;
 
     /// <summary>
     /// Initializes a new instance of the ImportService.

@@ -422,3 +422,173 @@ public class OnThisDayAndFaceQueryTests : RepositoryTestBase
         await _repo.MarkFacesReviewedAsync(Guid.NewGuid()); // should not throw
     }
 }
+
+/// <summary>
+/// Tests for new batch operations: BatchAddFacesAsync, BatchLinkFacesToPersonAsync, GetFacesByIdsAsync.
+/// These ensure the optimizations work correctly without N+1 query patterns.
+/// </summary>
+public class FaceBatchOperationsTests : RepositoryTestBase
+{
+    private readonly MediaFileRepository _repo;
+    private readonly PersonRepository    _people;
+
+    public FaceBatchOperationsTests()
+    {
+        _repo   = new MediaFileRepository(Db);
+        _people = new PersonRepository(Db);
+    }
+
+    // ── BatchAddFacesAsync ────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task BatchAddFacesAsync_PersistsMultipleFaces()
+    {
+        var photo = Photo(@"C:\batch.jpg");
+        await _repo.AddAsync(photo);
+
+        var faces = new[]
+        {
+            new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.1, Y = 0.1, Width = 0.2, Height = 0.2 },
+            new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.5, Y = 0.1, Width = 0.2, Height = 0.2 },
+            new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.7, Y = 0.5, Width = 0.15, Height = 0.15 },
+        };
+
+        await _repo.BatchAddFacesAsync(faces);
+
+        var fetched = await _repo.GetFacesForPhotoAsync(photo.Id);
+        Assert.Equal(3, fetched.Count);
+    }
+
+    [Fact]
+    public async Task BatchAddFacesAsync_EmptyList_DoesNotThrow()
+    {
+        await _repo.BatchAddFacesAsync(Array.Empty<PhotoIQPro.Core.Models.Face>());
+        // Should not throw
+    }
+
+    [Fact]
+    public async Task BatchAddFacesAsync_SingleFace_Works()
+    {
+        var photo = Photo(@"C:\single.jpg");
+        await _repo.AddAsync(photo);
+
+        var face = new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.3, Y = 0.3, Width = 0.2, Height = 0.2 };
+        await _repo.BatchAddFacesAsync(new[] { face });
+
+        var fetched = await _repo.GetFacesForPhotoAsync(photo.Id);
+        Assert.Single(fetched);
+    }
+
+    // ── GetFacesByIdsAsync ────────────────────────────────────────────────────────
+
+    [Fact]
+    public async Task GetFacesByIdsAsync_RetrievesMultipleFaces()
+    {
+        var photo = Photo(@"C:\getbyid.jpg");
+        await _repo.AddAsync(photo);
+
+        var f1 = new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.1, Y = 0.1, Width = 0.2, Height = 0.2 };
+        var f2 = new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.5, Y = 0.1, Width = 0.2, Height = 0.2 };
+        Db.Faces.AddRange(f1, f2);
+        await Db.SaveChangesAsync();
+
+        var retrieved = await _repo.GetFacesByIdsAsync(new[] { f1.Id, f2.Id });
+
+        Assert.Equal(2, retrieved.Count);
+        Assert.Contains(retrieved, f => f.Id == f1.Id);
+        Assert.Contains(retrieved, f => f.Id == f2.Id);
+    }
+
+    [Fact]
+    public async Task GetFacesByIdsAsync_EmptyList_ReturnsEmpty()
+    {
+        var retrieved = await _repo.GetFacesByIdsAsync(Array.Empty<Guid>());
+        Assert.Empty(retrieved);
+    }
+
+    [Fact]
+    public async Task GetFacesByIdsAsync_PartialMismatch_ReturnsOnlyFound()
+    {
+        var photo = Photo(@"C:\partial.jpg");
+        await _repo.AddAsync(photo);
+
+        var f1 = new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.1, Y = 0.1, Width = 0.2, Height = 0.2 };
+        Db.Faces.Add(f1);
+        await Db.SaveChangesAsync();
+
+        var nonexistentId = Guid.NewGuid();
+        var retrieved = await _repo.GetFacesByIdsAsync(new[] { f1.Id, nonexistentId });
+
+        Assert.Single(retrieved);
+        Assert.Equal(f1.Id, retrieved[0].Id);
+    }
+
+    // ── BatchLinkFacesToPersonAsync ────────────────────────────────────────────────
+
+    [Fact]
+    public async Task BatchLinkFacesToPersonAsync_LinksMultipleFaces()
+    {
+        var photo = Photo(@"C:\batchlink.jpg");
+        await _repo.AddAsync(photo);
+
+        var person = await _people.FindOrCreateByNameAsync("BatchTest", "batchtest");
+
+        var f1 = new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.1, Y = 0.1, Width = 0.2, Height = 0.2 };
+        var f2 = new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.5, Y = 0.1, Width = 0.2, Height = 0.2 };
+        Db.Faces.AddRange(f1, f2);
+        await Db.SaveChangesAsync();
+
+        // Verify faces exist before linking
+        var before1 = await Db.Faces.FirstOrDefaultAsync(f => f.Id == f1.Id);
+        var before2 = await Db.Faces.FirstOrDefaultAsync(f => f.Id == f2.Id);
+        Assert.NotNull(before1);
+        Assert.NotNull(before2);
+        Assert.Null(before1.PersonId);
+        Assert.Null(before2.PersonId);
+
+        // Link both faces to the person in a single batch operation
+        await _people.BatchLinkFacesToPersonAsync(new[] { f1.Id, f2.Id }, person.Id, 0.95);
+
+        // ExecuteUpdateAsync doesn't refresh in-memory entities; must reload from DB
+        Db.ChangeTracker.Clear();
+        var linked1 = await Db.Faces.FirstOrDefaultAsync(f => f.Id == f1.Id);
+        var linked2 = await Db.Faces.FirstOrDefaultAsync(f => f.Id == f2.Id);
+
+        Assert.NotNull(linked1);
+        Assert.NotNull(linked2);
+        Assert.Equal(person.Id, linked1.PersonId);
+        Assert.Equal(person.Id, linked2.PersonId);
+        Assert.Equal(0.95, linked1.IdentificationConfidence);
+        Assert.Equal(0.95, linked2.IdentificationConfidence);
+    }
+
+    [Fact]
+    public async Task BatchLinkFacesToPersonAsync_EmptyList_DoesNotThrow()
+    {
+        var person = await _people.FindOrCreateByNameAsync("Empty", "empty");
+        await _people.BatchLinkFacesToPersonAsync(Array.Empty<Guid>(), person.Id, 0.9);
+        // Should not throw
+    }
+
+    [Fact]
+    public async Task BatchLinkFacesToPersonAsync_PartialMismatch_LinkOnlyFound()
+    {
+        var photo = Photo(@"C:\partialbatch.jpg");
+        await _repo.AddAsync(photo);
+
+        var person = await _people.FindOrCreateByNameAsync("Partial", "partial");
+
+        var f1 = new PhotoIQPro.Core.Models.Face { MediaFileId = photo.Id, X = 0.1, Y = 0.1, Width = 0.2, Height = 0.2 };
+        Db.Faces.Add(f1);
+        await Db.SaveChangesAsync();
+
+        var nonexistentId = Guid.NewGuid();
+        await _people.BatchLinkFacesToPersonAsync(new[] { f1.Id, nonexistentId }, person.Id, 0.85);
+
+        // ExecuteUpdateAsync doesn't refresh in-memory entities; must reload from DB
+        Db.ChangeTracker.Clear();
+        var linked = await Db.Faces.FindAsync(f1.Id);
+        Assert.Equal(person.Id, linked!.PersonId);
+        Assert.Equal(0.85, linked.IdentificationConfidence);
+    }
+}

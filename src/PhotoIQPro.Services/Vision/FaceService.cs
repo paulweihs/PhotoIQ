@@ -74,9 +74,11 @@ public sealed class FaceService : IFaceService
         {
             var detected = await _engine.DetectAsync(imagePath, AppSettings.FacesPath);
 
+            // Batch 1: Create all Face objects
+            var faces = new List<Face>();
             foreach (var d in detected)
             {
-                var face = new Face
+                faces.Add(new Face
                 {
                     MediaFileId         = mf.Id,
                     X                   = d.X,
@@ -87,10 +89,17 @@ public sealed class FaceService : IFaceService
                     Embedding           = EmbeddingToBytes(d.Embedding),
                     ThumbnailPath       = d.ThumbnailPath,
                     DateDetected        = DateTime.UtcNow,
-                };
+                });
+            }
 
-                await _repo.AddFaceAsync(face);
-                await _recognition.IdentifyFaceAsync(face, ct);
+            // Batch 2: Persist all faces in a single database operation
+            if (faces.Count > 0)
+            {
+                await _repo.BatchAddFacesAsync(faces);
+
+                // Batch 3: Identify all faces in parallel (not sequential per-face)
+                var identifyTasks = faces.Select(face => _recognition.IdentifyFaceAsync(face, ct));
+                await Task.WhenAll(identifyTasks);
             }
 
             mf.FaceDetectionStatus = FaceDetectionStatus.Complete;
