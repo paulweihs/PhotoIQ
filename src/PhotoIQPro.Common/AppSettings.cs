@@ -11,7 +11,12 @@ public static class AppSettings
     // Face model filenames (downloaded to ModelsPath on first use)
     public const string FaceDetectionModelName = "ultraface-rfb-640.onnx";
     public const string FaceEmbeddingModelName  = "arcface-mobilefacenet.onnx";
-    public const string FaceModelDownloadBaseUrl = "https://models.photoiqpro.com/v1/face/";
+
+    // HuggingFace direct download URLs for face detection models
+    // UltraFace from onnxmodelzoo: https://huggingface.co/onnxmodelzoo/version-RFB-640
+    // ArcFace from garavv: https://huggingface.co/garavv/arcface-onnx
+    public const string FaceDetectionModelUrl = "https://huggingface.co/onnxmodelzoo/version-RFB-640/resolve/main/version-RFB-640.onnx";
+    public const string FaceEmbeddingModelUrl = "https://huggingface.co/garavv/arcface-onnx/resolve/main/arc.onnx";
 
     public static string VisionLogPath    => Path.Combine(AppDataPath, "vision.log");
     public static string AppLogPath       => Path.Combine(AppDataPath, "app.log");

@@ -6,8 +6,7 @@ using PhotoIQPro.Core.Interfaces;
 namespace PhotoIQPro.Services.Models;
 
 /// <summary>
-/// Downloads face detection model files that are absent from <see cref="AppSettings.ModelsPath"/>.
-/// Files are fetched from <see cref="AppSettings.FaceModelDownloadBaseUrl"/>.
+/// Downloads face detection model files from HuggingFace.
 /// </summary>
 public sealed class FaceModelDownloadService : IFaceModelDownloadService
 {
@@ -17,6 +16,13 @@ public sealed class FaceModelDownloadService : IFaceModelDownloadService
         "ultraface-rfb-640.onnx",
         "arcface-mobilefacenet.onnx",
     ];
+
+    // Map local filenames to HuggingFace download URLs
+    private static readonly Dictionary<string, string> ModelUrls = new()
+    {
+        { "ultraface-rfb-640.onnx", AppSettings.FaceDetectionModelUrl },
+        { "arcface-mobilefacenet.onnx", AppSettings.FaceEmbeddingModelUrl },
+    };
 
     private const int BufferSize = 65_536;
     private readonly HttpClient _http;
@@ -68,9 +74,13 @@ public sealed class FaceModelDownloadService : IFaceModelDownloadService
 
     private async Task<DownloadResult> DownloadFileAsync(string fileName, CancellationToken ct)
     {
+        if (!ModelUrls.TryGetValue(fileName, out var url))
+        {
+            return new(false, $"Unknown model file: {fileName}", 0);
+        }
+
         var destPath = Path.Combine(AppSettings.ModelsPath, fileName);
         var tmpPath = destPath + ".tmp";
-        var url = AppSettings.FaceModelDownloadBaseUrl + fileName;
 
         try
         {
