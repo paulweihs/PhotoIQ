@@ -40,9 +40,12 @@ public sealed class FaceModelDownloadService : IFaceModelDownloadService
 
         if (missing.Count == 0)
         {
+            AppLog.Info("Face detection models already installed.");
             yield return (object)new FaceDownloadProgress(FaceDownloadStage.Complete, "Face detection models ready.");
             yield break;
         }
+
+        AppLog.Info($"Missing face detection models: {string.Join(", ", missing)}");
 
         yield return (object)new FaceDownloadProgress(FaceDownloadStage.Checking, 
             $"Downloading {missing.Count} face detection model file(s)…");
@@ -52,8 +55,9 @@ public sealed class FaceModelDownloadService : IFaceModelDownloadService
             var result = await DownloadFileAsync(fileName, ct);
             if (!result.Success)
             {
-                yield return (object)new FaceDownloadProgress(FaceDownloadStage.Error,
-                    $"Failed to download {fileName}: {result.Error}");
+                var error = $"Failed to download {fileName}: {result.Error}";
+                AppLog.Error(error);
+                yield return (object)new FaceDownloadProgress(FaceDownloadStage.Error, error);
                 yield break;
             }
         }
@@ -71,10 +75,14 @@ public sealed class FaceModelDownloadService : IFaceModelDownloadService
         try
         {
             Directory.CreateDirectory(AppSettings.ModelsPath);
-            
+
+            AppLog.Info($"Downloading face model: {fileName} from {url}");
             using var resp = await _http.GetAsync(url, HttpCompletionOption.ResponseHeadersRead, ct);
             if (!resp.IsSuccessStatusCode)
+            {
+                AppLog.Error($"Download failed for {fileName}: HTTP {resp.StatusCode}");
                 return new(false, resp.StatusCode.ToString(), 0);
+            }
 
             using var srcStream = await resp.Content.ReadAsStreamAsync(ct);
             using var dstStream = new FileStream(tmpPath, FileMode.Create, FileAccess.Write, FileShare.None);
@@ -96,6 +104,7 @@ public sealed class FaceModelDownloadService : IFaceModelDownloadService
             if (File.Exists(destPath)) File.Delete(destPath);
             File.Move(tmpPath, destPath);
 
+            AppLog.Info($"Successfully downloaded {fileName} ({bytesWritten} bytes) to {destPath}");
             return new(true, null, bytesWritten);
         }
         catch (OperationCanceledException)
@@ -106,6 +115,7 @@ public sealed class FaceModelDownloadService : IFaceModelDownloadService
         catch (Exception ex)
         {
             if (File.Exists(tmpPath)) try { File.Delete(tmpPath); } catch { }
+            AppLog.Error($"Exception downloading {fileName}: {ex.GetType().Name}: {ex.Message}");
             return new(false, ex.Message, 0);
         }
     }
