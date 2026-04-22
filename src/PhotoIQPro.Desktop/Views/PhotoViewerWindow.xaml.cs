@@ -40,6 +40,7 @@ public partial class PhotoViewerWindow : Window
             {
                 ResetZoom();
                 RedrawFaceOverlay();
+                UpdateDebugDisplay();
             }
         };
 
@@ -49,7 +50,10 @@ public partial class PhotoViewerWindow : Window
             if (e.Action is NotifyCollectionChangedAction.Reset
                          or NotifyCollectionChangedAction.Add
                          or NotifyCollectionChangedAction.Remove)
+            {
                 RedrawFaceOverlay();
+                UpdateDebugDisplay();
+            }
         };
 
         // Redraw on resize so boxes stay aligned when the window is resized.
@@ -357,5 +361,31 @@ public partial class PhotoViewerWindow : Window
             vm.SkipFacePromptOnceCommand.Execute(null);
             e.Handled = true;
         }
+    }
+
+    // ── Debug display ─────────────────────────────────────────────────────
+
+    /// <summary>Update debug display with face detection status and counts.</summary>
+    private void UpdateDebugDisplay()
+    {
+        var vm = (PhotoViewerViewModel)DataContext;
+        if (vm.Current == null)
+        {
+            DebugStatus.Text = "No photo loaded";
+            DebugFaceCount.Text = "";
+            return;
+        }
+
+        var status = vm.Current.FaceDetectionStatus;
+        DebugStatus.Text = $"Face detection: {status}";
+
+        var faceCount = vm.Faces.Count;
+        var linked = vm.Faces.Count(f => f.PersonId.HasValue);
+        var unlinked = faceCount - linked;
+
+        if (faceCount == 0)
+            DebugFaceCount.Text = "No faces detected";
+        else
+            DebugFaceCount.Text = $"Faces: {faceCount} ({linked} linked, {unlinked} unknown)";
     }
 }

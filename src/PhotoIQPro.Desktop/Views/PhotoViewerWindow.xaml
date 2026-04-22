@@ -320,6 +320,23 @@
                 <TextBlock Text="{Binding Counter}"
                            FontSize="13" Foreground="#CCFFFFFF"/>
             </Border>
+
+            <!-- Debug info — bottom right (face detection status + counts) -->
+            <Border HorizontalAlignment="Right" VerticalAlignment="Bottom"
+                    Margin="0,0,12,16"
+                    Background="#CC1E1E2E" BorderBrush="#FF45475A" BorderThickness="1"
+                    CornerRadius="4" Padding="8,4"
+                    ToolTip="Face detection status and count">
+                <StackPanel>
+                    <TextBlock x:Name="DebugStatus"
+                               FontSize="10" Foreground="#FF888888"
+                               FontFamily="Consolas"/>
+                    <TextBlock x:Name="DebugFaceCount"
+                               FontSize="10" Foreground="#FF89B4FA"
+                               FontFamily="Consolas"
+                               Margin="0,2,0,0"/>
+                </StackPanel>
+            </Border>
         </Grid>
 
         <!-- ═══ Right pane ═══ -->
