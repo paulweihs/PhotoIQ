@@ -3957,8 +3957,8 @@ public class MainViewModel : ObservableObject, IDisposable
 		MediaFile selectedMediaFile5 = SelectedMediaFile;
 		if (!flag && selectedMediaFile5 != null && selectedMediaFile5.AiDescription != null && selectedMediaFile5.AiDescription != string.Empty)
 		{
-			string text3 = "minicpm-v";
-			string text4 = "v42-minicpm";
+			string text3 = AppSettings.VisionModelName;
+			string text4 = AppSettings.CurrentPromptVersion;
 			bool num = selectedMediaFile5.AiModelUsed == text3;
 			bool flag2 = selectedMediaFile5.PromptVersion == text4;
 			bool flag3 = num && flag2;
@@ -4170,14 +4170,18 @@ public class MainViewModel : ObservableObject, IDisposable
 		{
 			if (e.PropertyName == "IsRunning")
 			{
-				((IRelayCommand)ReanalyzeAllCommand).NotifyCanExecuteChanged();
-				((IRelayCommand)ReanalyzeOutdatedCommand).NotifyCanExecuteChanged();
+				Application.Current.Dispatcher.InvokeAsync(() =>
+				{
+					((IRelayCommand)ReanalyzeAllCommand).NotifyCanExecuteChanged();
+					((IRelayCommand)ReanalyzeOutdatedCommand).NotifyCanExecuteChanged();
+				});
 			}
 		};
 		LoadAsync();
 		LoadSidebarLibrariesAsync();
 		LoadExclusionCacheAsync();
-		Task.Delay(TimeSpan.FromSeconds(2.0)).ContinueWith((Task _) => ResumeImportQueueAsync(), TaskScheduler.Default).Unwrap();
+		// ResumeImportQueueAsync is triggered from App.xaml.cs after onboarding completes,
+		// so the dialog never races with FirstRunWindow.ShowDialog().
 		VisionBackgroundWorkerAsync(_visionWorkerCts.Token);
 		Task.Delay(TimeSpan.FromSeconds(5.0)).ContinueWith((Task _) => FaceDetectionWorkerAsync(_faceWorkerCts.Token), TaskScheduler.Default).Unwrap();
 		StartupHealAsync();
@@ -4564,7 +4568,7 @@ public class MainViewModel : ObservableObject, IDisposable
 	{
 		OfflineCount = await Task.Run(() => MarkOfflineFiles(snapshot));
 		NotifyPropertiesChanged("HasOfflineFiles", "OfflineStatusText", "SelectedIsOffline");
-		OutdatedDescriptionCount = await WithRepo((IMediaFileRepository r) => r.CountOutdatedDescriptionsAsync("minicpm-v", "v42-minicpm"));
+		OutdatedDescriptionCount = await WithRepo((IMediaFileRepository r) => r.CountOutdatedDescriptionsAsync(AppSettings.VisionModelName, AppSettings.CurrentPromptVersion));
 		foreach (Guid item in await WithRepo((IMediaFileRepository r) => r.GetVisionPendingIdsAsync()))
 		{
 			EnqueueForVision(item);
@@ -4688,6 +4692,7 @@ public class MainViewModel : ObservableObject, IDisposable
 			bool lockAcquired = false;
 			try
 			{
+				await Progress.WaitIfPausedAsync(ct);
 				Stopwatch swLock = Stopwatch.StartNew();
 				AppLog.Info($"[LOCK] VisionWorker: waiting for _analysisLock (photo {photoId})");
 				await _analysisLock.WaitAsync(ct);
@@ -5532,14 +5537,34 @@ public class MainViewModel : ObservableObject, IDisposable
 		((IRelayCommand)ReanalyzeMultiSelectedCommand).NotifyCanExecuteChanged();
 	}
 
+	/// <summary>
+	/// Called from App.xaml.cs after onboarding/tip-toast to start the 2-second
+	/// resume-import countdown. Kept internal to the ViewModel layer.
+	/// </summary>
+	public void ScheduleResumeImportQueue()
+	{
+		Task.Delay(TimeSpan.FromSeconds(2.0))
+		    .ContinueWith((Task _) => ResumeImportQueueAsync(), TaskScheduler.Default)
+		    .Unwrap();
+	}
+
 	private async Task ResumeImportQueueAsync()
 	{
+		AppLog.Info("[RESUME] ResumeImportQueueAsync entry");
+		try
+		{
 		int count = await Progress.GetQueueCountAsync();
+		AppLog.Info($"[RESUME] Queue count = {count}");
 		if (count == 0)
 		{
 			return;
 		}
-		if (((DispatcherObject)Application.Current).Dispatcher.Invoke<MessageBoxResult>((Func<MessageBoxResult>)(() => MessageBox.Show($"{count} import folder{((count == 1) ? "" : "s")} remain from your last session.\n\nResume importing them now?", "Resume Import", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes))) != MessageBoxResult.Yes)
+		var result = ((DispatcherObject)Application.Current).Dispatcher.Invoke<MessageBoxResult>((Func<MessageBoxResult>)(() =>
+			MessageBox.Show(Application.Current.MainWindow,
+				$"{count} import folder{((count == 1) ? "" : "s")} remain from your last session.\n\nResume importing them now?",
+				"Resume Import", MessageBoxButton.YesNo, MessageBoxImage.Question, MessageBoxResult.Yes)));
+		AppLog.Info($"[RESUME] Dialog result = {result}");
+		if (result != MessageBoxResult.Yes)
 		{
 			await Progress.ClearQueueAsync();
 			return;
@@ -5585,6 +5610,11 @@ public class MainViewModel : ObservableObject, IDisposable
 				AppLog.Error("Post-resume FTS rebuild failed: " + ex.Message);
 			}
 		});
+		}
+		catch (Exception ex)
+		{
+			AppLog.Error($"[RESUME] ResumeImportQueueAsync failed: {ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
+		}
 	}
 
 	private async Task<bool> CheckExpressCeilingAsync()
@@ -5652,7 +5682,7 @@ public class MainViewModel : ObservableObject, IDisposable
 	private async Task RefreshAfterBulkReanalysisAsync()
 	{
 		PendingDescriptionCount = MediaFiles.Count((MediaFile m) => (int)m.AnalysisStatus == 4);
-		OutdatedDescriptionCount = await WithRepo((IMediaFileRepository r) => r.CountOutdatedDescriptionsAsync("minicpm-v", "v42-minicpm"));
+		OutdatedDescriptionCount = await WithRepo((IMediaFileRepository r) => r.CountOutdatedDescriptionsAsync(AppSettings.VisionModelName, AppSettings.CurrentPromptVersion));
 		OnPropertyChanged("IsEmpty");
 		OnPropertyChanged("IsLibraryEmpty");
 		OnPropertyChanged("PhotoCountText");
@@ -5683,6 +5713,7 @@ public class MainViewModel : ObservableObject, IDisposable
 				if ((int)analyzed.AnalysisStatus == 4)
 				{
 					EnqueueForVision(analyzed.Id);
+					PendingDescriptionCount++;
 				}
 			});
 		};
