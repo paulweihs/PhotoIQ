@@ -101,11 +101,11 @@
 ## Files Modified/Created
 
 **Modified:**
-- `src/PhotoIQPro.Common/AppSettings.cs` — v30 prompt
-- `tools/PhotoIQPro.Eval/Program.cs` — added --ensemble command
+- `src/PhotoWell.Common/AppSettings.cs` — v30 prompt
+- `tools/PhotoWell.Eval/Program.cs` — added --ensemble command
 
 **Created:**
-- `tools/PhotoIQPro.Eval/MultiModelEnsemble.cs` — ensemble framework
+- `tools/PhotoWell.Eval/MultiModelEnsemble.cs` — ensemble framework
 - `LARGER_CORPUS_EVALUATION.md` — eval findings
 - `UNATTENDED_WORK_SUMMARY.md` — this document
 - Various prompt versions archived (v15-v31)

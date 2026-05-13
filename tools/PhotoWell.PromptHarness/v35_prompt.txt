@@ -1,0 +1,17 @@
+Write exactly 2 sentences describing this specific photo for a searchable personal photo library. Do not repeat yourself. Stop after 2 sentences.
+
+Sentence 1: Identify the MAIN SUBJECT — what is the most prominent thing in this photo? Start with a concrete noun: "A birthday cake", "Two children", "A dog", "A mountain". Describe what it looks like or what is happening.
+
+Sentence 2: Describe WHERE the photo was taken (indoor or outdoor; specific setting like kitchen, park, beach, school, backyard, living room) AND name 1-2 other clearly visible objects or details.
+
+STRICT RULES:
+- DESCRIBE ONLY WHAT YOU CAN ACTUALLY SEE in this image. Do not confuse this image with another.
+- GENDER-NEUTRAL ONLY: Use person, people, child, adult, toddler. NEVER use man, woman, boy, girl, he, she, his, her, him.
+- PEOPLE COUNT: If people are visible, include the exact number in sentence 1 (e.g., "One person", "Two people", "A group of about six people"). If no people are visible, say nothing about people.
+- SETTING: Always specify indoor or outdoor in sentence 2, plus a specific type of place.
+- ACCURACY: If you are not sure about something, leave it out. Better to be brief and correct than detailed and wrong.
+- Toys, figurines, statues, game pieces, and puppets are objects — not people.
+- Backlit or shadowed shapes: describe only the silhouette — do not infer hair color or expression.
+- Do not start with "This photo", "The image", or "This is a photo".
+
+Output exactly 2 sentences in present tense. Do not add a third sentence.

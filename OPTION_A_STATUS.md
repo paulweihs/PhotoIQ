@@ -10,7 +10,7 @@
 
 ### CorpusBuilder.cs — Complete Tool (195 lines)
 
-**Location:** `tools/PhotoIQPro.Eval/CorpusBuilder.cs`
+**Location:** `tools/PhotoWell.Eval/CorpusBuilder.cs`
 
 **Functionality:**
 ```
@@ -30,7 +30,7 @@ Phase 4: Validate all entries have both source and image files
 
 ```bash
 # Run corpus builder (40 photos, ~5 seconds)
-dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus 40
+dotnet run --project tools/PhotoWell.Eval -- --build-corpus 40
 ```
 
 ### What It Does
@@ -55,7 +55,7 @@ dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus 40
 
 ### Verify Corpus Was Created
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --corpus-status
+dotnet run --project tools/PhotoWell.Eval -- --corpus-status
 ```
 
 **Expected output:**
@@ -67,8 +67,8 @@ Reference corpus: 40 images
 
 ### Re-Run v16 Evaluation
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --optimize-prompt 40 \
-  --prompt "$(cat tools/PhotoIQPro.Eval/v16_prompt.txt)"
+dotnet run --project tools/PhotoWell.Eval -- --optimize-prompt 40 \
+  --prompt "$(cat tools/PhotoWell.Eval/v16_prompt.txt)"
 ```
 
 **This will:**
@@ -125,7 +125,7 @@ Results:
 
 Before running corpus builder, verify:
 
-- [ ] `photoiq.db` exists with imported and analyzed photos (`%LOCALAPPDATA%/PhotoIQPro/photoiq.db`)
+- [ ] `photoiq.db` exists with imported and analyzed photos (`%LOCALAPPDATA%/PhotoWell/photoiq.db`)
 - [ ] At least 40 photos in library have existing Claude-generated descriptions
 - [ ] `evaluations.db` exists in working directory or specify path
 - [ ] Ollama running with llama3.2-vision model (for v16 evaluation)
@@ -152,19 +152,19 @@ Since the corpus build is very fast (~5 seconds), these longer tasks can be star
 
 ### Build Status
 ```
-✓ PhotoIQPro.Eval -> ...bin/Debug/net8.0/PhotoIQPro.Eval.dll
+✓ PhotoWell.Eval -> ...bin/Debug/net8.0/PhotoWell.Eval.dll
 Build succeeded. 0 Warning(s), 0 Error(s)
 ```
 
 ### Help Text Verification
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval
+dotnet run --project tools/PhotoWell.Eval
 # (Shows --build-corpus option in usage)
 ```
 
 ### API Key Check
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus 40
+dotnet run --project tools/PhotoWell.Eval -- --build-corpus 40
 # [ERROR] ANTHROPIC_API_KEY environment variable not set
 # (Expected when key not set)
 ```
@@ -209,13 +209,13 @@ dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus 40
 
 ### Required
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus 40
+dotnet run --project tools/PhotoWell.Eval -- --build-corpus 40
 ```
 
 ### Then
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --optimize-prompt 40 \
-  --prompt "$(cat tools/PhotoIQPro.Eval/v16_prompt.txt)"
+dotnet run --project tools/PhotoWell.Eval -- --optimize-prompt 40 \
+  --prompt "$(cat tools/PhotoWell.Eval/v16_prompt.txt)"
 ```
 
 ### Then
@@ -227,7 +227,7 @@ Review results and decide on v16 deployment.
 
 Option A (Rebuild Ground Truth Corpus) is **fully implemented and ready to run**. The user only needs to:
 
-1. Run one command: `dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus 40`
+1. Run one command: `dotnet run --project tools/PhotoWell.Eval -- --build-corpus 40`
 2. Wait ~5 seconds for corpus to build
 3. Re-run v16 evaluation
 4. Compare results and decide on deployment

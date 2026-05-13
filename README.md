@@ -80,7 +80,7 @@ Place the following in `%LOCALAPPDATA%\PhotoIQ\models\`:
 
 ### 4. Build and run
 
-Open `PhotoIQPro.sln` in Visual Studio 2022 and run.
+Open `PhotoWell.sln` in Visual Studio 2022 and run.
 
 ---
 

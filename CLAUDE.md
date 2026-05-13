@@ -6,16 +6,16 @@ This file provides guidance to Claude Code (claude.ai/code) when working with co
 
 ```bash
 # Build
-dotnet build PhotoIQPro.sln
+dotnet build PhotoWell.sln
 
 # Run (Windows only - WPF app)
-dotnet run --project src/PhotoIQPro.Desktop/PhotoIQPro.Desktop.csproj
+dotnet run --project src/PhotoWell.Desktop/PhotoWell.Desktop.csproj
 
 # Test
-dotnet test src/PhotoIQPro.Tests/PhotoIQPro.Tests.csproj
+dotnet test src/PhotoWell.Tests/PhotoWell.Tests.csproj
 
 # Single test
-dotnet test src/PhotoIQPro.Tests/PhotoIQPro.Tests.csproj --filter "FullyQualifiedName~TestName"
+dotnet test src/PhotoWell.Tests/PhotoWell.Tests.csproj --filter "FullyQualifiedName~TestName"
 ```
 
 Requires: Windows 10/11, .NET 8.0 SDK, Visual Studio 2022 ("`.NET desktop development`" workload for WPF designer).
@@ -25,24 +25,24 @@ Requires: Windows 10/11, .NET 8.0 SDK, Visual Studio 2022 ("`.NET desktop develo
 Six-project solution with strict layering — dependencies flow inward toward Core:
 
 ```
-PhotoIQPro.Desktop  →  PhotoIQPro.Services  →  PhotoIQPro.Core
-PhotoIQPro.Desktop  →  PhotoIQPro.Data      →  PhotoIQPro.Core
-PhotoIQPro.Desktop  →  PhotoIQPro.AI        →  PhotoIQPro.Core
-PhotoIQPro.Desktop  →  PhotoIQPro.Common
+PhotoWell.Desktop  →  PhotoWell.Services  →  PhotoWell.Core
+PhotoWell.Desktop  →  PhotoWell.Data      →  PhotoWell.Core
+PhotoWell.Desktop  →  PhotoWell.AI        →  PhotoWell.Core
+PhotoWell.Desktop  →  PhotoWell.Common
 ```
 
 **Core** — Domain models (`MediaFile`, `Tag`, `Person`, `Face`, `Collection`, `ExclusionRule`) and interfaces (`IImportService`, `IThumbnailService`, `IMediaFileRepository`, `IDriveService`). Zero external dependencies.
 
-**Common** — Static `AppSettings` with data paths (`%LOCALAPPDATA%\PhotoIQPro\`).
+**Common** — Static `AppSettings` with data paths (`%LOCALAPPDATA%\PhotoWell\`).
 
-**Data** — EF Core 8 + SQLite. `PhotoIQContext` configures all relationships. `MediaFileRepository` handles CRUD and filtered queries (by path, hash, favorites, unanalyzed). DB at `%LOCALAPPDATA%\PhotoIQPro\photoiq.db`.
+**Data** — EF Core 8 + SQLite. `PhotoIQContext` configures all relationships. `MediaFileRepository` handles CRUD and filtered queries (by path, hash, favorites, unanalyzed). DB at `%LOCALAPPDATA%\PhotoWell\photoiq.db`.
 
 **Services** — Three services:
 - `ImportService` — hashes files (SHA-256), extracts EXIF via MetadataExtractor, deduplicates, persists
-- `ThumbnailService` — generates 150px/400px/800px thumbnails via SixLabors.ImageSharp into `%LOCALAPPDATA%\PhotoIQPro\thumbnails\`
+- `ThumbnailService` — generates 150px/400px/800px thumbnails via SixLabors.ImageSharp into `%LOCALAPPDATA%\PhotoWell\thumbnails\`
 - `DriveService` — scans drives for media files (photos/video/RAW), filters default system exclusions plus user-defined rules
 
-**AI** — `ClipEngine` loads `clip-vit-base-patch32-vision.onnx` via ONNX Runtime, preprocesses images (224×224, ImageNet normalization), returns 768-dim float embeddings. Model stored at `%LOCALAPPDATA%\PhotoIQPro\models\`.
+**AI** — `ClipEngine` loads `clip-vit-base-patch32-vision.onnx` via ONNX Runtime, preprocesses images (224×224, ImageNet normalization), returns 768-dim float embeddings. Model stored at `%LOCALAPPDATA%\PhotoWell\models\`.
 
 **Desktop** — WPF + MVVM (CommunityToolkit.MVVM). DI wired in `App.xaml.cs`. Two main windows:
 - `MainWindow` / `MainViewModel` — photo grid gallery with sidebar and details panel
@@ -81,7 +81,7 @@ Upgrade prompt appears **only** when a user hits an Express ceiling — never on
 - **Never modify originals.** Preprocess to a temp JPG for analysis; delete temp after. Originals are read-only.
 - **Perpetual license only.** No subscription model. No SaaS. Tiers are Express and Standard — no third tier.
 - **Never auto-delete files.** Every destructive action requires explicit user confirmation.
-- Add new interfaces in `PhotoIQPro.Core` before implementing in Services/AI.
+- Add new interfaces in `PhotoWell.Core` before implementing in Services/AI.
 - Register all new services in `App.xaml.cs`. Run `dotnet build` after every meaningful change.
 - Add EF Core migrations for any schema changes — never hand-edit the `.db` file.
 
@@ -89,7 +89,7 @@ Upgrade prompt appears **only** when a user hits an Express ceiling — never on
 
 OneDrive syncs this folder and causes DLL file locks during builds. If `MSB3027` errors appear:
 1. Kill any running PhotoIQ process
-2. Delete `src/PhotoIQPro.Desktop/bin/` and rebuild
+2. Delete `src/PhotoWell.Desktop/bin/` and rebuild
 
 For XAML type resolution errors: `dotnet build --no-incremental`
 
@@ -97,11 +97,11 @@ For XAML type resolution errors: `dotnet build --no-incremental`
 
 ```bash
 dotnet build --no-incremental          # full rebuild
-dotnet ef migrations add Name --project src/PhotoIQPro.Data
-del %LOCALAPPDATA%\PhotoIQPro\photoiq.db   # reset DB after schema changes
+dotnet ef migrations add Name --project src/PhotoWell.Data
+del %LOCALAPPDATA%\PhotoWell\photoiq.db   # reset DB after schema changes
 ```
 
-Model files: `%LOCALAPPDATA%\PhotoIQPro\models\` (vocab.json, merges.txt, vision ONNX, text ONNX)
+Model files: `%LOCALAPPDATA%\PhotoWell\models\` (vocab.json, merges.txt, vision ONNX, text ONNX)
 Ollama: `http://localhost:11434` — check with `curl http://localhost:11434/api/tags`
 
 ## Tech Stack

@@ -42,7 +42,7 @@ const string PromptVersion = "v12b";
 
 var DbPath = Path.Combine(
     Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-    "PhotoIQPro", "photoiq.db");
+    "PhotoWell", "photowell.db");
 
 // Production prompt — keep in sync with AppSettings.VisionAnalysisPrompt.
 const string ProductionPrompt = """
@@ -444,7 +444,7 @@ static async Task<int> RunLegacyEval(string dbPath, int count, string? specificI
     }
 
     bool candidate = prompt != ProductionPrompt;
-    Header($"PhotoIQ Prompt Eval — {rows.Count} photo(s) — model: {Model}");
+    Header($"PhotoWell Prompt Eval — {rows.Count} photo(s) — model: {Model}");
     if (candidate) Color("  CANDIDATE prompt active\n", ConsoleColor.Yellow);
     Console.WriteLine();
 

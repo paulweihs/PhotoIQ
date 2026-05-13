@@ -19,28 +19,28 @@ Generated: April 18, 2026 | Analysis Complete | 11 Bottlenecks Identified
 ## HIGH-IMPACT OPTIMIZATIONS (Phase 1 - Start Here)
 
 ### 1. Fix Tag Photo Counts N+1 Query
-**File:** `PhotoIQPro.Data/Repositories/MediaFileRepository.cs` (GetTagPhotoCountsAsync)
+**File:** `PhotoWell.Data/Repositories/MediaFileRepository.cs` (GetTagPhotoCountsAsync)
 **Impact:** -98% queries on tag browser load (500+ queries → 1)
 **Effort:** 1-2 hours
 **Complexity:** Moderate (convert to raw SQL or GROUP BY aggregation)
 **Expected Gain:** Tag popup load time <10ms (vs. 100-200ms currently)
 
 ### 2. Add Missing Tag Include to Vision Pending Query
-**File:** `PhotoIQPro.Data/Repositories/MediaFileRepository.cs` (GetVisionPendingAsync)
+**File:** `PhotoWell.Data/Repositories/MediaFileRepository.cs` (GetVisionPendingAsync)
 **Impact:** -95% queries on vision re-analysis (1K queries → 1)
 **Effort:** 30 minutes
 **Complexity:** Easy (one-line .Include)
 **Expected Gain:** 1000-file re-analysis -50% faster
 
 ### 3. Implement VirtualizingStackPanel in Photo Gallery
-**File:** `PhotoIQPro.Desktop/Views/MainWindow.xaml`
+**File:** `PhotoWell.Desktop/Views/MainWindow.xaml`
 **Impact:** -95% memory on large galleries, +200% scroll FPS
 **Effort:** 1-2 hours
 **Complexity:** Moderate
 **Expected Gain:** Scroll from <10 FPS to 60 FPS, memory -500 MB on 10K gallery
 
 ### 4. Fix Blocking Wait in Face Cache Invalidation
-**File:** `PhotoIQPro.Services/Vision/FaceRecognitionService.cs` (InvalidateCache)
+**File:** `PhotoWell.Services/Vision/FaceRecognitionService.cs` (InvalidateCache)
 **Impact:** +100% UI responsiveness during face detection
 **Effort:** 30 minutes
 **Complexity:** Easy (replace .Wait() with async or volatile flag)

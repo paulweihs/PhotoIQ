@@ -10,7 +10,7 @@
 
 ### 1. Phase 8: Unit Tests for ImportService Helpers ✓ COMPLETE
 
-**File:** `src/PhotoIQPro.Tests/ImportServiceHelperTests.cs`
+**File:** `src/PhotoWell.Tests/ImportServiceHelperTests.cs`
 
 **Test Coverage:** 13 new tests (499 total passing)
 
@@ -35,7 +35,7 @@
 
 ### 2. Initiative #1: v16 Prompt Implementation ⏳ DESIGNED
 
-**File:** `tools/PhotoIQPro.Eval/v16_prompt.txt`
+**File:** `tools/PhotoWell.Eval/v16_prompt.txt`
 
 **Status:** Fully designed, ready for evaluation (blocked by Initiative #6)
 
@@ -165,8 +165,8 @@
 ## Files Created/Modified This Session
 
 **Created:**
-- `src/PhotoIQPro.Tests/ImportServiceHelperTests.cs` (13 tests, all passing)
-- `tools/PhotoIQPro.Eval/v16_prompt.txt` (v16 prompt for evaluation)
+- `src/PhotoWell.Tests/ImportServiceHelperTests.cs` (13 tests, all passing)
+- `tools/PhotoWell.Eval/v16_prompt.txt` (v16 prompt for evaluation)
 - `INITIATIVE_1_V16_IMPLEMENTATION.md` (progress report)
 - `PHASE_8_SESSION_2_SUMMARY.md` (this file)
 

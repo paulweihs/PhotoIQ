@@ -41,7 +41,7 @@
 
 **Achievement:**
 - Designed comprehensive v16 prompt (140 words, 7 sections)
-- Saved to `tools/PhotoIQPro.Eval/v16_prompt.txt`
+- Saved to `tools/PhotoWell.Eval/v16_prompt.txt`
 - Addresses 3 specific problem cases with explicit guidance
 
 **Prompt Improvements:**

@@ -52,10 +52,22 @@ public static class AppSettings
     /// Current vision prompt version. Bump this string whenever the analysis prompt changes.
     /// Photos analyzed with a different version are flagged as "outdated" in the UI.
     /// </summary>
-    public const string CurrentPromptVersion = "v43-minicpm";
+    public const string CurrentPromptVersion = "v45-minicpm";
 
     /// <summary>
     /// Vision analysis prompt sent to the Ollama vision model.
+    /// v45-minicpm (2026-05-12): Removed gender-neutral rule from prompt — it was preventing
+    ///        the v43 "who appears to be a X" post-processing hint from ever firing, because the
+    ///        model followed instructions and never said "woman"/"man"/etc., leaving the
+    ///        TextNormalizer nothing to replace. Model now uses natural gendered terms; post-
+    ///        processing converts them to "person, who appears to be a woman," etc. Updated
+    ///        sentence (1) examples to include gendered terms so the model follows the pattern.
+    ///        Strengthened TEXT RULE to explicitly cover clothing labels/logos.
+    /// v44-minicpm (2026-05-11): Added TEXT RULE — only include brand names/labels/signs
+    ///        that can be read with certainty; if unsure describe the object type instead.
+    ///        Addresses field-observed hallucination of brand names: model was inventing
+    ///        "Corona"/"Eskimo Creek" for bottles labelled "ERIN CHRIS"/"LORINA".
+    ///        The existing "do not guess" rule was not specific enough for text/labels.
     /// v43-minicpm (2026-05-11): Post-processing updated — gendered nouns (woman/man/girl/boy,
     ///        singular and plural) now replaced with neutral noun + "who appears to be a X" hint
     ///        rather than plain neutral substitution. Preserves searchability of gendered terms
@@ -122,15 +134,15 @@ public static class AppSettings
         """
         Describe this photo in exactly 3 sentences for a searchable personal photo library. Stop after 3 sentences.
 
-        (1) Name the main subject with a concrete noun phrase. If people are present and visible in the foreground, they are always the main subject — state the exact count and their activity (e.g. "Two people sitting at a restaurant table", "One child playing in a backyard"). For non-people subjects use a specific noun phrase (e.g. "A tiered birthday cake", "A small dog resting on an armchair").
+        (1) Name the main subject with a concrete noun phrase. If people are present and visible in the foreground, they are always the main subject — state the exact count and apparent gender (e.g. "One woman smiling at the camera", "Two men sitting at a restaurant table", "One girl playing in a backyard"). For non-people subjects use a specific noun phrase (e.g. "A tiered birthday cake", "A small dog resting on an armchair").
         (2) Describe 1-3 key visible details — colors, clothing, objects held or nearby, expressions, or distinguishing features. Only describe what you can clearly see.
         (3) State where the photo was taken: indoor or outdoor, and the specific location type (kitchen, park, beach, school gym, restaurant, living room, etc.).
 
         Rules:
-        - Exact people count: say "one person", "two people", "three children" — never "a person" or "some people". For uncountable crowds say "a large group of people".
+        - Exact people count: say "one woman", "two men", "three girls" — never "a person" or "some people". For uncountable crowds say "a large group of people".
         - Named figures: if you see Easter Bunny, Santa Claus, or a sports mascot, name them.
-        - Gender-neutral: use person, people, child, adult. Never use man, woman, boy, girl.
         - Only describe what is clearly visible. Do not guess or invent details.
+        - TEXT RULE: Only include text (brand names, labels, clothing logos, signs) if you can read every word with certainty. If unsure, describe the object instead (e.g. "a pink top" not a guessed brand name, "a bottle of amber liquid" not a guessed label). Never invent text you cannot clearly read.
         - Do not mention that this is a photo or image. Do not start sentences with "Sentence 1", "Sentence 2", etc.
         """;
 

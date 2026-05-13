@@ -1,4 +1,4 @@
-# PhotoIQPro Refactoring Recommendations
+# PhotoWell Refactoring Recommendations
 
 Generated: April 18, 2026 | Token Analysis Complete | 5 Methods Identified
 
@@ -17,7 +17,7 @@ Generated: April 18, 2026 | Token Analysis Complete | 5 Methods Identified
 ## PRIORITY 1: CRITICAL REFACTORING
 
 ### 1. DeleteMarkedAsync() in FindDuplicatesViewModel
-**File**: `PhotoIQPro.Desktop/ViewModels/FindDuplicatesViewModel.cs`, Lines 57-94
+**File**: `PhotoWell.Desktop/ViewModels/FindDuplicatesViewModel.cs`, Lines 57-94
 
 **Current State**:
 - 38 lines of code
@@ -123,7 +123,7 @@ private async Task DeleteMarkedAsync()
 ## PRIORITY 2: QUICK WINS (Low Risk, High Impact)
 
 ### 2. OnSelectedMediaFileChanged() in MainViewModel
-**File**: `PhotoIQPro.Desktop/ViewModels/MainViewModel.cs`, Lines 2992-3033
+**File**: `PhotoWell.Desktop/ViewModels/MainViewModel.cs`, Lines 2992-3033
 
 **Current State**:
 - 41 lines of code (20+ property notifications)
@@ -196,7 +196,7 @@ private void LoadSelectionAsync(MediaFile? value)
 ---
 
 ### 3. LoadAsync() in MainViewModel
-**File**: `PhotoIQPro.Desktop/ViewModels/MainViewModel.cs`, Lines 1020+
+**File**: `PhotoWell.Desktop/ViewModels/MainViewModel.cs`, Lines 1020+
 
 **Issue**: Complex ternary conditions (3 levels deep) for query source selection
 
@@ -244,7 +244,7 @@ private IQueryable<MediaFile> BuildMediaQuery()
 ---
 
 ### 4. ScanAsync() in FindDuplicatesViewModel
-**File**: `PhotoIQPro.Desktop/ViewModels/FindDuplicatesViewModel.cs`, Lines 27-46
+**File**: `PhotoWell.Desktop/ViewModels/FindDuplicatesViewModel.cs`, Lines 27-46
 
 **Issue**: Status text mixed with view model mapping logic
 
@@ -291,7 +291,7 @@ private string BuildScanResultMessage(int groupCount)
 ## PRIORITY 3: POLISH (Lower Impact)
 
 ### 5. ToggleFavoriteAsync() in MainViewModel
-**File**: `PhotoIQPro.Desktop/ViewModels/MainViewModel.cs`, Lines 2953+
+**File**: `PhotoWell.Desktop/ViewModels/MainViewModel.cs`, Lines 2953+
 
 **Issue**: Collection sync logic mixed with business logic
 

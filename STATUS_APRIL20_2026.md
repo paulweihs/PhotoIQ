@@ -200,18 +200,18 @@ Deferred to future versions:
 
 ## Summary by Component
 
-### PhotoIQPro.Common (AppSettings.cs)
+### PhotoWell.Common (AppSettings.cs)
 - ✓ CurrentPromptVersion = "v15c"
 - ✓ VisionAnalysisPrompt updated (100 words, 7 sections)
 
-### PhotoIQPro.Services (Vision/)
+### PhotoWell.Services (Vision/)
 - ✓ TextNormalizer: Added EnforceGenderNeutrality() method
 - ✓ OllamaVisionService: Integrated two-pass gender processing
 
-### PhotoIQPro.Data (PhotoIQContext.cs)
+### PhotoWell.Data (PhotoIQContext.cs)
 - ✓ Added 2 composite indexes for performance
 
-### PhotoIQPro.Tests
+### PhotoWell.Tests
 - ✓ All 486 tests passing (no changes needed)
 
 ---

@@ -18,7 +18,7 @@
 
 .EXAMPLE
     .\install-sideload.ps1
-    .\install-sideload.ps1 -Bundle "C:\Downloads\PhotoIQPro_1.0.0.0.msixbundle"
+    .\install-sideload.ps1 -Bundle "C:\Downloads\PhotoWell_1.0.0.0.msixbundle"
 #>
 param(
     [string] $Bundle = ""
@@ -69,8 +69,8 @@ Options:
                      -CertStoreLocation "Cert:\CurrentUser\My" ``
                      -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3","2.5.29.19={text}")
        2. Export and trust the cert:
-            Export-Certificate -Cert `$cert -FilePath PhotoIQPro.cer
-            Import-Certificate -FilePath PhotoIQPro.cer -CertStoreLocation Cert:\LocalMachine\Root
+            Export-Certificate -Cert `$cert -FilePath PhotoWell.cer
+            Import-Certificate -FilePath PhotoWell.cer -CertStoreLocation Cert:\LocalMachine\Root
        3. Rebuild:  installer\build-msix.ps1 -SignThumbprint `$cert.Thumbprint
        4. Re-run this script.
 "@
@@ -94,7 +94,7 @@ Installation failed: $_
 
 If the error mentions "Deployment failed with HRESULT: 0x80073CF3" (package update conflict):
   Run this first to remove the existing installation:
-    Get-AppxPackage *PhotoIQPro* | Remove-AppxPackage
+    Get-AppxPackage *PhotoWell* | Remove-AppxPackage
   Then re-run this script.
 "@
     exit 1

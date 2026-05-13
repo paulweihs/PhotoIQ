@@ -10,7 +10,7 @@
 
 ### 1. Corpus Rebuild Tool Created
 
-**File:** `tools/PhotoIQPro.Eval/CorpusRebuild.cs`
+**File:** `tools/PhotoWell.Eval/CorpusRebuild.cs`
 
 **Functionality:**
 - Phase 1: Inventory — count entries and categorize by file status
@@ -22,7 +22,7 @@
 
 **Usage:**
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --rebuild-corpus
+dotnet run --project tools/PhotoWell.Eval -- --rebuild-corpus
 ```
 
 ---
@@ -126,7 +126,7 @@ This likely occurred during the initial corpus setup when JSON ground truth file
 **Implement Option B (Test Set Evaluation)** — Quick 10-minute evaluation to validate v16 improvements:
 
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- tools/PhotoIQPro.Eval/test-set llama3.2-vision
+dotnet run --project tools/PhotoWell.Eval -- tools/PhotoWell.Eval/test-set llama3.2-vision
 ```
 
 This will:
@@ -142,10 +142,10 @@ This will:
 ## Files Created/Modified
 
 **Created:**
-- `tools/PhotoIQPro.Eval/CorpusRebuild.cs` (rebuild tool)
+- `tools/PhotoWell.Eval/CorpusRebuild.cs` (rebuild tool)
 
 **Modified:**
-- `tools/PhotoIQPro.Eval/Program.cs` (added --rebuild-corpus command)
+- `tools/PhotoWell.Eval/Program.cs` (added --rebuild-corpus command)
 
 **Documentation:**
 - `INITIATIVE_6_CORPUS_REBUILD_RESULT.md` (this file)

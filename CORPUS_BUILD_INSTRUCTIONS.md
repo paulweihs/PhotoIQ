@@ -12,17 +12,17 @@
 
 ### Default (40 photos)
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus
+dotnet run --project tools/PhotoWell.Eval -- --build-corpus
 ```
 
 ### Custom Count (e.g., 50 photos)
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus 50
+dotnet run --project tools/PhotoWell.Eval -- --build-corpus 50
 ```
 
 ### With Custom Database Paths
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus 40 \
+dotnet run --project tools/PhotoWell.Eval -- --build-corpus 40 \
   --eval-db path/to/evaluations.db \
   --main-db path/to/photoiq.db
 ```
@@ -110,15 +110,15 @@ Final corpus: 40 entries
 
 ### 1. Verify Corpus
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --corpus-status
+dotnet run --project tools/PhotoWell.Eval -- --corpus-status
 ```
 
 Expected: `Reference corpus: 40 images`
 
 ### 2. Re-run v16 Evaluation
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --optimize-prompt 40 \
-  --prompt "$(cat tools/PhotoIQPro.Eval/v16_prompt.txt)"
+dotnet run --project tools/PhotoWell.Eval -- --optimize-prompt 40 \
+  --prompt "$(cat tools/PhotoWell.Eval/v16_prompt.txt)"
 ```
 
 This will:
@@ -180,17 +180,17 @@ Look for:
 
 ```bash
 # Build corpus (40 photos)
-dotnet run --project tools/PhotoIQPro.Eval -- --build-corpus 40
+dotnet run --project tools/PhotoWell.Eval -- --build-corpus 40
 
 # Check corpus status
-dotnet run --project tools/PhotoIQPro.Eval -- --corpus-status
+dotnet run --project tools/PhotoWell.Eval -- --corpus-status
 
 # Evaluate v16 prompt
-dotnet run --project tools/PhotoIQPro.Eval -- --optimize-prompt 40 \
-  --prompt "$(cat tools/PhotoIQPro.Eval/v16_prompt.txt)"
+dotnet run --project tools/PhotoWell.Eval -- --optimize-prompt 40 \
+  --prompt "$(cat tools/PhotoWell.Eval/v16_prompt.txt)"
 
 # Clean corpus if needed
-dotnet run --project tools/PhotoIQPro.Eval -- --rebuild-corpus
+dotnet run --project tools/PhotoWell.Eval -- --rebuild-corpus
 ```
 
 ---

@@ -1,4 +1,4 @@
-# PhotoIQPro UI Review
+# PhotoWell UI Review
 _Generated 2026-04-06_
 
 ## Executive Summary

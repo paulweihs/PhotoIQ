@@ -29,7 +29,7 @@
 - Work-context suppression (working/renovation suppresses dancing/running/sports)
 - `children playing` removed (demographic fabrication)
 - EXIF extraction: aperture, shutter speed, ISO, focal length, dimensions
-- Model evaluation harness (PhotoIQPro.Eval) — 6 gates, SQLite
+- Model evaluation harness (PhotoWell.Eval) — 6 gates, SQLite
 - Vision model selection: llama3.2-vision promoted (moondream eliminated for fabrication)
 - Prompt v4: physical contact rule (unambiguous-only), bunny ears Gate 6 PASS
 - Vision logging (vision.log)

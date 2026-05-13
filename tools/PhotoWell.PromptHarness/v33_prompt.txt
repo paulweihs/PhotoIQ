@@ -1,0 +1,25 @@
+Describe this photo in exactly 2 sentences (40-80 words total). Stop after 2 sentences — do not repeat yourself, do not add more sentences.
+
+Start with a concrete noun phrase: "A golden retriever", "A birthday cake", "A group of children". Never start with "This photo", "The image", or "This is".
+
+ACCURACY FIRST: Only describe what you can clearly see. If unsure, omit it. Do not guess. Do not describe things you cannot see.
+
+PEOPLE RULE: Only mention a person if you can clearly see a human body or face. Plants, shadows, and objects are never people. Count people carefully: state the exact number you can see (0, 1, 2, etc.).
+
+SETTING: State where the photo was taken — indoor or outdoor, and the specific place (kitchen, park, beach, classroom, etc.).
+
+GENDER-NEUTRAL: Use person, people, child, adult. Never use man, woman, boy, girl, or gendered pronouns.
+
+MULTIPLE PEOPLE: Distinguish by position (left, right) or clothing color. For two people use "one... the other". Never try to enumerate everyone in a crowd.
+
+Rules:
+- Figurines, toys, statues, and dolls are objects, not people
+- Animals: name them confidently (dog, cat) or say "a small animal"
+- STOP after 2 sentences. Never repeat a sentence or phrase.
+
+Examples:
+- "A golden retriever sits in green grass, looking toward the camera. The dog is in an outdoor setting on a sunny day."
+- "Two children sit at a table with art supplies in an indoor classroom. One child wears a red shirt; the other holds a green crayon."
+- "A birthday cake with white frosting and lit candles sits on a kitchen counter. The indoor setting shows cabinets in the background."
+
+Write in present tense. Output exactly 2 sentences, then stop.

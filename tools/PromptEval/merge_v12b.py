@@ -116,7 +116,7 @@ annotations = [
 gap_map = {a["id"].upper(): a["gaps"] for a in annotations}
 print(f"Annotations collected: {len(gap_map)}")
 
-batch_path = "C:/dev/PhotoIQPro/tools/PromptEval/batches/batch_20260410_110245_rerun_20260410_113207_rerun_20260411_025932.json"
+batch_path = "C:/dev/PhotoWell/tools/PromptEval/batches/batch_20260410_110245_rerun_20260410_113207_rerun_20260411_025932.json"
 with open(batch_path) as f:
     batch = json.load(f)
 

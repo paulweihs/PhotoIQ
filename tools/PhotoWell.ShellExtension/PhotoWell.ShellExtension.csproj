@@ -1,0 +1,18 @@
+<Project Sdk="Microsoft.NET.Sdk">
+
+  <PropertyGroup>
+    <OutputType>Exe</OutputType>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+    <AllowUnsafeBlocks>true</AllowUnsafeBlocks>
+    <AssemblyName>PhotoWell.ShellExtension</AssemblyName>
+    <RootNamespace>PhotoWell.ShellExtension</RootNamespace>
+    <!-- Must run as STA for COM shell extensions -->
+    <ApplicationManifest>app.manifest</ApplicationManifest>
+  </PropertyGroup>
+
+  <!-- No project references — this surrogate process communicates with PhotoWell
+       via named pipe only, so it has no compile-time dependency on the main app. -->
+
+</Project>

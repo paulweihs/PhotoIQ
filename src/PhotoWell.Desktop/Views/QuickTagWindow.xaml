@@ -1,0 +1,175 @@
+<Window x:Class="PhotoWell.Desktop.Views.QuickTagWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        xmlns:conv="clr-namespace:PhotoWell.Desktop.Converters"
+        Title="Add Tag — PhotoWell"
+        Width="460" Height="380"
+        MinWidth="340" MinHeight="280"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        Background="#FF1E1E2E"
+        Foreground="#FFCDD6F4">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+        <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVis"/>
+
+        <SolidColorBrush x:Key="PaneBrush"     Color="#FF1E1E2E"/>
+        <SolidColorBrush x:Key="SurfaceBrush"  Color="#FF313244"/>
+        <SolidColorBrush x:Key="Surface2Brush" Color="#FF45475A"/>
+        <SolidColorBrush x:Key="TextBrush"     Color="#FFCDD6F4"/>
+        <SolidColorBrush x:Key="SubtextBrush"  Color="#FFA6ADC8"/>
+        <SolidColorBrush x:Key="AccentBrush"   Color="#FF89B4FA"/>
+
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource Surface2Brush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="#FF1E1E2E"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>  <!-- header: thumbnail + title -->
+            <RowDefinition Height="Auto"/>  <!-- "TAGS" label -->
+            <RowDefinition Height="*"/>     <!-- tag chips -->
+            <RowDefinition Height="Auto"/>  <!-- add tag input -->
+            <RowDefinition Height="Auto"/>  <!-- status -->
+            <RowDefinition Height="Auto"/>  <!-- buttons -->
+        </Grid.RowDefinitions>
+
+        <!-- ── Header ── -->
+        <Grid Grid.Row="0" Margin="0,0,0,14">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Thumbnail (single-file only) -->
+            <Border Grid.Column="0"
+                    Visibility="{Binding IsMultiFile, Converter={StaticResource InverseBoolToVis}}"
+                    Background="{StaticResource SurfaceBrush}"
+                    CornerRadius="4" ClipToBounds="True"
+                    Width="90" Height="70"
+                    Margin="0,0,12,0">
+                <Image Source="{Binding Thumbnail}" Stretch="Uniform"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Border>
+
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="{Binding Title}"
+                           FontSize="14" FontWeight="SemiBold"
+                           Foreground="{StaticResource TextBrush}"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,4"/>
+                <TextBlock Text="{Binding SubTitle}"
+                           FontSize="10"
+                           Foreground="{StaticResource SubtextBrush}"
+                           TextWrapping="Wrap"
+                           TextTrimming="CharacterEllipsis"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ── Tags label ── -->
+        <TextBlock Grid.Row="1"
+                   Text="TAGS"
+                   FontSize="10" FontWeight="SemiBold"
+                   Foreground="{StaticResource SubtextBrush}"
+                   Margin="0,0,0,6"/>
+
+        <!-- ── Tag chips ── -->
+        <ScrollViewer Grid.Row="2" VerticalScrollBarVisibility="Auto" Margin="0,0,0,8">
+            <ItemsControl ItemsSource="{Binding SharedTags}">
+                <ItemsControl.ItemsPanel>
+                    <ItemsPanelTemplate><WrapPanel/></ItemsPanelTemplate>
+                </ItemsControl.ItemsPanel>
+                <ItemsControl.ItemTemplate>
+                    <DataTemplate>
+                        <Border Background="{StaticResource SurfaceBrush}"
+                                BorderBrush="{StaticResource AccentBrush}"
+                                BorderThickness="1" CornerRadius="3"
+                                Padding="6,3" Margin="0,0,5,5">
+                            <StackPanel Orientation="Horizontal">
+                                <TextBlock Text="{Binding Name}" FontSize="11"
+                                           Foreground="{StaticResource TextBrush}"
+                                           VerticalAlignment="Center"/>
+                                <!-- Remove button: only for user tags -->
+                                <Button Content="×" FontSize="11" Padding="3,0"
+                                        Background="Transparent" BorderThickness="0"
+                                        Foreground="#FF888888" Cursor="Hand"
+                                        Margin="4,0,0,0"
+                                        Command="{Binding DataContext.RemoveTagCommand,
+                                                  RelativeSource={RelativeSource AncestorType=Window}}"
+                                        CommandParameter="{Binding}"
+                                        Visibility="{Binding IsAIGenerated,
+                                                     Converter={StaticResource InverseBoolToVis}}"/>
+                            </StackPanel>
+                        </Border>
+                    </DataTemplate>
+                </ItemsControl.ItemTemplate>
+            </ItemsControl>
+        </ScrollViewer>
+
+        <!-- ── Add tag row ── -->
+        <Grid Grid.Row="3" Margin="0,0,0,6">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="Auto"/>
+            </Grid.ColumnDefinitions>
+            <TextBox Grid.Column="0"
+                     Text="{Binding NewTagText, UpdateSourceTrigger=PropertyChanged}"
+                     Background="{StaticResource SurfaceBrush}"
+                     Foreground="{StaticResource TextBrush}"
+                     BorderBrush="{StaticResource AccentBrush}"
+                     FontSize="12" Padding="6,5"
+                     IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolToVis}}">
+                <TextBox.InputBindings>
+                    <KeyBinding Key="Return" Command="{Binding AddTagCommand}"/>
+                </TextBox.InputBindings>
+            </TextBox>
+            <Button Grid.Column="1" Content="+" Margin="6,0,0,0"
+                    Padding="12,5" FontSize="14"
+                    Style="{StaticResource ActionBtn}"
+                    Command="{Binding AddTagCommand}"
+                    IsEnabled="{Binding IsBusy, Converter={StaticResource InverseBoolToVis}}"/>
+        </Grid>
+
+        <!-- ── Status ── -->
+        <TextBlock Grid.Row="4"
+                   Text="{Binding StatusMessage}"
+                   FontSize="11"
+                   Foreground="{StaticResource SubtextBrush}"
+                   TextWrapping="Wrap"
+                   Margin="0,2,0,6"/>
+
+        <!-- ── Close button ── -->
+        <StackPanel Grid.Row="5" Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Done"
+                    Command="{Binding CloseCommand}"
+                    Style="{StaticResource ActionBtn}"
+                    IsDefault="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

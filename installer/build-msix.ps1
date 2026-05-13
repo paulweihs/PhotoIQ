@@ -57,7 +57,7 @@ $ErrorActionPreference = "Stop"
 
 # ── Paths ─────────────────────────────────────────────────────────────────────
 $RepoRoot     = (Resolve-Path "$PSScriptRoot\..")
-$SrcProject   = "$RepoRoot\src\PhotoIQPro.Desktop\PhotoIQPro.Desktop.csproj"
+$SrcProject   = "$RepoRoot\src\PhotoWell.Desktop\PhotoWell.Desktop.csproj"
 $ManifestTpl  = "$PSScriptRoot\AppxManifest.template.xml"
 $AssetsScript = "$PSScriptRoot\New-AppAssets.ps1"
 $AssetsDir    = "$PSScriptRoot\assets"
@@ -149,7 +149,7 @@ foreach ($arch in $Architectures) {
 
     $publishDir = "$PSScriptRoot\publish\$arch"
     $pkgDir     = "$PSScriptRoot\package\$arch"
-    $msixOut    = "$OutDir\PhotoIQPro_${Version}_${arch}.msix"
+    $msixOut    = "$OutDir\PhotoWell_${Version}_${arch}.msix"
 
     # 1. Publish self-contained
     Write-Host "│  Publishing…"
@@ -210,7 +210,7 @@ foreach ($arch in $Architectures) {
 # ── Bundle both architectures ─────────────────────────────────────────────────
 Write-Host "`n┌─ Bundle ────────────────────────────────────────────────────────"
 $bundleStage = "$PSScriptRoot\bundle"
-$bundleOut   = "$OutDir\PhotoIQPro_${Version}.msixbundle"
+$bundleOut   = "$OutDir\PhotoWell_${Version}.msixbundle"
 
 Remove-Item -Recurse -Force $bundleStage -ErrorAction SilentlyContinue
 New-Item -ItemType Directory -Force -Path $bundleStage | Out-Null
@@ -242,7 +242,7 @@ if (-not $SignThumbprint) {
   ⚠  Packages are UNSIGNED.
 
   Microsoft Store:
-    Upload PhotoIQPro_${Version}.msixbundle to Partner Center.
+    Upload PhotoWell_${Version}.msixbundle to Partner Center.
     They sign it — no cert needed from you.
 
   Sideload (direct download):

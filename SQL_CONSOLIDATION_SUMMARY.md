@@ -17,7 +17,7 @@ Successfully extracted and consolidated all FTS (Full-Text Search) SQL query pat
 
 ### New File: FtsQueryHelper.cs
 
-**File:** `PhotoIQPro.Data/Helpers/FtsQueryHelper.cs`
+**File:** `PhotoWell.Data/Helpers/FtsQueryHelper.cs`
 
 Created a static helper class with 4 methods encapsulating all FTS-related SQL operations:
 
@@ -69,10 +69,10 @@ public static async Task UpsertAsync(
 
 ### Refactored: MediaFileRepository.cs
 
-**File:** `PhotoIQPro.Data/Repositories/MediaFileRepository.cs`
+**File:** `PhotoWell.Data/Repositories/MediaFileRepository.cs`
 
 #### Changes Summary:
-- **Added using:** `using PhotoIQPro.Data.Helpers;`
+- **Added using:** `using PhotoWell.Data.Helpers;`
 - **Replaced 5 SQL patterns** with FtsQueryHelper method calls
 - **Removed:** ~20 lines of SQL duplication
 - **Improved:** Code clarity and maintainability
@@ -178,8 +178,8 @@ await FtsQueryHelper.UpsertAsync(_context.Database, m.Id, description, tagText, 
 
 | File | Type | Changes |
 |------|------|---------|
-| `PhotoIQPro.Data/Helpers/FtsQueryHelper.cs` | **NEW** | 118 lines (4 static methods) |
-| `PhotoIQPro.Data/Repositories/MediaFileRepository.cs` | **Modified** | -20 lines (5 method calls simplified) |
+| `PhotoWell.Data/Helpers/FtsQueryHelper.cs` | **NEW** | 118 lines (4 static methods) |
+| `PhotoWell.Data/Repositories/MediaFileRepository.cs` | **Modified** | -20 lines (5 method calls simplified) |
 
 **Net change:** +98 lines (mostly documentation in helper)
 

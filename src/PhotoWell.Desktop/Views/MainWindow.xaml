@@ -1391,10 +1391,7 @@
                                         <MenuItem Header="Export as Bundle…"   Command="{Binding OpenBackupWindowCommand}"
                                                   CommandParameter="{Binding SelectedPhotoIds}"/>
                                         <Separator/>
-                                        <MenuItem Header="Exclude this folder" Command="{Binding ExcludeFolderCommand}"
-                                                  Visibility="{Binding SelectedFolderIsExcluded, Converter={StaticResource InverseBoolToVis}}"/>
-                                        <MenuItem Header="Include this folder" Command="{Binding IncludeFolderCommand}"
-                                                  Visibility="{Binding SelectedFolderIsExcluded, Converter={StaticResource BoolToVis}}"/>
+                                        <MenuItem Header="Exclude this folder" Command="{Binding ExcludeFolderCommand}"/>
                                         <Separator/>
                                         <MenuItem Header="{Binding ExcludeImageLabel}"       Command="{Binding ExcludeImageCommand}"/>
                                         <MenuItem Header="Remove from Album"          Command="{Binding RemoveFromAlbumCommand}"
@@ -1617,10 +1614,7 @@
                                 <MenuItem Header="Export as Bundle…"   Command="{Binding OpenBackupWindowCommand}"
                                           CommandParameter="{Binding SelectedPhotoIds}"/>
                                 <Separator/>
-                                <MenuItem Header="Exclude this folder" Command="{Binding ExcludeFolderCommand}"
-                                          Visibility="{Binding SelectedFolderIsExcluded, Converter={StaticResource InverseBoolToVis}}"/>
-                                <MenuItem Header="Include this folder" Command="{Binding IncludeFolderCommand}"
-                                          Visibility="{Binding SelectedFolderIsExcluded, Converter={StaticResource BoolToVis}}"/>
+                                <MenuItem Header="Exclude this folder" Command="{Binding ExcludeFolderCommand}"/>
                                 <Separator/>
                                 <MenuItem Header="{Binding RemoveFromLibraryLabel}" Command="{Binding RemoveFromLibraryCommand}"/>
                                 <MenuItem Header="{Binding DeletePermanentlyLabel}" Command="{Binding DeletePermanentlyCommand}"
@@ -2286,6 +2280,10 @@
                                        FontSize="10" Foreground="#6fcf6f"
                                        Visibility="{Binding Progress.HasBatchRateText, Converter={StaticResource BoolToVis}}"/>
                         </StackPanel>
+                        <Button Content="{Binding Progress.PauseButtonLabel}"
+                                Command="{Binding Progress.TogglePauseCommand}"
+                                Style="{StaticResource GhostButtonStyle}"
+                                Padding="6,1" FontSize="10" Margin="0,0,6,0"/>
                         <Button Content="Cancel"
                                 Command="{Binding Progress.CancelOrCloseCommand}"
                                 Style="{StaticResource GhostButtonStyle}"

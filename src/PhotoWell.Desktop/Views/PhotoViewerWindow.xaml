@@ -205,10 +205,7 @@
                     <MenuItem Header="Re-analyze with AI" Command="{Binding ReanalyzeSelectedCommand}"/>
                     <MenuItem Header="Add to Favorites"   Command="{Binding ToggleFavoriteCommand}"/>
                     <Separator/>
-                    <MenuItem Header="Exclude this folder" Command="{Binding ExcludeFolderCommand}"
-                              Visibility="{Binding IsCurrentFolderExcluded, Converter={StaticResource InverseBoolToVis}}"/>
-                    <MenuItem Header="Include this folder" Command="{Binding IncludeFolderCommand}"
-                              Visibility="{Binding IsCurrentFolderExcluded, Converter={StaticResource BoolToVis}}"/>
+                    <MenuItem Header="Exclude this folder" Command="{Binding ExcludeFolderCommand}"/>
                     <Separator/>
                     <MenuItem Header="Exclude this Image" Command="{Binding ExcludeImageCommand}"/>
                     <MenuItem Header="{Binding RemoveFromLibraryLabel}" Command="{Binding RemoveFromLibraryCommand}"/>

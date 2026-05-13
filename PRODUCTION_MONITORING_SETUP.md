@@ -44,7 +44,7 @@ GROUP BY PromptVersion, AiModelUsed
 Run evaluation harness every 3 months on fresh 50-image sample:
 
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- --optimize-prompt 50 --prompt "$PROMPT"
+dotnet run --project tools/PhotoWell.Eval -- --optimize-prompt 50 --prompt "$PROMPT"
 ```
 
 **Baseline established April 20, 2026:**

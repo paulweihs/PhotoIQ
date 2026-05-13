@@ -1,0 +1,4085 @@
+{
+  "generated_at": "2026-04-30T01:54:17Z",
+  "images": [
+    {
+      "id": 1,
+      "file_name": "IMG_1953.JPG",
+      "subject": "dark or underexposed image",
+      "person_count": -1,
+      "setting": "unknown",
+      "key_objects": [],
+      "verified_absent": [
+        "people",
+        "outdoor scenery",
+        "bright lighting"
+      ],
+      "free_text": "Severely underexposed or blank image with minimal visible content. Unable to determine subject matter due to darkness."
+    },
+    {
+      "id": 2,
+      "file_name": "_MG_6419.JPG",
+      "subject": "marklin model train set box",
+      "person_count": -1,
+      "setting": "indoor table",
+      "key_objects": [
+        "train set box",
+        "wooden base",
+        "model train",
+        "buildings"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor setting",
+        "full track layout"
+      ],
+      "free_text": "A Marklin model train set displayed on a wooden base against a neutral background. The box shows vintage train imagery with the iconic Marklin branding."
+    },
+    {
+      "id": 3,
+      "file_name": "IMG_0659.JPG",
+      "subject": "toy dinosaur figures display",
+      "person_count": -1,
+      "setting": "indoor tabletop",
+      "key_objects": [
+        "dinosaur figurines",
+        "palm trees",
+        "green terrain mat",
+        "blue background",
+        "volcano decoration"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor environment",
+        "real animals"
+      ],
+      "free_text": "A colorful dinosaur playset with multiple prehistoric creatures arranged on a green landscape mat with palm tree decorations and blue sky backdrop."
+    },
+    {
+      "id": 4,
+      "file_name": "20221025_110359.jpg",
+      "subject": "autumn pumpkin display with gather sign",
+      "person_count": -1,
+      "setting": "indoor fireplace hearth",
+      "key_objects": [
+        "pumpkins",
+        "white gourds",
+        "gather sign",
+        "decorative basket",
+        "fireplace",
+        "wooden mantel"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor setting",
+        "winter decorations"
+      ],
+      "free_text": "A festive fall display featuring orange and white pumpkins, small gourds, and a wooden Gather sign arranged on a black hearth, framed by a fireplace mantel."
+    },
+    {
+      "id": 5,
+      "file_name": "IMG_1639.JPG",
+      "subject": "drum kit and cymbals",
+      "person_count": -1,
+      "setting": "indoor music studio or room",
+      "key_objects": [
+        "snare drum",
+        "cymbals",
+        "drum sticks",
+        "marching bass drum"
+      ],
+      "verified_absent": [
+        "people",
+        "guitars",
+        "keyboard instruments"
+      ],
+      "free_text": "A percussion setup featuring a white snare drum with branding, bronze cymbals, and wooden drumsticks arranged on a carpeted floor."
+    },
+    {
+      "id": 6,
+      "file_name": "IMG_0209_2.JPG",
+      "subject": "toddler girl with gift ribbon",
+      "person_count": 1,
+      "setting": "indoor living room",
+      "key_objects": [
+        "young girl",
+        "red ribbon bow",
+        "white sweater",
+        "black patterned dress",
+        "bookshelf"
+      ],
+      "verified_absent": [
+        "adult males",
+        "outdoor setting",
+        "sports equipment"
+      ],
+      "free_text": "A blonde toddler wearing a black dress with teddy bear design and white cardigan holds a large red gift ribbon above her head in an indoor home setting."
+    },
+    {
+      "id": 7,
+      "file_name": "_MG_3881.JPG",
+      "subject": "children diving in swimming pool",
+      "person_count": 4,
+      "setting": "indoor swimming pool",
+      "key_objects": [
+        "diving board",
+        "children",
+        "swimming pool",
+        "white tile",
+        "water"
+      ],
+      "verified_absent": [
+        "adults only",
+        "outdoor beach",
+        "diving platform"
+      ],
+      "free_text": "Children learning to dive and swim in an indoor pool, using white diving boards and practicing water safety techniques."
+    },
+    {
+      "id": 8,
+      "file_name": "IMG_1137.JPG",
+      "subject": "child on sandy beach",
+      "person_count": 1,
+      "setting": "outdoor beach",
+      "key_objects": [
+        "young girl",
+        "sand",
+        "swimsuit",
+        "beach",
+        "sunshine"
+      ],
+      "verified_absent": [
+        "water",
+        "people swimming",
+        "beach toys"
+      ],
+      "free_text": "A child lying stretched out on the sand in a colorful swimsuit, enjoying a sunny day at the beach."
+    },
+    {
+      "id": 9,
+      "file_name": "IMG_1332.JPG",
+      "subject": "adult and child in pool",
+      "person_count": 2,
+      "setting": "indoor swimming pool",
+      "key_objects": [
+        "woman",
+        "child",
+        "pool water",
+        "teal water",
+        "swimming"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "diving equipment",
+        "spectators"
+      ],
+      "free_text": "An adult and young child interact in clear teal pool water, with the child playing in the water during what appears to be a swimming lesson or recreational time."
+    },
+    {
+      "id": 10,
+      "file_name": "CRW_9910_JFR.JPG",
+      "subject": "man carving roasted turkey",
+      "person_count": 1,
+      "setting": "indoor kitchen dining area",
+      "key_objects": [
+        "roasted turkey",
+        "carving knife",
+        "man",
+        "kitchen counter",
+        "potted plants"
+      ],
+      "verified_absent": [
+        "raw meat",
+        "outdoor grill",
+        "large dining table"
+      ],
+      "free_text": "A man in professional attire carves a golden roasted turkey in an indoor kitchen setting surrounded by potted plants and kitchen cabinetry."
+    },
+    {
+      "id": 11,
+      "file_name": "_MG_7184.JPG",
+      "subject": "beer glass with holiday lights",
+      "person_count": -1,
+      "setting": "indoor bar or lounge",
+      "key_objects": [
+        "beer glass",
+        "warm lights",
+        "holiday decorations",
+        "table",
+        "bokeh lights"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor setting",
+        "cocktail"
+      ],
+      "free_text": "A glass of beer sits on a dark table with warm golden bokeh lights and holiday decorations visible in the blurred background, creating a cozy festive atmosphere."
+    },
+    {
+      "id": 12,
+      "file_name": "IMG_1631.JPG",
+      "subject": "thomas the tank engine toy",
+      "person_count": -1,
+      "setting": "indoor floor",
+      "key_objects": [
+        "thomas train",
+        "toy locomotive",
+        "character face",
+        "metal wheels",
+        "blue and red paint"
+      ],
+      "verified_absent": [
+        "people",
+        "tracks",
+        "real trains"
+      ],
+      "free_text": "A classic Thomas the Tank Engine toy train engine painted in blue and red with the characteristic friendly face and metal wheels."
+    },
+    {
+      "id": 13,
+      "file_name": "IMG_0680.JPG",
+      "subject": "two children playing together",
+      "person_count": 2,
+      "setting": "indoor home",
+      "key_objects": [
+        "two girls",
+        "couch",
+        "decorative pillow",
+        "furniture",
+        "toys"
+      ],
+      "verified_absent": [
+        "adult supervision",
+        "outdoor play",
+        "sports"
+      ],
+      "free_text": "Two young children sit together indoors near furniture and home decorations, engaged in play or bonding time."
+    },
+    {
+      "id": 14,
+      "file_name": "IMG_0672.JPG",
+      "subject": "children at outdoor sports event",
+      "person_count": 4,
+      "setting": "outdoor grass field",
+      "key_objects": [
+        "children",
+        "grass",
+        "sports jerseys",
+        "outdoor setting",
+        "trees"
+      ],
+      "verified_absent": [
+        "water",
+        "swimming",
+        "indoor equipment"
+      ],
+      "free_text": "Children wear sports jerseys and stand on a grassy outdoor field during what appears to be a youth sports gathering or event."
+    },
+    {
+      "id": 15,
+      "file_name": "IMG_9653.JPG",
+      "subject": "person on stage with stage lights",
+      "person_count": 1,
+      "setting": "indoor stage performance",
+      "key_objects": [
+        "person",
+        "stage lights",
+        "blue light",
+        "orange light",
+        "microphone"
+      ],
+      "verified_absent": [
+        "audience",
+        "daylight",
+        "outdoor venue"
+      ],
+      "free_text": "A performer stands alone on stage illuminated by dramatic blue and orange stage lighting during an indoor performance."
+    },
+    {
+      "id": 16,
+      "file_name": "_MG_6666.JPG",
+      "subject": "group graduation ceremony",
+      "person_count": 8,
+      "setting": "indoor auditorium",
+      "key_objects": [
+        "graduates",
+        "graduation robes",
+        "podium",
+        "mortarboards",
+        "black gowns"
+      ],
+      "verified_absent": [
+        "children",
+        "outdoor setting",
+        "casual clothing"
+      ],
+      "free_text": "A group of graduates in black robes and mortarboards stand together on a stage near a wooden podium during a graduation ceremony."
+    },
+    {
+      "id": 17,
+      "file_name": "IMG_3079.JPG",
+      "subject": "boy holding science fiction books",
+      "person_count": 1,
+      "setting": "indoor classroom or library",
+      "key_objects": [
+        "boy",
+        "science fiction books",
+        "star wars book",
+        "toy decoration",
+        "seated position"
+      ],
+      "verified_absent": [
+        "girls",
+        "sports equipment",
+        "outdoor environment"
+      ],
+      "free_text": "A young boy sits holding multiple science fiction and Star Wars books, showcasing his reading interests in an indoor setting."
+    },
+    {
+      "id": 18,
+      "file_name": "IMG_4519.JPG",
+      "subject": "woman holding comic books",
+      "person_count": 1,
+      "setting": "indoor home",
+      "key_objects": [
+        "woman",
+        "comic books",
+        "smile",
+        "red shirt",
+        "collector mugs"
+      ],
+      "verified_absent": [
+        "men",
+        "outdoor setting",
+        "books without graphics"
+      ],
+      "free_text": "A woman proudly displays comic books she is holding, with collectible mugs visible on a shelf behind her in a home setting."
+    },
+    {
+      "id": 19,
+      "file_name": "_MG_3688.jpg",
+      "subject": "large group of children at school event",
+      "person_count": 15,
+      "setting": "indoor school building",
+      "key_objects": [
+        "children",
+        "school building",
+        "outdoor entrance",
+        "large group",
+        "varied clothing"
+      ],
+      "verified_absent": [
+        "adults only",
+        "indoor classroom",
+        "sports equipment"
+      ],
+      "free_text": "A large group of school children stands together outside a brick school building during what appears to be a school event or gathering."
+    },
+    {
+      "id": 20,
+      "file_name": "IMG_1556.JPG",
+      "subject": "adult man in garden with flowers",
+      "person_count": 1,
+      "setting": "outdoor residential garden",
+      "key_objects": [
+        "man",
+        "garden flowers",
+        "flowering plants",
+        "green foliage",
+        "bicycles"
+      ],
+      "verified_absent": [
+        "water feature",
+        "vegetables",
+        "formal landscaping"
+      ],
+      "free_text": "A man stands in a vibrant outdoor garden surrounded by blooming flowers, with bicycles visible in the background."
+    },
+    {
+      "id": 21,
+      "file_name": "IMG_0633_1.JPG",
+      "subject": "flowering plant in planter",
+      "person_count": -1,
+      "setting": "outdoor patio",
+      "key_objects": [
+        "magenta petunias",
+        "white planter",
+        "garden flowers",
+        "sidewalk",
+        "green leaves"
+      ],
+      "verified_absent": [
+        "people",
+        "water feature",
+        "fruit plants"
+      ],
+      "free_text": "A white planter filled with vibrant magenta and purple petunias displays abundant blooms on an outdoor patio near a sidewalk."
+    },
+    {
+      "id": 22,
+      "file_name": "20240810_200407.jpg",
+      "subject": "baked goods on serving tray",
+      "person_count": 1,
+      "setting": "indoor kitchen",
+      "key_objects": [
+        "baked pastries",
+        "hand",
+        "serving tray",
+        "kitchen counter",
+        "window"
+      ],
+      "verified_absent": [
+        "raw ingredients",
+        "meal dishes",
+        "outdoor setting"
+      ],
+      "free_text": "A hand holds a large baking tray filled with golden baked pastries or cookies in an indoor kitchen setting with windows visible."
+    },
+    {
+      "id": 23,
+      "file_name": "IMG_9635.JPG",
+      "subject": "person with heritage flag in spring",
+      "person_count": 1,
+      "setting": "outdoor residential area",
+      "key_objects": [
+        "person",
+        "flag",
+        "flowering tree",
+        "spring blossoms",
+        "residential house"
+      ],
+      "verified_absent": [
+        "winter setting",
+        "crowded area",
+        "formal event"
+      ],
+      "free_text": "A person holds a flag in front of a house with vibrant pink spring blossoms, capturing a moment of seasonal beauty and heritage."
+    },
+    {
+      "id": 24,
+      "file_name": "_MG_5472.JPG",
+      "subject": "people in hot tub",
+      "person_count": 5,
+      "setting": "indoor hot tub or spa",
+      "key_objects": [
+        "people",
+        "hot tub",
+        "water",
+        "spa setting",
+        "decorative tile border"
+      ],
+      "verified_absent": [
+        "children only",
+        "outdoor pool",
+        "dry setting"
+      ],
+      "free_text": "A group of people relaxes together in a tiled hot tub filled with steaming water during an indoor spa experience."
+    },
+    {
+      "id": 25,
+      "file_name": "IMG_2450.JPG",
+      "subject": "person in white jacket at outdoor event",
+      "person_count": 1,
+      "setting": "outdoor residential area",
+      "key_objects": [
+        "person",
+        "white jacket",
+        "sign",
+        "outdoor setting",
+        "residential home"
+      ],
+      "verified_absent": [
+        "formal wear",
+        "crowded venue",
+        "water feature"
+      ],
+      "free_text": "A person wearing a white jacket stands outdoors near a residential home with a sign visible, captured in an outdoor setting."
+    },
+    {
+      "id": 26,
+      "file_name": "IMG_2065.JPG",
+      "subject": "person playing soccer on field",
+      "person_count": 1,
+      "setting": "outdoor soccer field",
+      "key_objects": [
+        "soccer ball",
+        "field markings",
+        "goal line",
+        "grass",
+        "sports uniform"
+      ],
+      "verified_absent": [
+        "indoor walls",
+        "spectators",
+        "benches"
+      ],
+      "free_text": "A single player in neon yellow and black gear stands on a grass soccer field with white markings. The player holds a soccer ball on the ground near the center circle marking. Bright daylight illuminates the field and surrounding brick structures."
+    },
+    {
+      "id": 27,
+      "file_name": "_MG_2213.jpg",
+      "subject": "children making crafts outdoors",
+      "person_count": 4,
+      "setting": "outdoor yard near parked car",
+      "key_objects": [
+        "blue plastic tub",
+        "white container",
+        "car",
+        "tree",
+        "grass"
+      ],
+      "verified_absent": [
+        "indoor surfaces",
+        "beach sand",
+        "water feature"
+      ],
+      "free_text": "Four children lean over a blue plastic tub and white container engaged in a craft activity outdoors. A red vehicle and trees are visible in the background. The children wear various colored summer clothing while standing on grass."
+    },
+    {
+      "id": 28,
+      "file_name": "IMG_0607.JPG",
+      "subject": "teacher and children in classroom performance",
+      "person_count": 11,
+      "setting": "indoor school gymnasium with audience",
+      "key_objects": [
+        "green banner",
+        "children seated",
+        "teacher",
+        "classroom wall",
+        "stage area"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "sports equipment",
+        "professional stage"
+      ],
+      "free_text": "A teacher and multiple children participate in what appears to be a classroom performance or presentation. Many children sit facing the stage while a teacher and student demonstrate something with a green prop. The setting is an indoor school gym with painted walls."
+    },
+    {
+      "id": 29,
+      "file_name": "IMG_0469.JPG",
+      "subject": "group with young children and strollers at outdoor event",
+      "person_count": 9,
+      "setting": "outdoor parking lot at community event",
+      "key_objects": [
+        "stroller",
+        "news van",
+        "evergreen trees",
+        "pavement",
+        "winter clothing"
+      ],
+      "verified_absent": [
+        "beach setting",
+        "indoor mall",
+        "playground equipment"
+      ],
+      "free_text": "A diverse group of adults and children gather outside a news vehicle in a parking lot. Two strollers with young children are in the foreground while bundled-up adults stand nearby. Evergreen trees and a news broadcast van are visible in the background."
+    },
+    {
+      "id": 30,
+      "file_name": "20230709_190522.jpg",
+      "subject": "teenage girl with beaded bracelets",
+      "person_count": 1,
+      "setting": "indoor home setting",
+      "key_objects": [
+        "beaded bracelets",
+        "pink tank top",
+        "stairs",
+        "indoor wall",
+        "long hair"
+      ],
+      "verified_absent": [
+        "outdoor environment",
+        "multiple people",
+        "formal attire"
+      ],
+      "free_text": "A teenage girl displays multiple beaded bracelets on her wrist while posing for a portrait. She wears a pink sleeveless top and has long hair. The background shows interior home elements including carpeted stairs."
+    },
+    {
+      "id": 31,
+      "file_name": "IMG_0685.JPG",
+      "subject": "young child playing with electronic toy game",
+      "person_count": 1,
+      "setting": "indoor home environment",
+      "key_objects": [
+        "pink electronic game device",
+        "toy",
+        "beige furniture",
+        "blanket",
+        "child's clothing"
+      ],
+      "verified_absent": [
+        "outdoor playground",
+        "multiple children",
+        "school setting"
+      ],
+      "free_text": "A young child holds and plays with a pink and green electronic handheld game device. The child sits on furniture indoors wearing casual clothing. The toy features colorful buttons and a screen for interactive gameplay."
+    },
+    {
+      "id": 32,
+      "file_name": "IMG_0098.JPG",
+      "subject": "young toddler portrait",
+      "person_count": 1,
+      "setting": "indoor studio with purple background",
+      "key_objects": [
+        "denim shirt",
+        "purple backdrop",
+        "toddler",
+        "short blonde hair"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "multiple people",
+        "busy background"
+      ],
+      "free_text": "A smiling toddler with blonde hair wears a denim shirt against a solid purple background. The child faces the camera with a cheerful expression. The simple studio setup creates a clean portrait image."
+    },
+    {
+      "id": 33,
+      "file_name": "IMG_0984.JPG",
+      "subject": "young child in dress with flower crown at home",
+      "person_count": 1,
+      "setting": "outdoor residential home and lawn",
+      "key_objects": [
+        "blue dress",
+        "flower crown",
+        "grass",
+        "house",
+        "doll"
+      ],
+      "verified_absent": [
+        "school setting",
+        "multiple children",
+        "formal event"
+      ],
+      "free_text": "A young child in a blue dress with a purple flower crown stands on a green lawn in front of a residential home. The child holds a small doll and poses for the camera. The background shows the house's exterior and landscaping."
+    },
+    {
+      "id": 34,
+      "file_name": "_MG_6445.JPG",
+      "subject": "man and boy wrestling on bed",
+      "person_count": 2,
+      "setting": "indoor bedroom",
+      "key_objects": [
+        "bed",
+        "glasses",
+        "white shirt",
+        "bedroom furniture",
+        "clothing"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "gym equipment",
+        "multiple people"
+      ],
+      "free_text": "A man and young boy engage in playful wrestling or roughhousing on a bed. The man wears glasses and a white shirt while interacting with the child. The indoor bedroom setting shows typical home furnishings in the background."
+    },
+    {
+      "id": 35,
+      "file_name": "IMG_1966.JPG",
+      "subject": "family group on couch",
+      "person_count": 5,
+      "setting": "indoor living room",
+      "key_objects": [
+        "brown couch",
+        "red shirt",
+        "blue shirt",
+        "striped clothing",
+        "wrapped gift"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "formal dining",
+        "bedroom"
+      ],
+      "free_text": "Five family members sit together on a brown couch indoors. They wear casual colorful clothing including red, blue, and striped outfits. A wrapped gift sits on the couch, suggesting a family celebration or gathering."
+    },
+    {
+      "id": 36,
+      "file_name": "IMG_4615.JPG",
+      "subject": "three people standing on grass",
+      "person_count": 3,
+      "setting": "outdoor field or lawn",
+      "key_objects": [
+        "grass",
+        "casual clothing",
+        "outdoor ground",
+        "sky",
+        "natural setting"
+      ],
+      "verified_absent": [
+        "indoor walls",
+        "vehicles",
+        "playground"
+      ],
+      "free_text": "Three people stand together on a grassy field viewed from a rotated perspective. They wear casual clothing and stand on natural outdoor ground. The image captures a simple outdoor moment with clear sky visible."
+    },
+    {
+      "id": 37,
+      "file_name": "_MG_7171.dng",
+      "subject": "interior bar with television",
+      "person_count": 0,
+      "setting": "indoor bar or restaurant",
+      "key_objects": [
+        "television monitor",
+        "bar counter",
+        "wooden interior",
+        "decorative lights",
+        "glasses"
+      ],
+      "verified_absent": [
+        "people at tables",
+        "food service",
+        "crowded venue"
+      ],
+      "free_text": "An empty bar interior displays a television monitor mounted on the wall above the bar counter. Warm lighting and wooden elements create an inviting atmosphere. Various glasses and bar equipment are visible on the counter."
+    },
+    {
+      "id": 38,
+      "file_name": "IMG_9753.JPG",
+      "subject": "young child holding artwork",
+      "person_count": 1,
+      "setting": "indoor home with couch visible",
+      "key_objects": [
+        "white shirt with leaf prints",
+        "colorful artwork",
+        "couch",
+        "child",
+        "leaves"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "school classroom",
+        "multiple people"
+      ],
+      "free_text": "A young child displays a white shirt decorated with colorful painted leaves. The child stands indoors with home furnishings visible behind them. An adult in plaid clothing is partially visible in the background."
+    },
+    {
+      "id": 39,
+      "file_name": "IMG_1568.JPG",
+      "subject": "four children in blankets on couch",
+      "person_count": 4,
+      "setting": "indoor living room",
+      "key_objects": [
+        "brown leather couch",
+        "red blanket",
+        "blue blanket",
+        "black blanket",
+        "white socks"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "playground",
+        "classroom"
+      ],
+      "free_text": "Four children sit together on a brown leather couch wrapped in colorful blankets including red, blue, and black. They wear white socks and display playful, happy expressions. The cozy indoor scene suggests a family gathering or movie night."
+    },
+    {
+      "id": 40,
+      "file_name": "IMG_1702.JPG",
+      "subject": "woman and toddler with birthday cake",
+      "person_count": 2,
+      "setting": "indoor home with green tablecloth",
+      "key_objects": [
+        "birthday cake",
+        "toddler",
+        "woman",
+        "table",
+        "green cloth"
+      ],
+      "verified_absent": [
+        "restaurant setting",
+        "outdoor patio",
+        "large crowd"
+      ],
+      "free_text": "A woman and toddler sit at a table with a birthday cake placed between them. A green tablecloth covers the table. The indoor home setting shows typical household items in the background during what appears to be a birthday celebration."
+    },
+    {
+      "id": 41,
+      "file_name": "IMG_1268.JPG",
+      "subject": "three children at birthday party with cake",
+      "person_count": 3,
+      "setting": "indoor home party space",
+      "key_objects": [
+        "birthday cake",
+        "red party dress",
+        "party crown",
+        "children",
+        "table"
+      ],
+      "verified_absent": [
+        "restaurant venue",
+        "outdoor yard",
+        "large party"
+      ],
+      "free_text": "Three children stand around a decorated birthday cake at a home party. The child in front wears a red party dress and crown. Colorful cake decorations and party items are visible on the table surface."
+    },
+    {
+      "id": 42,
+      "file_name": "IMG_6201.JPG",
+      "subject": "craft decoration of santa face",
+      "person_count": 0,
+      "setting": "indoor on wooden table",
+      "key_objects": [
+        "santa face craft",
+        "pink material",
+        "red material",
+        "white trim",
+        "wooden surface"
+      ],
+      "verified_absent": [
+        "people present",
+        "outdoor setting",
+        "christmas tree"
+      ],
+      "free_text": "A handmade santa craft decoration sits on a wooden surface. Pink and red materials form the face while white trim creates the beard. A small ornament hook is visible at the top of the decoration."
+    },
+    {
+      "id": 43,
+      "file_name": "_MG_7013.dng",
+      "subject": "historic western saloon building exterior",
+      "person_count": 0,
+      "setting": "outdoor historic downtown street",
+      "key_objects": [
+        "wooden building",
+        "storefront windows",
+        "decorative garland",
+        "parked cars",
+        "pavement"
+      ],
+      "verified_absent": [
+        "people in scene",
+        "modern signage",
+        "indoor setting"
+      ],
+      "free_text": "A historic wooden saloon building with period architecture stands on a downtown street. The storefront features multiple windows and displays festive decorative garlands. Modern vehicles park in front of the historic structure."
+    },
+    {
+      "id": 44,
+      "file_name": "IMG_4325.JPG",
+      "subject": "cityscape aerial view from high building",
+      "person_count": 0,
+      "setting": "outdoor urban downtown view",
+      "key_objects": [
+        "tall buildings",
+        "street grid",
+        "dome structure",
+        "parks",
+        "urban landscape"
+      ],
+      "verified_absent": [
+        "people visible",
+        "water bodies",
+        "mountains"
+      ],
+      "free_text": "An elevated view captures a downtown cityscape with multiple buildings, green parks, and streets arranged in a grid pattern. A distinctive domed structure is visible in the skyline. The overcast sky provides soft natural lighting for the architectural scene."
+    },
+    {
+      "id": 45,
+      "file_name": "IMG_0541.JPG",
+      "subject": "four children on couch eating together",
+      "person_count": 4,
+      "setting": "indoor living room",
+      "key_objects": [
+        "couch",
+        "food items",
+        "children eating",
+        "casual clothing",
+        "furniture"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "formal dining",
+        "adults only"
+      ],
+      "free_text": "Four children sit together on a couch while enjoying food and drinks. They wear casual colorful clothing and appear to be having a snack or meal together. Various food items and beverages are visible on the couch around them."
+    },
+    {
+      "id": 46,
+      "file_name": "_MG_6740.JPG",
+      "subject": "two teenage graduates in caps and gowns",
+      "person_count": 2,
+      "setting": "outdoor graduation ceremony",
+      "key_objects": [
+        "graduation caps",
+        "graduation gowns",
+        "school building",
+        "diplomas",
+        "outdoor background"
+      ],
+      "verified_absent": [
+        "indoor gymnasium",
+        "multiple graduates",
+        "formal podium"
+      ],
+      "free_text": "Two teenagers wear graduation caps and gowns at an outdoor ceremony. A school building with distinctive architecture is visible in the background. They hold diplomas and stand under natural outdoor lighting."
+    },
+    {
+      "id": 47,
+      "file_name": "IMG_0918.JPG",
+      "subject": "two young children on grass",
+      "person_count": 2,
+      "setting": "outdoor residential lawn",
+      "key_objects": [
+        "grass",
+        "children",
+        "casual clothing",
+        "sidewalk",
+        "outdoor setting"
+      ],
+      "verified_absent": [
+        "indoor walls",
+        "playground equipment",
+        "vehicles"
+      ],
+      "free_text": "Two young children stand on a residential lawn wearing pink and blue outfits. They pose for the camera on a grassy area with a concrete sidewalk visible. The outdoor setting shows natural grass and daylight."
+    },
+    {
+      "id": 48,
+      "file_name": "IMG_1829.JPG",
+      "subject": "adult instructing group of children outdoors",
+      "person_count": 5,
+      "setting": "outdoor grass area with trees",
+      "key_objects": [
+        "adult instructor",
+        "children in pink",
+        "grass",
+        "trees",
+        "sidewalk"
+      ],
+      "verified_absent": [
+        "indoor gymnasium",
+        "playground equipment",
+        "formal classroom"
+      ],
+      "free_text": "An adult in red gives instruction to four children gathered on a grassy outdoor area. Several children wear pink while standing on the lawn with trees visible behind them. A concrete sidewalk runs along the edge of the gathering."
+    },
+    {
+      "id": 49,
+      "file_name": "IMG_4853.JPG",
+      "subject": "ferris wheel ride structure",
+      "person_count": 0,
+      "setting": "outdoor amusement area",
+      "key_objects": [
+        "ferris wheel",
+        "blue metal frame",
+        "sun designs",
+        "solar panels",
+        "mechanical structure"
+      ],
+      "verified_absent": [
+        "people in cars",
+        "ticket booths",
+        "carnival tents"
+      ],
+      "free_text": "A blue metal ferris wheel structure stands against natural foliage and sky. The ride features decorative sun designs and appears to include solar panel elements. Trees are visible in the background around the amusement ride."
+    },
+    {
+      "id": 50,
+      "file_name": "IMG_5867.JPG",
+      "subject": "woman and child reading together",
+      "person_count": 2,
+      "setting": "indoor home with carpet floor",
+      "key_objects": [
+        "book",
+        "woman",
+        "child",
+        "purple clothing",
+        "furniture"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "library setting",
+        "classroom"
+      ],
+      "free_text": "A woman and child sit together indoors while reading a book. The child wears purple clothing while leaning toward the open book. The home interior shows carpet flooring and typical household furnishings in the background."
+    },
+    {
+      "id": 51,
+      "file_name": "_MG_6664.JPG",
+      "subject": "people at formal event ceremony",
+      "person_count": 12,
+      "setting": "indoor arena or venue with seating",
+      "key_objects": [
+        "chairs",
+        "white clothing",
+        "crowd",
+        "banners"
+      ],
+      "verified_absent": [
+        "outdoor trees",
+        "water",
+        "sports equipment",
+        "food"
+      ],
+      "free_text": "A formal gathering shows multiple people in white robes or formal attire standing among rows of black chairs in an indoor venue. Spectators fill the background bleachers, suggesting an organized ceremonial or official event taking place indoors."
+    },
+    {
+      "id": 52,
+      "file_name": "IMG_20241012_0005.jpg",
+      "subject": "older couple anniversary portrait",
+      "person_count": 2,
+      "setting": "indoor studio with brown mat backing",
+      "key_objects": [
+        "framed photo",
+        "brown matting",
+        "glasses",
+        "casual clothing"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "children",
+        "formal decorations",
+        "flowers"
+      ],
+      "free_text": "An elderly couple poses together for a portrait framed in brown matting with text indicating a wedding anniversary celebration. They wear casual, relaxed clothing and smile warmly at the camera in this indoor studio setting."
+    },
+    {
+      "id": 53,
+      "file_name": "IMG_9525.JPG",
+      "subject": "toddler playing with toy",
+      "person_count": 1,
+      "setting": "indoor playroom or activity area",
+      "key_objects": [
+        "fisher price toy",
+        "pink items",
+        "wooden furniture",
+        "toy box"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "other children",
+        "school setting",
+        "animals"
+      ],
+      "free_text": "A young blonde toddler concentrates on a colorful Fisher-Price Learning toy in a pink-themed playroom. Other toys and play items are visible in the background, suggesting an engaged child at play indoors."
+    },
+    {
+      "id": 54,
+      "file_name": "IMG_4936.JPG",
+      "subject": "couple posing indoors",
+      "person_count": 2,
+      "setting": "indoor living room with star decoration",
+      "key_objects": [
+        "wooden star wall art",
+        "white wall",
+        "casual clothing",
+        "digital clock"
+      ],
+      "verified_absent": [
+        "outdoor view",
+        "formal attire",
+        "people in background",
+        "children"
+      ],
+      "free_text": "A man and woman stand together indoors against a pale wall decorated with a large wooden star. The casual portrait captures them in relaxed home setting clothing with warm lighting and furnishings visible behind them."
+    },
+    {
+      "id": 55,
+      "file_name": "IMG_4683.JPG",
+      "subject": "high school graduate outdoors",
+      "person_count": 1,
+      "setting": "outdoor garden or driveway with greenery",
+      "key_objects": [
+        "graduation cap",
+        "white gown",
+        "yellow cords",
+        "green hedge"
+      ],
+      "verified_absent": [
+        "other people",
+        "school building",
+        "diploma",
+        "indoor setting"
+      ],
+      "free_text": "A young woman in white graduation robes and cap with yellow honor cords stands outdoors against lush green hedges. The outdoor natural setting provides a scenic backdrop for this graduation portrait."
+    },
+    {
+      "id": 56,
+      "file_name": "_MG_7039.dng",
+      "subject": "beer glass with food",
+      "person_count": 2,
+      "setting": "indoor restaurant or bar table",
+      "key_objects": [
+        "beer glass",
+        "pizza",
+        "table setting",
+        "plates",
+        "hands"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "formal attire",
+        "children",
+        "empty glasses"
+      ],
+      "free_text": "A tall beer glass sits prominently on a wooden table with pizza and place settings visible beside it. Hands of diners and additional people are partially visible, indicating a casual indoor dining or bar environment."
+    },
+    {
+      "id": 57,
+      "file_name": "IMG_4231.JPG",
+      "subject": "person standing in gymnasium",
+      "person_count": 1,
+      "setting": "indoor gymnasium with wooden floor",
+      "key_objects": [
+        "wooden gymnasium floor",
+        "decorative banner",
+        "athletic wear",
+        "bleachers"
+      ],
+      "verified_absent": [
+        "outdoor sports field",
+        "water",
+        "formal clothing",
+        "winter setting"
+      ],
+      "free_text": "A person stands centered in a spacious gymnasium on polished wooden flooring with decorative banners visible overhead. The indoor athletic facility setting suggests a school or community sports venue."
+    },
+    {
+      "id": 58,
+      "file_name": "_MG_6420.JPG",
+      "subject": "decorative wooden box",
+      "person_count": 0,
+      "setting": "indoor white surface studio",
+      "key_objects": [
+        "wooden box",
+        "printed image",
+        "decorative item",
+        "white background"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor scenery",
+        "food",
+        "animals"
+      ],
+      "free_text": "A decorative wooden box with printed imagery sits on a neutral white studio surface. The object appears to be a finished craft or product photograph in a controlled indoor lighting environment."
+    },
+    {
+      "id": 59,
+      "file_name": "IMG_1836.JPG",
+      "subject": "children at costume party",
+      "person_count": 7,
+      "setting": "indoor classroom or school event space",
+      "key_objects": [
+        "colorful leis",
+        "costumes",
+        "children in foreground",
+        "bulletin board"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "formal setting",
+        "adults only",
+        "balloons"
+      ],
+      "free_text": "Several children gather at what appears to be a Hawaiian-themed classroom party, with two smiling children in the foreground wearing colorful flower leis. Other children and a decorated bulletin board are visible in the background."
+    },
+    {
+      "id": 60,
+      "file_name": "_MG_3575-2_sm.jpg",
+      "subject": "architectural detail sundial",
+      "person_count": 0,
+      "setting": "outdoor building facade or entryway",
+      "key_objects": [
+        "carved sundial",
+        "decorative arch",
+        "stone wall",
+        "architectural finials"
+      ],
+      "verified_absent": [
+        "people",
+        "vehicles",
+        "landscaping",
+        "weather"
+      ],
+      "free_text": "An ornate carved sundial with text reading REPTILIA is mounted on a classical stone building's facade beneath a decorative arch. The architectural detail suggests a museum, institution, or historic building entrance."
+    },
+    {
+      "id": 61,
+      "file_name": "IMG_0106.JPG",
+      "subject": "couple at event",
+      "person_count": 2,
+      "setting": "indoor venue with glass backdrop",
+      "key_objects": [
+        "casual clothing",
+        "window reflections",
+        "interior space",
+        "bright lighting"
+      ],
+      "verified_absent": [
+        "formal attire",
+        "outdoor scenery",
+        "children",
+        "decorations"
+      ],
+      "free_text": "A man and woman smile together indoors with bright natural light illuminating their faces. Large windows or glass panels create reflections in the background, suggesting a modern interior venue or public space."
+    },
+    {
+      "id": 62,
+      "file_name": "_MG_6999.JPG",
+      "subject": "chocolate covered treats",
+      "person_count": 0,
+      "setting": "overhead studio or food photography flat lay",
+      "key_objects": [
+        "chocolate covered sweets",
+        "black and white spots",
+        "plastic wrapping",
+        "tray"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor scenery",
+        "eating utensils",
+        "beverages"
+      ],
+      "free_text": "Multiple chocolate-covered confections with distinctive black and white spotted patterns are arranged in clear plastic wrapping on a tray. The overhead product photography style suggests food preparation or bakery documentation."
+    },
+    {
+      "id": 63,
+      "file_name": "IMG_2003.JPG",
+      "subject": "soccer digital photo frame",
+      "person_count": 0,
+      "setting": "indoor table or surface flat lay",
+      "key_objects": [
+        "soccer ball photo frame",
+        "green packaging",
+        "product box",
+        "white border"
+      ],
+      "verified_absent": [
+        "people",
+        "actual soccer field",
+        "athletes",
+        "outdoor scenery"
+      ],
+      "free_text": "A soccer ball-shaped digital photo frame product sits on a wooden surface in its retail packaging. The device displays an image inside the circular soccer ball design, indicating this is a novelty sports-themed photo display product."
+    },
+    {
+      "id": 64,
+      "file_name": "IMG_1029.JPG",
+      "subject": "beer glass in bar setting",
+      "person_count": 1,
+      "setting": "indoor bar or restaurant with decorative lighting",
+      "key_objects": [
+        "beer glass",
+        "bar counter",
+        "colorful decorations",
+        "bright lights"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "food on table",
+        "formal setting",
+        "empty venue"
+      ],
+      "free_text": "A glass of amber beer sits prominently on a bar counter with bright decorative lighting and colorful elements visible in the blurred background. The festive indoor bar atmosphere is captured in this beverage-focused shot."
+    },
+    {
+      "id": 65,
+      "file_name": "_MG_7197-Edit.png",
+      "subject": "children at sports event",
+      "person_count": 10,
+      "setting": "outdoor sports field with grass",
+      "key_objects": [
+        "soccer jerseys",
+        "children athletes",
+        "grass field",
+        "trees in background"
+      ],
+      "verified_absent": [
+        "adults only",
+        "indoor setting",
+        "spectator stands",
+        "winter scenery"
+      ],
+      "free_text": "A youth soccer team of approximately ten children huddles together on a grass field with their hands raised in celebration. The outdoor park setting with trees visible in the background captures a moment of team unity and enthusiasm."
+    },
+    {
+      "id": 66,
+      "file_name": "CRW_5778.jpg",
+      "subject": "commercial storefront signage",
+      "person_count": 0,
+      "setting": "outdoor commercial area cloudy sky",
+      "key_objects": [
+        "starbucks sign",
+        "utility pole",
+        "lamp fixture",
+        "building exterior"
+      ],
+      "verified_absent": [
+        "people",
+        "vehicles",
+        "trees",
+        "clear sky"
+      ],
+      "free_text": "The iconic green Starbucks logo sign is mounted on a commercial building's exterior with utility poles and lighting fixtures visible against an overcast sky. This is a straightforward commercial establishment exterior photograph."
+    },
+    {
+      "id": 67,
+      "file_name": "20230826_121730.jpg",
+      "subject": "person with string lights",
+      "person_count": 1,
+      "setting": "indoor venue or event space with decorative lighting",
+      "key_objects": [
+        "warm string lights",
+        "person in center",
+        "dark backdrop",
+        "warm glow"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "daylight",
+        "multiple people",
+        "formal setting"
+      ],
+      "free_text": "A person stands illuminated by warm golden string lights in what appears to be an indoor event space or decorated venue. The atmospheric lighting creates an intimate, festive indoor environment."
+    },
+    {
+      "id": 68,
+      "file_name": "IMG_2045.JPG",
+      "subject": "large group at event",
+      "person_count": 25,
+      "setting": "indoor school or community event space",
+      "key_objects": [
+        "white t-shirts",
+        "group of people",
+        "table",
+        "exit sign"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "formal attire",
+        "sports uniforms",
+        "child-only crowd"
+      ],
+      "free_text": "A large group of people wearing white t-shirts stands together in an indoor venue, suggesting an organized community event or school gathering. The crowded indoor setting with visible exit signage indicates a public meeting or group event."
+    },
+    {
+      "id": 69,
+      "file_name": "IMG_4522.JPG",
+      "subject": "young girl portrait",
+      "person_count": 1,
+      "setting": "indoor with dark wall backdrop",
+      "key_objects": [
+        "teal colored shirt",
+        "girl child",
+        "dark background",
+        "natural lighting"
+      ],
+      "verified_absent": [
+        "other people",
+        "outdoor scenery",
+        "decorations",
+        "formal setting"
+      ],
+      "free_text": "A young girl with dark hair smiles directly at the camera wearing a teal-colored shirt against a plain dark wall. The simple indoor portrait setup with natural side lighting creates a clean, focused headshot."
+    },
+    {
+      "id": 70,
+      "file_name": "IMG_9410.JPG",
+      "subject": "young woman portrait",
+      "person_count": 1,
+      "setting": "indoor with window backlighting",
+      "key_objects": [
+        "blonde hair",
+        "white shirt",
+        "window light",
+        "necklace"
+      ],
+      "verified_absent": [
+        "other people",
+        "outdoor scenery",
+        "formal attire",
+        "dark setting"
+      ],
+      "free_text": "A blonde young woman with a warm smile is backlit by soft window light, creating a luminous portrait against a neutral background. She wears casual white clothing and appears relaxed in this naturally-lit indoor setting."
+    },
+    {
+      "id": 71,
+      "file_name": "_MG_5928.JPG",
+      "subject": "couple outdoors with greenery",
+      "person_count": 2,
+      "setting": "outdoor garden or landscaped area",
+      "key_objects": [
+        "lush green hedge",
+        "casual clothing",
+        "woman in dress",
+        "sunglasses"
+      ],
+      "verified_absent": [
+        "formal attire",
+        "indoor setting",
+        "children",
+        "water feature"
+      ],
+      "free_text": "A couple poses outdoors against a tall, dense green hedge backdrop in casual summer clothing. The woman wears a patterned dress while the man wears light-colored shorts and a polo shirt in this relaxed outdoor garden setting."
+    },
+    {
+      "id": 72,
+      "file_name": "_MG_6097.dng",
+      "subject": "swimmers in pool",
+      "person_count": 4,
+      "setting": "indoor swimming pool with diving boards",
+      "key_objects": [
+        "blue water",
+        "swimmers",
+        "diving boards",
+        "pool lanes"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "spectators",
+        "dry land",
+        "empty pool"
+      ],
+      "free_text": "Multiple swimmers are captured in blue pool water with diving boards visible in the background of this indoor aquatic facility. The composition suggests an active swimming practice or competition session."
+    },
+    {
+      "id": 73,
+      "file_name": "_MG_6340.dng",
+      "subject": "girl in striped shirt",
+      "person_count": 1,
+      "setting": "indoor home with radiator",
+      "key_objects": [
+        "pink striped shirt",
+        "radiator",
+        "dark doorway",
+        "blonde hair"
+      ],
+      "verified_absent": [
+        "other people",
+        "outdoor scenery",
+        "formal setting",
+        "bright lighting"
+      ],
+      "free_text": "A young girl with blonde hair stands indoors wearing a pink and white striped shirt against a white wall beside a tall radiator. The home interior setting with dark doorway in the background suggests a casual indoor family photo."
+    },
+    {
+      "id": 74,
+      "file_name": "IMG_0339.JPG",
+      "subject": "young boy in room",
+      "person_count": 1,
+      "setting": "indoor bedroom or living space",
+      "key_objects": [
+        "shirtless boy",
+        "dark shorts",
+        "sofa",
+        "lit lamp",
+        "wooden furniture"
+      ],
+      "verified_absent": [
+        "other people",
+        "outdoor view",
+        "formal clothing",
+        "school setting"
+      ],
+      "free_text": "A young shirtless boy stands confidently in an indoor living space with his hands on his hips, flanked by a glowing side table lamp and striped radiator. The casual home interior setting captures a candid moment in his day."
+    },
+    {
+      "id": 75,
+      "file_name": "IMG_9741.JPG",
+      "subject": "young woman in home",
+      "person_count": 1,
+      "setting": "indoor bedroom or closet space",
+      "key_objects": [
+        "pink striped shirt",
+        "denim skirt",
+        "blonde hair",
+        "closet backdrop"
+      ],
+      "verified_absent": [
+        "other people",
+        "outdoor scenery",
+        "formal attire",
+        "school setting"
+      ],
+      "free_text": "A young blonde woman poses in a casual outfit of pink striped long-sleeve shirt and denim skirt in what appears to be a bedroom closet or dressing area. The simple home interior setting captures a relaxed personal moment."
+    },
+    {
+      "id": 76,
+      "file_name": "IMG_2884.JPG",
+      "subject": "children in halloween costumes interacting with masked character",
+      "person_count": 4,
+      "setting": "indoor gymnasium or event space",
+      "key_objects": [
+        "red costume",
+        "white dress costume",
+        "pumpkins",
+        "green mesh backdrop",
+        "masked character head"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "trees",
+        "daylight",
+        "vehicles"
+      ],
+      "free_text": "Multiple children in festive costumes engage with a large red-masked character figure at an indoor Halloween event. A child in white dress costume and another in casual wear interact with the costumed character while decorative orange pumpkins are visible on the floor."
+    },
+    {
+      "id": 77,
+      "file_name": "IMG_4823.JPG",
+      "subject": "adult and two children playing in water with float",
+      "person_count": 3,
+      "setting": "outdoor lake or bay water",
+      "key_objects": [
+        "inflatable float",
+        "water",
+        "adult",
+        "children",
+        "shallow water"
+      ],
+      "verified_absent": [
+        "beach sand visible",
+        "boats",
+        "swimming pool",
+        "concrete decking"
+      ],
+      "free_text": "An adult and two young children enjoy playtime in calm water, with the smaller child seated on a bright pink inflatable float. The shallow water and clear conditions show ripples spreading from their activity in what appears to be a peaceful lake or bay setting."
+    },
+    {
+      "id": 78,
+      "file_name": "IMG_0543_4x6_300.jpg",
+      "subject": "child on inflatable bounce house slide",
+      "person_count": 1,
+      "setting": "outdoor yard or garden area",
+      "key_objects": [
+        "orange and white inflatable slide",
+        "child",
+        "grass field",
+        "sunny day"
+      ],
+      "verified_absent": [
+        "water",
+        "sand",
+        "concrete surface",
+        "crowds"
+      ],
+      "free_text": "A young child stands within a large inflatable bounce house and slide structure with orange and white sections. The activity takes place in a sunny backyard setting with green grass visible in the background."
+    },
+    {
+      "id": 79,
+      "file_name": "IMG_4486.JPG",
+      "subject": "young child lying on floor with toys and snacks",
+      "person_count": 1,
+      "setting": "indoor residential room with brick fireplace",
+      "key_objects": [
+        "child",
+        "food items",
+        "plastic toy",
+        "brick floor",
+        "dark footwear"
+      ],
+      "verified_absent": [
+        "furniture",
+        "windows",
+        "outdoor items",
+        "animals"
+      ],
+      "free_text": "A young child lies on a brick-tiled floor surrounded by snacks and toys, appearing to be in a playful mood. The indoor residential setting shows the child in casual loungewear against a brick fireplace backdrop."
+    },
+    {
+      "id": 80,
+      "file_name": "IMG_1215.JPG",
+      "subject": "child posing in front of hampton inn and suites sign",
+      "person_count": 1,
+      "setting": "outdoor hotel grounds with landscaping",
+      "key_objects": [
+        "hotel sign",
+        "child",
+        "bushes",
+        "grass",
+        "building in background"
+      ],
+      "verified_absent": [
+        "people other than the child",
+        "vehicles",
+        "indoor setting",
+        "water feature"
+      ],
+      "free_text": "A child stands in front of a large Hampton Inn and Suites hexagonal sign on a sunny day at the hotel's landscaped grounds. The setting shows manicured landscaping with shrubs, grass, and the hotel building visible in the background."
+    },
+    {
+      "id": 81,
+      "file_name": "IMG_5023.JPG",
+      "subject": "three adults posing indoors",
+      "person_count": 3,
+      "setting": "indoor room with windows and daylight",
+      "key_objects": [
+        "three men",
+        "white t-shirt",
+        "striped shirt",
+        "windows",
+        "interior wall"
+      ],
+      "verified_absent": [
+        "furniture",
+        "outdoor elements",
+        "crowded space",
+        "formal attire"
+      ],
+      "free_text": "Three adult men pose together indoors in a casual setting with natural light coming through windows. The group includes men wearing casual clothing including a white shirt with design and a horizontally striped shirt."
+    },
+    {
+      "id": 82,
+      "file_name": "IMG_4777.JPG",
+      "subject": "bavarian restaurant cutout figures with adult in costume",
+      "person_count": 2,
+      "setting": "indoor restaurant or event space with german decor",
+      "key_objects": [
+        "bavarian costume cutout",
+        "man in hat",
+        "bavarian woman cutout",
+        "diamond pattern backdrop",
+        "restaurant signage"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "crowd",
+        "food service",
+        "stage"
+      ],
+      "free_text": "A man in traditional bavarian hat stands next to two large bavarian restaurant promotional cutout figures featuring traditional german clothing and diamond pattern backdrop. The indoor setting displays authentic bavarian-themed restaurant decor and signage."
+    },
+    {
+      "id": 83,
+      "file_name": "IMG_3489.JPG",
+      "subject": "nighttime stadium or arena with stage lighting",
+      "person_count": 0,
+      "setting": "indoor arena or stadium at night",
+      "key_objects": [
+        "stage lights",
+        "dark ceiling",
+        "lighting fixtures",
+        "arena structure"
+      ],
+      "verified_absent": [
+        "people",
+        "performers",
+        "bright daylight",
+        "outdoor elements"
+      ],
+      "free_text": "A dimly lit interior shot of what appears to be an indoor arena or stadium with various stage and ceiling lights creating a dramatic nighttime atmosphere. The darkness and red lighting create an ambient, moody environment typical of entertainment venues."
+    },
+    {
+      "id": 84,
+      "file_name": "IMG_1014.JPG",
+      "subject": "children playing at splash pad water playground",
+      "person_count": 5,
+      "setting": "outdoor water playground with blue surface",
+      "key_objects": [
+        "blue splash pad",
+        "yellow water spout",
+        "children",
+        "fencing",
+        "playground equipment"
+      ],
+      "verified_absent": [
+        "swimming pool",
+        "slides",
+        "sand",
+        "buildings"
+      ],
+      "free_text": "Multiple children enjoy playing at an outdoor splash pad featuring a bright blue ground surface and yellow water features. Several kids engage with the water play equipment while others are visible in the background near fencing and adjacent playground areas."
+    },
+    {
+      "id": 85,
+      "file_name": "IMG_0872.JPG",
+      "subject": "performer on stage in yellow costume",
+      "person_count": 1,
+      "setting": "indoor theater or circus tent stage",
+      "key_objects": [
+        "performer",
+        "yellow costume",
+        "stage lights",
+        "red stage floor",
+        "dark background"
+      ],
+      "verified_absent": [
+        "audience visible",
+        "outdoor setting",
+        "props",
+        "other performers"
+      ],
+      "free_text": "A solitary performer dressed in bright yellow attire stands on a red stage floor under theatrical lighting. The dramatic indoor stage setting with dark background creates a circus or theater performance atmosphere."
+    },
+    {
+      "id": 86,
+      "file_name": "IMG_5449.JPG",
+      "subject": "illuminated castle structure at night event",
+      "person_count": 0,
+      "setting": "outdoor nighttime entertainment venue",
+      "key_objects": [
+        "castle silhouette",
+        "lights",
+        "night sky",
+        "decorative lighting"
+      ],
+      "verified_absent": [
+        "people",
+        "daytime",
+        "vehicles",
+        "crowds"
+      ],
+      "free_text": "An ornate castle structure is beautifully illuminated at night with decorative lighting creating a magical atmosphere. The nighttime outdoor setting captures the castle against a dark sky with artistic lighting enhancing its architectural features."
+    },
+    {
+      "id": 87,
+      "file_name": "IMG_2969.JPG",
+      "subject": "group of children posing with mascot character",
+      "person_count": 8,
+      "setting": "indoor event space with blue wall",
+      "key_objects": [
+        "mouse mascot",
+        "children",
+        "blue backdrop",
+        "yellow striped element",
+        "colorful clothing"
+      ],
+      "verified_absent": [
+        "outdoor elements",
+        "large crowds",
+        "stage",
+        "food service"
+      ],
+      "free_text": "A group of eight children gather around a large mouse mascot character against a bright blue wall backdrop at an indoor event. The children wear various colorful outfits and pose together for a photo with the costumed character."
+    },
+    {
+      "id": 88,
+      "file_name": "IMG_9758.JPG",
+      "subject": "children participating in craft activity with adult",
+      "person_count": 3,
+      "setting": "indoor craft workshop or classroom",
+      "key_objects": [
+        "children",
+        "adult hand",
+        "colored markers",
+        "white paper",
+        "pink table"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "large group",
+        "food",
+        "computer equipment"
+      ],
+      "free_text": "Two children engage in a creative craft activity at a pink table under the guidance of an adult. Colored markers and white paper are visible as the children work on their artistic projects in an indoor workshop setting."
+    },
+    {
+      "id": 89,
+      "file_name": "20221114_211024.jpg",
+      "subject": "branded beer glass on counter",
+      "person_count": 0,
+      "setting": "indoor bar or restaurant counter",
+      "key_objects": [
+        "steampunk-branded beer glass",
+        "red liquid",
+        "aluminum can",
+        "granite countertop"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor setting",
+        "food",
+        "windows"
+      ],
+      "free_text": "A vibrant red-colored beverage fills a steampunk-themed branded beer glass displayed on a granite counter next to its aluminum can. The indoor bar setting showcases the decorative glassware with detailed branding and artistic design."
+    },
+    {
+      "id": 90,
+      "file_name": "IMG_1004.JPG",
+      "subject": "children in matching plaid holiday outfits at indoor event",
+      "person_count": 5,
+      "setting": "indoor event space with christmas decorations",
+      "key_objects": [
+        "children in plaid dresses",
+        "christmas tree",
+        "poinsettias",
+        "holiday candelabra",
+        "stage"
+      ],
+      "verified_absent": [
+        "outdoor elements",
+        "snow",
+        "crowds",
+        "presents"
+      ],
+      "free_text": "Five children dressed in matching plaid holiday outfits stand on an indoor stage surrounded by Christmas decorations including a tree, white poinsettias, and holiday lighting. The festive indoor setting captures a holiday performance or celebration with full seasonal decor."
+    },
+    {
+      "id": 91,
+      "file_name": "_MG_7638-16.jpg",
+      "subject": "girl decorating christmas tree indoors",
+      "person_count": 1,
+      "setting": "indoor living room with christmas decorations",
+      "key_objects": [
+        "christmas tree",
+        "girl in red sweater",
+        "ornaments",
+        "bookshelf",
+        "holiday decor"
+      ],
+      "verified_absent": [
+        "outdoor view",
+        "other people",
+        "snow",
+        "presents wrapped"
+      ],
+      "free_text": "A young girl in a red and white striped sweater decorates a Christmas tree in an indoor living room setting. Wrapped garland and holiday decorations are visible around the tree and shelving in this festive residential Christmas scene."
+    },
+    {
+      "id": 92,
+      "file_name": "IMG_4019.JPG",
+      "subject": "five children lying on floor in festive setting",
+      "person_count": 5,
+      "setting": "indoor room with holiday decorations",
+      "key_objects": [
+        "five children",
+        "holiday lights",
+        "dark carpet",
+        "festive clothing",
+        "couch or furniture"
+      ],
+      "verified_absent": [
+        "outdoor view",
+        "large group",
+        "activities",
+        "dining table"
+      ],
+      "free_text": "Five children lie together on a dark floor in a cozy indoor room decorated with warm holiday lights and festive furnishings. The intimate gathering captures the children in various colorful outfits surrounded by holiday ambiance."
+    },
+    {
+      "id": 93,
+      "file_name": "IMG_3907.JPG",
+      "subject": "three girls posing together indoors",
+      "person_count": 3,
+      "setting": "indoor room with dark background",
+      "key_objects": [
+        "three girls",
+        "casual clothing",
+        "indoor wall",
+        "dark lighting"
+      ],
+      "verified_absent": [
+        "outdoor elements",
+        "significant background detail",
+        "other people",
+        "bright lighting"
+      ],
+      "free_text": "Three young girls pose together for a close-up portrait photograph indoors against a dark background. The girls display friendly smiles and casual styling in a warm, intimate indoor setting."
+    },
+    {
+      "id": 94,
+      "file_name": "IMG_0608_4x6_300.jpg",
+      "subject": "two women and child at sandy beach",
+      "person_count": 3,
+      "setting": "outdoor sandy beach with water",
+      "key_objects": [
+        "woman in sunglasses",
+        "child",
+        "beach sand",
+        "woman in black",
+        "ocean water"
+      ],
+      "verified_absent": [
+        "buildings",
+        "boardwalk",
+        "crowds",
+        "umbrellas"
+      ],
+      "free_text": "Two women and a young child stand together on a sandy beach with ocean water visible in the background. One woman wears sunglasses and purple swim attire while the other is dressed in black, creating a casual beach outing moment."
+    },
+    {
+      "id": 95,
+      "file_name": "IMG_0478.JPG",
+      "subject": "toddler sitting in pink toy chair with stuffed animal",
+      "person_count": 1,
+      "setting": "indoor playroom or bedroom",
+      "key_objects": [
+        "pink toy chair",
+        "toddler",
+        "stuffed animal",
+        "colorful toy structure",
+        "carpet"
+      ],
+      "verified_absent": [
+        "outdoor view",
+        "other people",
+        "adult furniture",
+        "windows"
+      ],
+      "free_text": "A happy toddler sits in a bright pink toy chair while holding a stuffed animal in an indoor playroom. The child wears colorful striped clothing and is surrounded by various colorful toys on the carpeted floor."
+    },
+    {
+      "id": 96,
+      "file_name": "IMG_0252.JPG",
+      "subject": "children engaged in art and craft activities indoors",
+      "person_count": 4,
+      "setting": "indoor community center or school activity room",
+      "key_objects": [
+        "children drawing",
+        "paper and markers",
+        "white table",
+        "yellow floor",
+        "craft supplies"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "large crowds",
+        "food",
+        "stage"
+      ],
+      "free_text": "Four children participate in creative art and coloring activities at a white table indoors. The yellow floor setting and visible craft supplies suggest a community center or school activity room environment where the children enjoy creative play."
+    },
+    {
+      "id": 97,
+      "file_name": "_MG_4292.dng",
+      "subject": "girl in purple and yellow dress lying down",
+      "person_count": 1,
+      "setting": "indoor room at night with ambient lighting",
+      "key_objects": [
+        "girl in floral dress",
+        "dark background",
+        "warm ambient lights",
+        "blanket or fabric"
+      ],
+      "verified_absent": [
+        "outdoor elements",
+        "other people",
+        "daylight",
+        "furniture visible"
+      ],
+      "free_text": "A young girl wearing a purple and yellow floral dress lies relaxed indoors surrounded by soft ambient lighting. The intimate nighttime indoor setting captures a peaceful moment with the child resting against warm-toned background lighting."
+    },
+    {
+      "id": 98,
+      "file_name": "IMG_5967.JPG",
+      "subject": "children on carousel at amusement venue",
+      "person_count": 3,
+      "setting": "indoor amusement area or carnival space",
+      "key_objects": [
+        "carousel horse",
+        "children",
+        "carnival ride",
+        "colorful decorative elements"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "crowds",
+        "food vendors",
+        "bright daylight"
+      ],
+      "free_text": "Three children enjoy riding on a carousel horse at what appears to be an indoor amusement venue or carnival setting. The festive carousel ride features colorful decorative elements and provides an entertaining activity for the young riders."
+    },
+    {
+      "id": 99,
+      "file_name": "IMG_3839.JPG",
+      "subject": "three girls posing together at indoor event",
+      "person_count": 3,
+      "setting": "indoor event space with winter clothing",
+      "key_objects": [
+        "three girls",
+        "hats",
+        "winter coats",
+        "casual pose",
+        "indoor background"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "other people",
+        "significant background",
+        "seasonal decorations"
+      ],
+      "free_text": "Three young girls pose together indoors wearing winter clothing including hats and coats. The casual, friendly pose captures the group at what appears to be an indoor winter event or gathering."
+    },
+    {
+      "id": 100,
+      "file_name": "_MG_6872.JPG",
+      "subject": "wildlife reserve entrance sign in forest",
+      "person_count": 0,
+      "setting": "outdoor forest area with tall trees",
+      "key_objects": [
+        "wooden sign",
+        "forest vegetation",
+        "monkey silhouette graphic",
+        "entrance marker"
+      ],
+      "verified_absent": [
+        "people",
+        "buildings",
+        "vehicles",
+        "water"
+      ],
+      "free_text": "A weathered wooden sign marking the entrance to Harambe Wildlife Reserve stands among tall forest trees and dense vegetation. The sign features a silhouette of a monkey and directs visitors entering this outdoor natural area surrounded by foliage."
+    },
+    {
+      "id": 101,
+      "file_name": "_MG_6876.dng",
+      "subject": "teenage girl posing by tree",
+      "person_count": 1,
+      "setting": "outdoor park or wooded area",
+      "key_objects": [
+        "green plaid mini skirt",
+        "green tank top",
+        "white sandals",
+        "large tree trunk",
+        "grass lawn"
+      ],
+      "verified_absent": [
+        "water",
+        "animals",
+        "buildings",
+        "other people"
+      ],
+      "free_text": "A teenage girl with long blonde hair stands leaning against a large tree trunk in a park-like setting, smiling at the camera. She is wearing a green tank top, green plaid mini skirt, and white sandals."
+    },
+    {
+      "id": 102,
+      "file_name": "IMG_8626.JPG",
+      "subject": "three girls walking on sidewalk with backpacks",
+      "person_count": 3,
+      "setting": "outdoor suburban neighborhood",
+      "key_objects": [
+        "pink Barbie backpack",
+        "pink rolling backpack",
+        "sidewalk",
+        "green lawn",
+        "suburban street"
+      ],
+      "verified_absent": [
+        "adults",
+        "bicycles",
+        "school bus",
+        "pets"
+      ],
+      "free_text": "Three young girls are seen from behind walking along a suburban sidewalk, each carrying or rolling a colorful backpack. The scene suggests a back-to-school outing in a residential neighborhood."
+    },
+    {
+      "id": 103,
+      "file_name": "20240928_163457.jpg",
+      "subject": "man wearing bavarian hat at oktoberfest event",
+      "person_count": 1,
+      "setting": "outdoor festival food stand",
+      "key_objects": [
+        "grey felt bavarian hat",
+        "blue and white checkered tablecloth",
+        "plate of sausages",
+        "glasses",
+        "blue plaid shirt"
+      ],
+      "verified_absent": [
+        "beer steins",
+        "women",
+        "indoor venue",
+        "snow"
+      ],
+      "free_text": "A smiling middle-aged man wearing glasses and a grey felt Bavarian hat poses at an Oktoberfest-style event. In front of him is a plate of white and brown sausages on a blue and white checkered tablecloth."
+    },
+    {
+      "id": 104,
+      "file_name": "20230317_150149.jpg",
+      "subject": "green wine glass on window ledge",
+      "person_count": 0,
+      "setting": "indoor windowsill",
+      "key_objects": [
+        "lime green wine glass",
+        "wooden window frame",
+        "window screen",
+        "white window sill",
+        "street view through window"
+      ],
+      "verified_absent": [
+        "people",
+        "food",
+        "bottles",
+        "curtains"
+      ],
+      "free_text": "A single lime-green wine glass sits on a wooden window ledge, backlit by natural light coming through the window and screen. A blurred street scene is visible through the window behind the glass."
+    },
+    {
+      "id": 105,
+      "file_name": "IMG_9848.JPG",
+      "subject": "young girl holding colorful artwork",
+      "person_count": 1,
+      "setting": "indoor classroom or school",
+      "key_objects": [
+        "colorful paw print artwork",
+        "pink tie-dye outfit",
+        "coloring page on table",
+        "crayons",
+        "wooden chair"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "animals",
+        "sports equipment",
+        "other children"
+      ],
+      "free_text": "A young girl wearing a pink tie-dye outfit sits at a table and proudly holds up a colorful paw print artwork. Additional coloring supplies and a coloring page are visible on the table in front of her."
+    },
+    {
+      "id": 106,
+      "file_name": "20240708_223223.jpg",
+      "subject": "refrigerator stocked with wine bottles and beer cans",
+      "person_count": 0,
+      "setting": "indoor bar or retail cooler",
+      "key_objects": [
+        "white wine bottles",
+        "beer cans",
+        "cardboard boxes",
+        "glass door refrigerator"
+      ],
+      "verified_absent": [
+        "people",
+        "food items",
+        "spirits bottles",
+        "outdoor setting"
+      ],
+      "free_text": "A glass-door commercial refrigerator is stocked with multiple bottles of white wine alongside cans of beer and boxed beverage packs. The shelves are fully loaded suggesting a bar or retail environment."
+    },
+    {
+      "id": 107,
+      "file_name": "20240601_212403.jpg",
+      "subject": "nutrition facts label on food packaging",
+      "person_count": 0,
+      "setting": "close-up product label",
+      "key_objects": [
+        "nutrition facts panel",
+        "100 calories per serving",
+        "total fat",
+        "sodium",
+        "Country Cook brand"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor setting",
+        "prepared food",
+        "cooking equipment"
+      ],
+      "free_text": "A close-up photograph of a nutrition facts label on a food product, showing 100 calories per serving with 11g of total fat. The label references the Country Cook brand."
+    },
+    {
+      "id": 108,
+      "file_name": "IR7A6042-2.JPG",
+      "subject": "middle-aged man headshot portrait",
+      "person_count": 1,
+      "setting": "indoor studio with grey background",
+      "key_objects": [
+        "light blue polo shirt",
+        "rectangular glasses",
+        "grey background",
+        "curly dark hair",
+        "goatee"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "other people",
+        "props",
+        "furniture"
+      ],
+      "free_text": "A professional-style headshot of a middle-aged man with curly dark hair, a goatee, and rectangular glasses wearing a light blue polo shirt. He is posed against a plain grey studio background."
+    },
+    {
+      "id": 109,
+      "file_name": "IMG_7602.JPG",
+      "subject": "handmade wanted poster featuring child in cowboy costume",
+      "person_count": 1,
+      "setting": "indoor on flat surface",
+      "key_objects": [
+        "wanted poster",
+        "cowboy hat",
+        "orange bandana",
+        "glasses",
+        "handwritten text",
+        "brown construction paper border"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "animals",
+        "real law enforcement materials"
+      ],
+      "free_text": "A handmade Wanted poster features a photo of a young child dressed in a cowboy hat and orange bandana, with handwritten fields filled in. The poster is mounted on brown construction paper."
+    },
+    {
+      "id": 110,
+      "file_name": "IMG_9502.JPG",
+      "subject": "close-up of toddler face with tongue out",
+      "person_count": 1,
+      "setting": "close-up portrait indoors",
+      "key_objects": [
+        "red hair",
+        "blue eyes",
+        "missing teeth",
+        "tongue sticking out",
+        "freckles"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "animals",
+        "food",
+        "toys"
+      ],
+      "free_text": "An extreme close-up portrait of a red-haired toddler with bright blue eyes sticking their tongue out and displaying gaps where baby teeth are missing. The child's expression is playful."
+    },
+    {
+      "id": 111,
+      "file_name": "_MG_6601.JPG",
+      "subject": "four teenagers dressed for prom outdoors by fountain",
+      "person_count": 4,
+      "setting": "outdoor park with pond and fountain",
+      "key_objects": [
+        "silver sequin dress",
+        "black tuxedo",
+        "black strapless dress",
+        "blue floral dress",
+        "water fountain"
+      ],
+      "verified_absent": [
+        "indoor venue",
+        "vehicles",
+        "food",
+        "balloons"
+      ],
+      "free_text": "Four prom-dressed teenagers pose together outdoors near a pond with a water fountain in the background. The group includes one young man in a black tuxedo and three young women in formal dresses."
+    },
+    {
+      "id": 112,
+      "file_name": "IMG_1379_4x6_300.jpg",
+      "subject": "young girl planting seeds indoors with adult",
+      "person_count": 2,
+      "setting": "indoor home table",
+      "key_objects": [
+        "seed starting tray with soil",
+        "pink bracelet",
+        "tan jacket",
+        "white flower pots",
+        "wooden table"
+      ],
+      "verified_absent": [
+        "outdoor garden",
+        "animals",
+        "food",
+        "playground equipment"
+      ],
+      "free_text": "A young girl wearing a tan jacket and pink bracelet leans forward enthusiastically at a wooden table where she and an adult are planting seeds in a sectioned seed starting tray. White flower pots are visible nearby."
+    },
+    {
+      "id": 113,
+      "file_name": "IMG_7145.JPG",
+      "subject": "two children playing outdoors at picnic table",
+      "person_count": 2,
+      "setting": "outdoor backyard or park",
+      "key_objects": [
+        "purple tank top on girl",
+        "colorful printed tablecloth",
+        "trees in background",
+        "picnic table"
+      ],
+      "verified_absent": [
+        "food on table",
+        "animals",
+        "vehicles",
+        "swimming pool"
+      ],
+      "free_text": "Two young children are playing at a picnic table outdoors, with one child lying back and the other leaning over them laughing. The scene is set in a shaded backyard or park area."
+    },
+    {
+      "id": 114,
+      "file_name": "IMG_1970.JPG",
+      "subject": "tall ships docked at waterfront",
+      "person_count": -1,
+      "setting": "outdoor waterfront park",
+      "key_objects": [
+        "tall sailing ship masts",
+        "international flags",
+        "rigging and ropes",
+        "green lawn",
+        "blue sky"
+      ],
+      "verified_absent": [
+        "modern boats",
+        "indoor setting",
+        "animals",
+        "bad weather"
+      ],
+      "free_text": "Multiple tall sailing ships with towering masts are docked at a waterfront, with colorful international flags strung along their rigging. A grassy park area in the foreground leads to the dock."
+    },
+    {
+      "id": 115,
+      "file_name": "IMG_1566.JPG",
+      "subject": "three children opening christmas presents",
+      "person_count": 3,
+      "setting": "indoor living room at christmas",
+      "key_objects": [
+        "christmas stockings on fireplace",
+        "christmas tree",
+        "brick fireplace",
+        "toys and gifts on floor",
+        "pajamas"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "snow",
+        "adults",
+        "pets"
+      ],
+      "free_text": "Three young children in pajamas are gathered in a living room around a fireplace decorated with Christmas stockings, surrounded by toys and gifts on the floor. A decorated Christmas tree is visible in the background."
+    },
+    {
+      "id": 116,
+      "file_name": "IMG_0379.JPG",
+      "subject": "youth soccer game in progress",
+      "person_count": -1,
+      "setting": "outdoor soccer field",
+      "key_objects": [
+        "neon yellow jersey",
+        "neon orange jersey",
+        "soccer goal",
+        "green grass field",
+        "overcast sky"
+      ],
+      "verified_absent": [
+        "indoor gymnasium",
+        "spectator stands",
+        "scoreboards",
+        "winter clothing"
+      ],
+      "free_text": "A youth soccer match is being played on a grass field under an overcast sky, with players in neon yellow and orange jerseys visible across the field."
+    },
+    {
+      "id": 117,
+      "file_name": "IMG_1307.JPG",
+      "subject": "four children doing crafts at kitchen table",
+      "person_count": 4,
+      "setting": "indoor kitchen or dining room",
+      "key_objects": [
+        "wooden dining table",
+        "craft supplies",
+        "popsicle sticks",
+        "paint pots",
+        "colorful straws"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "food being eaten",
+        "animals",
+        "adults"
+      ],
+      "free_text": "Four children sit around a large wooden dining table engaged in a craft activity, with popsicle sticks, paint pots, and colorful straws spread across the table."
+    },
+    {
+      "id": 118,
+      "file_name": "IMG_7764.JPG",
+      "subject": "young woman portrait indoors",
+      "person_count": 1,
+      "setting": "indoor studio or room with grey background",
+      "key_objects": [
+        "black and white striped shirt",
+        "long dark hair",
+        "ring light reflection",
+        "grey backdrop",
+        "necklace"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "other people",
+        "props",
+        "colorful background"
+      ],
+      "free_text": "A young woman with long dark straight hair wearing a black and white striped shirt poses for a portrait with a circular ring light visible as a reflection behind her. The background is plain grey."
+    },
+    {
+      "id": 119,
+      "file_name": "_MG_7164.JPG",
+      "subject": "family group at disney park with mickey mouse cutout",
+      "person_count": 5,
+      "setting": "outdoor disney theme park",
+      "key_objects": [
+        "Mickey Mouse cardboard cutout",
+        "Disney park signage",
+        "pink dress on girl",
+        "All Star sign",
+        "evening lighting"
+      ],
+      "verified_absent": [
+        "rides",
+        "costumed characters in person",
+        "indoor venue",
+        "snow"
+      ],
+      "free_text": "A family of five poses together next to a large Mickey Mouse cardboard cutout at a Disney theme park with All Star signage visible in the background. The group is photographed in early evening light."
+    },
+    {
+      "id": 120,
+      "file_name": "IMG_3753.JPG",
+      "subject": "performer in spotlight on dark stage",
+      "person_count": 1,
+      "setting": "indoor concert or performance venue stage",
+      "key_objects": [
+        "spotlight on stage",
+        "dark auditorium",
+        "red accent lights",
+        "distant performer figure",
+        "black stage floor"
+      ],
+      "verified_absent": [
+        "audience visible",
+        "outdoor setting",
+        "bright lighting",
+        "multiple performers"
+      ],
+      "free_text": "A lone performer stands in a spotlight at the center of a dark stage, visible only as a small silhouetted figure illuminated from above. The surrounding auditorium is nearly black."
+    },
+    {
+      "id": 121,
+      "file_name": "IMG_9692.JPG",
+      "subject": "bowling score screen on monitor",
+      "person_count": 0,
+      "setting": "indoor bowling alley",
+      "key_objects": [
+        "bowling score display",
+        "player names",
+        "total scores",
+        "ceiling tiles",
+        "monitor screen"
+      ],
+      "verified_absent": [
+        "bowling lanes",
+        "people",
+        "bowling balls",
+        "outdoor setting"
+      ],
+      "free_text": "A monitor mounted above a bowling lane displays an animated scorecard showing scores for four players. The screen shows a colorful bowling-themed scoreboard interface."
+    },
+    {
+      "id": 122,
+      "file_name": "IMG_4018.JPG",
+      "subject": "young toddler girl on coin-operated ride",
+      "person_count": 1,
+      "setting": "indoor arcade or amusement area",
+      "key_objects": [
+        "coin-operated kiddie ride",
+        "orange shorts",
+        "orange shirt",
+        "safety belt",
+        "steering wheel"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "parents in frame",
+        "other children",
+        "food"
+      ],
+      "free_text": "A young blonde toddler girl wearing an orange outfit sits strapped into a colorful coin-operated kiddie ride at what appears to be an arcade or amusement area."
+    },
+    {
+      "id": 123,
+      "file_name": "IMG_2486.JPG",
+      "subject": "floral patterned loveseat sofa",
+      "person_count": 0,
+      "setting": "indoor living room",
+      "key_objects": [
+        "cream floral loveseat",
+        "pink and red rose pattern",
+        "throw pillow",
+        "light carpet floor",
+        "white walls"
+      ],
+      "verified_absent": [
+        "people",
+        "pets",
+        "television",
+        "coffee table"
+      ],
+      "free_text": "A cream-colored loveseat sofa with a pink and red floral rose pattern sits against a white wall in a living room setting. A small matching throw pillow rests on one end."
+    },
+    {
+      "id": 124,
+      "file_name": "CRW_9952_JFR.JPG",
+      "subject": "couple dressed for prom posing outdoors",
+      "person_count": 2,
+      "setting": "outdoor wooded path or park",
+      "key_objects": [
+        "green satin short dress",
+        "black tuxedo",
+        "green bow tie",
+        "white boutonniere",
+        "green heeled shoes"
+      ],
+      "verified_absent": [
+        "indoor venue",
+        "limousine",
+        "other couples",
+        "balloons"
+      ],
+      "free_text": "A young couple dressed for prom pose together on a wooded outdoor path, with the young man in a black tuxedo with green bow tie and the young woman in a short green satin dress."
+    },
+    {
+      "id": 125,
+      "file_name": "_MG_6215.dng",
+      "subject": "family seated at dinner table",
+      "person_count": 7,
+      "setting": "indoor dining room",
+      "key_objects": [
+        "holiday tablecloth",
+        "wine glasses",
+        "wooden dining chairs",
+        "glass display cabinet",
+        "colorful dishes and food"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "birthday cake",
+        "candles",
+        "pets"
+      ],
+      "free_text": "Seven family members of varying ages are seated around a dining table covered in a colorful holiday tablecloth, with plates of food, wine glasses, and dishes spread across the table."
+    },
+    {
+      "id": 126,
+      "file_name": "IMG_0440.JPG",
+      "subject": "beauty and the beast stage performance",
+      "person_count": 2,
+      "setting": "indoor theater stage",
+      "key_objects": [
+        "Belle blue dress",
+        "Beast purple cape",
+        "painted stage backdrop",
+        "theatrical lighting",
+        "character props"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "audience visible",
+        "movie screen",
+        "modern clothing"
+      ],
+      "free_text": "Two performers in Beauty and the Beast costumes stand center stage during a live theatrical performance, with Belle in her blue dress and the Beast in his purple cape."
+    },
+    {
+      "id": 127,
+      "file_name": "IMG_4321.JPG",
+      "subject": "comerica park scoreboard sign for detroit tigers",
+      "person_count": 0,
+      "setting": "outdoor baseball stadium",
+      "key_objects": [
+        "Comerica Park sign",
+        "Tigers WIN text",
+        "clock",
+        "large orange TIGERS letters",
+        "stadium structures"
+      ],
+      "verified_absent": [
+        "players",
+        "crowd",
+        "baseball field",
+        "indoor setting"
+      ],
+      "free_text": "An upward-angled photograph captures the exterior Comerica Park scoreboard sign displaying Tigers WIN with large orange lettering."
+    },
+    {
+      "id": 128,
+      "file_name": "IMG_3010.JPG",
+      "subject": "children in halloween costumes outdoors at night",
+      "person_count": 4,
+      "setting": "outdoor residential yard at night",
+      "key_objects": [
+        "dog costume",
+        "fox costume",
+        "purple fairy costume",
+        "orange pumpkin bucket",
+        "dark grass lawn"
+      ],
+      "verified_absent": [
+        "indoor setting",
+        "jack-o-lanterns",
+        "adults",
+        "daylight"
+      ],
+      "free_text": "Four young children in various Halloween costumes including a dog, a fox, and a purple fairy are grouped together on a dark grass lawn at night. One child is holding an orange pumpkin trick-or-treat bucket."
+    },
+    {
+      "id": 129,
+      "file_name": "IMG_9602.JPG",
+      "subject": "woman and toddler posing indoors",
+      "person_count": 2,
+      "setting": "indoor home",
+      "key_objects": [
+        "white turtleneck sweater",
+        "pink outfit on toddler",
+        "pink bow",
+        "striped leggings",
+        "white walls"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "other adults",
+        "food",
+        "christmas decorations"
+      ],
+      "free_text": "A woman in a white turtleneck sweater holds and poses with a toddler girl dressed in pink with a large pink bow in her hair. The setting is a plain indoor home environment."
+    },
+    {
+      "id": 130,
+      "file_name": "IMG_0204.JPG",
+      "subject": "family group seated in dark theater venue",
+      "person_count": 5,
+      "setting": "indoor theater or auditorium seating",
+      "key_objects": [
+        "purple seat",
+        "young girls in foreground",
+        "woman with red hair",
+        "dark auditorium",
+        "hair flower clip on girl"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "stage visible",
+        "food",
+        "formal attire"
+      ],
+      "free_text": "A group of five family members including several young girls and a red-haired woman are seated in the audience of a darkened theater or auditorium."
+    },
+    {
+      "id": 131,
+      "file_name": "IMG_2703.JPG",
+      "subject": "family group photo at graduation outdoors",
+      "person_count": 6,
+      "setting": "outdoor garden or park path",
+      "key_objects": [
+        "graduation cap and gown with yellow sash",
+        "floral dress",
+        "pink dress",
+        "green trees and hedge background"
+      ],
+      "verified_absent": [
+        "indoor venue",
+        "cars",
+        "balloons",
+        "graduation stage"
+      ],
+      "free_text": "Six family members pose together on an outdoor garden path for a graduation celebration, with the graduate in the center wearing a white cap and gown with a yellow honor sash."
+    },
+    {
+      "id": 132,
+      "file_name": "IMG_4679.JPG",
+      "subject": "person posing next to hockey goalie photo cutout",
+      "person_count": 2,
+      "setting": "indoor exhibit or museum space",
+      "key_objects": [
+        "Detroit Red Wings jersey number 39",
+        "hockey goalie pads",
+        "goal net",
+        "life-size photo cutout",
+        "yellow background display"
+      ],
+      "verified_absent": [
+        "real ice rink",
+        "outdoor setting",
+        "spectators",
+        "hockey puck"
+      ],
+      "free_text": "A person stands behind a life-size photo cutout of a Detroit Red Wings goalie in full gear in front of a goal net, with their face visible above the cutout."
+    },
+    {
+      "id": 133,
+      "file_name": "IMG_0924.JPG",
+      "subject": "baby celebrating first birthday in high chair",
+      "person_count": 1,
+      "setting": "indoor kitchen",
+      "key_objects": [
+        "high chair",
+        "first birthday cake",
+        "happy birthday balloon",
+        "purple balloon",
+        "first birthday banner"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "other children",
+        "candles lit",
+        "adults in frame"
+      ],
+      "free_text": "A young baby sits in a white high chair in front of a small first birthday cake with decorative banners and a Happy Birthday balloon hovering above."
+    },
+    {
+      "id": 134,
+      "file_name": "IMG_0063.JPG",
+      "subject": "teenagers pinning boutonniere at prom outdoors",
+      "person_count": 3,
+      "setting": "outdoor park near pond",
+      "key_objects": [
+        "black suit with bow tie",
+        "white boutonniere",
+        "strapless formal dress",
+        "pond in background",
+        "sunglasses"
+      ],
+      "verified_absent": [
+        "indoor venue",
+        "limousine",
+        "corsage on wrist",
+        "balloons"
+      ],
+      "free_text": "Three teenagers are gathered outdoors near a pond as two young women help pin a white boutonniere onto a young man in a black suit with sunglasses. The background shows a calm pond."
+    },
+    {
+      "id": 135,
+      "file_name": "_MG_6588.dng",
+      "subject": "three girls playing in bounce house",
+      "person_count": 3,
+      "setting": "indoor inflatable bounce house",
+      "key_objects": [
+        "blue inflatable bounce house walls",
+        "white tights",
+        "white long-sleeve top",
+        "red shorts",
+        "purple shirt"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "adults",
+        "food",
+        "playground equipment"
+      ],
+      "free_text": "Three young girls play and slide around inside a large blue inflatable bounce house. The children are wearing casual play clothes."
+    },
+    {
+      "id": 136,
+      "file_name": "IMG_3566.JPG",
+      "subject": "woman and two young children with craft activity",
+      "person_count": 3,
+      "setting": "indoor community hall or event space",
+      "key_objects": [
+        "blue beaded craft board",
+        "pink bow in girl's hair",
+        "pink top on girl",
+        "grey-haired woman",
+        "floral patterned flooring"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "food",
+        "sports equipment",
+        "animals"
+      ],
+      "free_text": "An older grey-haired woman holds up a blue beaded craft board while a young girl in a pink top and a boy nearby look on. The setting appears to be a community hall or event space."
+    },
+    {
+      "id": 137,
+      "file_name": "IMG_4497.JPG",
+      "subject": "boy and adult in star wars costumes at convention",
+      "person_count": 2,
+      "setting": "indoor convention or event hall",
+      "key_objects": [
+        "stormtrooper costume",
+        "green robot or clone helmet",
+        "toy blaster gun",
+        "red carpet floor",
+        "stormtrooper chest armor"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "lightsaber",
+        "real weapons",
+        "movie screen"
+      ],
+      "free_text": "A young boy wearing a green robotic helmet and carrying a toy blaster gun poses next to a full-sized adult dressed in a detailed Stormtrooper costume at what appears to be a fan convention."
+    },
+    {
+      "id": 138,
+      "file_name": "IMG_4108.JPG",
+      "subject": "its a small world ride display with irish themed figurines",
+      "person_count": 0,
+      "setting": "indoor theme park ride",
+      "key_objects": [
+        "green shamrock decorations",
+        "glittering green scenery",
+        "animatronic figurines",
+        "rainbow display",
+        "gold pot",
+        "harp figurine"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor setting",
+        "water",
+        "animals"
+      ],
+      "free_text": "A section of what appears to be the It's a Small World theme park ride features Irish-themed green scenery with animatronic figurines in traditional clothing near a rainbow and shamrocks."
+    },
+    {
+      "id": 139,
+      "file_name": "IR7A6038.JPG",
+      "subject": "young woman speaking at graduation podium",
+      "person_count": -1,
+      "setting": "indoor graduation ceremony auditorium",
+      "key_objects": [
+        "graduation cap and gown",
+        "wooden podium",
+        "yellow honor cords",
+        "faculty in academic regalia",
+        "microphone at podium"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "diplomas being handed out",
+        "balloons",
+        "audience visible"
+      ],
+      "free_text": "A young woman in a white graduation gown and cap with yellow honor cords stands at a wooden podium and delivers a speech at a graduation ceremony."
+    },
+    {
+      "id": 140,
+      "file_name": "IMG_1728.JPG",
+      "subject": "two young women in formal dresses posing outdoors",
+      "person_count": 2,
+      "setting": "outdoor park or wooded area",
+      "key_objects": [
+        "black beaded halter formal dress",
+        "silver floor-length gown",
+        "tree trunk",
+        "green foliage background"
+      ],
+      "verified_absent": [
+        "indoor venue",
+        "limousine",
+        "corsages",
+        "male companions"
+      ],
+      "free_text": "Two young women in formal dresses pose together outdoors leaning against a tree, one wearing a black beaded halter gown and the other a silver floor-length dress."
+    },
+    {
+      "id": 141,
+      "file_name": "IMG_7516.JPG",
+      "subject": "rolling sand dunes landscape with water view",
+      "person_count": -1,
+      "setting": "outdoor sand dunes",
+      "key_objects": [
+        "sandy hills",
+        "scrub grass vegetation",
+        "blue sky",
+        "distant water or lake horizon",
+        "dirt path"
+      ],
+      "verified_absent": [
+        "people",
+        "buildings",
+        "animals",
+        "vehicles"
+      ],
+      "free_text": "A panoramic view of rolling sandy dunes covered in sparse scrub grass with winding dirt paths stretching toward a distant body of blue water on the horizon."
+    },
+    {
+      "id": 142,
+      "file_name": "IMG_3995.JPG",
+      "subject": "woman holding salt and pepper set gift box",
+      "person_count": 1,
+      "setting": "indoor home living room at christmas",
+      "key_objects": [
+        "red blouse",
+        "salt and pepper set box",
+        "mirror on wall",
+        "christmas poinsettia decoration",
+        "table lamp"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "christmas tree",
+        "children",
+        "wrapped presents"
+      ],
+      "free_text": "A smiling woman with long reddish-brown hair wearing a red blouse holds up a Salt and Pepper Set gift box toward the camera in what appears to be a home living room during the Christmas season."
+    },
+    {
+      "id": 143,
+      "file_name": "_MG_6708.JPG",
+      "subject": "baby crawling on tile floor under chair",
+      "person_count": 1,
+      "setting": "indoor kitchen or dining area",
+      "key_objects": [
+        "white and pink baby outfit",
+        "tile floor",
+        "teal chair leg",
+        "baby crawling"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "toys",
+        "other children",
+        "food"
+      ],
+      "free_text": "A baby in a white and pink outfit crawls across a patterned tile floor under a teal-colored chair, looking up toward the camera with a curious expression."
+    },
+    {
+      "id": 144,
+      "file_name": "IMG_4632.JPG",
+      "subject": "praying mantis on evergreen shrub",
+      "person_count": 0,
+      "setting": "outdoor residential front yard",
+      "key_objects": [
+        "green praying mantis",
+        "evergreen shrub or hedge",
+        "green lawn",
+        "suburban house in background",
+        "street visible"
+      ],
+      "verified_absent": [
+        "people",
+        "other insects",
+        "vehicles close up",
+        "indoor setting"
+      ],
+      "free_text": "A green praying mantis perches among the dense branches of a well-trimmed evergreen hedge in a suburban front yard. A green lawn, a residential street, and houses are visible in the background."
+    },
+    {
+      "id": 145,
+      "file_name": "IMG_8358.JPG",
+      "subject": "young girl planting seeds at table with adult",
+      "person_count": 2,
+      "setting": "indoor home dining area",
+      "key_objects": [
+        "seed starting tray with soil",
+        "tan jacket on girl",
+        "pink bracelet",
+        "seed packets",
+        "potted plant seedlings"
+      ],
+      "verified_absent": [
+        "outdoor garden",
+        "animals",
+        "food being eaten",
+        "other children"
+      ],
+      "free_text": "A young girl in a tan jacket with a pink bracelet sits at a dining table working on a seed starting tray alongside an adult. Seed packets and potted seedling plants are arranged on the table."
+    },
+    {
+      "id": 146,
+      "file_name": "IMG_0231_2.JPG",
+      "subject": "person swimming in backyard pool",
+      "person_count": 1,
+      "setting": "outdoor backyard swimming pool",
+      "key_objects": [
+        "turquoise pool water",
+        "brick pool coping",
+        "black swim cap",
+        "person floating face down",
+        "sandals visible on pool edge"
+      ],
+      "verified_absent": [
+        "other swimmers",
+        "pool toys",
+        "indoor setting",
+        "diving board"
+      ],
+      "free_text": "A single person wearing a black swim cap floats face-down in a turquoise backyard swimming pool surrounded by brick coping. A pair of sandals is visible on the pool deck."
+    },
+    {
+      "id": 147,
+      "file_name": "IMG_0173.JPG",
+      "subject": "family seated in dark theater venue",
+      "person_count": 5,
+      "setting": "indoor theater or auditorium seating",
+      "key_objects": [
+        "purple auditorium seat",
+        "white flower hair clip on girl",
+        "girl in blue shirt",
+        "red-haired woman",
+        "dark venue lighting"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "stage visible",
+        "food",
+        "formal attire"
+      ],
+      "free_text": "A group of five family members including several young girls and a red-haired woman are seated in the dimly lit audience section of a theater or auditorium."
+    },
+    {
+      "id": 148,
+      "file_name": "20230911_182012.jpg",
+      "subject": "praying mantis on evergreen shrub in yard",
+      "person_count": 0,
+      "setting": "outdoor residential front yard",
+      "key_objects": [
+        "green praying mantis",
+        "dense evergreen hedge",
+        "residential street",
+        "suburban homes in background",
+        "green lawn"
+      ],
+      "verified_absent": [
+        "people",
+        "other insects",
+        "indoor setting",
+        "vehicles in foreground"
+      ],
+      "free_text": "A green praying mantis is perched on the branches of a dense evergreen hedge in a suburban front yard with a residential street and neighboring homes visible in the background."
+    },
+    {
+      "id": 149,
+      "file_name": "IMG_7144.JPG",
+      "subject": "young girl planting seeds indoors with adult",
+      "person_count": 2,
+      "setting": "indoor home dining area",
+      "key_objects": [
+        "seed starting tray with soil",
+        "tan jacket on girl",
+        "pink bracelet",
+        "seed packets",
+        "yellow potted plant"
+      ],
+      "verified_absent": [
+        "outdoor garden",
+        "animals",
+        "other children",
+        "food being eaten"
+      ],
+      "free_text": "A young girl in a tan jacket with a pink bracelet sits at a dining room table planting seeds in a partitioned seed tray alongside an adult. Seed packets and a yellow potted plant are visible."
+    },
+    {
+      "id": 150,
+      "file_name": "_MG_6051.JPG",
+      "subject": "middle-aged man headshot portrait",
+      "person_count": 1,
+      "setting": "indoor studio with grey background",
+      "key_objects": [
+        "light blue polo shirt",
+        "rectangular glasses",
+        "curly dark hair",
+        "goatee",
+        "grey studio background"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "other people",
+        "props",
+        "colorful elements"
+      ],
+      "free_text": "A middle-aged man with curly dark hair, a short goatee, and rectangular glasses wearing a light blue polo shirt is photographed in a clean headshot style against a plain grey background."
+    },
+    {
+      "id": 151,
+      "file_name": "_MG_3844.JPG",
+      "subject": "adult woman and young girl swimming in indoor pool",
+      "person_count": 2,
+      "setting": "indoor swimming pool",
+      "key_objects": [
+        "yellow and red swim floaties on girl",
+        "black swimsuit on woman",
+        "lane markers",
+        "rippling pool water",
+        "tile pool edge"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "diving board",
+        "pool toys",
+        "spectators"
+      ],
+      "free_text": "A woman supports a young girl as they swim together in an indoor lap pool. The girl is wearing colorful yellow and red swim floaties and both are smiling in the water."
+    },
+    {
+      "id": 152,
+      "file_name": "IMG_7031.JPG",
+      "subject": "five children posing outdoors with baby in stroller",
+      "person_count": 5,
+      "setting": "outdoor parking lot",
+      "key_objects": [
+        "green stroller",
+        "easter bunny ears on baby",
+        "denim jacket on girl",
+        "painted whiskers on children"
+      ],
+      "verified_absent": [
+        "indoor setting",
+        "adults",
+        "playground equipment",
+        "grass lawn"
+      ],
+      "free_text": "Five children pose together outdoors, with a baby in a green stroller at the center wearing bunny ears. The older children have painted whiskers on their faces suggesting an Easter event."
+    },
+    {
+      "id": 153,
+      "file_name": "IMG_0870_4x6_300.jpg",
+      "subject": "group of children and adults at outdoor youth soccer practice",
+      "person_count": 8,
+      "setting": "outdoor soccer field",
+      "key_objects": [
+        "orange traffic cone",
+        "green grass field",
+        "soccer uniforms",
+        "residential houses in background",
+        "trees"
+      ],
+      "verified_absent": [
+        "bleachers",
+        "scoreboard",
+        "soccer goals",
+        "indoor gymnasium"
+      ],
+      "free_text": "A group of children participate in youth soccer practice on a large grass field, with two adults appearing to give instruction. Residential houses and trees are visible in the background."
+    },
+    {
+      "id": 154,
+      "file_name": "IMG_0069.JPG",
+      "subject": "baby lying on stomach on carpet",
+      "person_count": 1,
+      "setting": "indoor living room floor",
+      "key_objects": [
+        "white floral onesie",
+        "beige carpet",
+        "baby looking at camera"
+      ],
+      "verified_absent": [
+        "toys",
+        "other people",
+        "outdoor scenery",
+        "crib or bed"
+      ],
+      "free_text": "A young baby lies on their stomach on a beige carpet, looking directly at the camera with alert eyes. The baby is wearing a white onesie with small floral accents."
+    },
+    {
+      "id": 155,
+      "file_name": "_MG_3840.JPG",
+      "subject": "young girl standing at edge of indoor swimming pool",
+      "person_count": 3,
+      "setting": "indoor swimming pool",
+      "key_objects": [
+        "red and yellow swimsuit on girl",
+        "metal pool railing",
+        "lane divider flags",
+        "tiled pool wall",
+        "children in pool water"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "diving board",
+        "adults",
+        "changing area"
+      ],
+      "free_text": "A young girl in a bright red and yellow swimsuit stands at the edge of an indoor pool holding a metal railing. Two other children are visible swimming in the pool behind her."
+    },
+    {
+      "id": 156,
+      "file_name": "20231018_145424.jpg",
+      "subject": "empty bathtub in bathroom",
+      "person_count": 0,
+      "setting": "indoor bathroom",
+      "key_objects": [
+        "white bathtub",
+        "white tile walls",
+        "pink towel draped on tub",
+        "gold faucet fixtures",
+        "shampoo bottles on edge"
+      ],
+      "verified_absent": [
+        "people",
+        "shower curtain",
+        "bath mat",
+        "toilet"
+      ],
+      "free_text": "A white bathtub with gold fixtures sits in a tiled bathroom, with a pink towel draped over one side. Various toiletry items are visible along the edge of the tub."
+    },
+    {
+      "id": 157,
+      "file_name": "CRW_9945_JFR.JPG",
+      "subject": "young girl playing with baby dolls",
+      "person_count": 1,
+      "setting": "indoor living room",
+      "key_objects": [
+        "white graphic t-shirt",
+        "two baby dolls",
+        "beige couch"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "other children",
+        "toys on floor",
+        "table"
+      ],
+      "free_text": "A young girl in a white graphic t-shirt carefully holds a baby doll while another doll rests beside her on a beige couch. She is looking down attentively at the doll in her hands."
+    },
+    {
+      "id": 158,
+      "file_name": "IMG_4120.JPG",
+      "subject": "children and adults gathered around costumed character at theme park",
+      "person_count": 10,
+      "setting": "outdoor theme park",
+      "key_objects": [
+        "jack sparrow pirate costume",
+        "children in casual clothes",
+        "wooden stage structure",
+        "decorative tropical props"
+      ],
+      "verified_absent": [
+        "roller coaster",
+        "indoor setting",
+        "uniforms on children",
+        "balloons"
+      ],
+      "free_text": "A group of children and adults surround a performer dressed as the pirate Jack Sparrow at what appears to be a Disney theme park. The performer is on a decorated wooden stage surrounded by tropical props."
+    },
+    {
+      "id": 159,
+      "file_name": "IMG_0223.JPG",
+      "subject": "family group posing at outdoor charity run event",
+      "person_count": 7,
+      "setting": "outdoor park",
+      "key_objects": [
+        "race bib numbers",
+        "white event t-shirt",
+        "orange pants on woman",
+        "stone wall seating",
+        "running shoes"
+      ],
+      "verified_absent": [
+        "finish line tape",
+        "trophies",
+        "vehicles",
+        "indoor setting"
+      ],
+      "free_text": "A family of seven poses together seated on a stone wall at what appears to be a charity run or race event. Several members are wearing race bib numbers."
+    },
+    {
+      "id": 160,
+      "file_name": "IMG_8167.JPG",
+      "subject": "fireworks display at night",
+      "person_count": 0,
+      "setting": "outdoor nighttime event",
+      "key_objects": [
+        "yellow and green fireworks burst",
+        "dark sky",
+        "illuminated building in background",
+        "smoke trails"
+      ],
+      "verified_absent": [
+        "people",
+        "daytime sky",
+        "ground-level detail",
+        "water reflection"
+      ],
+      "free_text": "A bright yellow and green fireworks display explodes against a dark night sky with streaking light trails. A faintly lit structure is visible in the background through the smoke."
+    },
+    {
+      "id": 161,
+      "file_name": "_MG_7289.dng",
+      "subject": "pretzel on plate at bar table",
+      "person_count": 0,
+      "setting": "indoor bar or restaurant",
+      "key_objects": [
+        "soft pretzel on white plate",
+        "dipping sauce",
+        "dark wooden table",
+        "blurred patrons in background",
+        "ambient bar lighting"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "beer glasses",
+        "food menu",
+        "server"
+      ],
+      "free_text": "A soft pretzel with dipping sauce sits on a white plate in the foreground of a dimly lit bar or restaurant. Blurred patrons and warm ambient lighting are visible in the background."
+    },
+    {
+      "id": 162,
+      "file_name": "_MG_6007.JPG",
+      "subject": "older woman sitting in armchair with small dog",
+      "person_count": 1,
+      "setting": "indoor living room",
+      "key_objects": [
+        "gray hoodie sweatshirt",
+        "small yorkshire terrier dog",
+        "tan armchair",
+        "window blinds"
+      ],
+      "verified_absent": [
+        "outdoor scenery",
+        "other people",
+        "cat",
+        "television"
+      ],
+      "free_text": "A woman with gray hair sits in a tan armchair wearing a gray hoodie, cradling a small Yorkshire Terrier in her lap. Natural light filters in through window blinds behind her."
+    },
+    {
+      "id": 163,
+      "file_name": "IMG_9356.JPG",
+      "subject": "boy holding tray of decorated cupcakes",
+      "person_count": 1,
+      "setting": "indoor school or community building",
+      "key_objects": [
+        "blue soccer jersey",
+        "aluminum cupcake tray",
+        "green frosted cupcakes",
+        "wooden lockers in background"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "birthday candles",
+        "table setup",
+        "other children"
+      ],
+      "free_text": "A smiling boy wearing a blue soccer jersey holds a tray of green-frosted cupcakes in what appears to be a school locker room. He looks proud as he displays the baked goods."
+    },
+    {
+      "id": 164,
+      "file_name": "IMG_2824.JPG",
+      "subject": "people playing beach volleyball on sand court",
+      "person_count": 10,
+      "setting": "outdoor sand court",
+      "key_objects": [
+        "sand court",
+        "blue event tents in background",
+        "red and white shirts on players",
+        "volleyball net",
+        "green trees in background"
+      ],
+      "verified_absent": [
+        "ocean water",
+        "indoor gymnasium",
+        "scoreboards",
+        "swimwear"
+      ],
+      "free_text": "A group of people play beach volleyball on a sandy court with blue event tents visible in the background. Players are wearing casual athletic clothing in red and white."
+    },
+    {
+      "id": 165,
+      "file_name": "_MG_6870.JPG",
+      "subject": "teenage girl in floral dress posing outdoors",
+      "person_count": 1,
+      "setting": "outdoor garden or park",
+      "key_objects": [
+        "purple and white floral dress",
+        "pink hair accessory",
+        "green foliage background",
+        "wooden railing"
+      ],
+      "verified_absent": [
+        "other people",
+        "indoor setting",
+        "formal venue",
+        "flowers in hand"
+      ],
+      "free_text": "A teenage girl in a purple and white floral dress poses outdoors with lush green foliage behind her. She is smiling and wearing a pink hair accessory."
+    },
+    {
+      "id": 166,
+      "file_name": "_MG_6690.dng",
+      "subject": "high school graduation ceremony with students in caps and gowns",
+      "person_count": 10,
+      "setting": "indoor graduation arena or auditorium",
+      "key_objects": [
+        "navy blue graduation caps and gowns",
+        "gold honor cords",
+        "arena seating",
+        "faculty in colorful regalia",
+        "female graduate smiling at camera"
+      ],
+      "verified_absent": [
+        "diplomas being handed out",
+        "outdoor setting",
+        "podium",
+        "balloons"
+      ],
+      "free_text": "A high school graduation ceremony is underway inside a large arena, with rows of students seated in navy caps and gowns. A smiling female graduate stands out in the foreground."
+    },
+    {
+      "id": 167,
+      "file_name": "IMG_4133.JPG",
+      "subject": "party gathering around table with balloons",
+      "person_count": 8,
+      "setting": "indoor restaurant or party room",
+      "key_objects": [
+        "green and purple balloons",
+        "party table with dishes",
+        "glasses on table",
+        "orange shirt on man"
+      ],
+      "verified_absent": [
+        "birthday cake",
+        "outdoor setting",
+        "children",
+        "streamers"
+      ],
+      "free_text": "A group of adults gathers around a table during what appears to be a party or celebration, with green and purple balloons decorating the room. The table is covered with dishes and glasses."
+    },
+    {
+      "id": 168,
+      "file_name": "IMG_8199.JPG",
+      "subject": "children playing at outdoor splash pad",
+      "person_count": 3,
+      "setting": "outdoor splash pad or water park",
+      "key_objects": [
+        "pink bikini on girl",
+        "blue bikini on girl",
+        "water spray jets",
+        "dark wet ground",
+        "water spray column"
+      ],
+      "verified_absent": [
+        "swimming pool",
+        "indoor setting",
+        "adults",
+        "water slides"
+      ],
+      "free_text": "Three children play and cool off at an outdoor splash pad, with water spraying around them from jets in the ground. Two girls in colorful bikinis are clearly visible enjoying the water."
+    },
+    {
+      "id": 169,
+      "file_name": "IMG_6753.JPG",
+      "subject": "illuminated arena marquee sign at night",
+      "person_count": 0,
+      "setting": "outdoor arena entrance at night",
+      "key_objects": [
+        "palace of auburn hills sign",
+        "disney on ice advertisement",
+        "illuminated marquee letters",
+        "dark night sky"
+      ],
+      "verified_absent": [
+        "people",
+        "vehicles",
+        "daytime lighting",
+        "indoor setting"
+      ],
+      "free_text": "The illuminated marquee of the Palace of Auburn Hills arena displays advertising for Disney On Ice. The sign glows brightly against the dark night sky."
+    },
+    {
+      "id": 170,
+      "file_name": "20230701_120744.jpg",
+      "subject": "three-blade led ceiling light fixture",
+      "person_count": 0,
+      "setting": "indoor ceiling",
+      "key_objects": [
+        "black tri-blade led light",
+        "white ceiling",
+        "led light strips on blades"
+      ],
+      "verified_absent": [
+        "people",
+        "room furniture",
+        "fan blades",
+        "decorative fixture"
+      ],
+      "free_text": "A black tri-blade LED garage or shop light hangs from a white ceiling, with LED strips running along each of the three adjustable blades. The image is shot looking straight up at the fixture."
+    },
+    {
+      "id": 171,
+      "file_name": "IMG_0892.JPG",
+      "subject": "performer in cinderella costume on ice stage",
+      "person_count": 3,
+      "setting": "indoor ice show or ice rink",
+      "key_objects": [
+        "white ball gown",
+        "blonde updo hairstyle",
+        "ice stage",
+        "background performers",
+        "audience silhouettes",
+        "stage lighting"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "microphone",
+        "castle backdrop"
+      ],
+      "free_text": "A performer dressed as Cinderella in a white ball gown skates on an ice stage during what appears to be a Disney on Ice show. Background performers and audience silhouettes are visible."
+    },
+    {
+      "id": 172,
+      "file_name": "IMG_7605.JPG",
+      "subject": "collapsed outdoor canopy structure in backyard",
+      "person_count": 0,
+      "setting": "outdoor residential backyard",
+      "key_objects": [
+        "collapsed tan canopy fabric",
+        "metal canopy frame",
+        "white lattice fence",
+        "house siding",
+        "brick chimney"
+      ],
+      "verified_absent": [
+        "people",
+        "vehicles",
+        "intact lawn furniture",
+        "clear sky"
+      ],
+      "free_text": "A large outdoor canopy or gazebo has collapsed, with its tan fabric draped over bent metal poles in a residential backyard. A white lattice fence and the side of a house are visible in the background."
+    },
+    {
+      "id": 173,
+      "file_name": "IMG_1364.JPG",
+      "subject": "halloween yard decorations at night",
+      "person_count": 0,
+      "setting": "outdoor residential front yard at night",
+      "key_objects": [
+        "tombstone decorations",
+        "spooky figures or statues",
+        "red accent lighting",
+        "residential house in background",
+        "green lawn"
+      ],
+      "verified_absent": [
+        "people in costumes",
+        "jack-o-lanterns",
+        "daytime lighting",
+        "vehicles"
+      ],
+      "free_text": "A front yard is decorated with Halloween decorations including tombstones and spooky figures lit with red accent lighting at night. The front of a house is illuminated in the background."
+    },
+    {
+      "id": 174,
+      "file_name": "_MG_6158.dng",
+      "subject": "small dog chewing on toy on carpet",
+      "person_count": 0,
+      "setting": "indoor living room floor",
+      "key_objects": [
+        "yorkshire terrier dog",
+        "gray fabric mouse toy",
+        "beige carpet",
+        "brown couch in background"
+      ],
+      "verified_absent": [
+        "people",
+        "cat",
+        "food bowl",
+        "outdoor scenery"
+      ],
+      "free_text": "A small Yorkshire Terrier is intensely focused on chewing a gray fabric mouse toy on a beige carpet. A brown couch is partially visible in the soft background."
+    },
+    {
+      "id": 175,
+      "file_name": "IMG_2057.JPG",
+      "subject": "girl playing mini golf near water feature",
+      "person_count": 1,
+      "setting": "outdoor mini golf course",
+      "key_objects": [
+        "pink shirt",
+        "white sneakers",
+        "mini golf putter",
+        "concrete water feature",
+        "rocks surrounding water",
+        "wood plank decking"
+      ],
+      "verified_absent": [
+        "indoor setting",
+        "other golfers",
+        "golf cart",
+        "grass putting green"
+      ],
+      "free_text": "A young girl in a pink shirt and white sneakers leans over to putt at a mini golf hole near a water feature surrounded by rocks."
+    },
+    {
+      "id": 176,
+      "file_name": "IMG_4867.JPG",
+      "subject": "boy holding gift bag and present at party",
+      "person_count": 2,
+      "setting": "indoor home party or event",
+      "key_objects": [
+        "striped black and white shirt",
+        "pink gift bag",
+        "boxed gift items",
+        "window with natural light"
+      ],
+      "verified_absent": [
+        "birthday cake",
+        "balloons",
+        "outdoor setting",
+        "wrapped presents with bow"
+      ],
+      "free_text": "A boy in a black and white striped shirt holds a pink gift bag and a boxed present, smiling at the camera during what appears to be a party or gift-opening event."
+    },
+    {
+      "id": 177,
+      "file_name": "IMG_4633.JPG",
+      "subject": "two teenage girls in formal prom dresses outdoors",
+      "person_count": 2,
+      "setting": "outdoor park or garden",
+      "key_objects": [
+        "black beaded halter gown",
+        "silver sequined gown",
+        "green tree foliage background",
+        "tree trunk"
+      ],
+      "verified_absent": [
+        "indoor venue",
+        "corsages",
+        "limousine",
+        "male companions"
+      ],
+      "free_text": "Two teenage girls in formal prom gowns pose together outdoors in front of green foliage. One wears a black beaded halter gown and the other a silver sequined dress."
+    },
+    {
+      "id": 178,
+      "file_name": "105_0532_RT8final.JPG",
+      "subject": "person watching spinning carnival ride at night",
+      "person_count": 1,
+      "setting": "outdoor carnival or fair at night",
+      "key_objects": [
+        "spinning carnival ride with light trails",
+        "metal barrier fence",
+        "dark night sky",
+        "silhouetted person standing"
+      ],
+      "verified_absent": [
+        "daytime sky",
+        "multiple spectators",
+        "carnival booths",
+        "animals"
+      ],
+      "free_text": "A lone silhouetted figure stands before a brightly lit spinning carnival ride photographed with a long exposure, creating dramatic circular light trails against the night sky."
+    },
+    {
+      "id": 179,
+      "file_name": "IMG_4362.JPG",
+      "subject": "musicians performing at indoor band concert",
+      "person_count": 4,
+      "setting": "indoor auditorium or school concert stage",
+      "key_objects": [
+        "black concert attire",
+        "saxophone",
+        "music stands with sheet music",
+        "conductor standing",
+        "wooden stage floor"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "audience visible",
+        "microphone stand",
+        "guitar"
+      ],
+      "free_text": "A small ensemble of musicians dressed in black performs on an indoor stage, with a conductor standing to the right. Music stands with sheet music are visible and a saxophone can be seen."
+    },
+    {
+      "id": 180,
+      "file_name": "IMG_7656.JPG",
+      "subject": "boy posing in front of dinosaur exhibit outdoors",
+      "person_count": 1,
+      "setting": "outdoor dinosaur exhibit or zoo",
+      "key_objects": [
+        "navy blue t-shirt",
+        "red shorts",
+        "large dinosaur model behind",
+        "trees and tents in background"
+      ],
+      "verified_absent": [
+        "indoor museum",
+        "other children",
+        "real animals",
+        "fossils on display"
+      ],
+      "free_text": "A boy in a navy t-shirt and red shorts poses making a funny face in front of large dinosaur statues at an outdoor exhibit. A large Dimetrodon model is visible directly behind him."
+    },
+    {
+      "id": 181,
+      "file_name": "IMG_1411_4x6_300.jpg",
+      "subject": "young toddler girl dancing on table",
+      "person_count": 2,
+      "setting": "indoor home dining or living area",
+      "key_objects": [
+        "red and white striped shirt",
+        "red pants",
+        "red pigtails with bows",
+        "wooden dining chair",
+        "second child in background"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "birthday decorations",
+        "food on table",
+        "adults"
+      ],
+      "free_text": "A toddler girl with red pigtails and a red-and-white striped outfit dances energetically on top of a table. A second child is visible seated in the background."
+    },
+    {
+      "id": 182,
+      "file_name": "20150404_224803.jpg",
+      "subject": "decorative wall-mounted lamp made from a paddle",
+      "person_count": 0,
+      "setting": "indoor home interior wall",
+      "key_objects": [
+        "wooden paddle or oar base",
+        "Edison-style bulb",
+        "black pipe lamp hardware",
+        "white rope accents",
+        "dark ambient lighting"
+      ],
+      "verified_absent": [
+        "people",
+        "ceiling fixture",
+        "outdoor scenery",
+        "furniture"
+      ],
+      "free_text": "A decorative wall lamp is mounted on a wooden paddle or oar, with industrial black pipe hardware holding an Edison-style filament bulb. White rope knots accent the edges of the paddle."
+    },
+    {
+      "id": 183,
+      "file_name": "20240928_172922.jpg",
+      "subject": "three men holding large beer mugs at bar",
+      "person_count": 3,
+      "setting": "indoor bar or brewery",
+      "key_objects": [
+        "large glass beer mugs",
+        "samuel adams branded mug",
+        "digital menu boards behind bar",
+        "tap handles",
+        "green baseball cap"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "food on counter",
+        "women in group",
+        "wine glasses"
+      ],
+      "free_text": "Three men stand at a bar holding oversized glass beer mugs, with one mug prominently branded Samuel Adams. Behind them, digital menu boards and tap handles are visible."
+    },
+    {
+      "id": 184,
+      "file_name": "IMG_0441.JPG",
+      "subject": "two children in halloween costumes indoors",
+      "person_count": 2,
+      "setting": "indoor home living room",
+      "key_objects": [
+        "witch hat and black outfit on girl",
+        "orange jack-o-lantern shirt on boy",
+        "fireplace in background",
+        "halloween candy bag"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "jack-o-lanterns",
+        "other children",
+        "masks"
+      ],
+      "free_text": "Two children stand together wearing Halloween costumes inside a home, with a girl in a witch hat and black outfit and a boy in an orange jack-o-lantern shirt. A fireplace is visible in the background."
+    },
+    {
+      "id": 185,
+      "file_name": "IMG_0060.JPG",
+      "subject": "toddler opening gifts surrounded by wrapping paper",
+      "person_count": 2,
+      "setting": "indoor home living room",
+      "key_objects": [
+        "black velvet dress on toddler",
+        "scattered wrapping paper and gift bags",
+        "brick fireplace in background",
+        "adult partially visible"
+      ],
+      "verified_absent": [
+        "birthday cake",
+        "balloons",
+        "outdoor setting",
+        "other children"
+      ],
+      "free_text": "A toddler in a black velvet dress stands amid a pile of torn wrapping paper and gift bags during a holiday gift opening. An adult is partially visible near a brick fireplace."
+    },
+    {
+      "id": 186,
+      "file_name": "IMG_2074.JPG",
+      "subject": "youth girls soccer team with coach posing indoors",
+      "person_count": 12,
+      "setting": "indoor sports facility",
+      "key_objects": [
+        "black team jerseys with red logo",
+        "pink soccer ball",
+        "adult male coach in red jersey",
+        "team posing in two rows"
+      ],
+      "verified_absent": [
+        "outdoor field",
+        "soccer goals",
+        "trophies",
+        "referee"
+      ],
+      "free_text": "A youth girls soccer team poses with their adult male coach inside what appears to be an indoor sports facility. The girls wear matching black jerseys and a pink soccer ball is placed in front."
+    },
+    {
+      "id": 187,
+      "file_name": "IMG_2096.JPG",
+      "subject": "man and young child on water slide at lakeside",
+      "person_count": 2,
+      "setting": "outdoor lakeside or pond",
+      "key_objects": [
+        "turquoise water slide",
+        "life jacket on child",
+        "lake water below",
+        "wooden deck and ladder",
+        "trees and cabin in background"
+      ],
+      "verified_absent": [
+        "swimming pool",
+        "indoor setting",
+        "other swimmers",
+        "beach sand"
+      ],
+      "free_text": "A man and a young child sit together at the top of a turquoise water slide that empties into a lake. The child is wearing a life jacket and a cabin with a wooden deck is visible in the background."
+    },
+    {
+      "id": 188,
+      "file_name": "IMG_4085.JPG",
+      "subject": "family group posed at christmas or formal event indoors",
+      "person_count": 4,
+      "setting": "indoor home or event venue",
+      "key_objects": [
+        "christmas tree with lights",
+        "black dress on woman",
+        "blue dress shirt on man",
+        "white french doors in background"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "gifts under tree",
+        "other guests",
+        "food table"
+      ],
+      "free_text": "A group of four people in formal attire poses together in front of white French doors and a decorated Christmas tree. The group includes two women in black dresses and a man in a blue shirt."
+    },
+    {
+      "id": 189,
+      "file_name": "_MG_6933.dng",
+      "subject": "high school graduation portrait photo",
+      "person_count": 1,
+      "setting": "indoor studio portrait with flag backdrop",
+      "key_objects": [
+        "white graduation cap and gown",
+        "multi-colored honor cords",
+        "american flag backdrop",
+        "adlai stevenson high school text",
+        "class of 2022 text"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "diploma",
+        "family members",
+        "stage or podium"
+      ],
+      "free_text": "A close-up graduation portrait shows a young woman in a white cap and gown with colorful honor cords, posed in front of an American flag backdrop identifying this as Adlai Stevenson High School Commencement 2022."
+    },
+    {
+      "id": 190,
+      "file_name": "IMG_2840.JPG",
+      "subject": "young girl drinking from starbucks cup at restaurant table",
+      "person_count": 1,
+      "setting": "indoor restaurant or cafe",
+      "key_objects": [
+        "starbucks coffee cup",
+        "orange race car sippy cup",
+        "red shirt",
+        "white cereal bowl",
+        "wooden restaurant table"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "adults at table",
+        "food on plate",
+        "straw"
+      ],
+      "free_text": "A young blonde girl in a red shirt drinks from a Starbucks cup while seated at a wooden restaurant table. An orange race car themed sippy cup and a white bowl are also on the table."
+    },
+    {
+      "id": 191,
+      "file_name": "20221001_141452.jpg",
+      "subject": "bedroom interior with bed and furniture",
+      "person_count": 0,
+      "setting": "indoor bedroom",
+      "key_objects": [
+        "floral patterned bedspread",
+        "wall sconce light fixture",
+        "white curtained windows",
+        "wooden desk and chair",
+        "carpeted floor"
+      ],
+      "verified_absent": [
+        "people",
+        "pets",
+        "closet visible",
+        "bathroom"
+      ],
+      "free_text": "A tidy bedroom is photographed from a wide angle showing a bed with a floral patterned spread, a lit wall sconce, and white-curtained windows. A wooden desk is visible toward the back of the room."
+    },
+    {
+      "id": 192,
+      "file_name": "IMG_7387.JPG",
+      "subject": "child artwork showing cat silhouette in pop art style",
+      "person_count": 0,
+      "setting": "indoor home or school",
+      "key_objects": [
+        "blue and purple cat silhouettes",
+        "green background panels",
+        "9-panel grid layout",
+        "painted canvas or poster board"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor setting",
+        "real animals",
+        "photography"
+      ],
+      "free_text": "A piece of children's artwork features a 9-panel grid of cat silhouettes painted in blue and purple against green backgrounds in a pop art style."
+    },
+    {
+      "id": 193,
+      "file_name": "IMG_3294.JPG",
+      "subject": "group of people gathered around bonfire at night",
+      "person_count": 5,
+      "setting": "outdoor nighttime field or yard",
+      "key_objects": [
+        "bonfire flames in background",
+        "winter coats and snowsuits on children",
+        "pink snowsuit on girl",
+        "red coat on child",
+        "adult in dark jacket"
+      ],
+      "verified_absent": [
+        "indoor setting",
+        "snow on ground",
+        "marshmallows or food",
+        "chairs"
+      ],
+      "free_text": "A group of five people including four bundled-up children and an adult crouch together outdoors at night with a bright bonfire burning behind them."
+    },
+    {
+      "id": 194,
+      "file_name": "IMG_0799.JPG",
+      "subject": "adult handing balloons to children at outdoor park event",
+      "person_count": 4,
+      "setting": "outdoor park or community event",
+      "key_objects": [
+        "red and white balloons",
+        "white baseball cap on adult",
+        "striped shirt on girl",
+        "stroller in background",
+        "brick paved path"
+      ],
+      "verified_absent": [
+        "indoor setting",
+        "carnival rides",
+        "food vendors",
+        "animals"
+      ],
+      "free_text": "An adult wearing a white baseball cap leans down to hand balloons to a group of young children on a brick paved path at what appears to be a community outdoor event."
+    },
+    {
+      "id": 195,
+      "file_name": "_MG_6720.JPG",
+      "subject": "three people posing after college graduation outdoors",
+      "person_count": 3,
+      "setting": "outdoor university campus",
+      "key_objects": [
+        "white cap and gown on graduate",
+        "bouquet of red roses",
+        "bell tower in background",
+        "blue sky with clouds"
+      ],
+      "verified_absent": [
+        "indoor venue",
+        "diploma in hand",
+        "other graduates nearby",
+        "academic regalia on non-graduate"
+      ],
+      "free_text": "A college graduate in white cap and gown poses with two family members outdoors on campus, holding a bouquet of red roses. A distinctive bell tower is visible in the background under a partly cloudy sky."
+    },
+    {
+      "id": 196,
+      "file_name": "Dinosauria2011.jpg",
+      "subject": "family group posing in front of dinosaur exhibit backdrop",
+      "person_count": 11,
+      "setting": "indoor dinosaur exhibit photo booth",
+      "key_objects": [
+        "dinosauria exhibit logo",
+        "large dinosaur model",
+        "dinosaur eggs in foreground",
+        "lush jungle backdrop",
+        "mixed age group"
+      ],
+      "verified_absent": [
+        "outdoor setting",
+        "fossils in cases",
+        "museum plaques",
+        "school group uniforms"
+      ],
+      "free_text": "A large family group of about eleven people poses in front of a Dinosauria exhibit backdrop featuring a large dinosaur and jungle scenery. Dinosaur eggs are arranged in the foreground."
+    },
+    {
+      "id": 197,
+      "file_name": "IMG_0005.JPG",
+      "subject": "man smiling with birthday cake with candles",
+      "person_count": 1,
+      "setting": "indoor home kitchen or dining room",
+      "key_objects": [
+        "white coconut frosted birthday cake",
+        "lit birthday candles",
+        "polka dot tablecloth",
+        "wooden cabinet in background",
+        "blue shirt"
+      ],
+      "verified_absent": [
+        "other people",
+        "balloons",
+        "outdoor setting",
+        "wrapped gifts"
+      ],
+      "free_text": "A man in a blue shirt smiles broadly behind a white coconut-frosted birthday cake with lit candles on a polka dot tablecloth."
+    },
+    {
+      "id": 198,
+      "file_name": "CRW_5343.jpg",
+      "subject": "indoor mall or atrium with floral spring decorations",
+      "person_count": 0,
+      "setting": "indoor shopping mall or atrium",
+      "key_objects": [
+        "large green floral birdcage installation",
+        "hanging flower decorations",
+        "stuffed animal or figurine",
+        "tall atrium ceiling with windows"
+      ],
+      "verified_absent": [
+        "people",
+        "outdoor scenery",
+        "Christmas decorations",
+        "fountain"
+      ],
+      "free_text": "A large decorative green birdcage structure adorned with flowers hangs in what appears to be a shopping mall atrium. A stuffed animal or figurine is positioned within the display."
+    },
+    {
+      "id": 199,
+      "file_name": "_MG_3389.jpg",
+      "subject": "sleeping newborn baby in infant car seat",
+      "person_count": 1,
+      "setting": "outdoor or transitional setting",
+      "key_objects": [
+        "gray infant car seat",
+        "white swaddle blanket",
+        "colorful rattle toy held above",
+        "striped onesie"
+      ],
+      "verified_absent": [
+        "car interior visible",
+        "other children",
+        "stroller",
+        "hospital setting"
+      ],
+      "free_text": "A newborn baby sleeps peacefully in a gray infant car seat, swaddled in a white blanket. An adult hand holds a colorful rattle toy above the baby."
+    },
+    {
+      "id": 200,
+      "file_name": "IMG_4841.JPG",
+      "subject": "man holding certificate in front of fire engine",
+      "person_count": 1,
+      "setting": "outdoor fire station",
+      "key_objects": [
+        "red fire engine with eng. 5 marking",
+        "gray polo shirt",
+        "certificate or award document",
+        "fire station equipment on truck"
+      ],
+      "verified_absent": [
+        "firefighter uniform",
+        "other people",
+        "indoor setting",
+        "fire hose in use"
+      ],
+      "free_text": "A man in a gray polo shirt stands in front of a red fire engine marked Engine 5, holding a certificate or award document. The photo appears to be taken outdoors at a fire station."
+    }
+  ]
+}

@@ -16,7 +16,7 @@ Successfully implemented Phase 2 (performance optimizations) and Phase 3 (refact
 ## Completed Work
 
 ### Item 1: DeleteMarkedAsync() Extraction — FindDuplicatesViewModel.cs
-**File:** `PhotoIQPro.Desktop/ViewModels/FindDuplicatesViewModel.cs`
+**File:** `PhotoWell.Desktop/ViewModels/FindDuplicatesViewModel.cs`
 **Complexity:** LOW | **Lines changed:** 68 → 18 (-73%)
 
 **Extracted 3 private helpers:**
@@ -45,7 +45,7 @@ Successfully implemented Phase 2 (performance optimizations) and Phase 3 (refact
 ---
 
 ### Item 2: Tag Photo Counts SQL Optimization — MediaFileRepository.cs
-**File:** `PhotoIQPro.Data/Repositories/MediaFileRepository.cs`, line 672
+**File:** `PhotoWell.Data/Repositories/MediaFileRepository.cs`, line 672
 **Complexity:** MEDIUM | **Query optimization:** N correlated subqueries → 2 simple queries
 
 **Problem:** `GetTagPhotoCountsAsync()` used correlated subquery pattern:
@@ -109,7 +109,7 @@ return allTagNames.ToDictionary(name => name, name => countMap.GetValueOrDefault
 ---
 
 ### Item 3: ToggleFavoriteAsync + RefreshItemInPlace Helper — MainViewModel.cs
-**File:** `PhotoIQPro.Desktop/ViewModels/MainViewModel.cs`
+**File:** `PhotoWell.Desktop/ViewModels/MainViewModel.cs`
 **Complexity:** LOW | **Code consolidation:** 3 locations unified into 1 helper
 
 **New Helper: RefreshItemInPlace()**
@@ -150,7 +150,7 @@ private void RefreshItemInPlace(MediaFile target, MediaFile? source = null)
 ---
 
 ### Item 4: Remove Redundant LoadAsync() After Bulk Re-analysis — MainViewModel.cs
-**File:** `PhotoIQPro.Desktop/ViewModels/MainViewModel.cs`
+**File:** `PhotoWell.Desktop/ViewModels/MainViewModel.cs`
 **Complexity:** MEDIUM | **Performance impact:** Eliminates 2 full library reloads per bulk operation
 
 **Problem:** After `ReanalyzeAllAsync` and `ReanalyzeOutdatedAsync`, a full `LoadAsync()` was called. However:

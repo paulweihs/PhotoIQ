@@ -1,7 +1,7 @@
 ## ADR: Subject Recognition — "That's Bubba"
 
 ### Decision
-PhotoIQ v2 will support subject recognition beyond
+PhotoWell v2 will support subject recognition beyond
 human faces — including pets, buildings, and objects.
 
 ### The Origin Story

@@ -18,7 +18,7 @@ Completed two final improvements:
 ## Part A: Vision Worker Refactoring
 
 ### Change
-**File:** `C:\Dev\PhotoIQPro\src\PhotoIQPro.Desktop\ViewModels\MainViewModel.cs`, lines 1342–1354
+**File:** `C:\Dev\PhotoWell\src\PhotoWell.Desktop\ViewModels\MainViewModel.cs`, lines 1342–1354
 
 **Before (13 lines):**
 ```csharp
@@ -69,7 +69,7 @@ if (existing != null)
 ## Part B: Unit Tests for FindDuplicatesViewModel
 
 ### New File
-**Location:** `C:\Dev\PhotoIQPro\src\PhotoIQPro.Tests\FindDuplicatesViewModelTests.cs` (189 lines)
+**Location:** `C:\Dev\PhotoWell\src\PhotoWell.Tests\FindDuplicatesViewModelTests.cs` (189 lines)
 
 ### Test Coverage (8 test cases)
 

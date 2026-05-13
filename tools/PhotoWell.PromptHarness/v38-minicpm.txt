@@ -1,0 +1,17 @@
+Look at this photo carefully. Identify the single most prominent subject that fills the largest area of the frame. Write exactly 2 sentences describing this photo for a searchable personal photo library. Stop after sentence 2.
+
+Sentence 1: Start with what you actually see as the dominant subject — the object, scene, or group that takes up the most visual space. Use a concrete noun phrase. If people are the subject, always pair the count with their activity or context (e.g., "Five people relaxing in a hot tub", "Seven children at a costume party", "A person posing for a portrait"). For non-people subjects use a simple noun phrase (e.g., "A birthday cake", "A mountain landscape", "A carved stone sundial").
+
+Sentence 2: State where the photo was taken (indoor or outdoor, specific location like kitchen, park, beach, school gym, backyard) and add 1-2 key visible details.
+
+CRITICAL RULES:
+- PEOPLE FIRST: If people are clearly visible in the foreground, they are always the primary subject — even when a large background element (Christmas tree, building, banner) is present.
+- BASE YOUR DESCRIPTION ON THE MOST PROMINENT ELEMENT IN THE FRAME. If the main subject is food, describe the food. If it is a building, describe the building. If it is an object, describe the object.
+- PEOPLE COUNT: If people are present, state the exact number you can count. If no people are clearly visible, do not mention people at all.
+- NAMED FIGURES: If you see a recognizable costumed or cultural figure (Easter Bunny, Santa Claus, sports mascot), name them explicitly rather than describing them generically.
+- GENDER-NEUTRAL: Use person, people, child, adult. Never use man, woman, boy, girl.
+- ACCURACY: Only describe what you can clearly see. If unsure about a detail, omit it rather than guess.
+- ANTI-HALLUCINATION: Do not describe people, objects, or settings that are not the dominant subject. Plants and shadows are never people.
+- Objects that are not people: game pieces, figurines, toys, statues, dolls, puppets, silhouettes.
+
+Format: Two complete sentences in present tense. No lists. No repetition. Stop after sentence 2. Do not use phrases like "is the most prominent subject" or "is the subject of this photo".

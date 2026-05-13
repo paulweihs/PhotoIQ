@@ -1,0 +1,155 @@
+<Window x:Class="PhotoWell.Desktop.Views.QuickDescriptionWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="AI Description — PhotoWell"
+        Width="500" Height="420"
+        MinWidth="380" MinHeight="320"
+        WindowStartupLocation="CenterScreen"
+        ResizeMode="CanResize"
+        Background="#FF1E1E2E"
+        Foreground="#FFCDD6F4">
+
+    <Window.Resources>
+        <BooleanToVisibilityConverter x:Key="BoolToVis"/>
+
+        <SolidColorBrush x:Key="PaneBrush"     Color="#FF1E1E2E"/>
+        <SolidColorBrush x:Key="SurfaceBrush"  Color="#FF313244"/>
+        <SolidColorBrush x:Key="Surface2Brush" Color="#FF45475A"/>
+        <SolidColorBrush x:Key="TextBrush"     Color="#FFCDD6F4"/>
+        <SolidColorBrush x:Key="SubtextBrush"  Color="#FFA6ADC8"/>
+        <SolidColorBrush x:Key="AccentBrush"   Color="#FF89B4FA"/>
+
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="Background" Value="{StaticResource Surface2Brush}"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,7"/>
+            <Setter Property="FontSize" Value="13"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
+                                <Setter Property="Foreground" Value="#FF1E1E2E"/>
+                            </Trigger>
+                            <Trigger Property="IsEnabled" Value="False">
+                                <Setter Property="Opacity" Value="0.4"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <Grid Margin="20,16">
+        <Grid.RowDefinitions>
+            <RowDefinition Height="Auto"/>
+            <!-- thumbnail + filename -->
+            <RowDefinition Height="Auto"/>
+            <!-- label -->
+            <RowDefinition Height="*"/>
+            <!-- description box -->
+            <RowDefinition Height="Auto"/>
+            <!-- status -->
+            <RowDefinition Height="Auto"/>
+            <!-- buttons -->
+        </Grid.RowDefinitions>
+
+        <!-- ── Top: thumbnail + filename ── -->
+        <Grid Grid.Row="0" Margin="0,0,0,12">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="Auto"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Thumbnail -->
+            <Border Grid.Column="0"
+                    Background="{StaticResource SurfaceBrush}"
+                    CornerRadius="4"
+                    ClipToBounds="True"
+                    Width="180" Height="140"
+                    Margin="0,0,14,0">
+                <Image Source="{Binding Thumbnail}"
+                       Stretch="Uniform"
+                       RenderOptions.BitmapScalingMode="HighQuality"/>
+            </Border>
+
+            <!-- File info -->
+            <StackPanel Grid.Column="1" VerticalAlignment="Center">
+                <TextBlock Text="{Binding FileName}"
+                           FontSize="14" FontWeight="SemiBold"
+                           Foreground="{StaticResource TextBrush}"
+                           TextWrapping="Wrap"
+                           Margin="0,0,0,8"/>
+                <TextBlock Text="{Binding FilePath}"
+                           FontSize="10"
+                           Foreground="{StaticResource SubtextBrush}"
+                           TextWrapping="Wrap"
+                           TextTrimming="CharacterEllipsis"/>
+                <TextBlock Text="Loading…"
+                           FontSize="11"
+                           Foreground="{StaticResource SubtextBrush}"
+                           Margin="0,8,0,0"
+                           Visibility="{Binding IsBusy, Converter={StaticResource BoolToVis}}"/>
+            </StackPanel>
+        </Grid>
+
+        <!-- ── Label ── -->
+        <TextBlock Grid.Row="1"
+                   Text="AI DESCRIPTION"
+                   FontSize="10" FontWeight="SemiBold"
+                   Foreground="{StaticResource SubtextBrush}"
+                   Margin="0,0,0,6"/>
+
+        <!-- ── Editable description ── -->
+        <TextBox Grid.Row="2"
+                 Text="{Binding Description, UpdateSourceTrigger=PropertyChanged}"
+                 AcceptsReturn="True"
+                 TextWrapping="Wrap"
+                 VerticalScrollBarVisibility="Auto"
+                 Background="{StaticResource SurfaceBrush}"
+                 Foreground="{StaticResource TextBrush}"
+                 BorderBrush="{StaticResource AccentBrush}"
+                 BorderThickness="1"
+                 FontSize="13"
+                 Padding="10,8"
+                 IsEnabled="{Binding IsBusy, Converter={StaticResource BoolToVis}, ConverterParameter=inverse}"
+                 VerticalAlignment="Stretch"/>
+
+        <!-- ── Status ── -->
+        <TextBlock Grid.Row="3"
+                   Text="{Binding StatusMessage}"
+                   FontSize="11"
+                   Foreground="{StaticResource SubtextBrush}"
+                   TextWrapping="Wrap"
+                   Margin="0,6,0,4"
+                   Visibility="{Binding StatusMessage, Converter={StaticResource BoolToVis}}"/>
+
+        <!-- ── Buttons ── -->
+        <StackPanel Grid.Row="4"
+                    Orientation="Horizontal"
+                    HorizontalAlignment="Right"
+                    Margin="0,8,0,0">
+            <Button Content="Re-analyze"
+                    Command="{Binding ReanalyzeCommand}"
+                    Style="{StaticResource ActionBtn}"
+                    ToolTip="Reset this photo to Pending — the background AI worker will generate a fresh description."
+                    Margin="0,0,8,0"/>
+            <Button Content="Cancel"
+                    Command="{Binding CancelCommand}"
+                    Style="{StaticResource ActionBtn}"
+                    Margin="0,0,8,0"/>
+            <Button Content="Save"
+                    Command="{Binding SaveCommand}"
+                    Style="{StaticResource ActionBtn}"
+                    IsDefault="True"/>
+        </StackPanel>
+    </Grid>
+</Window>

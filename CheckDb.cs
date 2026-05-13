@@ -1,9 +1,9 @@
 using System;
-using PhotoIQPro.Data;
-using PhotoIQPro.Core.Models;
+using PhotoWell.Data;
+using PhotoWell.Core.Models;
 using Microsoft.EntityFrameworkCore;
 
-var dbPath = @"C:\Users\retli\AppData\Local\PhotoIQPro\photoiq.db";
+var dbPath = @"C:\Users\retli\AppData\Local\PhotoWell\photoiq.db";
 var connStr = $"Data Source={dbPath}";
 var options = new DbContextOptionsBuilder<PhotoIQContext>()
     .UseSqlite(connStr)

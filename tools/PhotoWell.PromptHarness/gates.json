@@ -1,0 +1,72 @@
+{
+  "version": "1.1",
+  "pass_threshold_points": 9,
+  "gates": [
+    {
+      "id": "G1",
+      "name": "NoHallucination",
+      "description": "Description does not mention people, animals, or objects listed in verified_absent",
+      "points": 3,
+      "type": "verified_absent",
+      "penalty_per_hit": 1
+    },
+    {
+      "id": "G2",
+      "name": "SubjectMatch",
+      "description": "Primary subject keywords appear in the description (>=40% = full credit, >=20% = partial)",
+      "points": 2,
+      "type": "keyword_match",
+      "source_field": "subject",
+      "full_credit_pct": 0.4,
+      "partial_credit_pct": 0.2
+    },
+    {
+      "id": "G3",
+      "name": "PersonCount",
+      "description": "Person count stated matches ground truth; skipped when person_count = -1",
+      "points": 1,
+      "type": "person_count"
+    },
+    {
+      "id": "G4",
+      "name": "SettingMatch",
+      "description": "Setting/location keywords appear in the description (>=30% = full credit). Low threshold due to vocabulary variation.",
+      "points": 1,
+      "type": "keyword_match",
+      "source_field": "setting",
+      "full_credit_pct": 0.3,
+      "partial_credit_pct": 0.0
+    },
+    {
+      "id": "G5",
+      "name": "KeyObjects",
+      "description": "Key objects from ground truth appear in the description (>=50% = full, >=25% = partial)",
+      "points": 2,
+      "type": "keyword_match",
+      "source_field": "key_objects",
+      "full_credit_pct": 0.5,
+      "partial_credit_pct": 0.25
+    },
+    {
+      "id": "G6",
+      "name": "NoFillerOpener",
+      "description": "Description does not begin with a banned filler phrase",
+      "points": 1,
+      "type": "filler_opener",
+      "banned_prefixes": [
+        "The image", "This image", "This photo", "The photo",
+        "The main subject", "In this image", "In this photo",
+        "The scene", "Here we see", "We can see", "The picture"
+      ]
+    },
+    {
+      "id": "G7",
+      "name": "ProperLength",
+      "description": "Description is between 15 and 200 words (not too terse, not a repetition loop)",
+      "points": 1,
+      "type": "word_count",
+      "min_words": 15,
+      "max_words": 200
+    }
+  ]
+}

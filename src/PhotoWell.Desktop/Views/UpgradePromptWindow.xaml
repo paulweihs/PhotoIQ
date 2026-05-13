@@ -1,0 +1,159 @@
+<Window x:Class="PhotoWell.Desktop.Views.UpgradePromptWindow"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Library Limit Reached"
+        Width="520" Height="420"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="#1E1E2E"
+        Foreground="#FFCDD6F4">
+
+    <Window.Resources>
+        <SolidColorBrush x:Key="PaneBrush"     Color="#1E1E2E"/>
+        <SolidColorBrush x:Key="SurfaceBrush"  Color="#313244"/>
+        <SolidColorBrush x:Key="Surface2Brush" Color="#45475A"/>
+        <SolidColorBrush x:Key="TextBrush"     Color="#FFCDD6F4"/>
+        <SolidColorBrush x:Key="SubtextBrush"  Color="#FFA6ADC8"/>
+        <SolidColorBrush x:Key="AccentBrush"   Color="#FF89B4FA"/>
+        <SolidColorBrush x:Key="GreenBrush"    Color="#FFA6E3A1"/>
+        <SolidColorBrush x:Key="YellowBrush"   Color="#FFF9E2AF"/>
+        <SolidColorBrush x:Key="RedBrush"      Color="#FFF38BA8"/>
+
+        <Style x:Key="TierCard" TargetType="Border">
+            <Setter Property="Background"      Value="{StaticResource SurfaceBrush}"/>
+            <Setter Property="CornerRadius"    Value="6"/>
+            <Setter Property="Padding"         Value="18,14"/>
+        </Style>
+
+        <Style x:Key="TierName" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="15"/>
+            <Setter Property="FontWeight" Value="SemiBold"/>
+            <Setter Property="Foreground" Value="{StaticResource TextBrush}"/>
+            <Setter Property="Margin"     Value="0,0,0,6"/>
+        </Style>
+
+        <Style x:Key="TierDetail" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="12"/>
+            <Setter Property="Foreground" Value="{StaticResource SubtextBrush}"/>
+            <Setter Property="Margin"     Value="0,2,0,0"/>
+        </Style>
+
+        <Style x:Key="TierPrice" TargetType="TextBlock">
+            <Setter Property="FontSize"   Value="20"/>
+            <Setter Property="FontWeight" Value="Bold"/>
+            <Setter Property="Foreground" Value="{StaticResource AccentBrush}"/>
+            <Setter Property="Margin"     Value="0,10,0,0"/>
+        </Style>
+
+        <Style x:Key="ActionBtn" TargetType="Button">
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding"         Value="24,10"/>
+            <Setter Property="FontSize"        Value="13"/>
+            <Setter Property="Cursor"          Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}"
+                                CornerRadius="5"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+
+    <StackPanel Margin="32,28,32,28">
+
+        <!-- Header -->
+        <StackPanel Orientation="Horizontal" Margin="0,0,0,6">
+            <TextBlock Text="⚠" FontSize="22" Foreground="{StaticResource YellowBrush}"
+                       VerticalAlignment="Center" Margin="0,0,10,0"/>
+            <TextBlock Text="Express Library Limit Reached"
+                       FontSize="20" FontWeight="SemiBold"
+                       Foreground="{StaticResource TextBrush}"
+                       VerticalAlignment="Center"/>
+        </StackPanel>
+
+        <!-- Sub-header -->
+        <TextBlock Margin="0,0,0,24" TextWrapping="Wrap" FontSize="13"
+                   Foreground="{StaticResource SubtextBrush}">
+            <Run Text="Your library has"/>
+            <Run Text="{Binding LibraryCountText}" FontWeight="SemiBold"
+                 Foreground="{StaticResource TextBrush}"/>
+            <Run Text="photos. Express supports up to"/>
+            <Run Text="{Binding LimitText}" FontWeight="SemiBold"
+                 Foreground="{StaticResource YellowBrush}"/>
+            <Run Text=". No more photos can be imported until you upgrade."/>
+        </TextBlock>
+
+        <!-- Tier comparison -->
+        <Grid Margin="0,0,0,28">
+            <Grid.ColumnDefinitions>
+                <ColumnDefinition Width="*"/>
+                <ColumnDefinition Width="12"/>
+                <ColumnDefinition Width="*"/>
+            </Grid.ColumnDefinitions>
+
+            <!-- Express -->
+            <Border Grid.Column="0" Style="{StaticResource TierCard}">
+                <StackPanel>
+                    <TextBlock Text="Express" Style="{StaticResource TierName}"/>
+                    <TextBlock Text="✓  CLIP tag search" Style="{StaticResource TierDetail}"/>
+                    <TextBlock Text="✓  Up to 25,000 photos" Style="{StaticResource TierDetail}"/>
+                    <TextBlock Text="✗  No AI descriptions" Style="{StaticResource TierDetail}"
+                               Foreground="{StaticResource SubtextBrush}" Opacity="0.6"/>
+                    <TextBlock Text="✗  No natural language search" Style="{StaticResource TierDetail}"
+                               Foreground="{StaticResource SubtextBrush}" Opacity="0.6"/>
+                    <TextBlock Text="$39" Style="{StaticResource TierPrice}"
+                               Foreground="{StaticResource SubtextBrush}"/>
+                    <TextBlock Text="one-time" FontSize="10"
+                               Foreground="{StaticResource SubtextBrush}" Opacity="0.6"/>
+                </StackPanel>
+            </Border>
+
+            <!-- Standard -->
+            <Border Grid.Column="2" Style="{StaticResource TierCard}"
+                    BorderBrush="{StaticResource AccentBrush}" BorderThickness="1">
+                <StackPanel>
+                    <StackPanel Orientation="Horizontal" Margin="0,0,0,0">
+                        <TextBlock Text="Standard" Style="{StaticResource TierName}" Margin="0,0,8,6"/>
+                        <Border Background="#2289B4FA" CornerRadius="3" Padding="6,2"
+                                VerticalAlignment="Top" Margin="0,2,0,0">
+                            <TextBlock Text="RECOMMENDED" FontSize="9" FontWeight="SemiBold"
+                                       Foreground="{StaticResource AccentBrush}"/>
+                        </Border>
+                    </StackPanel>
+                    <TextBlock Text="✓  CLIP tag search" Style="{StaticResource TierDetail}"
+                               Foreground="{StaticResource GreenBrush}"/>
+                    <TextBlock Text="✓  Unlimited photos" Style="{StaticResource TierDetail}"
+                               Foreground="{StaticResource GreenBrush}"/>
+                    <TextBlock Text="✓  AI descriptions" Style="{StaticResource TierDetail}"
+                               Foreground="{StaticResource GreenBrush}"/>
+                    <TextBlock Text="✓  Natural language search" Style="{StaticResource TierDetail}"
+                               Foreground="{StaticResource GreenBrush}"/>
+                    <TextBlock Text="$79" Style="{StaticResource TierPrice}"/>
+                    <TextBlock Text="one-time" FontSize="10"
+                               Foreground="{StaticResource SubtextBrush}" Opacity="0.6"/>
+                </StackPanel>
+            </Border>
+        </Grid>
+
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Stay on Express"
+                    Command="{Binding StayOnExpressCommand}"
+                    Style="{StaticResource ActionBtn}"
+                    Background="{StaticResource Surface2Brush}"
+                    Foreground="{StaticResource SubtextBrush}"
+                    Margin="0,0,12,0"/>
+            <Button Content="Upgrade to Standard"
+                    Command="{Binding UpgradeToStandardCommand}"
+                    Style="{StaticResource ActionBtn}"
+                    Background="{StaticResource AccentBrush}"
+                    Foreground="#FF1E1E2E"/>
+        </StackPanel>
+
+    </StackPanel>
+</Window>

@@ -1,0 +1,22 @@
+Look at this photo carefully. Identify the single most prominent subject that fills the largest area of the frame. Write exactly 3 sentences describing this photo for a searchable personal photo library. Stop after sentence 3.
+
+Sentence 1: Name the dominant subject with a concrete noun phrase. If people are the subject, pair the exact count with their activity or context (e.g., "Five people relaxing in a hot tub", "Seven children at a costume party", "One person posing for a portrait", "Two people standing outdoors"). For non-people subjects use a descriptive noun phrase (e.g., "A tiered birthday cake", "A carved stone sundial", "A mountain landscape").
+
+Sentence 2: Describe 1-3 key visible details of the subject — clothing, objects held or nearby, colors, expressions, decorations, or distinguishing features. Only describe what you can clearly see.
+
+Sentence 3: State where the photo was taken — indoor or outdoor, and the specific location (kitchen, park, beach, school gym, backyard, restaurant, living room, etc.).
+
+CRITICAL RULES:
+- PEOPLE FIRST: If people are clearly visible in the foreground, they are always the primary subject — even when a large background element (Christmas tree, building, banner) is present.
+- BASE YOUR DESCRIPTION ON THE MOST PROMINENT ELEMENT IN THE FRAME. If the main subject is food, describe the food. If it is a building, describe the building. If it is an object, describe the object.
+- PEOPLE COUNT: If people are present, state the exact number. For one person say "one person" or "one child" — never just "a person". For a large group you cannot count precisely, say "a large group of people".
+- NAMED FIGURES: If you see a recognizable costumed or cultural figure (Easter Bunny, Santa Claus, sports mascot), name them explicitly rather than describing them generically.
+- GENDER-NEUTRAL: Use person, people, child, adult. Never use man, woman, boy, girl.
+- ACCURACY: Only describe what you can clearly see. Omit uncertain details rather than guessing.
+- ANTI-HALLUCINATION: Do not describe people, objects, or settings that are not the dominant subject. Plants and shadows are never people.
+- Objects that are not people: game pieces, figurines, toys, statues, dolls, puppets, silhouettes.
+- SENTENCE 2 SPECIFICITY: Name the actual items — say "a red graduation cap and diploma" not "academic accessories", "a soccer ball and orange cones" not "sports equipment", "a birthday cake with lit candles" not "a dessert".
+
+Format: Exactly 3 complete sentences in present tense. No lists. No repetition. Stop after sentence 3. Do not use phrases like "is the most prominent subject" or "is the subject of this photo".
+
+Example: "Four children are playing soccer in a backyard. One child wears a neon orange jersey; a black-and-white soccer ball and two orange traffic cones are on the grass. The photo is taken outdoors in a residential backyard."

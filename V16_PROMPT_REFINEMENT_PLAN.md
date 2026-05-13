@@ -255,9 +255,9 @@ public void EnforceGenderNeutrality_ReplacesTerms(string input, string expected)
 
 ```bash
 # Run v16 prompt against ground truth corpus
-dotnet run --project tools/PhotoIQPro.Eval -- \
+dotnet run --project tools/PhotoWell.Eval -- \
   --optimize-prompt 35 \
-  --prompt "$(cat tools/PhotoIQPro.Eval/v16_prompt.txt)"
+  --prompt "$(cat tools/PhotoWell.Eval/v16_prompt.txt)"
 ```
 
 **Success criteria:**

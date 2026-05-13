@@ -110,7 +110,7 @@ public class DescriptionFeedback
 
 ### Component 1: Database & Repository
 
-**File:** PhotoIQPro.Data/Repositories/DescriptionFeedbackRepository.cs
+**File:** PhotoWell.Data/Repositories/DescriptionFeedbackRepository.cs
 
 ```csharp
 public class DescriptionFeedbackRepository
@@ -155,7 +155,7 @@ public class DescriptionFeedbackRepository
 
 ### Component 2: Services Layer
 
-**File:** PhotoIQPro.Services/Feedback/DescriptionFeedbackService.cs
+**File:** PhotoWell.Services/Feedback/DescriptionFeedbackService.cs
 
 ```csharp
 public class DescriptionFeedbackService
@@ -210,7 +210,7 @@ public class FeedbackSummary
 
 ### Component 3: UI Integration
 
-**File:** PhotoIQPro.Desktop/ViewModels/PhotoDetailsViewModel.cs
+**File:** PhotoWell.Desktop/ViewModels/PhotoDetailsViewModel.cs
 
 ```csharp
 public class PhotoDetailsViewModel : ObservableObject
@@ -247,10 +247,10 @@ public class PhotoDetailsViewModel : ObservableObject
 
 ### Component 4: UI Dialog
 
-**File:** PhotoIQPro.Desktop/Views/ReportDescriptionDialog.xaml**
+**File:** PhotoWell.Desktop/Views/ReportDescriptionDialog.xaml**
 
 ```xaml
-<Window x:Class="PhotoIQPro.Desktop.Views.ReportDescriptionDialog"
+<Window x:Class="PhotoWell.Desktop.Views.ReportDescriptionDialog"
         Title="Report Description Issue"
         Width="400" Height="350"
         WindowStartupLocation="CenterOwner"

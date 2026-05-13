@@ -172,8 +172,8 @@ Reliability: 99%+ success rate (rare Ollama connectivity issues)
 - `ENSEMBLE_EVALUATION_FINAL.md` — This document
 
 **Code:**
-- `tools/PhotoIQPro.Eval/MultiModelEnsemble.cs` — Ensemble framework (created but NOT recommended for production)
-- `src/PhotoIQPro.Common/AppSettings.cs` — Updated CurrentPromptVersion = "v30" ✓
+- `tools/PhotoWell.Eval/MultiModelEnsemble.cs` — Ensemble framework (created but NOT recommended for production)
+- `src/PhotoWell.Common/AppSettings.cs` — Updated CurrentPromptVersion = "v30" ✓
 
 **Status:**
 - ✓ Build: 0 errors, 499/499 tests passing

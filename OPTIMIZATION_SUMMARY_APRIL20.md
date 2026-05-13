@@ -41,7 +41,7 @@ modelBuilder.Entity<MediaFile>().HasIndex(e => new { e.IsExcluded, e.IsAnalyzed,
 
 ### Implementation Details
 
-- **File:** `src/PhotoIQPro.Data/PhotoIQContext.cs`
+- **File:** `src/PhotoWell.Data/PhotoIQContext.cs`
 - **Location:** Lines 68-69 in `OnModelCreating` method
 - **Type:** Non-unique composite indexes (additive, no schema migration needed)
 - **Deployment:** Indexes created automatically at next app startup

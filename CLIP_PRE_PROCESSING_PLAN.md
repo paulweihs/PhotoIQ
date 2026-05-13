@@ -306,9 +306,9 @@ public async Task RunVisionInferenceAsync_WithGameBoardHint_DescribesPiecesAsObj
 ### Evaluation Tests
 ```bash
 # Run v15c + CLIP classification on problem cases
-dotnet run --project tools/PhotoIQPro.Eval -- \
+dotnet run --project tools/PhotoWell.Eval -- \
   --optimize-prompt 50 \
-  --prompt "$(cat tools/PhotoIQPro.Eval/v15_with_clip.txt)"
+  --prompt "$(cat tools/PhotoWell.Eval/v15_with_clip.txt)"
 
 # Compare similarity scores for foosball, cats, silhouettes
 ```

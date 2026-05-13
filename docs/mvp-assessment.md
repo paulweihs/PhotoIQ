@@ -47,7 +47,7 @@ PhotoIQ Pro is shippable as an Express MVP today. The Standard tier requires one
 
 ### ⚠️ Needs Verification Before Ship
 
-- [ ] **CLIP model cold-start on new machine** — model files must be present in the installer; verify the path resolution works with the default `%LOCALAPPDATA%\PhotoIQPro\models\` layout on a clean Windows install
+- [ ] **CLIP model cold-start on new machine** — model files must be present in the installer; verify the path resolution works with the default `%LOCALAPPDATA%\PhotoWell\models\` layout on a clean Windows install
 - [ ] **Express mode library limit (25,000)** — limit is defined in CLAUDE.md but the enforcement gate is not visible in the codebase; verify an upgrade prompt appears at the ceiling, not before
 - [ ] **Test suite coverage** — only `CommonTests.cs` and `ModelTests.cs` exist; import pipeline, repository, and search paths have no automated tests; risk is present for regression
 - [ ] **Installer / distribution** — no evidence of an MSIX/Inno Setup/WiX project; self-contained .exe must be verified on Windows 10 22H2 and Windows 11 without .NET runtime pre-installed

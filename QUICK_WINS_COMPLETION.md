@@ -20,7 +20,7 @@ Successfully completed **5 quick win optimizations** across performance and refa
 ## Completed Quick Wins
 
 ### ✓ Quick Win #1: Add Missing Tag Include to GetVisionPendingAsync
-**File:** `PhotoIQPro.Data/Repositories/MediaFileRepository.cs` (line 237)
+**File:** `PhotoWell.Data/Repositories/MediaFileRepository.cs` (line 237)
 **Type:** Performance optimization
 **Impact:** MAJOR - Eliminates N+1 query antipattern
 
@@ -49,7 +49,7 @@ public async Task<IEnumerable<MediaFile>> GetVisionPendingAsync() =>
 ---
 
 ### ✓ Quick Win #2: Fix Blocking Wait in FaceRecognitionService
-**File:** `PhotoIQPro.Core/Interfaces/IFaceRecognitionService.cs` + `PhotoIQPro.Services/Vision/FaceRecognitionService.cs` + `PhotoIQPro.Desktop/ViewModels/PeopleViewModel.cs`
+**File:** `PhotoWell.Core/Interfaces/IFaceRecognitionService.cs` + `PhotoWell.Services/Vision/FaceRecognitionService.cs` + `PhotoWell.Desktop/ViewModels/PeopleViewModel.cs`
 **Type:** Performance + Async pattern fix
 **Impact:** CRITICAL - Eliminates UI freezing
 
@@ -88,7 +88,7 @@ public async Task InvalidateCacheAsync()
 ---
 
 ### ✓ Quick Win #3: Consolidate Property Notifications in OnSelectedMediaFileChanged
-**File:** `PhotoIQPro.Desktop/ViewModels/MainViewModel.cs` (lines 2992-3033)
+**File:** `PhotoWell.Desktop/ViewModels/MainViewModel.cs` (lines 2992-3033)
 **Type:** Refactoring
 **Impact:** HIGH - Improves maintainability and clarity
 
@@ -142,7 +142,7 @@ private void LoadSelectionAsync(MediaFile? value) { ... }
 ---
 
 ### ✓ Quick Win #4: Extract Query Building from LoadAsync
-**File:** `PhotoIQPro.Desktop/ViewModels/MainViewModel.cs` (lines 1082-1088)
+**File:** `PhotoWell.Desktop/ViewModels/MainViewModel.cs` (lines 1082-1088)
 **Type:** Refactoring
 **Impact:** MEDIUM - Improves readability
 
@@ -193,7 +193,7 @@ private async Task<IEnumerable<MediaFile>> GetGalleryViewPhotosAsync()
 ---
 
 ### ✓ Quick Win #5: Refactor ScanAsync in FindDuplicatesViewModel
-**File:** `PhotoIQPro.Desktop/ViewModels/FindDuplicatesViewModel.cs` (lines 31-51)
+**File:** `PhotoWell.Desktop/ViewModels/FindDuplicatesViewModel.cs` (lines 31-51)
 **Type:** Refactoring
 **Impact:** MEDIUM - Improves clarity and testability
 
@@ -256,7 +256,7 @@ private string BuildScanResultMessage(int groupCount) { ... }
 
 ## Bonus Discovery: VirtualizingStackPanel Already Implemented ✓
 
-**File:** `PhotoIQPro.Desktop/Views/MainWindow.xaml` (lines 1209-1217)
+**File:** `PhotoWell.Desktop/Views/MainWindow.xaml` (lines 1209-1217)
 
 Investigation found that the main photo gallery **already uses virtualization**:
 

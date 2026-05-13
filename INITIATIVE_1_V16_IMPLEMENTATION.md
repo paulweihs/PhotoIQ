@@ -10,7 +10,7 @@
 
 ### 1. v16 Prompt Designed & Saved
 
-**File:** `tools/PhotoIQPro.Eval/v16_prompt.txt`
+**File:** `tools/PhotoWell.Eval/v16_prompt.txt`
 
 **v16 Prompt (140 words):**
 ```
@@ -101,10 +101,10 @@ When evaluation confirms >5% improvement:
 ## Files Created/Modified
 
 **Created:**
-- `tools/PhotoIQPro.Eval/v16_prompt.txt` — v16 prompt for evaluation
+- `tools/PhotoWell.Eval/v16_prompt.txt` — v16 prompt for evaluation
 
 **Ready to Modify (on deployment):**
-- `src/PhotoIQPro.Common/AppSettings.cs` — version + prompt
+- `src/PhotoWell.Common/AppSettings.cs` — version + prompt
 
 **Documentation:**
 - `V16_PROMPT_REFINEMENT_PLAN.md` — detailed specification (already existed)

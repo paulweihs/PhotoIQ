@@ -5334,6 +5334,62 @@ public class MainViewModel : ObservableObject, IDisposable
 		return !SelectedIsOffline;
 	}
 
+	/// <summary>
+	/// Runs a single-photo reanalysis in the background without touching ImportProgressViewModel state.
+	/// Called during an active queue import so the import continues uninterrupted.
+	/// Multiple calls serialize naturally behind <see cref="_analysisLock"/>.
+	/// </summary>
+	private async Task ReanalyzeOneDuringImportAsync(Guid photoId, string fileName, MediaFile priorItem)
+	{
+		try
+		{
+			AppLog.Info($"[PRIORITY] ReanalyzeOneDuringImportAsync queued: {fileName}");
+			using (await AcquireAnalysisLockAsync("ReanalyzeOne-DuringImport"))
+			{
+				using var scope = _scopeFactory.CreateScope();
+				var importSvc = scope.ServiceProvider.GetRequiredService<IImportService>();
+				await importSvc.ReanalyzeFileAsync(photoId, ct: CancellationToken.None);
+			}
+			using IServiceScope readScope = _scopeFactory.CreateScope();
+			var updated = await ((IRepository<MediaFile>)(object)readScope.ServiceProvider.GetRequiredService<IMediaFileRepository>()).GetByIdAsync(photoId);
+			if (updated != null)
+			{
+				Application.Current.Dispatcher.Invoke(() =>
+				{
+					// Find by ID — import may have swapped the original reference out.
+					int idx = -1;
+					for (int i = 0; i < MediaFiles.Count; i++)
+					{
+						if (MediaFiles[i].Id == photoId) { idx = i; break; }
+					}
+					if (idx >= 0)
+					{
+						// Capture wasSelected BEFORE the replace. MediaFiles[idx] = updated
+						// fires a WPF CollectionChanged(Replace) which causes the ListBox to
+						// clear SelectedItem (old reference gone), pushing null back through
+						// the two-way binding. Reading SelectedMediaFile after the replace
+						// would see null and skip the re-select, blanking the detail pane.
+						bool wasSelected = SelectedMediaFile?.Id == photoId;
+						updated.LoadedThumbnail = MediaFiles[idx].LoadedThumbnail;
+						MediaFiles[idx] = updated;
+						if (wasSelected)
+						{
+							SelectedMediaFile = updated;
+							ScrollIntoViewRequested?.Invoke(updated);
+						}
+					}
+					StatusText = $"Re-analyzed \"{fileName}\"";
+				});
+			}
+			AppLog.Info($"[PRIORITY] ReanalyzeOneDuringImportAsync complete: {fileName}");
+		}
+		catch (Exception ex)
+		{
+			AppLog.Error($"[PRIORITY] ReanalyzeOneDuringImportAsync failed for {fileName}: {ex.GetType().Name}: {ex.Message}");
+			Application.Current.Dispatcher.Invoke(() => StatusText = $"Re-analysis failed: {ex.Message}");
+		}
+	}
+
 	private bool CanRunBulkReanalyze()
 	{
 		return !Progress.IsRunning;
@@ -5354,6 +5410,21 @@ public class MainViewModel : ObservableObject, IDisposable
 		{
 			Progress.EnqueuePriorityReanalysis(SelectedMediaFile.Id);
 			StatusText = "Moved \"" + SelectedMediaFile.FileName + "\" to front of update queue";
+		}
+		else if (Progress.IsRunning && Progress.IsQueueImport)
+		{
+			// User has priority — reanalyze without touching the import's state.
+			// Fire-and-forget so AsyncRelayCommand re-enables the button immediately,
+			// allowing the user to queue additional photos. Each click serializes behind
+			// the analysis lock, so multiple requests process one at a time after Ollama.
+			if (SelectedMediaFile.UserDescription != null && MessageBox.Show("You've edited the AI description for \"" + SelectedMediaFile.FileName + "\".\n\nRe-analyzing will replace your custom description with a new AI-generated one.\n\nContinue?", "Overwrite Your Edit?", MessageBoxButton.YesNo, MessageBoxImage.Exclamation) != MessageBoxResult.Yes)
+				return;
+
+			Guid photoId = SelectedMediaFile.Id;
+			string fileName = SelectedMediaFile.FileName;
+			MediaFile priorItem = SelectedMediaFile;
+			StatusText = $"Re-analysis of \"{fileName}\" queued — will run after current AI call";
+			_ = ReanalyzeOneDuringImportAsync(photoId, fileName, priorItem);
 		}
 		else if (Progress.IsRunning)
 		{
@@ -5588,13 +5659,11 @@ public class MainViewModel : ObservableObject, IDisposable
 		AttachTaskbar(Progress);
 		AttachPhotoCallback(Progress);
 		AttachExpressLimitCallback(Progress);
-		using (await AcquireAnalysisLockAsync("ResumeImportQueue"))
-		{
-			// forceStart=true: bypasses the IsRunning guard in case the old operation is
-			// still cleaning up. The generation counter in RunFromQueueAsync ensures the
-			// old finally block does not clear IsRunning for this new run.
-			await Progress.RunFromQueueAsync(forceStart: true);
-		}
+		// No analysis lock here — the import itself doesn't call Ollama; only the vision
+		// background worker does (with its own per-photo lock acquisition). Holding
+		// _analysisLock for the full import (potentially hours) would permanently starve
+		// any user-initiated single-photo reanalysis.
+		await Progress.RunFromQueueAsync(forceStart: true);
 		ClearTaskbar();
 		StatusText = Progress.ResultMessage;
 		await LoadAsync();
@@ -5666,12 +5735,10 @@ public class MainViewModel : ObservableObject, IDisposable
 			{
 				target.LoadedThumbnail = source.LoadedThumbnail;
 			}
+			bool wasSelected = SelectedMediaFile?.Id == target.Id;
 			MediaFiles[num] = target;
-			MediaFile? selectedMediaFile = SelectedMediaFile;
-			if (((selectedMediaFile != null) ? new Guid?(selectedMediaFile.Id) : ((Guid?)null)) == target.Id)
-			{
+			if (wasSelected)
 				SelectedMediaFile = target;
-			}
 			if (reloadThumbnail)
 			{
 				LoadSingleThumbnailAsync(target);
@@ -5697,6 +5764,16 @@ public class MainViewModel : ObservableObject, IDisposable
 			{
 				//IL_00c4: Unknown result type (might be due to invalid IL or missing references)
 				//IL_00ca: Invalid comparison between Unknown and I4
+				// Don't surface photos from folders the user just excluded —
+				// they may have been queued before the exclusion took effect.
+				var analyzedFolder = Path.GetDirectoryName(analyzed.FilePath) ?? "";
+				if (_excludedFullPaths.Any(excl =>
+					analyzedFolder.Equals(excl, StringComparison.OrdinalIgnoreCase) ||
+					analyzedFolder.StartsWith(excl.TrimEnd(Path.DirectorySeparatorChar) + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase)))
+				{
+					return;
+				}
+
 				MediaFile val = MediaFiles.FirstOrDefault((MediaFile m) => m.Id == analyzed.Id);
 				if (val != null)
 				{

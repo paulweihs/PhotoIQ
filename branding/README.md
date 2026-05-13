@@ -27,7 +27,7 @@ magick icon-16.png icon-24.png icon-32.png icon-48.png icon-64.png icon-128.png 
 Or use any online SVG→ICO converter (e.g. https://convertio.co/svg-ico/).
 
 The resulting `icon.ico` goes in:
-- `src/PhotoIQPro.Desktop/` — reference in the `.csproj` as `<ApplicationIcon>`
+- `src/PhotoWell.Desktop/` — reference in the `.csproj` as `<ApplicationIcon>`
 - The installer script (Inno Setup: `SetupIconFile`)
 
 ## Referencing the Icon in the .csproj

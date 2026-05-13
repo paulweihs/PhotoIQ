@@ -1,0 +1,58 @@
+<Window x:Class="PhotoWell.Desktop.Views.ExcludeFolderDialog"
+        xmlns="http://schemas.microsoft.com/winfx/2006/xaml/presentation"
+        xmlns:x="http://schemas.microsoft.com/winfx/2006/xaml"
+        Title="Exclude Folder" Width="460" SizeToContent="Height"
+        ResizeMode="NoResize"
+        WindowStartupLocation="CenterOwner"
+        Background="#FF1E1E2E" Foreground="#FFCDD6F4"
+        ShowInTaskbar="False"
+        KeyDown="Window_KeyDown">
+    <Window.Resources>
+        <Style TargetType="Button">
+            <Setter Property="Background" Value="#FF313244"/>
+            <Setter Property="Foreground" Value="#FFCDD6F4"/>
+            <Setter Property="BorderThickness" Value="0"/>
+            <Setter Property="Padding" Value="16,8"/>
+            <Setter Property="Cursor" Value="Hand"/>
+            <Setter Property="Template">
+                <Setter.Value>
+                    <ControlTemplate TargetType="Button">
+                        <Border Background="{TemplateBinding Background}" CornerRadius="4"
+                                Padding="{TemplateBinding Padding}">
+                            <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                        </Border>
+                        <ControlTemplate.Triggers>
+                            <Trigger Property="IsMouseOver" Value="True">
+                                <Setter Property="Background" Value="#FF89B4FA"/>
+                                <Setter Property="Foreground" Value="#FF1E1E2E"/>
+                            </Trigger>
+                        </ControlTemplate.Triggers>
+                    </ControlTemplate>
+                </Setter.Value>
+            </Setter>
+        </Style>
+    </Window.Resources>
+    <StackPanel Margin="24">
+        <!-- Folder name headline -->
+        <TextBlock x:Name="FolderNameText"
+                   FontSize="14" FontWeight="SemiBold"
+                   Foreground="#FFCDD6F4"
+                   TextWrapping="Wrap"
+                   Margin="0,0,0,8"/>
+        <!-- Description -->
+        <TextBlock FontSize="13" Foreground="#FFA6ADC8" TextWrapping="Wrap"
+                   Text="Photos in this folder will be removed from your library. Future scans will skip it. Choose how much of the folder to exclude:"
+                   Margin="0,0,0,20"/>
+        <!-- Buttons -->
+        <StackPanel Orientation="Horizontal" HorizontalAlignment="Right">
+            <Button Content="Cancel" Click="Cancel_Click" Margin="0,0,8,0"/>
+            <Button x:Name="FolderOnlyButton"
+                    Content="This folder only"
+                    Click="FolderOnly_Click"
+                    Margin="0,0,8,0"/>
+            <Button Content="Folder and subfolders"
+                    Click="FolderAndSubfolders_Click"
+                    Background="#FF89B4FA" Foreground="#FF1E1E2E" FontWeight="SemiBold"/>
+        </StackPanel>
+    </StackPanel>
+</Window>

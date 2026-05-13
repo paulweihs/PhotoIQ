@@ -1,0 +1,25 @@
+<Project Sdk="Microsoft.NET.Sdk">
+  <PropertyGroup>
+    <TargetFramework>net8.0-windows</TargetFramework>
+    <UseWPF>true</UseWPF>
+    <ImplicitUsings>enable</ImplicitUsings>
+    <Nullable>enable</Nullable>
+  </PropertyGroup>
+  <ItemGroup>
+    <PackageReference Include="Sdcb.LibRaw" Version="0.21.1.7" />
+    <PackageReference Include="Sdcb.LibRaw.runtime.win64" Version="0.21.1" />
+    <PackageReference Include="MetadataExtractor" Version="2.9.0" />
+    <PackageReference Include="SixLabors.ImageSharp" Version="3.1.12" />
+  </ItemGroup>
+  <ItemGroup>
+    <AssemblyAttribute Include="System.Runtime.CompilerServices.InternalsVisibleToAttribute">
+      <_Parameter1>PhotoWell.Tests</_Parameter1>
+    </AssemblyAttribute>
+  </ItemGroup>
+  <ItemGroup>
+    <ProjectReference Include="..\PhotoWell.Core\PhotoWell.Core.csproj" />
+    <ProjectReference Include="..\PhotoWell.Common\PhotoWell.Common.csproj" />
+    <ProjectReference Include="..\PhotoWell.Data\PhotoWell.Data.csproj" />
+    <ProjectReference Include="..\PhotoWell.AI\PhotoWell.AI.csproj" />
+  </ItemGroup>
+</Project>

@@ -8,7 +8,7 @@
 ## Current State
 
 **Ground truth corpus:** 10 images with thumbnail files
-- Located in: `C:\Users\retli\AppData\Local\PhotoIQPro\thumbnails\{prefix}\medium\{filename}.jpg`
+- Located in: `C:\Users\retli\AppData\Local\PhotoWell\thumbnails\{prefix}\medium\{filename}.jpg`
 - Database: evaluations.db `reference_corpus` table
 - Descriptions: Claude-generated (high quality baseline)
 
@@ -209,11 +209,11 @@ ORDER BY gf.file_name
 
 ### Step 2: Regenerate Thumbnails for Found Images
 
-**File:** `tools/PhotoIQPro.Eval/ThumbnailGeneratorTool.cs` (new)
+**File:** `tools/PhotoWell.Eval/ThumbnailGeneratorTool.cs` (new)
 
 ```csharp
-using PhotoIQPro.Services.Thumbnails;
-using PhotoIQPro.Data;
+using PhotoWell.Services.Thumbnails;
+using PhotoWell.Data;
 
 public class ThumbnailGeneratorTool
 {
@@ -222,7 +222,7 @@ public class ThumbnailGeneratorTool
         var dbPath = args.Length > 0 ? args[0] :
             Path.Combine(
                 Environment.GetFolderPath(Environment.SpecialFolder.LocalApplicationData),
-                "PhotoIQPro", "photoiq.db");
+                "PhotoWell", "photoiq.db");
 
         var options = new DbContextOptionsBuilder<PhotoIQContext>()
             .UseSqlite($"Data Source={dbPath}")
@@ -270,7 +270,7 @@ public class ThumbnailGeneratorTool
 
 **Run:**
 ```bash
-dotnet run --project tools/PhotoIQPro.Eval -- regenerate-thumbnails
+dotnet run --project tools/PhotoWell.Eval -- regenerate-thumbnails
 ```
 
 ### Step 3: Update Orphaned Entries (or Delete)
@@ -313,9 +313,9 @@ Expected result: Empty (all files exist)
 
 ```bash
 # With expanded corpus (now 35 or more images)
-cd /c/Dev/PhotoIQPro
-PROMPT=$(cat tools/PhotoIQPro.Eval/v15c_prompt.txt)
-dotnet run --project tools/PhotoIQPro.Eval -- \
+cd /c/Dev/PhotoWell
+PROMPT=$(cat tools/PhotoWell.Eval/v15c_prompt.txt)
+dotnet run --project tools/PhotoWell.Eval -- \
   --optimize-prompt 50 --prompt "$PROMPT"
 ```
 

@@ -33,7 +33,7 @@ With index:
 
 ### Implementation
 
-**File:** `src/PhotoIQPro.Data/PhotoIQContext.cs`
+**File:** `src/PhotoWell.Data/PhotoIQContext.cs`
 
 **Current Code (lines 63-68):**
 ```csharp
@@ -103,7 +103,7 @@ With index:
 
 ### Implementation
 
-**File:** `src/PhotoIQPro.Data/PhotoIQContext.cs`
+**File:** `src/PhotoWell.Data/PhotoIQContext.cs`
 
 **Current Code (lines 63-68):**
 ```csharp
@@ -142,7 +142,7 @@ Same as Quick Win #1:
 
 ### File
 
-`src/PhotoIQPro.Services/Import/ImportService.cs`, line 23
+`src/PhotoWell.Services/Import/ImportService.cs`, line 23
 
 ### Current Code
 
@@ -174,8 +174,8 @@ private const int AnalysisBatchSize = 10;
 If implementing all three optimizations:
 
 ```diff
---- a/src/PhotoIQPro.Data/PhotoIQContext.cs
-+++ b/src/PhotoIQPro.Data/PhotoIQContext.cs
+--- a/src/PhotoWell.Data/PhotoIQContext.cs
++++ b/src/PhotoWell.Data/PhotoIQContext.cs
 @@ -65,6 +65,7 @@ protected override void OnModelCreating(ModelBuilder modelBuilder)
          modelBuilder.Entity<MediaFile>().HasIndex(e => e.FilePath).IsUnique();
          modelBuilder.Entity<MediaFile>().HasIndex(e => e.AnalysisStatus);
@@ -185,8 +185,8 @@ If implementing all three optimizations:
          modelBuilder.Entity<MediaFile>().HasIndex(e => e.IsFavorite);
          modelBuilder.Entity<MediaFile>().HasIndex(e => new { e.Latitude, e.Longitude });
 
---- a/src/PhotoIQPro.Services/Import/ImportService.cs
-+++ b/src/PhotoIQPro.Services/Import/ImportService.cs
+--- a/src/PhotoWell.Services/Import/ImportService.cs
++++ b/src/PhotoWell.Services/Import/ImportService.cs
 @@ -23,7 +23,7 @@ public class ImportService : IImportService
          private readonly IFaceService               _faces;
 

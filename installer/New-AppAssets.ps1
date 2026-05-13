@@ -28,7 +28,7 @@ $ErrorActionPreference = "Stop"
 
 Add-Type -AssemblyName System.Drawing
 
-$iconPath = Resolve-Path "$PSScriptRoot\..\src\PhotoIQPro.Desktop\icon.ico"
+$iconPath = Resolve-Path "$PSScriptRoot\..\src\PhotoWell.Desktop\icon.ico"
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 
 Write-Host "Source icon: $iconPath"
