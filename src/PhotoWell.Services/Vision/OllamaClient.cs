@@ -48,16 +48,39 @@ public sealed class OllamaClient : IDisposable
     /// Creates a named Ollama model from a Modelfile string.
     /// Used to bake parameters (e.g. num_ctx) into a derived model so they are
     /// honoured at load time rather than ignored as per-request options.
+    /// Streams the response so it works across all Ollama versions (some ignore stream=false).
     /// </summary>
     public async Task CreateModelAsync(string name, string modelfile, CancellationToken ct = default)
     {
         using var createClient = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
-        var body = JsonSerializer.Serialize(new { name, modelfile, stream = false }, JsonOpts);
+        var body = JsonSerializer.Serialize(new { name, modelfile, stream = true }, JsonOpts);
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
         using var resp = await createClient.PostAsync($"{_baseUrl}/api/create", content, ct);
-        resp.EnsureSuccessStatusCode();
+
+        if (!resp.IsSuccessStatusCode)
+        {
+            var errorBody = await resp.Content.ReadAsStringAsync(ct);
+            AppLog.Vision($"[OllamaClient] CreateModel '{name}' failed: HTTP {(int)resp.StatusCode} — {errorBody}");
+            throw new InvalidOperationException($"Ollama /api/create returned {(int)resp.StatusCode}: {errorBody}");
+        }
+
+        // Drain the stream — Ollama sends progress lines ending with {"status":"success"}.
+        await using var stream = await resp.Content.ReadAsStreamAsync(ct);
+        using var reader = new System.IO.StreamReader(stream);
+        while (!reader.EndOfStream && !ct.IsCancellationRequested)
+        {
+            var line = await reader.ReadLineAsync(ct);
+            if (string.IsNullOrWhiteSpace(line)) continue;
+            var evt = JsonSerializer.Deserialize<CreateEvent>(line, JsonOpts);
+            if (evt?.Error != null)
+                throw new InvalidOperationException($"Ollama /api/create error: {evt.Error}");
+            if (evt?.Status?.Equals("success", StringComparison.OrdinalIgnoreCase) == true)
+                break;
+        }
         AppLog.Vision($"[OllamaClient] Created model '{name}'");
     }
+
+    private record CreateEvent(string? Status, string? Error);
 
     /// <summary>
     /// Unloads the model from VRAM so it reloads fresh on the next inference.
