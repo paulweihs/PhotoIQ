@@ -233,6 +233,18 @@ public partial class MainWindow : Window
             if (PhotoGrid.SelectedItem != null) PhotoGrid.ScrollIntoView(PhotoGrid.SelectedItem);
             e.Handled = true;
         }
+        else if (e.Key == Key.Home && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+        {
+            vm.NavigateByOffsetCommand.Execute(int.MinValue);
+            if (PhotoGrid.SelectedItem != null) PhotoGrid.ScrollIntoView(PhotoGrid.SelectedItem);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.End && (Keyboard.Modifiers & ModifierKeys.Control) != 0)
+        {
+            vm.NavigateByOffsetCommand.Execute(int.MaxValue);
+            if (PhotoGrid.SelectedItem != null) PhotoGrid.ScrollIntoView(PhotoGrid.SelectedItem);
+            e.Handled = true;
+        }
         else if (e.Key == Key.F && Keyboard.Modifiers == ModifierKeys.None)
         {
             vm.ToggleFavoriteCommand.Execute(null);
