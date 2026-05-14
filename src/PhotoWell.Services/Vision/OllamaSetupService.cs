@@ -106,29 +106,29 @@ public sealed class OllamaSetupService : IOllamaSetupService, IDisposable
                 }
             }
 
-            // ── Step 2: Ensure model is present ───────────────────────────────
-            bool modelPresent = await IsModelPresentAsync(modelName, ct);
-            if (!modelPresent)
+            // ── Step 2: Ensure base model is present ──────────────────────────
+            // modelName is the derived model (e.g. "photowell-minicpm-v"); the base
+            // model (e.g. "minicpm-v") is what Ollama pulls from the registry.
+            string baseModelName = PhotoWell.Common.AppSettings.VisionBaseModelName;
+            bool basePresent = await IsModelPresentAsync(baseModelName, ct);
+            if (!basePresent)
             {
-                bool pulled = await PullModelAsync(out_, modelName, ct);
+                bool pulled = await PullModelAsync(out_, baseModelName, ct);
                 if (!pulled) return;
             }
 
-            // ── Step 3: Ensure model is loaded with correct num_ctx ────────────
-            // Ollama only applies num_ctx at model load time, not per-request.
-            // If the model is already running at a larger context (e.g. 2048 default),
-            // it will stay there regardless of what num_ctx we send in /api/generate.
-            // We unload it here so the first inference reloads with num_ctx=1024,
-            // keeping the KV cache within the ~1 GB VRAM headroom and hitting 5-7 s/photo.
-            if (_ollamaClient != null)
+            // ── Step 3: Ensure derived model exists with num_ctx baked in ─────
+            // Ollama ignores per-request num_ctx when the model is already loaded.
+            // Creating a derived model with PARAMETER num_ctx 1024 in its Modelfile
+            // forces Ollama to always load it at that context size, keeping the KV
+            // cache in VRAM and hitting 5–7 s/photo (vs 47–125 s at the 2048 default).
+            bool derivedPresent = await IsModelPresentAsync(modelName, ct);
+            if (!derivedPresent && _ollamaClient != null)
             {
-                int runningCtx = await _ollamaClient.GetRunningContextSizeAsync(modelName, ct);
-                AppLog.Vision($"[OllamaSetup] Running num_ctx={runningCtx} (target={OllamaClient.TargetNumCtx})");
-                if (runningCtx > 0 && runningCtx != OllamaClient.TargetNumCtx)
-                {
-                    AppLog.Vision($"[OllamaSetup] Context mismatch — unloading model so next inference reloads at {OllamaClient.TargetNumCtx}");
-                    await _ollamaClient.UnloadModelAsync(modelName, ct);
-                }
+                await out_.WriteAsync(new(OllamaSetupStage.Checking, "Configuring AI model…"), ct);
+                string modelfile = $"FROM {baseModelName}\nPARAMETER num_ctx {OllamaClient.TargetNumCtx}";
+                AppLog.Vision($"[OllamaSetup] Creating derived model '{modelName}' with num_ctx={OllamaClient.TargetNumCtx}");
+                await _ollamaClient.CreateModelAsync(modelName, modelfile, ct);
             }
 
             await out_.WriteAsync(new(OllamaSetupStage.Ready, "AI engine ready"), ct);

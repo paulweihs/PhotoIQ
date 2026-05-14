@@ -45,6 +45,21 @@ public sealed class OllamaClient : IDisposable
     }
 
     /// <summary>
+    /// Creates a named Ollama model from a Modelfile string.
+    /// Used to bake parameters (e.g. num_ctx) into a derived model so they are
+    /// honoured at load time rather than ignored as per-request options.
+    /// </summary>
+    public async Task CreateModelAsync(string name, string modelfile, CancellationToken ct = default)
+    {
+        using var createClient = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
+        var body = JsonSerializer.Serialize(new { name, modelfile, stream = false }, JsonOpts);
+        using var content = new StringContent(body, Encoding.UTF8, "application/json");
+        using var resp = await createClient.PostAsync($"{_baseUrl}/api/create", content, ct);
+        resp.EnsureSuccessStatusCode();
+        AppLog.Vision($"[OllamaClient] Created model '{name}'");
+    }
+
+    /// <summary>
     /// Unloads the model from VRAM so it reloads fresh on the next inference.
     /// This forces Ollama to honour updated options (e.g. num_ctx) that only
     /// take effect at load time. Fire-and-forget safe — errors are swallowed.

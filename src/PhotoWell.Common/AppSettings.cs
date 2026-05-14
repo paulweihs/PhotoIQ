@@ -37,7 +37,19 @@ public static class AppSettings
     /// </summary>
     public const string UpgradeUrl = "https://photowell.app/upgrade";
 
-    public const string VisionModelName = "minicpm-v";
+    /// <summary>
+    /// The base Ollama model pulled from the registry.
+    /// Used by OllamaSetupService to ensure the model is downloaded before creating the derived variant.
+    /// </summary>
+    public const string VisionBaseModelName = "minicpm-v";
+
+    /// <summary>
+    /// The derived Ollama model used for all inference. Created once from VisionBaseModelName with
+    /// num_ctx=1024 baked into the Modelfile so Ollama always loads it at that context size,
+    /// keeping the KV cache within VRAM and achieving 5–7 s/photo (vs 47–125 s when loaded at 2048).
+    /// </summary>
+    public const string VisionModelName = "photowell-minicpm-v";
+
     public const string OllamaBaseUrl   = "http://127.0.0.1:11434";
 
     /// <summary>
