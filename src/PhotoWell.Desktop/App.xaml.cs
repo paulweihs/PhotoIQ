@@ -237,6 +237,23 @@ public partial class App : Application
 
             // Crash recovery — any photo still marked Processing was interrupted; reset to Pending.
             db.Database.ExecuteSqlRaw("UPDATE MediaFiles SET AnalysisStatus = 0 WHERE AnalysisStatus = 1");
+
+            // Model rename migration — 'minicpm-v' was the direct Ollama model name; we now use
+            // 'photowell-minicpm-v', a derived model with num_ctx=1024 baked in. Photos analyzed
+            // with the old name are identical in quality — just retag them so they don't show as
+            // outdated and don't get unnecessarily re-queued.
+            db.Database.ExecuteSqlRaw(
+                "UPDATE MediaFiles SET AiModelUsed = 'photowell-minicpm-v' WHERE AiModelUsed = 'minicpm-v'");
+
+            // Failed-vision recovery — photos where vision ran against the missing/broken
+            // 'photowell-minicpm-v' model and returned empty. Reset them to VisionPending (4)
+            // so the background worker picks them up and re-analyzes them correctly.
+            // Only resets Complete photos (AnalysisStatus=2) with an empty description and no
+            // user description, so user edits and genuinely-blank images are not disturbed.
+            db.Database.ExecuteSqlRaw(
+                "UPDATE MediaFiles SET AnalysisStatus = 4 " +
+                "WHERE AnalysisStatus = 2 AND AiDescription = '' AND UserDescription IS NULL " +
+                "AND AiModelUsed = 'photowell-minicpm-v'");
             AddColumn(db.Database, "ALTER TABLE MediaFiles ADD COLUMN IsExcluded INTEGER NOT NULL DEFAULT 0");
 
             // Video exclusion — video playback is not yet supported; hide any video files that were
