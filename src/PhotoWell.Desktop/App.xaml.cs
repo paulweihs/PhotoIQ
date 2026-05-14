@@ -42,12 +42,16 @@ public partial class App : Application
     public static IServiceProvider Services { get; private set; } = null!;
 
     private CancellationTokenSource _ftsCts = new();
+    private Task? _ftsTask;
 
     protected override void OnExit(ExitEventArgs e)
     {
         // Cancel the background FTS rebuild so it stops holding the SQLite write lock.
         // SQLite WAL ensures an incomplete run rolls back cleanly; next startup rebuilds.
         _ftsCts.Cancel();
+
+        // Wait up to 10 s for a clean finish so the index is never left half-written.
+        try { _ftsTask?.Wait(TimeSpan.FromSeconds(10)); } catch { }
 
         StopIpcListener();
         _singleInstanceMutex?.ReleaseMutex();
@@ -376,6 +380,13 @@ public partial class App : Application
             db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_MediaFiles_DateTaken ON MediaFiles (DateTaken)");
             db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_MediaFiles_IsFavorite ON MediaFiles (IsFavorite)");
             db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_MediaFiles_Lat_Lon ON MediaFiles (Latitude, Longitude)");
+            // Indexes identified by pre-release DBA review — commonly filtered columns missing coverage.
+            db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_MediaFiles_IsExcluded ON MediaFiles (IsExcluded)");
+            db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_MediaFiles_Extension ON MediaFiles (Extension)");
+            db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_MediaFiles_FaceDetectionStatus ON MediaFiles (FaceDetectionStatus, DateImported)");
+            db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_MediaFiles_IsExcluded_AnalysisStatus_DateTaken ON MediaFiles (IsExcluded, AnalysisStatus, DateTaken)");
+            db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_Faces_PersonId ON Faces (PersonId)");
+            db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_Faces_IsUserConfirmed ON Faces (IsUserConfirmed)");
 
             // ── FTS5 search index ─────────────────────────────────────────────────
             db.Database.ExecuteSqlRaw("""
@@ -500,7 +511,7 @@ public partial class App : Application
         if (!hasPendingQueue)
         {
             var ftsCt = _ftsCts.Token;
-            _ = Task.Run(async () =>
+            _ftsTask = Task.Run(async () =>
             {
                 try
                 {

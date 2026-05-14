@@ -154,7 +154,10 @@
             <Setter Property="Background" Value="Transparent"/>
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="ScrollViewer.HorizontalScrollBarVisibility" Value="Disabled"/>
-            <Setter Property="Focusable" Value="False"/>
+            <!-- Focusable=True so Tab navigation reaches the gallery and screen readers
+                 announce it as an interactive region. Keyboard navigation is handled at the
+                 Window level via PreviewKeyDown so WPF's built-in ListBox key handling does
+                 not conflict (e.Handled=true is set before the ListBox processes keys). -->
         </Style>
 
         <Style x:Key="GalleryItemContainerStyle" TargetType="ListBoxItem">
@@ -162,6 +165,9 @@
             <Setter Property="BorderThickness" Value="0"/>
             <Setter Property="Padding" Value="0"/>
             <Setter Property="Margin" Value="0"/>
+            <!-- Suppress the default dotted focus rectangle; the selection highlight in the
+                 DataTemplate already provides sufficient visual feedback for keyboard users. -->
+            <Setter Property="FocusVisualStyle" Value="{x:Null}"/>
             <!-- Size the container to ThumbnailSize + 8 (Border Margin="4" each side).
                  VirtualizingWrapPanel measures each container to determine column count. -->
             <Setter Property="Width">

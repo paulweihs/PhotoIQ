@@ -57,20 +57,30 @@ public class MediaFileRepository : IMediaFileRepository
     /// <returns>The added MediaFile (with any database-generated fields populated).</returns>
     public async Task<MediaFile> AddAsync(MediaFile entity)
     {
-        await _context.MediaFiles.AddAsync(entity);
+        // Wrap MediaFile insert + FTS upsert in a single transaction so a failed FTS write
+        // cannot leave a photo in the DB that is invisible to search.
+        await using var transaction = await _context.Database.BeginTransactionAsync();
         try
         {
+            await _context.MediaFiles.AddAsync(entity);
             await _context.SaveChangesAsync();
+            await UpsertFtsAsync(entity);
+            await transaction.CommitAsync();
         }
         catch (DbUpdateException)
         {
+            await transaction.RollbackAsync();
             // Clear the change tracker so the failed entity (left in Added state by EF Core)
             // does not contaminate subsequent SaveChangesAsync calls on this DbContext instance.
-            // Without this, every following write on the same context would also fail.
             _context.ChangeTracker.Clear();
             throw;
         }
-        await UpsertFtsAsync(entity);
+        catch
+        {
+            await transaction.RollbackAsync();
+            _context.ChangeTracker.Clear();
+            throw;
+        }
         return entity;
     }
 
@@ -86,44 +96,58 @@ public class MediaFileRepository : IMediaFileRepository
     {
         entity.DateModified = DateTime.UtcNow;
 
-        // Reload-and-merge pattern to avoid two complementary EF tracking bugs:
-        //
-        // BUG A — Identity conflict: calling Update() when the tracker already holds a Tag
-        // with the same Guid (different C# instance) throws "another instance with the same
-        // key value is already being tracked."
-        //
-        // BUG B — UNIQUE constraint: clearing the tracker before Update() fixes Bug A, but
-        // then EF has no snapshot of which MediaFileTag join rows already exist. It tries to
-        // INSERT all of them → SQLite UNIQUE constraint failure.
-        //
-        // FIX: load the authoritative DB copy (with Tags), copy scalar properties onto it,
-        // then explicitly sync the Tags collection so EF can produce correct INSERT/DELETE
-        // statements for the join table without touching rows that haven't changed.
-        _context.ChangeTracker.Clear();
-
-        var tracked = await _context.MediaFiles
-            .Include(m => m.Tags)
-            .FirstOrDefaultAsync(m => m.Id == entity.Id);
-
-        if (tracked == null)
+        // Wrap all writes in a single transaction so the MediaFile row and FTS index
+        // stay in sync — a failed FTS write will roll back the entity update too.
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+        try
         {
-            // New entity (e.g. first import) — just add it.
-            _context.MediaFiles.Add(entity);
-            await _context.SaveChangesAsync();
+            // Reload-and-merge pattern to avoid two complementary EF tracking bugs:
+            //
+            // BUG A — Identity conflict: calling Update() when the tracker already holds a Tag
+            // with the same Guid (different C# instance) throws "another instance with the same
+            // key value is already being tracked."
+            //
+            // BUG B — UNIQUE constraint: clearing the tracker before Update() fixes Bug A, but
+            // then EF has no snapshot of which MediaFileTag join rows already exist. It tries to
+            // INSERT all of them → SQLite UNIQUE constraint failure.
+            //
+            // FIX: load the authoritative DB copy (with Tags), copy scalar properties onto it,
+            // then explicitly sync the Tags collection so EF can produce correct INSERT/DELETE
+            // statements for the join table without touching rows that haven't changed.
+            _context.ChangeTracker.Clear();
+
+            var tracked = await _context.MediaFiles
+                .Include(m => m.Tags)
+                .FirstOrDefaultAsync(m => m.Id == entity.Id);
+
+            if (tracked == null)
+            {
+                // New entity (e.g. first import) — just add it.
+                _context.MediaFiles.Add(entity);
+                await _context.SaveChangesAsync();
+                _context.ChangeTracker.Clear();
+                await UpsertFtsAsync(entity);
+                await transaction.CommitAsync();
+                return;
+            }
+
+            // Copy all scalar properties from the incoming entity onto the tracked one.
+            _context.Entry(tracked).CurrentValues.SetValues(entity);
+
+            // Sync Tags: remove relationships no longer present, add new ones.
+            // Use FindAsync so EF resolves to the already-tracked Tag instance when possible,
+            // avoiding duplicate-tracking on the Tag itself.
+            await MergeTagsAndSaveAsync(tracked, entity);
             _context.ChangeTracker.Clear();
             await UpsertFtsAsync(entity);
-            return;
+            await transaction.CommitAsync();
         }
-
-        // Copy all scalar properties from the incoming entity onto the tracked one.
-        _context.Entry(tracked).CurrentValues.SetValues(entity);
-
-        // Sync Tags: remove relationships no longer present, add new ones.
-        // Use FindAsync so EF resolves to the already-tracked Tag instance when possible,
-        // avoiding duplicate-tracking on the Tag itself.
-        await MergeTagsAndSaveAsync(tracked, entity);
-        _context.ChangeTracker.Clear();
-        await UpsertFtsAsync(entity);
+        catch
+        {
+            await transaction.RollbackAsync();
+            _context.ChangeTracker.Clear();
+            throw;
+        }
     }
 
     /// <summary>
@@ -138,11 +162,23 @@ public class MediaFileRepository : IMediaFileRepository
     public async Task BatchUpdateAsync(IReadOnlyList<MediaFile> files)
     {
         if (files.Count == 0) return;
-        // Delegate to UpdateAsync so each file uses the reload-and-merge pattern.
-        // Direct _context.MediaFiles.Update() marks ALL tag junction rows as Added —
-        // any tag already in the DB for that photo hits a UNIQUE constraint.
-        foreach (var f in files)
-            await UpdateAsync(f);
+        // Delegate to UpdateAsync (reload-and-merge) so tag junction rows are handled
+        // correctly. A single outer transaction ensures partial failures roll back cleanly
+        // and reduces per-file transaction overhead in WAL mode.
+        // Note: UpdateAsync opens its own inner transaction via EF Core's SAVEPOINT support
+        // when a parent transaction is already active; both commit together.
+        await using var transaction = await _context.Database.BeginTransactionAsync();
+        try
+        {
+            foreach (var f in files)
+                await UpdateAsync(f);
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     /// <summary>
@@ -865,25 +901,17 @@ public class MediaFileRepository : IMediaFileRepository
 
     public async Task<IReadOnlyDictionary<string, int>> GetTagPhotoCountsAsync()
     {
-        // Query 1: single JOIN + GROUP BY — one row per tag with non-excluded photos.
-        var counts = await _context.MediaFiles
-            .Where(m => !m.IsExcluded)
-            .SelectMany(m => m.Tags)
+        // Single query: LEFT JOIN from Tags to non-excluded MediaFiles so zero-count tags
+        // are included without a separate round-trip.
+        return await _context.Tags
             .Where(t => t.Name != null)
-            .GroupBy(t => t.Name!)
-            .Select(g => new { Name = g.Key, Count = g.Count() })
+            .Select(t => new
+            {
+                Name  = t.Name!,
+                Count = t.MediaFiles.Count(m => !m.IsExcluded)
+            })
             .AsNoTracking()
-            .ToListAsync();
-
-        // Query 2: all tag names (cheap — no join, ensures zero-count tags are included).
-        var allTagNames = await _context.Tags
-            .Where(t => t.Name != null)
-            .Select(t => t.Name!)
-            .AsNoTracking()
-            .ToListAsync();
-
-        var countMap = counts.ToDictionary(x => x.Name, x => x.Count);
-        return allTagNames.ToDictionary(name => name, name => countMap.GetValueOrDefault(name, 0));
+            .ToDictionaryAsync(x => x.Name, x => x.Count);
     }
 
     public async Task RemoveTagFromPhotoAsync(Guid photoId, Guid tagId)

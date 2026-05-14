@@ -17,8 +17,11 @@ public sealed class OllamaVisionService : IImageUnderstandingService
     private readonly OllamaClient _client;
     private readonly string _model;
     private readonly SemaphoreSlim _availLock = new(1, 1);
-    // Two volatile fields instead of bool? so IsAvailable can be read from any thread
-    // without acquiring the semaphore. volatile guarantees write visibility across cores.
+    // Two volatile fields implement a one-directional double-checked locking pattern.
+    // _availableValue only ever transitions false → true (never reverts), so:
+    //   - reading it without the lock is safe — a stale false causes a harmless re-check,
+    //     a stale true is impossible once written (volatile guarantees write visibility).
+    //   - IsAvailable can be read from any thread without acquiring the semaphore.
     private volatile bool _availableChecked;
     private volatile bool _availableValue;
 

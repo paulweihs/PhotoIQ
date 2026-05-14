@@ -127,7 +127,12 @@ public sealed class OllamaClient : IDisposable
                 m.Name.StartsWith(model + ":", StringComparison.OrdinalIgnoreCase));
             return entry?.SizeVram > 0 ? (entry.ContextLength > 0 ? entry.ContextLength : -1) : -1;
         }
-        catch { return -1; }
+        catch (OperationCanceledException) { return -1; }
+        catch (Exception ex)
+        {
+            AppLog.Vision($"[OllamaClient] GetRunningContextSizeAsync failed: {ex.GetType().Name}: {ex.Message}");
+            return -1;
+        }
     }
 
     private record PsResponse(PsModel[]? Models);

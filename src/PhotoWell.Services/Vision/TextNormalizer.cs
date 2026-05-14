@@ -33,6 +33,23 @@ internal static class TextNormalizer
         return text;
     }
 
+    // ── Shared substitution helper ───────────────────────────────────────────
+
+    /// <summary>
+    /// Replaces every regex match with <paramref name="replacement"/>, preserving the
+    /// capitalisation of the first character of the original match.
+    /// Guards against empty match values and empty replacements.
+    /// </summary>
+    private static string Subst(string s, string pattern, string replacement) =>
+        Regex.Replace(s, pattern, m =>
+        {
+            if (string.IsNullOrEmpty(m.Value) || string.IsNullOrEmpty(replacement))
+                return replacement ?? string.Empty;
+            return char.IsUpper(m.Value[0])
+                ? char.ToUpperInvariant(replacement[0]) + (replacement.Length > 1 ? replacement[1..] : string.Empty)
+                : replacement;
+        }, RegexOptions.IgnoreCase);
+
     /// <summary>
     /// Replaces gendered nouns and pronouns with gender-neutral equivalents.
     /// Plurals are replaced before singulars to prevent double-substitution.
@@ -42,13 +59,6 @@ internal static class TextNormalizer
     {
         // First, collapse compound gendered phrases to prevent "a person and a person" outputs
         text = CollapsePersonPhrases(text);
-
-        static string Subst(string s, string pattern, string replacement) =>
-            Regex.Replace(s, pattern, m =>
-                char.IsUpper(m.Value[0])
-                    ? char.ToUpperInvariant(replacement[0]) + replacement[1..]
-                    : replacement,
-                RegexOptions.IgnoreCase);
 
         // Possessives — plain neutral replacement only; inserting "who appears to be a man's"
         // is ungrammatical, so these are handled separately before the main noun pass.
@@ -112,13 +122,6 @@ internal static class TextNormalizer
     /// </summary>
     internal static string EnforceGenderNeutrality(string text)
     {
-        static string Subst(string s, string pattern, string replacement) =>
-            Regex.Replace(s, pattern, m =>
-                char.IsUpper(m.Value[0])
-                    ? char.ToUpperInvariant(replacement[0]) + replacement[1..]
-                    : replacement,
-                RegexOptions.IgnoreCase);
-
         // Possessive forms (hers, his as pronouns)
         text = Subst(text, @"\bhers\b", "theirs");
         text = Subst(text, @"\bhis\b", "theirs");

@@ -194,22 +194,34 @@ public class PersonRepository : IPersonRepository
 
     public async Task MergeIntoAsync(Guid sourceId, Guid targetId)
     {
-        // Re-link all faces from the source to the target.
-        var faces = await _ctx.Faces.Where(f => f.PersonId == sourceId).ToListAsync();
-        foreach (var f in faces)
-            f.PersonId = targetId;
+        await using var transaction = await _ctx.Database.BeginTransactionAsync();
+        try
+        {
+            // Re-link all faces atomically via a single UPDATE — avoids the race window
+            // that existed when iterating ToList() then setting PersonId one by one.
+            await _ctx.Faces
+                .Where(f => f.PersonId == sourceId)
+                .ExecuteUpdateAsync(s => s.SetProperty(f => f.PersonId, targetId));
 
-        // Recompute the target's FaceCount.
-        var target = await _ctx.People.FirstOrDefaultAsync(p => p.Id == targetId);
-        if (target != null)
-            target.FaceCount = await _ctx.Faces.CountAsync(f => f.PersonId == targetId) + faces.Count;
+            // Recompute FaceCount from the authoritative DB state *after* the re-link
+            // so the count is exact even if concurrent writes occurred.
+            var target = await _ctx.People.FirstOrDefaultAsync(p => p.Id == targetId);
+            if (target != null)
+                target.FaceCount = await _ctx.Faces.CountAsync(f => f.PersonId == targetId);
 
-        // Delete the source person.
-        var source = await _ctx.People.FirstOrDefaultAsync(p => p.Id == sourceId);
-        if (source != null)
-            _ctx.People.Remove(source);
+            // Delete the source person.
+            var source = await _ctx.People.FirstOrDefaultAsync(p => p.Id == sourceId);
+            if (source != null)
+                _ctx.People.Remove(source);
 
-        await _ctx.SaveChangesAsync();
+            await _ctx.SaveChangesAsync();
+            await transaction.CommitAsync();
+        }
+        catch
+        {
+            await transaction.RollbackAsync();
+            throw;
+        }
     }
 
     public async Task HideAsync(Guid personId)

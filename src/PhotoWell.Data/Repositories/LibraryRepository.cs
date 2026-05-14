@@ -135,11 +135,19 @@ public class LibraryRepository : ILibraryRepository
     public async Task RemovePhotosFromAlbumAsync(Guid albumId, IReadOnlyList<Guid> photoIds)
     {
         if (photoIds.Count == 0) return;
+        // Batch DELETE in chunks of 900 to stay under SQLite's 999-variable limit.
         // Raw SQL avoids EF change-tracking issues with the shadow join entity.
         // Column names follow EF Core 8 convention: {NavigationName}Id.
-        foreach (var photoId in photoIds)
-            await _db.Database.ExecuteSqlInterpolatedAsync(
-                $"DELETE FROM photo_albums WHERE AlbumsId = {albumId} AND MediaFilesId = {photoId}");
+        foreach (var chunk in photoIds.Chunk(900))
+        {
+            // EF1002 suppressed: the values are Guid.ToString() outputs — fixed-format hex strings
+            // with no user-controlled content, so there is no SQL injection risk here.
+#pragma warning disable EF1002
+            var idList = string.Join(",", chunk.Select(id => $"'{id}'"));
+            await _db.Database.ExecuteSqlRawAsync(
+                $"DELETE FROM photo_albums WHERE AlbumsId = '{albumId}' AND MediaFilesId IN ({idList})");
+#pragma warning restore EF1002
+        }
     }
 
     public async Task<IEnumerable<MediaFile>> GetPhotosByAlbumAsync(Guid albumId)

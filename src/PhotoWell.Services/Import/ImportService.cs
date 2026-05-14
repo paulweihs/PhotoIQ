@@ -1074,9 +1074,6 @@ public class ImportService : IImportService
 
         // Record metrics — intentional fire-and-forget; never block the analysis pipeline.
         // Errors are logged but never propagated — a metrics failure must not abort an import.
-        // Use a linked token with a 10 s cap so this doesn't outlive app shutdown.
-        var metricsCts = CancellationTokenSource.CreateLinkedTokenSource(ct);
-        metricsCts.CancelAfter(TimeSpan.FromSeconds(10));
         _ = RecordMetricsSafeAsync(new AnalysisMetric
         {
             PhotoId           = mf.Id,
@@ -1092,12 +1089,17 @@ public class ImportService : IImportService
             DescriptionLength = mf.AiDescription?.Length ?? 0,
             GpuUsed           = gpuUsed,
             AnalyzedAt        = DateTime.UtcNow,
-        }, metricsCts);
+        }, ct);
     }
 
 
-    private async Task RecordMetricsSafeAsync(AnalysisMetric metric, CancellationTokenSource cts)
+    private async Task RecordMetricsSafeAsync(AnalysisMetric metric, CancellationToken ct)
     {
+        // Own the CTS here so lifetime is tied to this method, not the caller.
+        // 10 s cap prevents stale metrics work outliving app shutdown.
+        using var cts = CancellationTokenSource.CreateLinkedTokenSource(ct);
+        cts.CancelAfter(TimeSpan.FromSeconds(10));
+
         AppLog.Info($"[METRICS] RecordMetricsSafeAsync starting for photo {metric.PhotoId} on thread {System.Threading.Thread.CurrentThread.ManagedThreadId}");
         try
         {
@@ -1111,10 +1113,6 @@ public class ImportService : IImportService
             for (var inner = ex.InnerException; inner != null; inner = inner.InnerException)
                 chain += " → " + inner.Message;
             AppLog.Error($"[METRICS] RecordMetricsSafeAsync FAILED for photo {metric.PhotoId}: {chain}\n{ex.StackTrace}");
-        }
-        finally
-        {
-            cts.Dispose();
         }
     }
 

@@ -13,12 +13,26 @@
 
     <BooleanToVisibilityConverter x:Key="BoolToVis"/>
 
+    <!-- Shared keyboard-focus ring used by all custom button styles.
+         Shows a 2 px blue outline (matching Windows 11 focus indicator colour)
+         so keyboard users always have a clear visual affordance. -->
+    <Style x:Key="ButtonFocusVisual">
+        <Setter Property="Control.Template">
+            <Setter.Value>
+                <ControlTemplate>
+                    <Border BorderBrush="#0078D4" BorderThickness="2" CornerRadius="4" Margin="-1"/>
+                </ControlTemplate>
+            </Setter.Value>
+        </Setter>
+    </Style>
+
     <Style x:Key="PrimaryButtonStyle" TargetType="Button">
         <Setter Property="Background" Value="{StaticResource AccentBrush}"/>
         <Setter Property="Foreground" Value="White"/>
         <Setter Property="BorderThickness" Value="0"/>
         <Setter Property="FontWeight" Value="SemiBold"/>
         <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">
@@ -49,6 +63,7 @@
         <Setter Property="Padding" Value="8,10"/>
         <Setter Property="Margin" Value="0,2"/>
         <Setter Property="Cursor" Value="Hand"/>
+        <Setter Property="FocusVisualStyle" Value="{StaticResource ButtonFocusVisual}"/>
         <Setter Property="Template">
             <Setter.Value>
                 <ControlTemplate TargetType="Button">

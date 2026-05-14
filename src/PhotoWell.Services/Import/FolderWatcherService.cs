@@ -136,7 +136,10 @@ public sealed class FolderWatcherService : IFolderWatcherService
                     $"[Watcher] Import failed — {Path.GetFileName(filePath)}: " +
                     $"{ex.GetType().Name}: {ex.Message}\n{ex.StackTrace}");
             }
-        }, linked.Token);
+        }, linked.Token)
+        .ContinueWith(
+            t => AppLog.Error($"[Watcher] Unobserved task fault: {t.Exception?.GetBaseException().Message}"),
+            System.Threading.Tasks.TaskContinuationOptions.OnlyOnFaulted);
     }
 
     public void Stop()
