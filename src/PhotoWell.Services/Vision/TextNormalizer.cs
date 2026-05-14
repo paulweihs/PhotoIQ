@@ -159,6 +159,11 @@ internal static class TextNormalizer
                 @"^The\s+main\s+subject(?:\s+of\s+(?:this|the)\s+(?:image|photo|picture))?\s+is\s+(?:an?\s+)?",
                 RegexOptions.IgnoreCase);
 
+        if (!m.Success)
+            m = Regex.Match(text,
+                @"^The\s+setting(?:\s+of\s+(?:this|the)\s+(?:photo(?:graph)?|image|picture))?\s+(?:is|appears\s+to\s+be|seems\s+to\s+be)\s+(?:an?\s+)?",
+                RegexOptions.IgnoreCase);
+
         if (!m.Success) return text;
 
         var remainder = text[m.Length..].TrimStart();
@@ -203,6 +208,13 @@ internal static class TextNormalizer
         text = Regex.Replace(text,
             @",\s*the (?:single )?most prominent subject\b",
             "",
+            RegexOptions.IgnoreCase);
+
+        // "The setting is/appears to be X" / "The setting of the photo is X" → "X" (capitalised)
+        // Capture the first letter of the remainder so we can uppercase it.
+        text = Regex.Replace(text,
+            @"(?<=[.!?]\s{0,2}|^)The\s+setting(?:\s+of\s+(?:this|the)\s+(?:photo(?:graph)?|image|picture))?\s+(?:is|appears\s+to\s+be|seems\s+to\s+be)\s+(?:an?\s+)?([a-z])",
+            m => char.ToUpperInvariant(m.Groups[1].Value[0]).ToString(),
             RegexOptions.IgnoreCase);
 
         // "in this photo" / "in this image" / "in this photograph" as a trailing clause
