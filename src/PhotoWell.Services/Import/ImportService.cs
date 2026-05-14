@@ -20,6 +20,7 @@ public class ImportService : IImportService
     private readonly IImagePreprocessor         _preprocessor;
     private readonly IAnalysisMetricRepository  _metrics;
     private readonly IFaceService               _faces;
+    private readonly IExclusionRepository       _exclusions;
 
     private const int AnalysisBatchSize = 10;
 
@@ -45,7 +46,7 @@ public class ImportService : IImportService
     /// <param name="faces">Service for face detection.</param>
     public ImportService(IMediaFileRepository repo, IThumbnailService thumbs, ITaggingService tagging,
         IImageUnderstandingService vision, IImagePreprocessor preprocessor,
-        IAnalysisMetricRepository metrics, IFaceService faces)
+        IAnalysisMetricRepository metrics, IFaceService faces, IExclusionRepository exclusions)
     {
         _repo         = repo;
         _thumbs       = thumbs;
@@ -54,6 +55,7 @@ public class ImportService : IImportService
         _preprocessor = preprocessor;
         _metrics      = metrics;
         _faces        = faces;
+        _exclusions   = exclusions;
     }
 
     /// <summary>
@@ -83,6 +85,39 @@ public class ImportService : IImportService
     /// <returns>True if the file extension is in the supported formats list; otherwise, false.</returns>
     public bool IsSupportedFile(string path) =>
         AllExtensions.Contains(Path.GetExtension(path));
+
+    /// <summary>
+    /// Returns true if the file's folder matches any currently active exclusion rule.
+    /// Re-reads exclusion rules from the DB on every call so rules added mid-import
+    /// take effect immediately.
+    /// </summary>
+    private async Task<bool> IsFileExcludedAsync(string filePath)
+    {
+        var rules = await _exclusions.GetAllAsync();
+        if (rules.Count == 0) return false;
+
+        var fileDir = Path.GetDirectoryName(filePath) ?? "";
+        foreach (var rule in rules)
+        {
+            if (rule.IsFullPath)
+            {
+                // Full-path rule: file is excluded if its folder is or is under the excluded path.
+                var excl = rule.Value.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
+                if (fileDir.Equals(excl, StringComparison.OrdinalIgnoreCase) ||
+                    fileDir.StartsWith(excl + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
+                    return true;
+            }
+            else
+            {
+                // Name rule: any folder segment matching the rule name is excluded.
+                var parts = fileDir.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar,
+                                          StringSplitOptions.RemoveEmptyEntries);
+                if (parts.Any(p => p.Equals(rule.Value, StringComparison.OrdinalIgnoreCase)))
+                    return true;
+            }
+        }
+        return false;
+    }
 
     /// <summary>
     /// Imports a single photo or video file into the library.
@@ -634,6 +669,16 @@ public class ImportService : IImportService
             {
                 limitReached = true;
                 break;
+            }
+
+            // Re-check exclusions on every file so rules added while the import is running
+            // take effect immediately rather than being ignored until the next import job.
+            if (await IsFileExcludedAsync(f))
+            {
+                skipped++;
+                processed++;
+                progress?.Report(new ImportProgress(total, processed, imported, skipped, failed, f));
+                continue;
             }
 
             try

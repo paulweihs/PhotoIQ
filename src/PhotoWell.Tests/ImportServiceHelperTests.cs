@@ -26,6 +26,7 @@ public class ImportServiceHelperTests
     private readonly Mock<IImagePreprocessor> _mockPreprocessor;
     private readonly Mock<IAnalysisMetricRepository> _mockMetrics;
     private readonly Mock<IFaceService> _mockFaces;
+    private readonly Mock<IExclusionRepository> _mockExclusions;
     private readonly ImportService _service;
 
     public ImportServiceHelperTests()
@@ -37,6 +38,8 @@ public class ImportServiceHelperTests
         _mockPreprocessor = new Mock<IImagePreprocessor>();
         _mockMetrics = new Mock<IAnalysisMetricRepository>();
         _mockFaces = new Mock<IFaceService>();
+        _mockExclusions = new Mock<IExclusionRepository>();
+        _mockExclusions.Setup(e => e.GetAllAsync()).ReturnsAsync(new List<ExclusionRule>());
 
         _service = new ImportService(
             _mockRepo.Object,
@@ -45,7 +48,8 @@ public class ImportServiceHelperTests
             _mockVision.Object,
             _mockPreprocessor.Object,
             _mockMetrics.Object,
-            _mockFaces.Object);
+            _mockFaces.Object,
+            _mockExclusions.Object);
 
         // Default: thumbnail regeneration returns a failed result (safe no-op for tests that don't care about thumbnails)
         _mockThumbs.Setup(t => t.GenerateThumbnailsAsync(It.IsAny<MediaFile>(), It.IsAny<CancellationToken>()))
