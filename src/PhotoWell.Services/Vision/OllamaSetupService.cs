@@ -126,9 +126,8 @@ public sealed class OllamaSetupService : IOllamaSetupService, IDisposable
             if (!derivedPresent && _ollamaClient != null)
             {
                 await out_.WriteAsync(new(OllamaSetupStage.Checking, "Configuring AI model…"), ct);
-                string modelfile = $"FROM {baseModelName}\nPARAMETER num_ctx {OllamaClient.TargetNumCtx}";
-                AppLog.Vision($"[OllamaSetup] Creating derived model '{modelName}' with num_ctx={OllamaClient.TargetNumCtx}");
-                await _ollamaClient.CreateModelAsync(modelName, modelfile, ct);
+                AppLog.Vision($"[OllamaSetup] Creating derived model '{modelName}' from '{baseModelName}' with num_ctx={OllamaClient.TargetNumCtx}");
+                await _ollamaClient.CreateModelAsync(modelName, baseModelName, OllamaClient.TargetNumCtx, ct);
             }
 
             await out_.WriteAsync(new(OllamaSetupStage.Ready, "AI engine ready"), ct);

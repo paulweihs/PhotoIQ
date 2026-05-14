@@ -50,17 +50,24 @@ public sealed class OllamaClient : IDisposable
     /// honoured at load time rather than ignored as per-request options.
     /// Streams the response so it works across all Ollama versions (some ignore stream=false).
     /// </summary>
-    public async Task CreateModelAsync(string name, string modelfile, CancellationToken ct = default)
+    public async Task CreateModelAsync(string name, string from, int numCtx, CancellationToken ct = default)
     {
         using var createClient = new HttpClient { Timeout = TimeSpan.FromMinutes(2) };
-        var body = JsonSerializer.Serialize(new { name, modelfile, stream = true }, JsonOpts);
+        // Ollama v0.5+ uses structured fields (from/parameters) instead of a raw modelfile string.
+        var body = JsonSerializer.Serialize(new
+        {
+            model      = name,
+            from,
+            parameters = new { num_ctx = numCtx },
+            stream     = true,
+        });
         using var content = new StringContent(body, Encoding.UTF8, "application/json");
         using var resp = await createClient.PostAsync($"{_baseUrl}/api/create", content, ct);
 
         if (!resp.IsSuccessStatusCode)
         {
             var errorBody = await resp.Content.ReadAsStringAsync(ct);
-            AppLog.Vision($"[OllamaClient] CreateModel '{name}' failed: HTTP {(int)resp.StatusCode} — {errorBody}");
+            AppLog.Vision($"[OllamaClient] CreateModelAsync '{name}' failed: HTTP {(int)resp.StatusCode} — {errorBody}");
             throw new InvalidOperationException($"Ollama /api/create returned {(int)resp.StatusCode}: {errorBody}");
         }
 
