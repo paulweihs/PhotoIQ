@@ -2273,12 +2273,33 @@
                     <!-- Status line + cancel -->
                     <StackPanel Grid.Column="2" Orientation="Horizontal" VerticalAlignment="Center">
                         <StackPanel Orientation="Vertical" VerticalAlignment="Center" Margin="0,0,10,0">
-                            <TextBlock Text="{Binding Progress.StatusLine}"
-                                       FontSize="10"
-                                       Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            <!-- Status numbers — each segment has its own tooltip -->
+                            <StackPanel Orientation="Horizontal" Visibility="{Binding Progress.IsRunning, Converter={StaticResource BoolToVis}}">
+                                <TextBlock FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}">
+                                    <TextBlock.ToolTip><ToolTip><TextBlock><Run FontWeight="SemiBold">Files processed of total found</Run><LineBreak/>Files scanned so far out of the total supported photos discovered in this folder.</TextBlock></ToolTip></TextBlock.ToolTip>
+                                    <Run Text="{Binding Progress.GrandProcessed, Mode=OneWay, StringFormat='{}{0:N0}'}"/><Run Text=" of "/><Run Text="{Binding Progress.GrandTotal, Mode=OneWay, StringFormat='{}{0:N0}'}"/>
+                                </TextBlock>
+                                <TextBlock Text="  ·  " FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                <TextBlock FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}">
+                                    <TextBlock.ToolTip><ToolTip><TextBlock><Run FontWeight="SemiBold">Imported</Run><LineBreak/>New photos added to your library in this session.</TextBlock></ToolTip></TextBlock.ToolTip>
+                                    <Run Text="{Binding Progress.Imported, Mode=OneWay, StringFormat='{}{0:N0}'}"/><Run Text=" imported"/>
+                                </TextBlock>
+                                <TextBlock Text="  ·  " FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                <TextBlock FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}">
+                                    <TextBlock.ToolTip><ToolTip><TextBlock><Run FontWeight="SemiBold">Skipped</Run><LineBreak/>Already in your library, or from a folder you have excluded.</TextBlock></ToolTip></TextBlock.ToolTip>
+                                    <Run Text="{Binding Progress.Skipped, Mode=OneWay, StringFormat='{}{0:N0}'}"/><Run Text=" skipped"/>
+                                </TextBlock>
+                                <TextBlock Text="  ·  " FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}"/>
+                                <TextBlock FontSize="10" Foreground="{DynamicResource SecondaryTextBrush}">
+                                    <TextBlock.ToolTip><ToolTip><TextBlock><Run FontWeight="SemiBold">Failed</Run><LineBreak/>Files that could not be imported due to errors (corrupt, unreadable, or unsupported encoding).</TextBlock></ToolTip></TextBlock.ToolTip>
+                                    <Run Text="{Binding Progress.Failed, Mode=OneWay, StringFormat='{}{0:N0}'}"/><Run Text=" failed"/>
+                                </TextBlock>
+                            </StackPanel>
                             <TextBlock Text="{Binding Progress.BatchRateText}"
                                        FontSize="10" Foreground="#6fcf6f"
-                                       Visibility="{Binding Progress.HasBatchRateText, Converter={StaticResource BoolToVis}}"/>
+                                       Visibility="{Binding Progress.HasBatchRateText, Converter={StaticResource BoolToVis}}">
+                                <TextBlock.ToolTip><ToolTip><TextBlock><Run FontWeight="SemiBold">Processing rate</Run><LineBreak/>Files actually imported or checked per minute (excluded-folder skips are not counted).<LineBreak/><Run FontWeight="SemiBold">avg s/photo</Run> — average time per file through the full pipeline.<LineBreak/><Run FontWeight="SemiBold">ETA</Run> — estimated time to finish based on current rate.</TextBlock></ToolTip></TextBlock.ToolTip>
+                            </TextBlock>
                         </StackPanel>
                         <Button Content="{Binding Progress.PauseButtonLabel}"
                                 Command="{Binding Progress.TogglePauseCommand}"

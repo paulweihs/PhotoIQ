@@ -27,7 +27,7 @@ public interface IImportService
     Task<IReadOnlyList<MetadataTag>> ReadAllTagsAsync(string filePath, CancellationToken ct = default);
 }
 
-public record ImportProgress(int Total, int Processed, int Imported, int Skipped, int Failed, string CurrentFile);
+public record ImportProgress(int Total, int Processed, int Imported, int Skipped, int Failed, string CurrentFile, int Excluded = 0);
 public record MetadataTag(string Directory, string Tag, string Value);
 public record ImportResult(int TotalFiles, int Imported, int Skipped, int Failed, TimeSpan Duration, List<string> Errors)
 {

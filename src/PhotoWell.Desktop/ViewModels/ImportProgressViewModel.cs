@@ -49,6 +49,7 @@ public partial class ImportProgressViewModel : ObservableObject
     /// <summary>Total supported files across all queued folders — populated by a background pre-scan at import start.
     /// Zero until the scan completes its first folder; grows as each queued folder is counted.</summary>
     [ObservableProperty] private int _grandTotal;
+    [ObservableProperty] private int _grandExcluded;
     /// <summary>Files processed across all folders combined (resets at the start of each import job, not per-folder).
     /// Used for correct avg/ETA when multiple folders are queued.</summary>
     [ObservableProperty] private int _grandProcessed;
@@ -252,7 +253,7 @@ public partial class ImportProgressViewModel : ObservableObject
         _batchTimer   = System.Diagnostics.Stopwatch.StartNew();
 
         int totalImported = 0, totalSkipped = 0, totalFailed = 0;
-        int grandProcessedOffset = 0;
+        int grandProcessedOffset = 0, grandExcludedOffset = 0;
         var allErrors = new List<string>();
 
         // Background pre-scan: count all supported files across every queued folder so we can show
@@ -303,6 +304,7 @@ public partial class ImportProgressViewModel : ObservableObject
                     Skipped        = totalSkipped  + p.Skipped;
                     Failed         = totalFailed   + p.Failed;
                     GrandProcessed = grandProcessedOffset + p.Processed;
+                    GrandExcluded  = grandExcludedOffset  + p.Excluded;
                     CurrentFile    = Path.GetFileName(p.CurrentFile);
                     OnPropertyChanged(nameof(ProgressPercent));
                 });
@@ -343,6 +345,7 @@ public partial class ImportProgressViewModel : ObservableObject
                 totalSkipped         = Skipped;
                 totalFailed          = Failed;
                 grandProcessedOffset = GrandProcessed;
+                grandExcludedOffset  = GrandExcluded;
 
                 // Only remove from disk after the folder fully completes.
                 await RemoveFirstFromQueueAsync();
@@ -413,8 +416,12 @@ public partial class ImportProgressViewModel : ObservableObject
         get
         {
             // Use grand (cross-folder) counts when available; fall back to per-folder for single-folder ops.
-            var countForRate = GrandProcessed > 0 ? GrandProcessed : Processed;
-            var totalForRate = GrandTotal     > 0 ? GrandTotal     : Total;
+            // Exclude instantly-skipped excluded-folder files from rate — they involve no real work
+            // and would inflate the files/min figure and deflate the avg s/photo figure.
+            var processed    = GrandProcessed > 0 ? GrandProcessed : Processed;
+            var excluded     = GrandExcluded;
+            var countForRate = Math.Max(0, processed - excluded);
+            var totalForRate = Math.Max(0, (GrandTotal > 0 ? GrandTotal : Total) - excluded);
             if (_batchTimer == null || countForRate == 0) return "";
             var elapsed   = _batchTimer.Elapsed;
             var perMin    = elapsed.TotalMinutes > 0 ? countForRate / elapsed.TotalMinutes : 0;
@@ -506,6 +513,7 @@ public partial class ImportProgressViewModel : ObservableObject
         Failed         = 0;
         GrandTotal     = 0;
         GrandProcessed = 0;
+        GrandExcluded  = 0;
         CurrentFile    = "";
         IsComplete     = false;
         IsQueueImport  = false;

@@ -660,7 +660,7 @@ public class ImportService : IImportService
         int  libraryCount = expressMode ? await _repo.CountAsync() : 0;
         bool limitReached = false;
 
-        int total = files.Count, processed = 0, imported = 0, skipped = 0, failed = 0;
+        int total = files.Count, processed = 0, imported = 0, skipped = 0, failed = 0, excluded = 0;
         foreach (var f in files)
         {
             ct.ThrowIfCancellationRequested();
@@ -675,9 +675,10 @@ public class ImportService : IImportService
             // take effect immediately rather than being ignored until the next import job.
             if (await IsFileExcludedAsync(f))
             {
+                excluded++;
                 skipped++;
                 processed++;
-                progress?.Report(new ImportProgress(total, processed, imported, skipped, failed, f));
+                progress?.Report(new ImportProgress(total, processed, imported, skipped, failed, f, excluded));
                 continue;
             }
 
@@ -695,7 +696,7 @@ public class ImportService : IImportService
                 errors.Add($"{Path.GetFileName(f)}: {msg}");
             }
             processed++;
-            progress?.Report(new ImportProgress(total, processed, imported, skipped, failed, f));
+            progress?.Report(new ImportProgress(total, processed, imported, skipped, failed, f, excluded));
         }
         return new ImportResult(total, imported, skipped, failed, DateTime.UtcNow - start, errors)
         {
