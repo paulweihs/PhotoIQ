@@ -1324,6 +1324,7 @@
                          AutomationProperties.Name="Photo gallery"
                          MouseDoubleClick="OnPhotoDoubleClick"
                          PreviewMouseLeftButtonDown="OnPhotoGridPreviewMouseDown"
+                         PreviewMouseLeftButtonUp="OnPhotoGridPreviewMouseUp"
                          PreviewMouseRightButtonDown="OnPhotoGridPreviewMouseRightButtonDown"
                          PreviewMouseMove="OnPhotoGridPreviewMouseMove"
                          VirtualizingPanel.IsVirtualizing="True"

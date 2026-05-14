@@ -272,6 +272,11 @@ public partial class MainWindow : Window
         DragDrop.DoDragDrop(PhotoGrid, data, DragDropEffects.Copy);
     }
 
+    private void OnPhotoGridPreviewMouseUp(object sender, MouseButtonEventArgs e)
+    {
+        _isDragPending = false;
+    }
+
     private void OnPhotoGridPreviewMouseDown(object sender, MouseButtonEventArgs e)
     {
         _dragStartPoint = e.GetPosition(PhotoGrid);
