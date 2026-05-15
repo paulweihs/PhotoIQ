@@ -717,14 +717,24 @@ public class MediaFileRepository : IMediaFileRepository
     /// </summary>
     private static string BuildFtsQuery(string query)
     {
-        // Strip FTS5 special chars that would cause syntax errors.
-        var clean = Regex.Replace(query, @"[""()\[\]{}\*\+\-\^\!\&\|:,\.]", " ");
-        var tokens = clean
-            .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
-            .Where(t => t.Length >= 2)
-            .Select(t => t + "*")   // prefix match: "watermelon*" also hits "watermelons"
-            .ToArray();
-        return string.Join(" ", tokens);  // FTS5: space = AND
+        var tokens = new List<string>();
+
+        // Extract "quoted phrases" first — emit them as FTS5 phrase tokens verbatim.
+        // Remaining unquoted text is processed for individual prefix-match tokens.
+        var remaining = Regex.Replace(query, "\"([^\"]+)\"", m =>
+        {
+            var phrase = m.Groups[1].Value.Trim();
+            if (phrase.Length >= 2)
+                tokens.Add($"\"{phrase}\"");   // FTS5 phrase: both words must appear adjacent
+            return " ";
+        });
+
+        // Strip FTS5 special chars from unquoted remainder, then split into prefix tokens.
+        var clean = Regex.Replace(remaining, @"[""()\[\]{}\*\+\-\^\!\&\|:,\.]", " ");
+        foreach (var t in clean.Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries))
+            if (t.Length >= 2) tokens.Add(t + "*");   // prefix match: "wing*" hits "wings"
+
+        return string.Join(" ", tokens);  // FTS5: space-separated tokens = AND
     }
 
     private static string BuildDateText(DateTime? date)
@@ -742,7 +752,16 @@ public class MediaFileRepository : IMediaFileRepository
 
     private async Task<IEnumerable<MediaFile>> LikeSearchAsync(string query)
     {
-        var keywords = query
+        // Parse quoted phrases ("Red Wings") and bare keywords separately.
+        var phrases = new List<string>();
+        var remaining = Regex.Replace(query, "\"([^\"]+)\"", m =>
+        {
+            var p = m.Groups[1].Value.Trim().ToLowerInvariant();
+            if (p.Length >= 2) phrases.Add(p);
+            return " ";
+        });
+
+        var keywords = remaining
             .ToLowerInvariant()
             .Split(' ', StringSplitOptions.RemoveEmptyEntries | StringSplitOptions.TrimEntries)
             .Where(k => k.Length >= 2)
@@ -750,9 +769,10 @@ public class MediaFileRepository : IMediaFileRepository
             .Take(10)
             .ToArray();
 
-        if (keywords.Length == 0)
+        if (keywords.Length == 0 && phrases.Count == 0)
             return await GetAllAsync();
 
+        // Bare keywords → OR union (any keyword match qualifies a photo).
         var matchIds = new HashSet<Guid>();
         foreach (var kw in keywords)
         {
@@ -769,11 +789,39 @@ public class MediaFileRepository : IMediaFileRepository
             foreach (var id in ids) matchIds.Add(id);
         }
 
-        if (matchIds.Count == 0) return [];
+        // Quoted phrases → AND intersect (photo must contain every phrase).
+        HashSet<Guid>? phraseIds = null;
+        foreach (var phrase in phrases)
+        {
+            var ids = await _context.MediaFiles
+                .Where(m =>
+                    EF.Functions.Like(m.FileName.ToLower(),      $"%{phrase}%") ||
+                    (m.AiDescription   != null && EF.Functions.Like(m.AiDescription.ToLower(),   $"%{phrase}%")) ||
+                    (m.UserDescription != null && EF.Functions.Like(m.UserDescription.ToLower(), $"%{phrase}%")) ||
+                    m.Tags.Any(t => EF.Functions.Like(t.NormalizedName, $"%{phrase}%")))
+                .Select(m => m.Id)
+                .ToListAsync();
+            if (phraseIds == null) phraseIds = [.. ids];
+            else phraseIds.IntersectWith(ids);
+        }
+
+        // Merge: if both bare keywords and phrases are present, intersect them.
+        HashSet<Guid> finalIds;
+        if (phraseIds != null && matchIds.Count > 0)
+        {
+            phraseIds.IntersectWith(matchIds);
+            finalIds = phraseIds;
+        }
+        else
+        {
+            finalIds = phraseIds ?? matchIds;
+        }
+
+        if (finalIds.Count == 0) return [];
 
         var candidates = await _context.MediaFiles
             .Include(m => m.Tags)
-            .Where(m => matchIds.Contains(m.Id))
+            .Where(m => finalIds.Contains(m.Id))
             .ToListAsync();
 
         return candidates
