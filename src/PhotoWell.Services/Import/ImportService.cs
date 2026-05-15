@@ -91,17 +91,18 @@ public class ImportService : IImportService
     /// Re-reads exclusion rules from the DB on every call so rules added mid-import
     /// take effect immediately.
     /// </summary>
-    private async Task<bool> IsFileExcludedAsync(string filePath)
+    /// <summary>
+    /// Checks whether a file's directory is covered by any exclusion rule.
+    /// Accepts a pre-loaded rule list so callers processing many files can load once.
+    /// </summary>
+    private static bool IsFileExcluded(string filePath, IReadOnlyList<ExclusionRule> rules)
     {
-        var rules = await _exclusions.GetAllAsync();
         if (rules.Count == 0) return false;
-
         var fileDir = Path.GetDirectoryName(filePath) ?? "";
         foreach (var rule in rules)
         {
             if (rule.IsFullPath)
             {
-                // Full-path rule: file is excluded if its folder is or is under the excluded path.
                 var excl = rule.Value.TrimEnd(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar);
                 if (fileDir.Equals(excl, StringComparison.OrdinalIgnoreCase) ||
                     fileDir.StartsWith(excl + Path.DirectorySeparatorChar, StringComparison.OrdinalIgnoreCase))
@@ -109,7 +110,6 @@ public class ImportService : IImportService
             }
             else
             {
-                // Name rule: any folder segment matching the rule name is excluded.
                 var parts = fileDir.Split(Path.DirectorySeparatorChar, Path.AltDirectorySeparatorChar,
                                           StringSplitOptions.RemoveEmptyEntries);
                 if (parts.Any(p => p.Equals(rule.Value, StringComparison.OrdinalIgnoreCase)))
@@ -117,6 +117,12 @@ public class ImportService : IImportService
             }
         }
         return false;
+    }
+
+    private async Task<bool> IsFileExcludedAsync(string filePath)
+    {
+        var rules = await _exclusions.GetAllAsync();
+        return IsFileExcluded(filePath, rules);
     }
 
     /// <summary>
@@ -140,6 +146,7 @@ public class ImportService : IImportService
     /// <returns>The imported MediaFile if successful; null if the file does not exist, is unsupported, or was already imported.</returns>
     public async Task<MediaFile?> ImportFileAsync(string filePath, CancellationToken ct = default)
     {
+        if (await IsFileExcludedAsync(filePath)) return null;
         var exists = await _repo.ExistsAsync(filePath);
         if (!File.Exists(filePath) || !IsSupportedFile(filePath) || exists) return null;
 
@@ -655,6 +662,9 @@ public class ImportService : IImportService
                          recursive ? SearchOption.AllDirectories : SearchOption.TopDirectoryOnly)
                      .Where(IsSupportedFile).ToList();
 
+        // Load exclusion rules once for the whole folder run — avoids a DB call per file.
+        var exclusionRules = await _exclusions.GetAllAsync();
+
         // Express tier: enforce the library cap.
         bool expressMode  = UserPreferences.Current.IsExpressMode;
         int  libraryCount = expressMode ? await _repo.CountAsync() : 0;
@@ -671,9 +681,7 @@ public class ImportService : IImportService
                 break;
             }
 
-            // Re-check exclusions on every file so rules added while the import is running
-            // take effect immediately rather than being ignored until the next import job.
-            if (await IsFileExcludedAsync(f))
+            if (IsFileExcluded(f, exclusionRules))
             {
                 excluded++;
                 skipped++;
