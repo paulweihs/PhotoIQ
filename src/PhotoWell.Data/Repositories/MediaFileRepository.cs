@@ -162,23 +162,11 @@ public class MediaFileRepository : IMediaFileRepository
     public async Task BatchUpdateAsync(IReadOnlyList<MediaFile> files)
     {
         if (files.Count == 0) return;
-        // Delegate to UpdateAsync (reload-and-merge) so tag junction rows are handled
-        // correctly. A single outer transaction ensures partial failures roll back cleanly
-        // and reduces per-file transaction overhead in WAL mode.
-        // Note: UpdateAsync opens its own inner transaction via EF Core's SAVEPOINT support
-        // when a parent transaction is already active; both commit together.
-        await using var transaction = await _context.Database.BeginTransactionAsync();
-        try
-        {
-            foreach (var f in files)
-                await UpdateAsync(f);
-            await transaction.CommitAsync();
-        }
-        catch
-        {
-            await transaction.RollbackAsync();
-            throw;
-        }
+        // Each UpdateAsync manages its own transaction (reload-and-merge + FTS sync).
+        // Do NOT wrap in an outer BeginTransactionAsync — EF Core throws
+        // "connection is already in a transaction" when UpdateAsync tries to open its own.
+        foreach (var f in files)
+            await UpdateAsync(f);
     }
 
     /// <summary>
