@@ -103,6 +103,20 @@ public class MediaFile : INotifyPropertyChanged
     [NotMapped]
     public bool IsAnalysisPending => AnalysisStatus is AnalysisStatus.Pending or AnalysisStatus.VisionPending;
 
+    /// <summary>Set at app startup from AppSettings. Used in IsDescriptionOutdated without creating a Core→Common project dependency.</summary>
+    [NotMapped] public static string CurrentVisionModel    { get; set; } = "";
+    [NotMapped] public static string CurrentPromptVersion  { get; set; } = "";
+
+    /// <summary>True when the photo has an AI description generated with an outdated model or prompt version.
+    /// Drives the ⟳ outdated badge on thumbnails and the ⚠ outdated indicator in the detail pane.</summary>
+    [NotMapped]
+    public bool IsDescriptionOutdated =>
+        !string.IsNullOrEmpty(AiDescription) &&
+        UserDescription == null &&
+        (AiModelUsed != CurrentVisionModel ||
+         PromptVersion == null ||
+         PromptVersion != CurrentPromptVersion);
+
     /// <summary>Drive root (e.g. "E:") used in offline tooltip. Not persisted.</summary>
     [NotMapped]
     public string OfflineDriveRoot => Path.GetPathRoot(FilePath)?.TrimEnd('\\', '/') ?? "";

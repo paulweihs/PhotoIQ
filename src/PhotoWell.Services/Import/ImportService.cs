@@ -891,7 +891,6 @@ public class ImportService : IImportService
             {
                 while (priorityQueue.TryDequeue(out var priorityId))
                 {
-                    if (alreadyDone.Contains(priorityId)) continue;
                     alreadyDone.Add(priorityId);
                     AppLog.Vision($"[Priority] Processing {priorityId} ahead of batch");
                     try
@@ -969,6 +968,32 @@ public class ImportService : IImportService
         }
 
         await FlushBatchAsync(batchBuffer, onPhotoAnalyzed);
+
+        // Drain any priority items queued during the final loop iteration.
+        // The in-loop drain only fires at the START of each iteration, so a click during
+        // the last iteration would otherwise go unprocessed until the next run.
+        if (priorityQueue != null)
+        {
+            while (priorityQueue.TryDequeue(out var priorityId))
+            {
+                if (alreadyDone.Contains(priorityId)) continue;
+                AppLog.Vision($"[Priority] Post-loop processing {priorityId}");
+                try
+                {
+                    var ok = await ReanalyzeFileAsync(priorityId, ct: ct);
+                    if (ok) reanalyzed++; else skipped++;
+                    var refreshed = await _repo.GetByIdAsync(priorityId);
+                    if (refreshed != null) onPhotoAnalyzed?.Invoke(refreshed);
+                }
+                catch (Exception ex) when (ex is not OperationCanceledException)
+                {
+                    failed++;
+                    errors.Add($"(priority) {priorityId}: {ex.Message}");
+                    AppLog.Error($"Post-loop priority re-analysis failed for {priorityId}: {ex.GetType().Name}: {ex.Message}");
+                }
+            }
+        }
+
         return new ImportResult(total, reanalyzed, skipped, failed, DateTime.UtcNow - start, errors);
     }
 

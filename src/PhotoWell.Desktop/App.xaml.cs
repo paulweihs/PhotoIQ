@@ -4,6 +4,7 @@ using Microsoft.EntityFrameworkCore;
 using Microsoft.Extensions.DependencyInjection;
 using PhotoWell.Common;
 using PhotoWell.Core.Interfaces;
+using PhotoWell.Core.Models;
 using PhotoWell.Data;
 using PhotoWell.Data.Repositories;
 using PhotoWell.Desktop.ViewModels;
@@ -100,6 +101,9 @@ public partial class App : Application
         // Show splash immediately — before any I/O or DI work.
         var splash = new Views.SplashWindow();
         splash.Show();
+
+        MediaFile.CurrentVisionModel   = AppSettings.VisionModelName;
+        MediaFile.CurrentPromptVersion = AppSettings.CurrentPromptVersion;
 
         splash.SetStatus("Initializing…");
         await Task.Run(() =>
