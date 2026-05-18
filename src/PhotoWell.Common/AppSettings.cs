@@ -67,6 +67,16 @@ public static class AppSettings
     public const string CurrentPromptVersion = "v45-minicpm";
 
     /// <summary>
+    /// Current post-processing pipeline version. Bump this string whenever TextNormalizer
+    /// logic changes in a way that would produce meaningfully different output for existing
+    /// descriptions (e.g. new filler stripping, gender normalisation changes, verb agreement).
+    /// Photos whose stored PostProcessVersion differs from this are flagged as "outdated".
+    /// pp1 (2026-05-18): Initial versioning. Includes filler-opener stripping, likely-gender
+    ///     normalisation, double-comma collapse, subject-verb agreement fixes.
+    /// </summary>
+    public const string CurrentPostProcessVersion = "pp1";
+
+    /// <summary>
     /// Vision analysis prompt sent to the Ollama vision model.
     /// v45-minicpm (2026-05-12): Removed gender-neutral rule from prompt — it was preventing
     ///        the v43 "who appears to be a X" post-processing hint from ever firing, because the

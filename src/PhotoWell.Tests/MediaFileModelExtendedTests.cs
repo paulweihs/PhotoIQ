@@ -280,8 +280,9 @@ public class AppSettingsConstantsTests
         => Assert.False(string.IsNullOrWhiteSpace(AppSettings.VisionAnalysisPrompt));
 
     [Fact]
-    public void VisionAnalysisPrompt_InstructsGenderNeutralLanguage()
-        => Assert.Contains("gender-neutral", AppSettings.VisionAnalysisPrompt, StringComparison.OrdinalIgnoreCase);
+    public void VisionAnalysisPrompt_InstructsGenderClassification()
+        // Prompt asks the model to state apparent gender; TextNormalizer neutralises post-hoc.
+        => Assert.Contains("apparent gender", AppSettings.VisionAnalysisPrompt, StringComparison.OrdinalIgnoreCase);
 
     [Fact]
     public void VisionAnalysisPrompt_BansGenderedTerms()

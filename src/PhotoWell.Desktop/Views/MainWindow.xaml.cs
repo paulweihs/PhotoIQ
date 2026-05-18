@@ -61,6 +61,19 @@ public partial class MainWindow : Window
         TipToast.DataContext = tipToastVm;
 
         vm.ScrollIntoViewRequested += _scrollHandler;
+        vm.GalleryCollectionReplaced += () =>
+        {
+            // The VirtualizingWrapPanel recycles containers whose Width/Height bind to
+            // ListBox.Tag (ThumbnailSize). When MediaFiles is replaced with a new collection
+            // the recycled containers keep their old measured size. InvalidateMeasure on the
+            // panel forces a clean remeasure so all thumbnails render at the correct size.
+            Dispatcher.InvokeAsync(() =>
+            {
+                var panel = FindVisualChild<System.Windows.Controls.Panel>(PhotoGrid);
+                panel?.InvalidateMeasure();
+                PhotoGrid.UpdateLayout();
+            }, System.Windows.Threading.DispatcherPriority.Loaded);
+        };
         vm.ScrollToTopRequested    += () =>
         {
             // Scroll the virtualizing panel to the top before the new result set is shown.

@@ -55,8 +55,57 @@ internal static class TextNormalizer
     /// Plurals are replaced before singulars to prevent double-substitution.
     /// Case is preserved: a capitalised match ("She") → capitalised replacement ("They").
     /// </summary>
+    /// <summary>
+    /// Resolves "likely female/male [based on ...]" phrases using sentence context:
+    /// - If the sentence already contains an explicit gendered noun (woman/man/girl/boy),
+    ///   the phrase is stripped entirely — it is redundant information.
+    /// - Otherwise, child context → "likely a girl/boy", adult context → "likely a woman/man".
+    /// Must run before noun substitutions so original gendered words are still present.
+    /// The "based on ..." qualifier is always dropped — it adds hedging without useful content.
+    /// </summary>
+    private static string NormaliseLikelyGender(string text)
+    {
+        var childWords    = new Regex(@"\b(?:child|children|kid|kids|toddler|infant|baby|young\s+(?:child|girl|boy|person))\b", RegexOptions.IgnoreCase);
+        // Explicit gendered nouns — when already present, "likely female/male" is redundant.
+        var explicitNouns = new Regex(@"\b(?:woman|women|man|men|girl|girls|boy|boys)\b", RegexOptions.IgnoreCase);
+
+        return Regex.Replace(text,
+            @"\blikely\s+(female|male)(?:\s+based\s+on\b[^,;.!?)]*)?",
+            m =>
+            {
+                bool isFemale = m.Groups[1].Value.Equals("female", StringComparison.OrdinalIgnoreCase);
+
+                // Look back to the start of the current sentence.
+                int sentenceStart = text.LastIndexOfAny(['.', '!', '?'], Math.Max(0, m.Index - 1));
+                if (sentenceStart < 0) sentenceStart = 0;
+                var sentencePrefix = text[sentenceStart..m.Index];
+
+                // If the sentence already names the gender explicitly, drop the phrase entirely.
+                if (explicitNouns.IsMatch(sentencePrefix))
+                    return "";
+
+                bool isChildContext = childWords.IsMatch(sentencePrefix);
+                string replacement = (isFemale, isChildContext) switch
+                {
+                    (true,  true)  => "likely a girl",
+                    (true,  false) => "likely a woman",
+                    (false, true)  => "likely a boy",
+                    (false, false) => "likely a man",
+                };
+
+                return char.IsUpper(m.Value[0])
+                    ? char.ToUpperInvariant(replacement[0]) + replacement[1..]
+                    : replacement;
+            },
+            RegexOptions.IgnoreCase);
+    }
+
     internal static string NeutraliseGender(string text)
     {
+        // Normalise "likely female/male" before noun substitutions so context words
+        // (child, girl, boy, man, woman) are still in their original form.
+        text = NormaliseLikelyGender(text);
+
         // First, collapse compound gendered phrases to prevent "a person and a person" outputs
         text = CollapsePersonPhrases(text);
 
@@ -79,6 +128,11 @@ internal static class TextNormalizer
         text = Subst(text, @"\bboys\b",  "children, who appear to be boys,");
         text = Subst(text, @"\bboy\b",   "child, who appears to be a boy,");
 
+        // Collapse double commas produced when the original text had a comma immediately
+        // after a gendered noun that was replaced with a comma-terminated hint phrase.
+        // e.g. "a boy, walking" → "a child, who appears to be a boy,, walking" → fix here.
+        text = Regex.Replace(text, @",\s*,", ",");
+
         // Strip trailing comma immediately before terminal punctuation or end-of-string.
         text = Regex.Replace(text, @",(\s*[.!?])", "$1");
         text = Regex.Replace(text, @",\s*$", "");
@@ -90,10 +144,20 @@ internal static class TextNormalizer
         text = Subst(text, @"\bher\b", "their");
         text = Subst(text, @"\bhim\b", "them");
 
-        // Subject-verb agreement broken by he/she → they substitution
-        text = Regex.Replace(text, @"\bthey is\b",  "they are",  RegexOptions.IgnoreCase);
-        text = Regex.Replace(text, @"\bthey was\b", "they were", RegexOptions.IgnoreCase);
-        text = Regex.Replace(text, @"\bthey has\b", "they have", RegexOptions.IgnoreCase);
+        // Subject-verb agreement broken by he/she → they substitution.
+        // Third-person singular verbs must become plural after the pronoun swap.
+        text = Regex.Replace(text, @"\bthey is\b",    "they are",  RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey was\b",   "they were", RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey has\b",   "they have", RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey seems\b", "they seem", RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey looks\b", "they look", RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey sits?\b", "they sit",  RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey stands?\b","they stand",RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey walks?\b", "they walk", RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey wears?\b", "they wear", RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey holds?\b", "they hold", RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey smiles?\b","they smile",RegexOptions.IgnoreCase);
+        text = Regex.Replace(text, @"\bthey appears?\b","they appear",RegexOptions.IgnoreCase);
 
         // Compound-predicate agreement: "they [verb] ... and is [verb]" → "and are [verb]"
         // Handles: "they have blonde hair and is wearing a shirt" → "...and are wearing"
@@ -147,24 +211,49 @@ internal static class TextNormalizer
 
     // ── Filler-opener stripping ──────────────────────────────────────────────
 
+    // Location qualifier: "in the foreground", "in the background", "in the center", etc.
+    // Also "of the image", "of the photo" — covers all positions the model might insert.
+    private const string SubjectLocation =
+        @"(?:\s+(?:" +
+            @"in\s+(?:the\s+)?(?:foreground|background|center|centre|middle|frame|image|photo|picture|scene)" +
+            @"|of\s+(?:this|the)\s+(?:image|photo|picture|photograph|scene)" +
+        @"))?";
+
+    // Verb phrase: all forms the model uses after a subject noun phrase.
+    // We do NOT strip the following article — "appears to be a dog" strips to "a dog",
+    // which then capitalises to "A dog", keeping natural grammar.
+    private const string SubjectVerb =
+        @"\s+(?:appears?\s+to\s+be|consists?\s+of|is|are|was|were|include[sd]?|feature[sd]?)";
+
     /// <summary>
     /// Removes common model filler openers and re-capitalises the remainder.
+    /// The article that follows the verb ("a", "an") is intentionally kept so the
+    /// remainder reads naturally: "appears to be a dog" → "A dog", not "Dog".
     /// Returns the original string unchanged if no pattern matches.
     /// </summary>
     internal static string StripFillerOpener(string text)
     {
+        // 1. "The/This image/photo/picture shows/depicts/features/..."
         var m = Regex.Match(text,
-            @"^(?:The|This)\s+(?:image|photo|picture)\s+(?:shows?|depicts?|features?|captures?|presents?|displays?|illustrates?|portrays?)\s+",
+            @"^(?:The|This)\s+(?:image|photo|picture|photograph)\s+" +
+            @"(?:shows?|depicts?|features?|captures?|presents?|displays?|illustrates?|portrays?)\s+",
             RegexOptions.IgnoreCase);
 
+        // 2. "The [main|primary|central|dominant] subject [location] [verb phrase] [a/an]"
+        //    e.g. "The main subject in the foreground appears to be a dog"  → "Dog."
+        //         "The main subject is an elderly person"                   → "Elderly person."
+        //    The optional article ("a/an") is consumed so the remainder starts at the noun.
         if (!m.Success)
             m = Regex.Match(text,
-                @"^The\s+main\s+subject(?:\s+of\s+(?:this|the)\s+(?:image|photo|picture))?\s+is\s+(?:an?\s+)?",
+                @"^The\s+(?:main|primary|central|dominant|sole|only)\s+subject" +
+                SubjectLocation + SubjectVerb + @"\s+(?:an?\s+)?",
                 RegexOptions.IgnoreCase);
 
+        // 3. "The setting [of the photo] [is/appears to be/seems to be]"
         if (!m.Success)
             m = Regex.Match(text,
-                @"^The\s+setting(?:\s+of\s+(?:this|the)\s+(?:photo(?:graph)?|image|picture))?\s+(?:is|appears\s+to\s+be|seems\s+to\s+be)\s+(?:an?\s+)?",
+                @"^The\s+setting(?:\s+of\s+(?:this|the)\s+(?:photo(?:graph)?|image|picture))?" +
+                @"\s+(?:is|appears\s+to\s+be|seems\s+to\s+be)\s+",
                 RegexOptions.IgnoreCase);
 
         if (!m.Success) return text;
@@ -213,10 +302,20 @@ internal static class TextNormalizer
             "",
             RegexOptions.IgnoreCase);
 
-        // "The setting is/appears to be X" / "The setting of the photo is X" → "X" (capitalised)
-        // Capture the first letter of the remainder so we can uppercase it.
+        // Mid-sentence "The [main|primary|...] subject [location] [verb phrase] X" → "X" (capitalised).
+        // Matches after a sentence boundary so only mid-sentence occurrences are caught here
+        // (the opening occurrence is handled by StripFillerOpener which runs first).
+        // We capture the first char of the remainder and uppercase it; the rest of the match
+        // (the whole filler phrase) is consumed and dropped.
         text = Regex.Replace(text,
-            @"(?<=[.!?]\s{0,2}|^)The\s+setting(?:\s+of\s+(?:this|the)\s+(?:photo(?:graph)?|image|picture))?\s+(?:is|appears\s+to\s+be|seems\s+to\s+be)\s+(?:an?\s+)?([a-z])",
+            @"(?<=[.!?]\s{1,2})The\s+(?:main|primary|central|dominant|sole|only)\s+subject" +
+            SubjectLocation + SubjectVerb + @"\s+([A-Za-z])",
+            m => char.ToUpperInvariant(m.Groups[1].Value[0]).ToString(),
+            RegexOptions.IgnoreCase);
+
+        // "The setting is/appears to be X" / "The setting of the photo is X" → "X" (capitalised).
+        text = Regex.Replace(text,
+            @"(?<=[.!?]\s{0,2}|^)The\s+setting(?:\s+of\s+(?:this|the)\s+(?:photo(?:graph)?|image|picture))?\s+(?:is|appears\s+to\s+be|seems\s+to\s+be)\s+([A-Za-z])",
             m => char.ToUpperInvariant(m.Groups[1].Value[0]).ToString(),
             RegexOptions.IgnoreCase);
 

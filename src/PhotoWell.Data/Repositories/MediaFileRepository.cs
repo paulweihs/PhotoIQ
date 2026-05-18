@@ -549,24 +549,29 @@ public class MediaFileRepository : IMediaFileRepository
             .OrderByDescending(m => m.DateTaken ?? m.DateImported)
             .ToListAsync();
 
-    public async Task<IEnumerable<MediaFile>> GetOutdatedDescriptionsAsync(string currentModel, string currentPromptVersion)
+    public async Task<IEnumerable<MediaFile>> GetOutdatedDescriptionsAsync(string currentModel, string currentPromptVersion, string currentPostProcessVersion)
         => await _context.MediaFiles
             .Where(m => !m.IsExcluded
                      && m.IsAnalyzed
-                     && m.AiDescription != null
+                     && m.AiDescription != null && m.AiDescription != ""
                      && (m.AiModelUsed != currentModel
                          || m.PromptVersion == null
-                         || m.PromptVersion != currentPromptVersion))
+                         || m.PromptVersion != currentPromptVersion
+                         || m.PostProcessVersion == null
+                         || m.PostProcessVersion != currentPostProcessVersion))
+            .Include(m => m.Tags)
             .ToListAsync();
 
-    public async Task<int> CountOutdatedDescriptionsAsync(string currentModel, string currentPromptVersion)
+    public async Task<int> CountOutdatedDescriptionsAsync(string currentModel, string currentPromptVersion, string currentPostProcessVersion)
         => await _context.MediaFiles
             .CountAsync(m => !m.IsExcluded
                           && m.IsAnalyzed
-                          && m.AiDescription != null
+                          && m.AiDescription != null && m.AiDescription != ""
                           && (m.AiModelUsed != currentModel
                               || m.PromptVersion == null
-                              || m.PromptVersion != currentPromptVersion));
+                              || m.PromptVersion != currentPromptVersion
+                              || m.PostProcessVersion == null
+                              || m.PostProcessVersion != currentPostProcessVersion));
 
     // ── FTS5 search ───────────────────────────────────────────────────────────
 
@@ -640,7 +645,14 @@ public class MediaFileRepository : IMediaFileRepository
         // Previously this ran inside one Serializable transaction that held the lock for the
         // entire rebuild (minutes on large libraries), blocking every other writer with SQLITE_BUSY.
         await FtsQueryHelper.ClearAllAsync(_context.Database);
+        await RefreshFtsIndexAsync(ct);
+    }
 
+    public async Task RefreshFtsIndexAsync(CancellationToken ct = default)
+    {
+        // Re-upserts every row WITHOUT clearing first. Searches remain fully functional
+        // throughout because each UpsertFtsAsync does an atomic delete+insert for that row —
+        // the entry is never absent from the index, only momentarily replaced.
         const int chunkSize = 1000;
         int offset = 0;
         while (true)
@@ -660,7 +672,7 @@ public class MediaFileRepository : IMediaFileRepository
             foreach (var m in chunk)
             {
                 ct.ThrowIfCancellationRequested();
-                await UpsertFtsAsync(m); // two auto-committed SQL statements — lock held for microseconds each
+                await UpsertFtsAsync(m);
             }
 
             if (chunk.Count < chunkSize) break;
@@ -687,15 +699,16 @@ public class MediaFileRepository : IMediaFileRepository
         var filename    = Path.GetFileNameWithoutExtension(m.FileName);
         var camera      = $"{m.CameraMake ?? ""} {m.CameraModel ?? ""}".Trim();
         var dateText    = BuildDateText(m.DateTaken);
-        var folder      = Path.GetFileName(Path.GetDirectoryName(m.FilePath) ?? "") ?? "";
 
         // ADR-003: user_description takes display priority; index both so either is searchable.
         var description = !string.IsNullOrEmpty(m.UserDescription)
             ? m.UserDescription
             : m.AiDescription ?? "";
 
-        // Upsert into FTS index (handles both delete and insert with parameterized safety).
-        await FtsQueryHelper.UpsertAsync(_context.Database, m.Id, description, tagText, filename, camera, dateText, folder);
+        // folder column kept in schema for backwards compat but not populated —
+        // folder names caused false-positive search matches (e.g. "Soccer" folder).
+        // Users browse by folder via the sidebar tree, not free-text search.
+        await FtsQueryHelper.UpsertAsync(_context.Database, m.Id, description, tagText, filename, camera, dateText, folder: "");
     }
 
     /// <summary>
@@ -1104,7 +1117,7 @@ public class MediaFileRepository : IMediaFileRepository
         return results;
     }
 
-    public async Task<IReadOnlyList<(Guid Id, ulong Hash, string? AiDescription, string? AiModelUsed, string? PromptVersion, bool IsAnalyzed)>>
+    public async Task<IReadOnlyList<(Guid Id, ulong Hash, string? AiDescription, string? AiModelUsed, string? PromptVersion, string? PostProcessVersion, bool IsAnalyzed)>>
         GetPerceptualHashCandidatesAsync()
     {
         return await _context.MediaFiles
@@ -1112,16 +1125,17 @@ public class MediaFileRepository : IMediaFileRepository
             .Select(m => new
             {
                 m.Id,
-                Hash         = (ulong)m.PerceptualHash!,
+                Hash              = (ulong)m.PerceptualHash!,
                 m.AiDescription,
                 m.AiModelUsed,
                 m.PromptVersion,
+                m.PostProcessVersion,
                 m.IsAnalyzed
             })
             .AsNoTracking()
             .ToListAsync()
-            .ContinueWith(t => (IReadOnlyList<(Guid, ulong, string?, string?, string?, bool)>)
-                t.Result.Select(r => (r.Id, r.Hash, r.AiDescription, r.AiModelUsed, r.PromptVersion, r.IsAnalyzed))
+            .ContinueWith(t => (IReadOnlyList<(Guid, ulong, string?, string?, string?, string?, bool)>)
+                t.Result.Select(r => (r.Id, r.Hash, r.AiDescription, r.AiModelUsed, r.PromptVersion, r.PostProcessVersion, r.IsAnalyzed))
                         .ToList());
     }
 }

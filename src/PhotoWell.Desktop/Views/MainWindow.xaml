@@ -311,39 +311,84 @@
                         </Button>
                     </Grid>
 
-                    <!-- Search button -->
-                    <Button Grid.Column="1" Content="Search"
-                            Command="{Binding ExecuteSearchCommand}"
-                            Height="34" Padding="14,0" Margin="6,0,0,0"
-                            Background="#0078d4" Foreground="White"
-                            BorderThickness="0" Cursor="Hand" FontSize="13"
-                            ToolTip="Search (Enter)">
-                        <Button.Template>
-                            <ControlTemplate TargetType="Button">
-                                <Border Background="{TemplateBinding Background}" CornerRadius="4"
-                                        Padding="{TemplateBinding Padding}">
-                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
-                                </Border>
-                                <ControlTemplate.Triggers>
-                                    <Trigger Property="IsMouseOver" Value="True">
-                                        <Setter Property="Background" Value="#1a8fe0"/>
-                                    </Trigger>
-                                    <Trigger Property="IsPressed" Value="True">
-                                        <Setter Property="Background" Value="#006bbd"/>
-                                    </Trigger>
-                                </ControlTemplate.Triggers>
-                            </ControlTemplate>
-                        </Button.Template>
-                    </Button>
-                    <!-- Search progress indicator — shown while CLIP inference is running -->
-                    <StackPanel Orientation="Horizontal" HorizontalAlignment="Left" Margin="0,4,0,0"
-                                Visibility="{Binding ShowSearchProgress, Converter={StaticResource BoolToVis}}">
-                        <ProgressBar IsIndeterminate="True" Width="40" Height="3"
-                                     Foreground="{StaticResource AccentBrush}"
-                                     Background="Transparent" BorderThickness="0"
-                                     VerticalAlignment="Center" Margin="0,0,6,0"/>
-                        <TextBlock Text="Searching…" Foreground="#888888" FontSize="11" VerticalAlignment="Center"/>
-                    </StackPanel>
+                    <!-- Search / Cancel button — toggles while search is running -->
+                    <Grid Grid.Column="1" Margin="6,0,0,0">
+                        <!-- Normal Search button — hidden while loading -->
+                        <Button Content="Search"
+                                Command="{Binding ExecuteSearchCommand}"
+                                Height="34" Padding="14,0"
+                                Background="#0078d4" Foreground="White"
+                                BorderThickness="0" Cursor="Hand" FontSize="13"
+                                ToolTip="Search (Enter)">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Visible"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="4"
+                                                        Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#1a8fe0"/>
+                                                    </Trigger>
+                                                    <Trigger Property="IsPressed" Value="True">
+                                                        <Setter Property="Background" Value="#006bbd"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ShowSearchProgress}" Value="True">
+                                            <Setter Property="Visibility" Value="Collapsed"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                        </Button>
+                        <!-- Cancel button — shown while search is running -->
+                        <Button Command="{Binding CancelSearchCommand}"
+                                Height="34" Padding="14,0"
+                                Background="#9B3A3A" Foreground="White"
+                                BorderThickness="0" Cursor="Hand" FontSize="13"
+                                ToolTip="Cancel search">
+                            <Button.Style>
+                                <Style TargetType="Button">
+                                    <Setter Property="Visibility" Value="Collapsed"/>
+                                    <Setter Property="Template">
+                                        <Setter.Value>
+                                            <ControlTemplate TargetType="Button">
+                                                <Border Background="{TemplateBinding Background}" CornerRadius="4"
+                                                        Padding="{TemplateBinding Padding}">
+                                                    <ContentPresenter HorizontalAlignment="Center" VerticalAlignment="Center"/>
+                                                </Border>
+                                                <ControlTemplate.Triggers>
+                                                    <Trigger Property="IsMouseOver" Value="True">
+                                                        <Setter Property="Background" Value="#b84444"/>
+                                                    </Trigger>
+                                                </ControlTemplate.Triggers>
+                                            </ControlTemplate>
+                                        </Setter.Value>
+                                    </Setter>
+                                    <Style.Triggers>
+                                        <DataTrigger Binding="{Binding ShowSearchProgress}" Value="True">
+                                            <Setter Property="Visibility" Value="Visible"/>
+                                        </DataTrigger>
+                                    </Style.Triggers>
+                                </Style>
+                            </Button.Style>
+                            <StackPanel Orientation="Horizontal">
+                                <ProgressBar IsIndeterminate="True" Width="14" Height="14"
+                                             Foreground="White" Background="Transparent"
+                                             BorderThickness="0" VerticalAlignment="Center"
+                                             Margin="0,0,6,0"/>
+                                <TextBlock Text="Cancel" VerticalAlignment="Center"/>
+                            </StackPanel>
+                        </Button>
+                    </Grid>
                     <!-- Semantic search badge — shown when CLIP embedding fallback was used -->
                     <Border Background="#1A6EC6E8" BorderBrush="#406EC6E8" BorderThickness="1"
                             CornerRadius="4" Padding="8,2" Margin="0,4,0,0"
@@ -352,6 +397,21 @@
                             Visibility="{Binding IsSemanticSearch, Converter={StaticResource BoolToVis}}">
                         <TextBlock Text="⚡ Includes visually similar results"
                                    Foreground="#6EC6E8" FontSize="11"/>
+                    </Border>
+                    <!-- FTS refresh indicator — shown while startup index rebuild is running -->
+                    <Border Background="#1AF5A623" BorderBrush="#40F5A623" BorderThickness="1"
+                            CornerRadius="4" Padding="8,2" Margin="0,4,0,0"
+                            HorizontalAlignment="Left"
+                            ToolTip="The search index is updating in the background — wait for this to finish before searching for consistent results"
+                            Visibility="{Binding IsFtsRefreshing, Converter={StaticResource BoolToVis}}">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <ProgressBar IsIndeterminate="True" Width="10" Height="10"
+                                         Foreground="#F5A623" Background="Transparent"
+                                         BorderThickness="0" VerticalAlignment="Center"
+                                         Margin="0,0,5,0"/>
+                            <TextBlock Text="Indexing library… search results may vary"
+                                       Foreground="#F5A623" FontSize="11" VerticalAlignment="Center"/>
+                        </StackPanel>
                     </Border>
                     <!-- Semantic unavailable hint — shown when searching but CLIP model is missing -->
                     <Border Background="#1AF9E2AF" BorderBrush="#40F9E2AF" BorderThickness="1"
@@ -1301,13 +1361,51 @@
                                                             Background="{DynamicResource SurfaceBrush}"
                                                             ClipToBounds="True"
                                                             Cursor="Hand"
-                                                            ToolTip="{Binding AiDescription}">
+                                                            ToolTip="{Binding AiDescription}"
+                                                            Tag="{Binding DataContext, RelativeSource={RelativeSource AncestorType=ScrollViewer}}">
                                                         <Border.InputBindings>
+                                                            <!-- Single left-click: navigate to photo in gallery -->
                                                             <MouseBinding MouseAction="LeftClick"
-                                                                          Command="{Binding DataContext.DataContext.ShowOnThisDayPhotoCommand,
+                                                                          Command="{Binding DataContext.ShowOnThisDayPhotoCommand,
+                                                                              RelativeSource={RelativeSource AncestorType=ScrollViewer}}"
+                                                                          CommandParameter="{Binding}"/>
+                                                            <!-- Double left-click: open full viewer -->
+                                                            <MouseBinding MouseAction="LeftDoubleClick"
+                                                                          Command="{Binding DataContext.OpenPhotoViewerCommand,
+                                                                              RelativeSource={RelativeSource AncestorType=ScrollViewer}}"/>
+                                                            <!-- Right-click: select the photo first so context menu commands act on it -->
+                                                            <MouseBinding MouseAction="RightClick"
+                                                                          Command="{Binding DataContext.ShowOnThisDayPhotoCommand,
                                                                               RelativeSource={RelativeSource AncestorType=ScrollViewer}}"
                                                                           CommandParameter="{Binding}"/>
                                                         </Border.InputBindings>
+                                                        <Border.ContextMenu>
+                                                            <!-- DataContext = MainViewModel via PlacementTarget.Tag -->
+                                                            <ContextMenu DataContext="{Binding PlacementTarget.Tag, RelativeSource={RelativeSource Self}}">
+                                                                <MenuItem Header="View Full Size"          Command="{Binding OpenPhotoViewerCommand}"/>
+                                                                <MenuItem Header="Open Folder in Explorer" Command="{Binding OpenInExplorerCommand}"
+                                                                          IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                                                <MenuItem Header="Copy Full Path"          Command="{Binding CopyFullPathCommand}"/>
+                                                                <MenuItem Header="Copy to Folder…"        Command="{Binding CopyToFolderCommand}"
+                                                                          IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                                                <Separator/>
+                                                                <MenuItem Header="Re-analyze with AI"     Command="{Binding ReanalyzeSelectedCommand}"
+                                                                          IsEnabled="{Binding SelectedIsOffline, Converter={StaticResource InverseBool}}"/>
+                                                                <Separator/>
+                                                                <MenuItem Header="Add to Favorites"       Command="{Binding ToggleFavoriteCommand}"/>
+                                                                <MenuItem Header="Add to Album"           Command="{Binding AddToAlbumCommand}"/>
+                                                                <Separator/>
+                                                                <MenuItem Header="Export as Bundle…"      Command="{Binding OpenBackupWindowCommand}"
+                                                                          CommandParameter="{Binding SelectedPhotoIds}"/>
+                                                                <Separator/>
+                                                                <MenuItem Header="Exclude this folder"    Command="{Binding ExcludeFolderCommand}"/>
+                                                                <Separator/>
+                                                                <MenuItem Header="{Binding ExcludeImageLabel}"       Command="{Binding ExcludeImageCommand}"/>
+                                                                <MenuItem Header="{Binding RemoveFromLibraryLabel}"  Command="{Binding RemoveFromLibraryCommand}"/>
+                                                                <MenuItem Header="{Binding DeletePermanentlyLabel}"  Command="{Binding DeletePermanentlyCommand}"
+                                                                          Foreground="#F38BA8"/>
+                                                            </ContextMenu>
+                                                        </Border.ContextMenu>
                                                         <Image Source="{Binding ThumbnailMedium, Converter={StaticResource PathToBitmap}}"
                                                                Stretch="UniformToFill"/>
                                                     </Border>

@@ -13,7 +13,7 @@ namespace PhotoWell.Data.Repositories;
 ///
 /// Key patterns:
 /// - Libraries and Albums are soft-deleted via cascade when deleted (with DeleteBehavior.Cascade)
-/// - Album photo membership uses raw SQL for RemovePhotosFromAlbumAsync to avoid EF shadow entity tracking issues
+/// - Album photo removal uses EF navigation (Include → Remove → SaveChanges) for correct parameterized deletes
 /// - All operations are eager-loaded (Include) to minimize round-trips
 /// </remarks>
 public class LibraryRepository : ILibraryRepository
@@ -126,28 +126,22 @@ public class LibraryRepository : ILibraryRepository
     }
 
     /// <summary>Removes photos from an album (does not delete the photos from the library).</summary>
-    /// <remarks>
-    /// Uses raw SQL to delete from the join table directly, avoiding EF Core change-tracker
-    /// issues with shadow entities (the implicit photo_albums join table).
-    /// </remarks>
     /// <param name="albumId">The Album ID to remove photos from.</param>
     /// <param name="photoIds">IDs of the photos to remove.</param>
     public async Task RemovePhotosFromAlbumAsync(Guid albumId, IReadOnlyList<Guid> photoIds)
     {
         if (photoIds.Count == 0) return;
-        // Batch DELETE in chunks of 900 to stay under SQLite's 999-variable limit.
-        // Raw SQL avoids EF change-tracking issues with the shadow join entity.
-        // Column names follow EF Core 8 convention: {NavigationName}Id.
-        foreach (var chunk in photoIds.Chunk(900))
-        {
-            // EF1002 suppressed: the values are Guid.ToString() outputs — fixed-format hex strings
-            // with no user-controlled content, so there is no SQL injection risk here.
-#pragma warning disable EF1002
-            var idList = string.Join(",", chunk.Select(id => $"'{id}'"));
-            await _db.Database.ExecuteSqlRawAsync(
-                $"DELETE FROM photo_albums WHERE AlbumsId = '{albumId}' AND MediaFilesId IN ({idList})");
-#pragma warning restore EF1002
-        }
+        var album = await _db.Albums
+            .Include(a => a.MediaFiles)
+            .FirstOrDefaultAsync(a => a.Id == albumId);
+        if (album == null) return;
+
+        var idSet = photoIds.ToHashSet();
+        var toRemove = album.MediaFiles.Where(m => idSet.Contains(m.Id)).ToList();
+        foreach (var photo in toRemove)
+            album.MediaFiles.Remove(photo);
+
+        await _db.SaveChangesAsync();
     }
 
     public async Task<IEnumerable<MediaFile>> GetPhotosByAlbumAsync(Guid albumId)

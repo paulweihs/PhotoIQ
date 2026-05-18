@@ -28,10 +28,10 @@ public class NeutraliseGenderTests
 
     // Pronouns — note: "She is" triggers the verb-agreement fix too, so the full pipeline
     // is "She is" → "They is" (Subst) → "they are" (verb fix). Use a verb not in the fix
-    // list ("smiles") to isolate the pronoun step.
+    // list ("talks", "runs") to isolate the pronoun step.
     [Theory]
-    [InlineData("She smiles warmly.",    "They smiles warmly.")]
-    [InlineData("He looks at the sky.",  "They looks at the sky.")]
+    [InlineData("She talks warmly.",     "They talks warmly.")]
+    [InlineData("He runs to the park.",  "They runs to the park.")]
     [InlineData("His hat is red.",       "Their hat is red.")]
     [InlineData("Her coat is blue.",     "Their coat is blue.")]
     [InlineData("I gave him the book.",  "I gave them the book.")]
@@ -68,8 +68,8 @@ public class NeutraliseGenderTests
     [Fact]
     public void CapitalisedMatch_ProducesCapitalisedReplacement()
     {
-        // "She" → "They" (capital preserved); "walks" is not in the verb-fix list
-        var result = TextNormalizer.NeutraliseGender("She walks to the park.");
+        // "She" → "They" (capital preserved); "talks" is not in the verb-fix list
+        var result = TextNormalizer.NeutraliseGender("She talks to the park.");
         Assert.StartsWith("They", result);
     }
 
@@ -147,8 +147,8 @@ public class StripFillerOpenerTests
     public void Pattern1_VariousVerbs_AreStripped(string input, string expected)
         => Assert.Equal(expected, TextNormalizer.StripFillerOpener(input));
 
-    // Pattern 2 variants — the regex includes (?:an?\s+)? so the article is consumed
-    // as part of the stripped prefix; the remainder starts after "a/an ".
+    // Pattern 2 variants — the regex optionally consumes the leading article ("a/an")
+    // so the remainder starts after "a/an " and capitalises without the article.
     [Theory]
     [InlineData("The main subject is a large tree.",                         "Large tree.")]
     [InlineData("The main subject is an elderly person.",                    "Elderly person.")]

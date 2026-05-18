@@ -338,13 +338,15 @@ public class OutdatedDescriptionsTests : RepositoryTestBase
     public OutdatedDescriptionsTests() => _repo = new MediaFileRepository(Db);
 
     private async Task<MediaFile> AddAnalysed(
-        string path, string? model, string? promptVer, string description = "A person stands outside.")
+        string path, string? model, string? promptVer, string? postProcessVer = "pp1",
+        string description = "A person stands outside.")
     {
         var photo = Photo(path);
-        photo.IsAnalyzed    = true;
-        photo.AiDescription = description;
-        photo.AiModelUsed   = model;
-        photo.PromptVersion = promptVer;
+        photo.IsAnalyzed        = true;
+        photo.AiDescription     = description;
+        photo.AiModelUsed       = model;
+        photo.PromptVersion     = promptVer;
+        photo.PostProcessVersion = postProcessVer;
         await _repo.AddAsync(photo);
         return photo;
     }
@@ -354,7 +356,7 @@ public class OutdatedDescriptionsTests : RepositoryTestBase
     {
         await AddAnalysed("/old/model.jpg", "llama2-vision", "v12b");
 
-        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b");
+        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1");
         Assert.Single(outdated);
     }
 
@@ -363,7 +365,7 @@ public class OutdatedDescriptionsTests : RepositoryTestBase
     {
         await AddAnalysed("/old/prompt.jpg", "llama3.2-vision", "v10a");
 
-        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b");
+        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1");
         Assert.Single(outdated);
     }
 
@@ -372,16 +374,34 @@ public class OutdatedDescriptionsTests : RepositoryTestBase
     {
         await AddAnalysed("/old/null.jpg", "llama3.2-vision", null);
 
-        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b");
+        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1");
+        Assert.Single(outdated);
+    }
+
+    [Fact]
+    public async Task OldPostProcessVersion_IsReturnedAsOutdated()
+    {
+        await AddAnalysed("/old/pp.jpg", "llama3.2-vision", "v12b", postProcessVer: "pp0");
+
+        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1");
+        Assert.Single(outdated);
+    }
+
+    [Fact]
+    public async Task NullPostProcessVersion_IsReturnedAsOutdated()
+    {
+        await AddAnalysed("/old/ppnull.jpg", "llama3.2-vision", "v12b", postProcessVer: null);
+
+        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1");
         Assert.Single(outdated);
     }
 
     [Fact]
     public async Task CurrentModelAndPrompt_IsNotReturnedAsOutdated()
     {
-        await AddAnalysed("/current/ok.jpg", "llama3.2-vision", "v12b");
+        await AddAnalysed("/current/ok.jpg", "llama3.2-vision", "v12b", postProcessVer: "pp1");
 
-        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b");
+        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1");
         Assert.Empty(outdated);
     }
 
@@ -391,7 +411,7 @@ public class OutdatedDescriptionsTests : RepositoryTestBase
         // IsAnalyzed = false → not in scope
         await _repo.AddAsync(Photo("/new/unanalysed.jpg"));
 
-        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b");
+        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1");
         Assert.Empty(outdated);
     }
 
@@ -399,13 +419,14 @@ public class OutdatedDescriptionsTests : RepositoryTestBase
     public async Task NullAiDescription_IsNotReturnedAsOutdated()
     {
         var photo = Photo("/new/nodesc.jpg");
-        photo.IsAnalyzed    = true;
-        photo.AiDescription = null;   // CLIP ran but vision produced nothing
-        photo.AiModelUsed   = "llama2-vision";
-        photo.PromptVersion = "v10a";
+        photo.IsAnalyzed        = true;
+        photo.AiDescription     = null;   // CLIP ran but vision produced nothing
+        photo.AiModelUsed       = "llama2-vision";
+        photo.PromptVersion     = "v10a";
+        photo.PostProcessVersion = "pp1";
         await _repo.AddAsync(photo);
 
-        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b");
+        var outdated = await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1");
         Assert.Empty(outdated);
     }
 
@@ -413,10 +434,10 @@ public class OutdatedDescriptionsTests : RepositoryTestBase
     public async Task CountOutdated_MatchesGetOutdated()
     {
         await AddAnalysed("/count/a.jpg", "llama2-vision", "v10a");
-        await AddAnalysed("/count/b.jpg", "llama3.2-vision", "v12b"); // current — not outdated
+        await AddAnalysed("/count/b.jpg", "llama3.2-vision", "v12b", postProcessVer: "pp1"); // current — not outdated
 
-        var list  = (await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b")).ToList();
-        var count = await _repo.CountOutdatedDescriptionsAsync("llama3.2-vision", "v12b");
+        var list  = (await _repo.GetOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1")).ToList();
+        var count = await _repo.CountOutdatedDescriptionsAsync("llama3.2-vision", "v12b", "pp1");
 
         Assert.Equal(list.Count, count);
         Assert.Equal(1, count);

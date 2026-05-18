@@ -102,8 +102,9 @@ public partial class App : Application
         var splash = new Views.SplashWindow();
         splash.Show();
 
-        MediaFile.CurrentVisionModel   = AppSettings.VisionModelName;
-        MediaFile.CurrentPromptVersion = AppSettings.CurrentPromptVersion;
+        MediaFile.CurrentVisionModel        = AppSettings.VisionModelName;
+        MediaFile.CurrentPromptVersion      = AppSettings.CurrentPromptVersion;
+        MediaFile.CurrentPostProcessVersion = AppSettings.CurrentPostProcessVersion;
 
         splash.SetStatus("Initializing…");
         await Task.Run(() =>
@@ -239,6 +240,8 @@ public partial class App : Application
             // Version tracking — records which PhotoWell version imported/analyzed each file
             AddColumn(db.Database, "ALTER TABLE MediaFiles ADD COLUMN ImportedWithVersion TEXT NULL");
             AddColumn(db.Database, "ALTER TABLE MediaFiles ADD COLUMN AnalyzedWithVersion TEXT NULL");
+            // Post-processing pipeline version — allows re-analysis when TextNormalizer logic changes
+            AddColumn(db.Database, "ALTER TABLE MediaFiles ADD COLUMN PostProcessVersion TEXT NULL");
 
             // Data migration — mark already-analyzed photos as Complete so they are not re-queued.
             db.Database.ExecuteSqlRaw("UPDATE MediaFiles SET AnalysisStatus = 2 WHERE IsAnalyzed = 1 AND AnalysisStatus = 0");
@@ -262,6 +265,14 @@ public partial class App : Application
                 "UPDATE MediaFiles SET AnalysisStatus = 4 " +
                 "WHERE AnalysisStatus = 2 AND AiDescription = '' AND UserDescription IS NULL " +
                 "AND AiModelUsed = 'photowell-minicpm-v'");
+
+            // Double-comma cleanup — TextNormalizer gendered-noun substitutions could produce ",,"
+            // when the original text already had a comma after the substituted word. Fixed in the
+            // normalizer pipeline, but existing stored descriptions need a one-time in-place fix.
+            db.Database.ExecuteSqlRaw(
+                "UPDATE MediaFiles SET AiDescription = REPLACE(AiDescription, ',,', ',') " +
+                "WHERE AiDescription LIKE '%,,%'");
+
             AddColumn(db.Database, "ALTER TABLE MediaFiles ADD COLUMN IsExcluded INTEGER NOT NULL DEFAULT 0");
 
             // Video exclusion — video playback is not yet supported; hide any video files that were

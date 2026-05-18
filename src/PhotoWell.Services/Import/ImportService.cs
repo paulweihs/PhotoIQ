@@ -65,10 +65,11 @@ public class ImportService : IImportService
     {
         foreach (var t in mf.Tags.Where(t => t.IsAIGenerated).ToList())
             mf.Tags.Remove(t);
-        mf.AiDescription  = null;
-        mf.AiModelUsed    = null;
-        mf.PromptVersion  = null;
-        mf.IsAnalyzed     = false;
+        mf.AiDescription      = null;
+        mf.AiModelUsed        = null;
+        mf.PromptVersion      = null;
+        mf.PostProcessVersion = null;
+        mf.IsAnalyzed         = false;
         mf.AnalysisStatus = AnalysisStatus.Pending;
         mf.FaceDetectionStatus = FaceDetectionStatus.Pending; // Reset face detection to be re-run
     }
@@ -207,6 +208,7 @@ public class ImportService : IImportService
         mf.AiDescription      = donor.AiDescription;
         mf.AiModelUsed        = donor.AiModelUsed;
         mf.PromptVersion      = donor.PromptVersion;
+        mf.PostProcessVersion = donor.PostProcessVersion;
         mf.IsAnalyzed         = true;
         mf.DateAnalyzed       = DateTime.UtcNow;
         mf.AnalysisStatus     = AnalysisStatus.Complete;
@@ -322,7 +324,8 @@ public class ImportService : IImportService
     {
         var photos = (await _repo.GetOutdatedDescriptionsAsync(
             AppSettings.VisionModelName,
-            _vision.PromptVersion))
+            _vision.PromptVersion,
+            AppSettings.CurrentPostProcessVersion))
             .Where(m => !skipUserModified || m.UserDescription == null)
             .ToList();
         return await BatchReanalyzeAsync(photos, progress, onPhotoAnalyzed, ct, priorityQueue);
@@ -411,9 +414,10 @@ public class ImportService : IImportService
                 }
                 else
                 {
-                    mf.AiDescription = understanding.Description;
-                    mf.AiModelUsed   = AppSettings.VisionModelName;
-                    mf.PromptVersion = _vision.PromptVersion;
+                    mf.AiDescription      = understanding.Description;
+                    mf.AiModelUsed        = AppSettings.VisionModelName;
+                    mf.PromptVersion      = _vision.PromptVersion;
+                    mf.PostProcessVersion = AppSettings.CurrentPostProcessVersion;
                 }
             }
             else
@@ -787,9 +791,10 @@ public class ImportService : IImportService
                 mf.AiDescription = null;
                 return false;
             }
-            mf.AiDescription = understanding.Description;
-            mf.AiModelUsed   = AppSettings.VisionModelName;
-            mf.PromptVersion = _vision.PromptVersion;
+            mf.AiDescription      = understanding.Description;
+            mf.AiModelUsed        = AppSettings.VisionModelName;
+            mf.PromptVersion      = _vision.PromptVersion;
+            mf.PostProcessVersion = AppSettings.CurrentPostProcessVersion;
             if (!mf.IsAnalyzed) { mf.IsAnalyzed = true; mf.DateAnalyzed = DateTime.UtcNow; }
             return true;
         }
@@ -976,7 +981,6 @@ public class ImportService : IImportService
         {
             while (priorityQueue.TryDequeue(out var priorityId))
             {
-                if (alreadyDone.Contains(priorityId)) continue;
                 AppLog.Vision($"[Priority] Post-loop processing {priorityId}");
                 try
                 {

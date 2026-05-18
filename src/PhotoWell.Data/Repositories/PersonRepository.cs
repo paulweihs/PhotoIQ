@@ -197,24 +197,28 @@ public class PersonRepository : IPersonRepository
         await using var transaction = await _ctx.Database.BeginTransactionAsync();
         try
         {
-            // Re-link all faces atomically via a single UPDATE — avoids the race window
-            // that existed when iterating ToList() then setting PersonId one by one.
+            // Re-link all faces atomically via bulk UPDATE — bypasses the change tracker
+            // to avoid a subtle EF ClientSetNull issue: if a tracked Face entity still
+            // holds PersonId == sourceId when Remove(source) runs, EF would null the FK
+            // on SaveChangesAsync, overwriting the bulk-updated value.
             await _ctx.Faces
                 .Where(f => f.PersonId == sourceId)
                 .ExecuteUpdateAsync(s => s.SetProperty(f => f.PersonId, targetId));
 
-            // Recompute FaceCount from the authoritative DB state *after* the re-link
-            // so the count is exact even if concurrent writes occurred.
-            var target = await _ctx.People.FirstOrDefaultAsync(p => p.Id == targetId);
-            if (target != null)
-                target.FaceCount = await _ctx.Faces.CountAsync(f => f.PersonId == targetId);
+            // Detach any tracked Face entities so EF doesn't undo the bulk update above
+            // when the source person is deleted (ClientSetNull cascade in the tracker).
+            foreach (var e in _ctx.ChangeTracker.Entries<Face>().ToList())
+                e.State = EntityState.Detached;
 
-            // Delete the source person.
-            var source = await _ctx.People.FirstOrDefaultAsync(p => p.Id == sourceId);
-            if (source != null)
-                _ctx.People.Remove(source);
+            // Recompute FaceCount from the authoritative DB state *after* the re-link.
+            int newFaceCount = await _ctx.Faces.CountAsync(f => f.PersonId == targetId);
+            await _ctx.People
+                .Where(p => p.Id == targetId)
+                .ExecuteUpdateAsync(s => s.SetProperty(p => p.FaceCount, newFaceCount));
 
-            await _ctx.SaveChangesAsync();
+            // Delete the source person via bulk delete — also avoids change-tracker issues.
+            await _ctx.People.Where(p => p.Id == sourceId).ExecuteDeleteAsync();
+
             await transaction.CommitAsync();
         }
         catch

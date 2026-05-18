@@ -24,7 +24,7 @@ public interface IMediaFileRepository : IRepository<MediaFile>
     Task ExcludeAsync(Guid id);
     Task<IEnumerable<DuplicateGroup>> GetDuplicateGroupsAsync(IProgress<string>? progress = null);
     /// <summary>Returns all photos that have a computed perceptual hash, for near-duplicate detection and description reuse.</summary>
-    Task<IReadOnlyList<(Guid Id, ulong Hash, string? AiDescription, string? AiModelUsed, string? PromptVersion, bool IsAnalyzed)>> GetPerceptualHashCandidatesAsync();
+    Task<IReadOnlyList<(Guid Id, ulong Hash, string? AiDescription, string? AiModelUsed, string? PromptVersion, string? PostProcessVersion, bool IsAnalyzed)>> GetPerceptualHashCandidatesAsync();
     Task<Tag> GetOrCreateTagAsync(string name, string normalizedName, TagCategory category, bool isAiGenerated, float confidence);
     Task RemoveTagFromPhotoAsync(Guid photoId, Guid tagId);
     Task<List<string>> GetAllTagNamesAsync();
@@ -32,9 +32,17 @@ public interface IMediaFileRepository : IRepository<MediaFile>
 
     /// <summary>
     /// Rebuilds the FTS5 search index from scratch using current library data.
-    /// Called once at startup to ensure existing records are indexed.
+    /// Destructive: clears all entries first. Safe to call when no searches are running.
     /// </summary>
     Task RebuildFtsIndexAsync(CancellationToken ct = default);
+
+    /// <summary>
+    /// Re-upserts every library entry into the FTS5 index without clearing first.
+    /// Non-destructive: searches remain fully functional throughout the operation because
+    /// existing entries are replaced row-by-row rather than wiped up front.
+    /// Use this for background refresh (e.g. clearing stale folder data).
+    /// </summary>
+    Task RefreshFtsIndexAsync(CancellationToken ct = default);
 
     /// <summary>
     /// Removes all library entries whose file path is inside <paramref name="folderPath"/>.
@@ -84,14 +92,15 @@ public interface IMediaFileRepository : IRepository<MediaFile>
     Task<IReadOnlyList<Guid>> GetVisionPendingIdsAsync();
 
     /// <summary>
-    /// Returns analyzed photos whose AiDescription was generated with a different model or
-    /// prompt version than the current ones. Excludes excluded photos and those with no description.
+    /// Returns analyzed photos whose AiDescription was generated with a different model,
+    /// prompt version, or post-processing pipeline version than the current ones.
+    /// Excludes excluded photos and those with no description.
     /// Tags are eagerly loaded so callers can strip AI tags without an extra round-trip.
     /// </summary>
-    Task<IEnumerable<MediaFile>> GetOutdatedDescriptionsAsync(string currentModel, string currentPromptVersion);
+    Task<IEnumerable<MediaFile>> GetOutdatedDescriptionsAsync(string currentModel, string currentPromptVersion, string currentPostProcessVersion);
 
-    /// <summary>Count of photos with outdated AI descriptions.</summary>
-    Task<int> CountOutdatedDescriptionsAsync(string currentModel, string currentPromptVersion);
+    /// <summary>Count of photos with outdated AI descriptions (model, prompt, or post-process version mismatch).</summary>
+    Task<int> CountOutdatedDescriptionsAsync(string currentModel, string currentPromptVersion, string currentPostProcessVersion);
 
     /// <summary>
     /// Returns the distinct parent directories of all non-excluded photos in the library.

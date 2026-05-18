@@ -53,6 +53,9 @@ public class MainViewModel : ObservableObject, IDisposable
 
 	private readonly IFolderWatcherService _folderWatcher;
 
+	/// <summary>The currently open photo viewer VM, or null when the viewer is closed.</summary>
+	private PhotoViewerViewModel? _activeViewerVm;
+
 	private readonly HashSet<string> _excludedFullPaths = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
 
 	private readonly HashSet<string> _excludedNames = new HashSet<string>(StringComparer.OrdinalIgnoreCase);
@@ -132,6 +135,8 @@ public class MainViewModel : ObservableObject, IDisposable
 	private bool _isSemanticSearch;
 
 	private bool _isSimilaritySearch;
+
+	private bool _isFtsRefreshing;
 
 	private string _similaritySourceName = "";
 
@@ -348,6 +353,7 @@ public class MainViewModel : ObservableObject, IDisposable
 
 	[GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.RelayCommandGenerator", "8.4.0.0")]
 	private AsyncRelayCommand? clearSearchCommand;
+	private RelayCommand? cancelSearchCommand;
 
 	[GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.RelayCommandGenerator", "8.4.0.0")]
 	private AsyncRelayCommand? reanalyzeMultiSelectedCommand;
@@ -1501,6 +1507,20 @@ public class MainViewModel : ObservableObject, IDisposable
 				OnPropertyChanging("IsSemanticSearch");
 				_isSemanticSearch = value;
 				OnPropertyChanged("IsSemanticSearch");
+			}
+		}
+	}
+
+	public bool IsFtsRefreshing
+	{
+		get => _isFtsRefreshing;
+		private set
+		{
+			if (_isFtsRefreshing != value)
+			{
+				OnPropertyChanging(nameof(IsFtsRefreshing));
+				_isFtsRefreshing = value;
+				OnPropertyChanged(nameof(IsFtsRefreshing));
 			}
 		}
 	}
@@ -2909,6 +2929,18 @@ public class MainViewModel : ObservableObject, IDisposable
 		}
 	}
 
+	/// <summary>
+	/// Cancels an in-progress search and clears results. Bound to the Cancel button
+	/// that replaces the Search button while IsLoading &amp;&amp; IsSearchActive.
+	/// </summary>
+	public ICommand CancelSearchCommand => cancelSearchCommand ??= new RelayCommand(() =>
+	{
+		try { _loadCts.Cancel(); } catch { }
+		PendingSearchQuery = "";
+		SearchQuery = "";
+		_ = LoadAsync();
+	});
+
 	[GeneratedCode("CommunityToolkit.Mvvm.SourceGenerators.RelayCommandGenerator", "8.4.0.0")]
 	[ExcludeFromCodeCoverage]
 	public IAsyncRelayCommand ReanalyzeMultiSelectedCommand
@@ -3575,6 +3607,14 @@ public class MainViewModel : ObservableObject, IDisposable
 
 	public event Action? ScrollToTopRequested;
 
+	/// <summary>
+	/// Fired after MediaFiles is replaced with a new ObservableCollection so the gallery
+	/// code-behind can force the VirtualizingWrapPanel to remeasure all item containers.
+	/// Without this, recycled containers retain their old measured sizes (e.g. search result
+	/// thumbnails stay tiny after returning to the full library).
+	/// </summary>
+	public event Action? GalleryCollectionReplaced;
+
 	private void ScheduleSimilarityRefresh()
 	{
 		try
@@ -3790,6 +3830,7 @@ public class MainViewModel : ObservableObject, IDisposable
 		{
 			List<MediaFile> sorted = ApplySortOrder(await _semanticSearch.FindSimilarAsync(sourceId, SimilarityCount), _sortHistory).ToList();
 			MediaFiles = new ObservableCollection<MediaFile>(sorted);
+			GalleryCollectionReplaced?.Invoke();
 			PhotoCount = sorted.Count;
 			TotalLibraryCount = await WithRepo((IMediaFileRepository r) => ((IRepository<MediaFile>)(object)r).CountAsync());
 			OnPropertyChanged("PhotoCountText");
@@ -4086,6 +4127,7 @@ public class MainViewModel : ObservableObject, IDisposable
 		Guid? prevSelectedId = ((selectedMediaFile != null) ? new Guid?(selectedMediaFile.Id) : ((Guid?)null));
 		List<MediaFile> list = ApplySortOrder(MediaFiles.ToList(), _sortHistory).ToList();
 		MediaFiles = new ObservableCollection<MediaFile>(list);
+		GalleryCollectionReplaced?.Invoke();
 		if (prevSelectedId.HasValue)
 		{
 			SelectedMediaFile = MediaFiles.FirstOrDefault((MediaFile m) => m.Id == prevSelectedId.Value);
@@ -4187,6 +4229,10 @@ public class MainViewModel : ObservableObject, IDisposable
 		StartupHealAsync();
 		ResumeUpdateOutdatedAsync();
 		StartPeriodicHealTimer();
+		// Refresh the FTS index at startup (non-destructive — re-upserts row-by-row so searches
+		// remain fully functional throughout). Clears stale folder data from existing entries
+		// and picks up description text fixed by the startup SQL double-comma migration.
+		RefreshFtsIndexBackgroundAsync();
 		StartFolderWatcherAsync();
 		RebuildSendToMenuItems();
 	}
@@ -4246,6 +4292,7 @@ public class MainViewModel : ObservableObject, IDisposable
 				ClearTaskbar();
 				Metrics.ClearBatchStatus();
 				StatusText = Progress.ResultMessage;
+				await RefreshAfterBulkReanalysisAsync();
 			}
 		}
 	}
@@ -4266,6 +4313,27 @@ public class MainViewModel : ObservableObject, IDisposable
 		{
 			StatusText = "Search index rebuild failed: " + ex.Message;
 			AppLog.Error("RebuildSearchIndex: " + ex.Message);
+		}
+	}
+
+	private async Task RefreshFtsIndexBackgroundAsync()
+	{
+		IsFtsRefreshing = true;
+		try
+		{
+			await Task.Run(async delegate
+			{
+				using IServiceScope scope = _scopeFactory.CreateScope();
+				await scope.ServiceProvider.GetRequiredService<IMediaFileRepository>().RefreshFtsIndexAsync();
+			});
+		}
+		catch (Exception ex)
+		{
+			AppLog.Error("RefreshFtsIndex: " + ex.Message);
+		}
+		finally
+		{
+			IsFtsRefreshing = false;
 		}
 	}
 
@@ -4514,6 +4582,7 @@ public class MainViewModel : ObservableObject, IDisposable
 			Guid? prevSelectedId = ((selectedMediaFile != null) ? new Guid?(selectedMediaFile.Id) : ((Guid?)null));
 			List<MediaFile> photoList = ApplySortOrder(source, _sortHistory).ToList();
 			MediaFiles = new ObservableCollection<MediaFile>(photoList);
+			GalleryCollectionReplaced?.Invoke();
 			PhotoCount = photoList.Count;
 			int totalLibraryCount = ((!IsSearchActive) ? PhotoCount : (await WithRepo((IMediaFileRepository r) => ((IRepository<MediaFile>)(object)r).CountAsync())));
 			TotalLibraryCount = totalLibraryCount;
@@ -4568,7 +4637,7 @@ public class MainViewModel : ObservableObject, IDisposable
 	{
 		OfflineCount = await Task.Run(() => MarkOfflineFiles(snapshot));
 		NotifyPropertiesChanged("HasOfflineFiles", "OfflineStatusText", "SelectedIsOffline");
-		OutdatedDescriptionCount = await WithRepo((IMediaFileRepository r) => r.CountOutdatedDescriptionsAsync(AppSettings.VisionModelName, AppSettings.CurrentPromptVersion));
+		OutdatedDescriptionCount = await WithRepo((IMediaFileRepository r) => r.CountOutdatedDescriptionsAsync(AppSettings.VisionModelName, AppSettings.CurrentPromptVersion, AppSettings.CurrentPostProcessVersion));
 		foreach (Guid item in await WithRepo((IMediaFileRepository r) => r.GetVisionPendingIdsAsync()))
 		{
 			EnqueueForVision(item);
@@ -4975,6 +5044,7 @@ public class MainViewModel : ObservableObject, IDisposable
 		IReadOnlyList<MediaFile> readOnlyList = await WithRepo((IMediaFileRepository repo) => repo.GetByIdsAsync((IEnumerable<Guid>)photoIds));
 		_personFilterPhotoIds = photoIds;
 		MediaFiles = new ObservableCollection<MediaFile>(readOnlyList);
+		GalleryCollectionReplaced?.Invoke();
 		StatusText = $"{readOnlyList.Count} photo(s) featuring this person";
 		IsPersonFilterActive = true;
 		ActiveFilterLabel = $"Showing {readOnlyList.Count} photo{((readOnlyList.Count == 1) ? "" : "s")} with this person";
@@ -5377,6 +5447,7 @@ public class MainViewModel : ObservableObject, IDisposable
 							SelectedMediaFile = updated;
 							ScrollIntoViewRequested?.Invoke(updated);
 						}
+						_activeViewerVm?.PhotoReanalyzed?.Invoke(updated);
 					}
 					StatusText = $"Re-analyzed \"{fileName}\"";
 				});
@@ -5449,17 +5520,10 @@ public class MainViewModel : ObservableObject, IDisposable
 			MediaFile val = await ((IRepository<MediaFile>)(object)scope.ServiceProvider.GetRequiredService<IMediaFileRepository>()).GetByIdAsync(photoId);
 			if (val != null)
 			{
-				int num = MediaFiles.IndexOf(priorItem);
-				if (num >= 0)
-				{
-					MediaFiles[num] = val;
-				}
-				MediaFile? selectedMediaFile = SelectedMediaFile;
-				if (selectedMediaFile != null && selectedMediaFile.Id == photoId)
-				{
-					SelectedMediaFile = val;
+				RefreshItemInPlace(val, priorItem);
+				if (SelectedMediaFile?.Id == photoId)
 					this.ScrollIntoViewRequested?.Invoke(val);
-				}
+				_activeViewerVm?.PhotoReanalyzed?.Invoke(val);
 			}
 			StatusText = Progress.ResultMessage;
 		}
@@ -5749,7 +5813,7 @@ public class MainViewModel : ObservableObject, IDisposable
 	private async Task RefreshAfterBulkReanalysisAsync()
 	{
 		PendingDescriptionCount = MediaFiles.Count((MediaFile m) => (int)m.AnalysisStatus == 4);
-		OutdatedDescriptionCount = await WithRepo((IMediaFileRepository r) => r.CountOutdatedDescriptionsAsync(AppSettings.VisionModelName, AppSettings.CurrentPromptVersion));
+		OutdatedDescriptionCount = await WithRepo((IMediaFileRepository r) => r.CountOutdatedDescriptionsAsync(AppSettings.VisionModelName, AppSettings.CurrentPromptVersion, AppSettings.CurrentPostProcessVersion));
 		OnPropertyChanged("IsEmpty");
 		OnPropertyChanged("IsLibraryEmpty");
 		OnPropertyChanged("PhotoCountText");
@@ -6393,6 +6457,8 @@ public class MainViewModel : ObservableObject, IDisposable
 			vm.IsCurrentFolderExcluded = SelectedFolderIsExcluded;
 			this.ScrollIntoViewRequested?.Invoke(mf);
 		};
+		vm.PhotoReanalyzed = updated => vm.ApplyReanalyzedPhoto(updated);
+		_activeViewerVm = vm;
 		vm.OpenInExplorerCommand = (ICommand?)OpenInExplorerCommand;
 		vm.CopyFullPathCommand = (ICommand?)CopyFullPathCommand;
 		vm.CopyToFolderCommand = (ICommand?)CopyToFolderCommand;
@@ -6453,6 +6519,7 @@ public class MainViewModel : ObservableObject, IDisposable
 		};
 		vm.Open(MediaFiles.ToList(), num);
 		window.ShowDialog();
+		_activeViewerVm = null;
 	}
 
 	private async Task OpenSettingsAsync()

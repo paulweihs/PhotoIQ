@@ -66,7 +66,12 @@ public partial class PhotoViewerViewModel : ObservableObject
     /// Invoked when the viewer navigates to a new photo, so MainViewModel can sync its single-selection state.
     /// </summary>
     /// <remarks>Set by MainViewModel before the viewer window opens.</remarks>
-    public Action<MediaFile>? PhotoChanged { get; set; }
+    public Action<MediaFile>? PhotoChanged     { get; set; }
+    /// <summary>
+    /// Invoked by MainViewModel after a re-analysis completes so the viewer can refresh
+    /// its description and metadata panel without closing and reopening.
+    /// </summary>
+    public Action<MediaFile>? PhotoReanalyzed { get; set; }
 
     public ICommand? OpenInExplorerCommand      { get; set; }
     public ICommand? CopyFullPathCommand        { get; set; }
@@ -313,6 +318,36 @@ public partial class PhotoViewerViewModel : ObservableObject
 
     /// <summary>Re-decodes the current image from disk (e.g. after rotation). Does not reload tags or faces.</summary>
     public Task ReloadCurrentImageAsync() => LoadImageAsync();
+
+    /// <summary>
+    /// Updates the viewer with a freshly re-analyzed <see cref="MediaFile"/>.
+    /// Called via the <see cref="PhotoReanalyzed"/> callback after a re-analysis completes.
+    /// Replaces the photo in the internal list, sets Current, and notifies all derived properties
+    /// so the description and metadata panel refresh without requiring navigation.
+    /// </summary>
+    public void ApplyReanalyzedPhoto(MediaFile updated)
+    {
+        // Replace the stale reference in the nav list so forward/back navigation picks up the new data.
+        // _photos is typed as IReadOnlyList but the concrete type (ObservableCollection / List) is
+        // mutable via IList<T>, so cast to that for index-based replacement.
+        if (_photos is IList<MediaFile> mutable)
+        {
+            for (int i = 0; i < mutable.Count; i++)
+            {
+                if (mutable[i].Id == updated.Id)
+                {
+                    mutable[i] = updated;
+                    break;
+                }
+            }
+        }
+
+        if (Current?.Id == updated.Id)
+        {
+            Current = updated;
+            NotifyDerived();
+        }
+    }
 
     private async Task LoadCurrentAsync()
     {

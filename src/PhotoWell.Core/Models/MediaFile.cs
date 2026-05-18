@@ -51,6 +51,8 @@ public class MediaFile : INotifyPropertyChanged
     public string? AiModelUsed { get; set; }
     /// <summary>Prompt version used when AiDescription was generated (e.g. "v10a"). Null for photos analyzed before version tracking was added.</summary>
     public string? PromptVersion { get; set; }
+    /// <summary>Post-processing pipeline version applied to AiDescription (e.g. "pp1"). Null for photos processed before this tracking was added.</summary>
+    public string? PostProcessVersion { get; set; }
     /// <summary>User-edited description. NULL = never edited. Takes display priority over AiDescription.</summary>
     public string? UserDescription { get; set; }
     public DateTime? DescriptionEditedAt { get; set; }
@@ -104,18 +106,21 @@ public class MediaFile : INotifyPropertyChanged
     public bool IsAnalysisPending => AnalysisStatus is AnalysisStatus.Pending or AnalysisStatus.VisionPending;
 
     /// <summary>Set at app startup from AppSettings. Used in IsDescriptionOutdated without creating a Core→Common project dependency.</summary>
-    [NotMapped] public static string CurrentVisionModel    { get; set; } = "";
-    [NotMapped] public static string CurrentPromptVersion  { get; set; } = "";
+    [NotMapped] public static string CurrentVisionModel       { get; set; } = "";
+    [NotMapped] public static string CurrentPromptVersion     { get; set; } = "";
+    [NotMapped] public static string CurrentPostProcessVersion { get; set; } = "";
 
-    /// <summary>True when the photo has an AI description generated with an outdated model or prompt version.
-    /// Drives the ⟳ outdated badge on thumbnails and the ⚠ outdated indicator in the detail pane.</summary>
+    /// <summary>True when the photo has an AI description generated with an outdated model, prompt version,
+    /// or post-processing pipeline version. Drives the ⟳ outdated badge on thumbnails and the ⚠ indicator in the detail pane.</summary>
     [NotMapped]
     public bool IsDescriptionOutdated =>
         !string.IsNullOrEmpty(AiDescription) &&
         UserDescription == null &&
         (AiModelUsed != CurrentVisionModel ||
          PromptVersion == null ||
-         PromptVersion != CurrentPromptVersion);
+         PromptVersion != CurrentPromptVersion ||
+         PostProcessVersion == null ||
+         PostProcessVersion != CurrentPostProcessVersion);
 
     /// <summary>Drive root (e.g. "E:") used in offline tooltip. Not persisted.</summary>
     [NotMapped]
