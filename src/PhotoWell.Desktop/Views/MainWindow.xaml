@@ -402,15 +402,16 @@
                     <Border Background="#1AF5A623" BorderBrush="#40F5A623" BorderThickness="1"
                             CornerRadius="4" Padding="8,2" Margin="0,4,0,0"
                             HorizontalAlignment="Left"
-                            ToolTip="The search index is updating in the background — wait for this to finish before searching for consistent results"
                             Visibility="{Binding IsFtsRefreshing, Converter={StaticResource BoolToVis}}">
-                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center"
+                                    ToolTip="The search index is rebuilding after a recent import or re-analysis — searches may miss newly updated photos until this finishes.">
                             <ProgressBar IsIndeterminate="True" Width="10" Height="10"
                                          Foreground="#F5A623" Background="Transparent"
                                          BorderThickness="0" VerticalAlignment="Center"
                                          Margin="0,0,5,0"/>
                             <TextBlock Text="Indexing library… search results may vary"
-                                       Foreground="#F5A623" FontSize="11" VerticalAlignment="Center"/>
+                                       Foreground="#F5A623" FontSize="11" VerticalAlignment="Center"
+                                       ToolTip="The search index is rebuilding after a recent import or re-analysis — searches may miss newly updated photos until this finishes."/>
                         </StackPanel>
                     </Border>
                     <!-- Semantic unavailable hint — shown when searching but CLIP model is missing -->
@@ -727,7 +728,7 @@
                 <Button Content="🔄  Re-analyze All"
                         Command="{Binding ReanalyzeAllCommand}"
                         Style="{DynamicResource NavButtonStyle}"
-                        ToolTip="Re-run AI description and tagging on every photo in the library"
+                        ToolTip="Re-run AI analysis on every photo — including ones that were never analyzed (e.g. Ollama was offline at import time) and ones that are already up to date."
                         Margin="0,2"/>
                 <Button Style="{DynamicResource NavButtonStyle}"
                         Command="{Binding ReanalyzeOutdatedCommand}"
@@ -735,7 +736,8 @@
                     <Button.ToolTip>
                         <ToolTip>
                             <TextBlock>
-                                <Run Text="Re-analyze photos whose descriptions used an older model or prompt version.&#x0a;"/>
+                                <Run Text="Re-analyze only photos whose AI description was generated with an older prompt or model version.&#x0a;"/>
+                                <Run Text="Photos that were never analyzed are not included — use Re-analyze All for those.&#x0a;"/>
                                 <Run Text="{Binding OutdatedDescriptionCount, StringFormat='{}{0} photo(s) need updating.'}"/>
                             </TextBlock>
                         </ToolTip>

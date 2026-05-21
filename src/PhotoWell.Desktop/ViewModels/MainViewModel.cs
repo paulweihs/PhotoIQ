@@ -4454,9 +4454,12 @@ public class MainViewModel : ObservableObject, IDisposable
 		}
 		_loadCts = new CancellationTokenSource();
 		CancellationToken ct = _loadCts.Token;
-		MultiSelectedItems.Clear();
-		_selectionAnchor = null;
-		NotifyMultiSelectChanged();
+		if (!IsRelatedImagesMode)
+		{
+			MultiSelectedItems.Clear();
+			_selectionAnchor = null;
+			NotifyMultiSelectChanged();
+		}
 		IsLoading = true;
 		try
 		{
@@ -5453,6 +5456,7 @@ public class MainViewModel : ObservableObject, IDisposable
 				});
 			}
 			AppLog.Info($"[PRIORITY] ReanalyzeOneDuringImportAsync complete: {fileName}");
+			await RefreshAfterBulkReanalysisAsync();
 		}
 		catch (Exception ex)
 		{
@@ -5526,6 +5530,7 @@ public class MainViewModel : ObservableObject, IDisposable
 				_activeViewerVm?.PhotoReanalyzed?.Invoke(val);
 			}
 			StatusText = Progress.ResultMessage;
+			await RefreshAfterBulkReanalysisAsync();
 		}
 	}
 
@@ -5999,26 +6004,53 @@ public class MainViewModel : ObservableObject, IDisposable
 
 	private void CopyToFolder()
 	{
-		MediaFile? selectedMediaFile = SelectedMediaFile;
-		string text = ((selectedMediaFile != null) ? selectedMediaFile.FilePath : null);
-		if (text == null || !File.Exists(text))
+		if (HasMultiSelection)
 		{
-			return;
-		}
-		SaveFileDialog saveFileDialog = new SaveFileDialog
-		{
-			Title = "Copy photo to…",
-			FileName = Path.GetFileName(text),
-			Filter = "All Files|*.*",
-			InitialDirectory = Path.GetDirectoryName(text)
-		};
-		if (saveFileDialog.ShowDialog() == true)
-		{
-			string fileName = saveFileDialog.FileName;
-			if (!string.Equals(text, fileName, StringComparison.OrdinalIgnoreCase))
+			var files = MultiSelectedItems
+				.Where(f => f.FilePath != null && File.Exists(f.FilePath))
+				.ToList();
+			if (files.Count == 0) return;
+
+			var dlg = new OpenFolderDialog { Title = "Copy photos to folder…" };
+			if (dlg.ShowDialog() != true) return;
+
+			string destFolder = dlg.FolderName;
+			int copied = 0, skipped = 0;
+			foreach (var file in files)
 			{
-				File.Copy(text, fileName, overwrite: false);
-				StatusText = "Copied to " + Path.GetFileName(fileName);
+				string dest = Path.Combine(destFolder, Path.GetFileName(file.FilePath));
+				if (string.Equals(file.FilePath, dest, StringComparison.OrdinalIgnoreCase)) continue;
+				if (File.Exists(dest)) { skipped++; continue; }
+				File.Copy(file.FilePath, dest);
+				copied++;
+			}
+			StatusText = skipped > 0
+				? $"Copied {copied} photo{(copied == 1 ? "" : "s")} ({skipped} skipped — already exist)"
+				: $"Copied {copied} photo{(copied == 1 ? "" : "s")} to {Path.GetFileName(destFolder)}";
+		}
+		else
+		{
+			MediaFile? selectedMediaFile = SelectedMediaFile;
+			string text = ((selectedMediaFile != null) ? selectedMediaFile.FilePath : null);
+			if (text == null || !File.Exists(text))
+			{
+				return;
+			}
+			SaveFileDialog saveFileDialog = new SaveFileDialog
+			{
+				Title = "Copy photo to…",
+				FileName = Path.GetFileName(text),
+				Filter = "All Files|*.*",
+				InitialDirectory = Path.GetDirectoryName(text)
+			};
+			if (saveFileDialog.ShowDialog() == true)
+			{
+				string fileName = saveFileDialog.FileName;
+				if (!string.Equals(text, fileName, StringComparison.OrdinalIgnoreCase))
+				{
+					File.Copy(text, fileName, overwrite: false);
+					StatusText = "Copied to " + Path.GetFileName(fileName);
+				}
 			}
 		}
 	}
@@ -6921,6 +6953,10 @@ public class MainViewModel : ObservableObject, IDisposable
 			return false;
 		}
 		if (ActiveView == GalleryView.Album)
+		{
+			return false;
+		}
+		if (IsRelatedImagesMode)
 		{
 			return false;
 		}
