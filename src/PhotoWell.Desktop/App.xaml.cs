@@ -431,7 +431,7 @@ public partial class App : Application
             fixDb.Database.ExecuteSqlRaw("""
                 UPDATE MediaFiles
                 SET    FaceDetectionStatus = 0
-                WHERE  FaceDetectionStatus = 2
+                WHERE  FaceDetectionStatus = 1
                 AND    NOT EXISTS (
                     SELECT 1 FROM Faces WHERE Faces.MediaFileId = MediaFiles.Id
                 )
