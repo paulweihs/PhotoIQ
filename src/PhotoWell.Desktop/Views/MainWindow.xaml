@@ -1888,8 +1888,20 @@
                         </Grid.ColumnDefinitions>
                         <TextBlock Grid.Column="0" Text="Date" FontSize="12"
                                    Foreground="{DynamicResource SecondaryTextBrush}"/>
-                        <TextBlock Grid.Column="1" Text="{Binding SelectedDateText}"
-                                   FontSize="12" Foreground="{DynamicResource ForegroundBrush}"/>
+                        <StackPanel Grid.Column="1" Orientation="Horizontal">
+                            <TextBlock Text="{Binding SelectedDateText}"
+                                       FontSize="12" Foreground="{DynamicResource ForegroundBrush}"
+                                       VerticalAlignment="Center"/>
+                            <Button Command="{Binding EditDateTakenCommand}"
+                                    ToolTip="Edit date and time"
+                                    Margin="5,0,0,0" Padding="2,0"
+                                    Background="Transparent" BorderThickness="0"
+                                    Cursor="Hand" VerticalAlignment="Center"
+                                    Visibility="{Binding SelectedMediaFile, Converter={StaticResource NullToCollapsed}}">
+                                <TextBlock Text="✎" FontSize="11"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"/>
+                            </Button>
+                        </StackPanel>
                     </Grid>
 
                     <!-- Time taken -->

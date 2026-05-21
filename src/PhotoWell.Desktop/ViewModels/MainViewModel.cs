@@ -53,6 +53,8 @@ public class MainViewModel : ObservableObject, IDisposable
 
 	private readonly IFolderWatcherService _folderWatcher;
 
+	private readonly IExifEditService _exifEditService;
+
 	/// <summary>The currently open photo viewer VM, or null when the viewer is closed.</summary>
 	private PhotoViewerViewModel? _activeViewerVm;
 
@@ -4200,13 +4202,14 @@ public class MainViewModel : ObservableObject, IDisposable
 		return list;
 	}
 
-	public MainViewModel(IServiceScopeFactory scopeFactory, MetricsViewModel metrics, ISemanticSearchService semanticSearch, ImportProgressViewModel progress, IFolderWatcherService folderWatcher)
+	public MainViewModel(IServiceScopeFactory scopeFactory, MetricsViewModel metrics, ISemanticSearchService semanticSearch, ImportProgressViewModel progress, IFolderWatcherService folderWatcher, IExifEditService exifEditService)
 	{
 		_scopeFactory = scopeFactory;
 		Metrics = metrics;
 		_semanticSearch = semanticSearch;
 		Progress = progress;
 		_folderWatcher = folderWatcher;
+		_exifEditService = exifEditService;
 		_sortHistory = LoadSortHistory();
 		((ObservableObject)Progress).PropertyChanged += delegate(object? _, PropertyChangedEventArgs e)
 		{
@@ -6052,6 +6055,57 @@ public class MainViewModel : ObservableObject, IDisposable
 					StatusText = "Copied to " + Path.GetFileName(fileName);
 				}
 			}
+		}
+	}
+
+	public IAsyncRelayCommand EditDateTakenCommand =>
+		_editDateTakenCommand ??= new AsyncRelayCommand(EditDateTakenAsync, () => SelectedMediaFile != null && !SelectedIsOffline);
+	private AsyncRelayCommand? _editDateTakenCommand;
+
+	private async Task EditDateTakenAsync()
+	{
+		var mf = SelectedMediaFile;
+		if (mf == null) return;
+
+		var dlg = new PhotoWell.Desktop.Views.EditDateDialog(mf.DateTaken)
+		{
+			Owner = Application.Current.MainWindow
+		};
+		if (dlg.ShowDialog() != true || dlg.ResultDateTime is not { } newDate) return;
+
+		// Persist to database
+		mf.DateTaken = newDate;
+		await WithRepo(r => ((IRepository<MediaFile>)(object)r).UpdateAsync(mf));
+		OnPropertyChanged(nameof(SelectedDateText));
+		OnPropertyChanged(nameof(SelectedTimeText));
+
+		if (dlg.WriteToFile && File.Exists(mf.FilePath))
+		{
+			try
+			{
+				if (dlg.CreateBackup)
+					File.Copy(mf.FilePath, mf.FilePath + ".bak", overwrite: true);
+
+				var progress = new Progress<string>(msg => StatusText = msg);
+				await _exifEditService.EnsureAvailableAsync(progress);
+
+				var formatted = newDate.ToString("yyyy:MM:dd HH:mm:ss");
+				await _exifEditService.WriteTagAsync(mf.FilePath, "DateTimeOriginal", formatted);
+				await _exifEditService.WriteTagAsync(mf.FilePath, "CreateDate", formatted);
+
+				StatusText = dlg.CreateBackup
+					? "Date updated and written to file (original backed up as .bak)"
+					: "Date updated and written to file";
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error($"EditDateTaken file write failed: {ex.Message}");
+				StatusText = $"Date saved to library, but file write failed: {ex.Message}";
+			}
+		}
+		else
+		{
+			StatusText = "Date updated in library";
 		}
 	}
 

@@ -115,6 +115,27 @@ public record TagPrediction(string Label, TagCategory Category, float Confidence
 /// or a temp JPEG copy. Always dispose the result to clean up temp files.
 /// Returns null if the file cannot be decoded.
 /// </summary>
+/// <summary>
+/// Writes EXIF metadata tags to photo files on disk using ExifTool.
+/// ExifTool is downloaded on first use and cached in %LOCALAPPDATA%\PhotoWell\tools\.
+/// </summary>
+public interface IExifEditService
+{
+    /// <summary>True when exiftool.exe is present and ready.</summary>
+    bool IsAvailable { get; }
+
+    /// <summary>Downloads exiftool.exe if not already present. Safe to call repeatedly.</summary>
+    Task EnsureAvailableAsync(IProgress<string>? status = null, CancellationToken ct = default);
+
+    /// <summary>
+    /// Writes a single EXIF tag to <paramref name="filePath"/> in place.
+    /// Call EnsureAvailableAsync before this method.
+    /// </summary>
+    /// <param name="tag">ExifTool tag name, e.g. "DateTimeOriginal".</param>
+    /// <param name="value">Raw value string in the format ExifTool expects.</param>
+    Task WriteTagAsync(string filePath, string tag, string value, CancellationToken ct = default);
+}
+
 public interface IImagePreprocessor
 {
     Task<PreparedImage?> PrepareAsync(string filePath, CancellationToken ct = default);

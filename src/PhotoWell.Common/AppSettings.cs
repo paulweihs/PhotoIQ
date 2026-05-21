@@ -22,6 +22,10 @@ public static class AppSettings
     public static string AppLogPath       => Path.Combine(AppDataPath, "app.log");
     public static string ImportQueuePath  => Path.Combine(AppDataPath, "import_queue.json");
 
+    public static string ToolsPath     => Path.Combine(AppDataPath, "tools");
+    public static string ExifToolPath  => Path.Combine(ToolsPath, "exiftool.exe");
+    public const  string ExifToolVersionUrl = "https://exiftool.org/ver.txt";
+
     public static string DuplicateIgnoredFoldersPath     => Path.Combine(AppDataPath, "duplicate_ignored_folders.txt");
     public static string FirstRunFlagPath               => Path.Combine(AppDataPath, ".first_run_complete");
     public static string UpdateOutdatedFlagPath         => Path.Combine(AppDataPath, ".update_outdated_pending");
@@ -174,5 +178,6 @@ public static class AppSettings
         Directory.CreateDirectory(ThumbnailsPath);
         Directory.CreateDirectory(ModelsPath);
         Directory.CreateDirectory(FacesPath);
+        Directory.CreateDirectory(ToolsPath);
     }
 }

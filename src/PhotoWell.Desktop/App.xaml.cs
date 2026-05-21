@@ -163,6 +163,8 @@ public partial class App : Application
         services.AddScoped<IFaceService, FaceService>();
         services.AddSingleton<IFaceModelDownloadService, FaceModelDownloadService>();
         services.AddSingleton<IFolderWatcherService, FolderWatcherService>();
+        services.AddSingleton<IExifEditService>(_ =>
+            new PhotoWell.Services.ExifTool.ExifEditService(AppSettings.ExifToolPath));
         services.AddScoped<IExportService, PhotoWell.Services.Export.ExportService>();
 
         // ── ViewModels ────────────────────────────────────────────────────────
