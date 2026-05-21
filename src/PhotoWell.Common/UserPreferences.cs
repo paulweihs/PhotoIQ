@@ -56,6 +56,9 @@ public class UserPreferences
     /// <summary>Index into the tips array for the next tip to display; cycles through all tips.</summary>
     public int LastTipIndex { get; set; } = 0;
 
+    /// <summary>Set to true after a one-time reset that re-queues photos processed under the buggy detection normalization.</summary>
+    public bool FaceDetectionNormalizationFixed { get; set; } = false;
+
     /// <summary>User-configured external editors shown in the Send To submenu.</summary>
     public List<ExternalEditorEntry> ExternalEditors { get; set; } = [];
 

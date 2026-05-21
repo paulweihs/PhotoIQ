@@ -184,9 +184,9 @@ public sealed class FaceDetectionEngine : IDisposable
                 for (int x = 0; x < DetW; x++)
                 {
                     int i = rowBase + x;
-                    data[i]           = row[x].R / 127.0f - 1.0f;
-                    data[plane + i]   = row[x].G / 127.0f - 1.0f;
-                    data[2 * plane + i] = row[x].B / 127.0f - 1.0f;
+                    data[i]           = (row[x].R - 127.5f) / 128.0f;
+                    data[plane + i]   = (row[x].G - 127.5f) / 128.0f;
+                    data[2 * plane + i] = (row[x].B - 127.5f) / 128.0f;
                 }
             }
         });

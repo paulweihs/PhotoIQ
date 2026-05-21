@@ -419,6 +419,27 @@ public partial class App : Application
                 """);
         });
 
+        // ── One-time face detection re-queue (normalization fix) ─────────────
+        // Prior builds used the wrong preprocessing formula for UltraFace-RFB-640
+        // (pixel/127.0-1.0 instead of (pixel-127.5)/128.0), causing all confidence
+        // scores to fall below threshold. Reset photos whose Complete status has no
+        // corresponding Face rows so the background worker re-processes them.
+        if (!prefs.FaceDetectionNormalizationFixed)
+        {
+            using var fixScope = Services.CreateScope();
+            var fixDb = fixScope.ServiceProvider.GetRequiredService<PhotoWellContext>();
+            fixDb.Database.ExecuteSqlRaw("""
+                UPDATE MediaFiles
+                SET    FaceDetectionStatus = 0
+                WHERE  FaceDetectionStatus = 2
+                AND    NOT EXISTS (
+                    SELECT 1 FROM Faces WHERE Faces.MediaFileId = MediaFiles.Id
+                )
+                """);
+            prefs.FaceDetectionNormalizationFixed = true;
+            prefs.Save();
+        }
+
         // ── CLIP model download (first run / missing files) ────────────────────
         // Downloads any absent model files before attempting to initialise the
         // ONNX sessions.  Progress is shown on the splash with a green bar.
