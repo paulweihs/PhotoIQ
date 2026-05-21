@@ -1896,8 +1896,7 @@
                                     ToolTip="Edit date and time"
                                     Margin="5,0,0,0" Padding="2,0"
                                     Background="Transparent" BorderThickness="0"
-                                    Cursor="Hand" VerticalAlignment="Center"
-                                    Visibility="{Binding SelectedMediaFile, Converter={StaticResource NullToCollapsed}}">
+                                    Cursor="Hand" VerticalAlignment="Center">
                                 <TextBlock Text="✎" FontSize="11"
                                            Foreground="{DynamicResource SecondaryTextBrush}"/>
                             </Button>
