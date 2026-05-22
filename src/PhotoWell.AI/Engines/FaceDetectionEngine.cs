@@ -54,8 +54,8 @@ public sealed class FaceDetectionEngine : IDisposable
         try
         {
             AppLog.Info($"FaceDetectionEngine: Loading models from {_modelsPath}");
-            var det = await Task.Run(() => new InferenceSession(detPath));
-            var emb = await Task.Run(() => new InferenceSession(embPath));
+            var det = await Task.Run(() => new InferenceSession(detPath, MakeSessionOptions()));
+            var emb = await Task.Run(() => new InferenceSession(embPath, MakeSessionOptions()));
             _detSession?.Dispose();
             _embSession?.Dispose();
             _detSession = det;
@@ -294,5 +294,20 @@ public sealed class FaceDetectionEngine : IDisposable
     {
         _detSession?.Dispose();
         _embSession?.Dispose();
+    }
+
+    private static SessionOptions MakeSessionOptions()
+    {
+        var opts = new SessionOptions();
+        try
+        {
+            opts.AppendExecutionProvider_DML();
+            AppLog.Info("FaceDetectionEngine: DirectML execution provider registered.");
+        }
+        catch (Exception ex)
+        {
+            AppLog.Info($"FaceDetectionEngine: DirectML unavailable ({ex.Message}), falling back to CPU.");
+        }
+        return opts;
     }
 }

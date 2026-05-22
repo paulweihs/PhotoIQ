@@ -52,7 +52,7 @@ public sealed class ClipTextEngine : IDisposable
         // InferenceSession() is CPU-bound and can take 5–30 s on first load.
         // Run on the thread pool so the caller is never blocked.
         // Create before swapping so that a constructor or metadata failure leaves the old session intact.
-        var newSession = await Task.Run(() => new InferenceSession(_modelPath));
+        var newSession = await Task.Run(() => new InferenceSession(_modelPath, MakeSessionOptions()));
         string? inputName, outputName;
         bool outputIsPooled;
         try
@@ -167,4 +167,12 @@ public sealed class ClipTextEngine : IDisposable
     }
 
     public void Dispose() => _session?.Dispose();
+
+    private static SessionOptions MakeSessionOptions()
+    {
+        var opts = new SessionOptions();
+        try   { opts.AppendExecutionProvider_DML(); }
+        catch { /* DirectML unavailable — CPU fallback */ }
+        return opts;
+    }
 }

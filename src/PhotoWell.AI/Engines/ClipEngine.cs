@@ -57,7 +57,7 @@ public class ClipEngine : IDisposable
         // InferenceSession() is CPU-bound and can take 5–30 s on first load.
         // Run on the thread pool so the caller is never blocked.
         // Create before swapping so that a constructor failure leaves the old session intact.
-        var newSession = await Task.Run(() => new InferenceSession(modelPath));
+        var newSession = await Task.Run(() => new InferenceSession(modelPath, MakeSessionOptions()));
         _session?.Dispose();
         _session = newSession;
     }
@@ -137,4 +137,12 @@ public class ClipEngine : IDisposable
 
     /// <summary>Disposes the ONNX InferenceSession and releases GPU/CPU resources.</summary>
     public void Dispose() => _session?.Dispose();
+
+    private static SessionOptions MakeSessionOptions()
+    {
+        var opts = new SessionOptions();
+        try   { opts.AppendExecutionProvider_DML(); }
+        catch { /* DirectML unavailable — CPU fallback */ }
+        return opts;
+    }
 }
