@@ -60,6 +60,10 @@ public sealed class FaceDetectionEngine : IDisposable
             _embSession?.Dispose();
             _detSession = det;
             _embSession = emb;
+            AppLog.Info($"FaceDetectionEngine: Detection inputs:  {string.Join(", ", det.InputMetadata.Keys)}");
+            AppLog.Info($"FaceDetectionEngine: Detection outputs: {string.Join(", ", det.OutputMetadata.Keys)}");
+            AppLog.Info($"FaceDetectionEngine: Embedding inputs:  {string.Join(", ", emb.InputMetadata.Keys)}");
+            AppLog.Info($"FaceDetectionEngine: Embedding outputs: {string.Join(", ", emb.OutputMetadata.Keys)}");
             AppLog.Info($"FaceDetectionEngine: Successfully initialized with detection and embedding sessions. IsInitialized={IsInitialized}");
         }
         catch (Exception ex)
@@ -134,12 +138,13 @@ public sealed class FaceDetectionEngine : IDisposable
                 var thumbPath = Path.Combine(facesOutputDir, $"{faceId}.jpg");
                 await faceImg.SaveAsJpegAsync(thumbPath);
 
-                // Generate embedding
+                // Generate embedding — use the model's actual input name, not a hardcoded "input"
                 var embTensor = BuildEmbeddingTensor(faceImg);
+                var embInputName = _embSession!.InputMetadata.Keys.First();
                 float[] embedding;
                 using (var embResults = _embSession!.Run(
                 [
-                    NamedOnnxValue.CreateFromTensor("input", embTensor)
+                    NamedOnnxValue.CreateFromTensor(embInputName, embTensor)
                 ]))
                 {
                     embedding = embResults.First().AsTensor<float>().ToArray();
