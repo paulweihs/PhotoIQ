@@ -62,7 +62,9 @@ public sealed class FaceDetectionEngine : IDisposable
             _embSession = emb;
             AppLog.Info($"FaceDetectionEngine: Detection inputs:  {string.Join(", ", det.InputMetadata.Keys)}");
             AppLog.Info($"FaceDetectionEngine: Detection outputs: {string.Join(", ", det.OutputMetadata.Keys)}");
-            AppLog.Info($"FaceDetectionEngine: Embedding inputs:  {string.Join(", ", emb.InputMetadata.Keys)}");
+            var embMeta  = emb.InputMetadata[emb.InputMetadata.Keys.First()];
+            var embShape = string.Join("×", embMeta.Dimensions);
+            AppLog.Info($"FaceDetectionEngine: Embedding inputs:  {string.Join(", ", emb.InputMetadata.Keys)} shape=[{embShape}]");
             AppLog.Info($"FaceDetectionEngine: Embedding outputs: {string.Join(", ", emb.OutputMetadata.Keys)}");
             AppLog.Info($"FaceDetectionEngine: Successfully initialized with detection and embedding sessions. IsInitialized={IsInitialized}");
         }
@@ -199,11 +201,14 @@ public sealed class FaceDetectionEngine : IDisposable
         return new DenseTensor<float>(data, [1, 3, DetH, DetW]);
     }
 
-    private static DenseTensor<float> BuildEmbeddingTensor(Image<Rgb24> face)
+    private DenseTensor<float> BuildEmbeddingTensor(Image<Rgb24> face)
     {
-        // face is already 112x112
-        int plane = EmbSize * EmbSize;
-        var data  = new float[3 * plane];
+        // face is already EmbSize×EmbSize
+        // Detect layout from model metadata: NCHW=[1,3,H,W] or NHWC=[1,H,W,3]
+        var dims = _embSession!.InputMetadata[_embSession.InputMetadata.Keys.First()].Dimensions;
+        bool isNhwc = dims.Length == 4 && dims[3] == 3;
+
+        var data = new float[3 * EmbSize * EmbSize];
 
         face.ProcessPixelRows(accessor =>
         {
@@ -213,15 +218,31 @@ public sealed class FaceDetectionEngine : IDisposable
                 int rowBase = y * EmbSize;
                 for (int x = 0; x < EmbSize; x++)
                 {
-                    int i = rowBase + x;
-                    data[i]           = row[x].R / 127.5f - 1.0f;
-                    data[plane + i]   = row[x].G / 127.5f - 1.0f;
-                    data[2 * plane + i] = row[x].B / 127.5f - 1.0f;
+                    float r = (row[x].R - 127.5f) / 128.0f;
+                    float g = (row[x].G - 127.5f) / 128.0f;
+                    float b = (row[x].B - 127.5f) / 128.0f;
+                    if (isNhwc)
+                    {
+                        int i = (rowBase + x) * 3;
+                        data[i]     = r;
+                        data[i + 1] = g;
+                        data[i + 2] = b;
+                    }
+                    else
+                    {
+                        int i = rowBase + x;
+                        int plane = EmbSize * EmbSize;
+                        data[i]             = r;
+                        data[plane + i]     = g;
+                        data[2 * plane + i] = b;
+                    }
                 }
             }
         });
 
-        return new DenseTensor<float>(data, [1, 3, EmbSize, EmbSize]);
+        return isNhwc
+            ? new DenseTensor<float>(data, [1, EmbSize, EmbSize, 3])
+            : new DenseTensor<float>(data, [1, 3, EmbSize, EmbSize]);
     }
 
     // ── Post-processing ───────────────────────────────────────────────────────
