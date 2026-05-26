@@ -179,11 +179,15 @@ public class MediaFileRepository : IMediaFileRepository
     /// <param name="id">The MediaFile ID to delete.</param>
     public async Task DeleteAsync(Guid id)
     {
-        var e = await _context.MediaFiles.FindAsync(id);
+        var e = await _context.MediaFiles
+            .Include(m => m.Faces)
+            .FirstOrDefaultAsync(m => m.Id == id);
         if (e == null) return;
+        var thumbPaths = e.Faces.Select(f => f.ThumbnailPath).ToList();
         _context.MediaFiles.Remove(e);
         await _context.SaveChangesAsync();
         await FtsQueryHelper.DeleteSingleAsync(_context.Database, id);
+        DeleteFaceThumbnailFiles(thumbPaths);
     }
 
     /// <summary>
@@ -248,11 +252,18 @@ public class MediaFileRepository : IMediaFileRepository
 
         if (toDelete.Count == 0) return 0;
 
+        var ids = toDelete.Select(m => m.Id).ToList();
+        var thumbPaths = await _context.Faces
+            .Where(f => ids.Contains(f.MediaFileId))
+            .Select(f => f.ThumbnailPath)
+            .ToListAsync();
+
         _context.MediaFiles.RemoveRange(toDelete);
         await _context.SaveChangesAsync();
 
         // Batch-delete from the FTS index using helper (handles chunking and parameterization).
         await FtsQueryHelper.DeleteBatchAsync(_context.Database, toDelete.Select(mf => mf.Id));
+        DeleteFaceThumbnailFiles(thumbPaths);
 
         return toDelete.Count;
     }
@@ -369,9 +380,14 @@ public class MediaFileRepository : IMediaFileRepository
 
     public async Task DeleteFacesForPhotoAsync(Guid mediaFileId)
     {
+        var thumbPaths = await _context.Faces
+            .Where(f => f.MediaFileId == mediaFileId)
+            .Select(f => f.ThumbnailPath)
+            .ToListAsync();
         await _context.Faces
             .Where(f => f.MediaFileId == mediaFileId)
             .ExecuteDeleteAsync();
+        DeleteFaceThumbnailFiles(thumbPaths);
     }
 
     public async Task<IReadOnlyList<Guid>> GetFaceDetectionPendingIdsAsync(int limit = 200)
@@ -1137,5 +1153,12 @@ public class MediaFileRepository : IMediaFileRepository
             .ContinueWith(t => (IReadOnlyList<(Guid, ulong, string?, string?, string?, string?, bool)>)
                 t.Result.Select(r => (r.Id, r.Hash, r.AiDescription, r.AiModelUsed, r.PromptVersion, r.PostProcessVersion, r.IsAnalyzed))
                         .ToList());
+    }
+
+    private static void DeleteFaceThumbnailFiles(IEnumerable<string?> paths)
+    {
+        foreach (var path in paths)
+            if (!string.IsNullOrEmpty(path))
+                try { File.Delete(path); } catch { }
     }
 }

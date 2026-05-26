@@ -4880,7 +4880,7 @@ public class MainViewModel : ObservableObject, IDisposable
 						goto IL_04a1;
 					}
 					IL_04a1:
-					await Task.Delay(TimeSpan.FromSeconds(2.0), ct);
+					await Task.Delay(TimeSpan.FromMilliseconds(50), ct);
 				}
 			}
 			catch (OperationCanceledException)

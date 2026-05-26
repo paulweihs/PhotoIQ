@@ -440,6 +440,41 @@ public partial class App : Application
             prefs.Save();
         }
 
+        // ── One-time orphaned face thumbnail cleanup ──────────────────────────
+        // Face thumbnail .jpg files accumulate on disk without a matching Face DB row when:
+        //   (a) the embedding step crashed and DetectAsync returned empty (no BatchAddFacesAsync)
+        //   (b) a MediaFile was removed from the library (cascade deletes the Face row but not the file)
+        // Going forward both paths now delete the files. This sweep cleans up the historical backlog.
+        if (!prefs.OrphanedFaceThumbnailsCleanedUp)
+        {
+            try
+            {
+                var facesDir = AppSettings.FacesPath;
+                if (Directory.Exists(facesDir))
+                {
+                    using var cleanScope = Services.CreateScope();
+                    var cleanDb = cleanScope.ServiceProvider.GetRequiredService<PhotoWellContext>();
+                    var referenced = await cleanDb.Faces
+                        .Where(f => f.ThumbnailPath != null)
+                        .Select(f => f.ThumbnailPath!)
+                        .ToListAsync();
+                    var referencedSet = new HashSet<string>(referenced, StringComparer.OrdinalIgnoreCase);
+                    var orphans = Directory.EnumerateFiles(facesDir, "*.jpg")
+                        .Where(f => !referencedSet.Contains(f))
+                        .ToList();
+                    foreach (var f in orphans)
+                        try { File.Delete(f); } catch { }
+                    AppLog.Info($"App: Cleaned up {orphans.Count} orphaned face thumbnail(s).");
+                }
+            }
+            catch (Exception ex)
+            {
+                AppLog.Error($"App: Orphaned face thumbnail cleanup failed: {ex.GetType().Name}: {ex.Message}");
+            }
+            prefs.OrphanedFaceThumbnailsCleanedUp = true;
+            prefs.Save();
+        }
+
         // ── CLIP model download (first run / missing files) ────────────────────
         // Downloads any absent model files before attempting to initialise the
         // ONNX sessions.  Progress is shown on the splash with a green bar.

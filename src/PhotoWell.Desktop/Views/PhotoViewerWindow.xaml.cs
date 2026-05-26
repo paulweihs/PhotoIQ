@@ -125,7 +125,9 @@ public partial class PhotoViewerWindow : Window
                 IsHitTestVisible = true,
                 Tag             = face,
             };
-            rect.MouseLeftButtonDown += FaceRect_AnyClick;
+            // MouseDown: handle to prevent panning from starting; MouseUp: open popup on release (standard click)
+            rect.MouseLeftButtonDown += FaceRect_PreventPan;
+            rect.MouseLeftButtonUp   += FaceRect_AnyClick;
 
             Canvas.SetLeft(rect, left);
             Canvas.SetTop(rect,  top);
@@ -149,7 +151,8 @@ public partial class PhotoViewerWindow : Window
                 Cursor        = Cursors.Hand,
                 Tag           = face,
             };
-            labelBorder.MouseLeftButtonDown += FaceRect_AnyClick;
+            labelBorder.MouseLeftButtonDown += FaceRect_PreventPan;
+            labelBorder.MouseLeftButtonUp   += FaceRect_AnyClick;
 
             double labelY = top + h + 3;
             // If label would clip below canvas, show it above the box instead.
@@ -178,6 +181,9 @@ public partial class PhotoViewerWindow : Window
 
     // ── Face click → popup ─────────────────────────────────────────────────────
 
+    private void FaceRect_PreventPan(object sender, MouseButtonEventArgs e)
+        => e.Handled = true; // stop the event from reaching the image grid's pan handler
+
     private async void FaceRect_AnyClick(object sender, MouseButtonEventArgs e)
     {
         if (sender is not FrameworkElement fe || fe.Tag is not FaceItemViewModel face) return;
@@ -198,45 +204,83 @@ public partial class PhotoViewerWindow : Window
         var vm = (PhotoViewerViewModel)DataContext;
         _allNamedPersons = (await vm.GetAllNamedPersonsAsync()).ToList();
 
-        // Populate combo with all names; pre-fill if already named
-        FaceNameCombo.ItemsSource = _allNamedPersons.Select(p => p.Name).ToList();
-        FaceNameCombo.Text = face.MatchedName ?? "";
-        FacePopupTitle.Text = face.IsNamed ? $"Rename \"{face.MatchedName}\"" : "Who is this?";
-
-        // Show Unlink button only when the face already has a person assignment
+        // Set Text before opening — TextChanged fires and populates the suggestion list
+        FacePopupTitle.Text         = face.IsNamed ? $"Rename \"{face.MatchedName}\"" : "Who is this?";
+        FaceNameBox.Text            = face.MatchedName ?? "";
         FaceNameUnlinkBtn.Visibility = face.IsNamed ? Visibility.Visible : Visibility.Collapsed;
 
-        // Position popup below the anchor element in screen coordinates
         var screenPt = anchor.PointToScreen(new Point(0, anchor.ActualHeight + 4));
         FaceNamePopup.HorizontalOffset = screenPt.X;
         FaceNamePopup.VerticalOffset   = screenPt.Y;
         FaceNamePopup.IsOpen           = true;
-        FaceNameCombo.Focus();
+        FaceNameBox.Focus();
+        FaceNameBox.SelectAll();
     }
 
     // ── Type-ahead filtering ───────────────────────────────────────────────────
 
-    private void FaceNameCombo_PreviewKeyDown(object sender, KeyEventArgs e)
+    private void FaceNameBox_TextChanged(object sender, TextChangedEventArgs e)
     {
-        if (e.Key == Key.Enter)
+        if (_allNamedPersons.Count == 0) { SuggestionBorder.Visibility = Visibility.Collapsed; return; }
+
+        var text     = FaceNameBox.Text;
+        var allNames = _allNamedPersons.Select(p => p.Name).Where(n => n != null).Cast<string>();
+        // Empty text → show all names so the user can pick without typing
+        var filtered = text.Length == 0
+            ? allNames.ToList()
+            : allNames.Where(n => n.Contains(text, StringComparison.OrdinalIgnoreCase)).ToList();
+
+        SuggestionList.ItemsSource  = filtered.Count > 0 ? filtered : null;
+        SuggestionBorder.Visibility = filtered.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+    }
+
+    private void FaceNameBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter)  { _ = SaveFacePopupAsync(); e.Handled = true; return; }
+        if (e.Key == Key.Escape) { FaceNameCancel_Click(sender, e); return; }
+        if (e.Key == Key.Tab)
         {
+            SuggestionBorder.Visibility = Visibility.Collapsed;
+            return; // let Tab propagate to move focus to Save button
+        }
+        if (e.Key == Key.Down && SuggestionBorder.Visibility == Visibility.Visible)
+        {
+            SuggestionList.Focus();
+            SuggestionList.SelectedIndex = 0;
+            e.Handled = true;
+        }
+    }
+
+    // ── Suggestion list interaction ────────────────────────────────────────────
+
+    private void SuggestionList_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        if (SuggestionList.SelectedItem is string name)
+            ApplySuggestion(name);
+    }
+
+    private void SuggestionList_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && SuggestionList.SelectedItem is string name)
+        {
+            ApplySuggestion(name);
             _ = SaveFacePopupAsync();
             e.Handled = true;
-            return;
         }
-        if (e.Key == Key.Escape) { FaceNameCancel_Click(sender, e); return; }
-
-        // After any other key, filter dropdown options
-        Dispatcher.InvokeAsync(() =>
+        else if (e.Key == Key.Escape)
         {
-            var text = FaceNameCombo.Text;
-            var filtered = _allNamedPersons
-                .Select(p => p.Name)
-                .Where(n => n != null && n.Contains(text, StringComparison.OrdinalIgnoreCase))
-                .ToList();
-            FaceNameCombo.ItemsSource   = filtered;
-            FaceNameCombo.IsDropDownOpen = filtered.Count > 0 && text.Length > 0;
-        });
+            SuggestionBorder.Visibility = Visibility.Collapsed;
+            FaceNameBox.Focus();
+            e.Handled = true;
+        }
+    }
+
+    private void ApplySuggestion(string name)
+    {
+        FaceNameBox.Text            = name;
+        FaceNameBox.CaretIndex      = name.Length;
+        SuggestionBorder.Visibility = Visibility.Collapsed;
+        FaceNameBox.Focus();
     }
 
     // ── Save / Cancel ──────────────────────────────────────────────────────────
@@ -247,7 +291,7 @@ public partial class PhotoViewerWindow : Window
     private async Task SaveFacePopupAsync()
     {
         if (_pendingFace == null) return;
-        var name = FaceNameCombo.Text.Trim();
+        var name = FaceNameBox.Text.Trim();
         var face = _pendingFace;
         _pendingFace = null;
         FaceNamePopup.IsOpen = false;

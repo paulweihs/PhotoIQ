@@ -28,6 +28,8 @@ public partial class FaceReviewDialog : Window
         _index = 0;
         _confirmed = 0;
         NeverAskBtn.Content = $"Never ask about {personName}";
+        SubtitleText.Text   = $"While scanning your library the AI automatically matched these faces to {personName}. " +
+                               "Confirm the ones that are correct and reject the rest.";
         ShowCurrent();
     }
 
@@ -41,13 +43,11 @@ public partial class FaceReviewDialog : Window
         }
 
         var (face, photo) = _queue[_index];
-        HeaderText.Text = $"Is this {_personName}?";
-        CounterText.Text = $"{_index + 1} / {_queue.Count}";
+        HeaderText.Text      = $"Is this also {_personName}?";
+        CounterText.Text     = $"{_index + 1} of {_queue.Count} matched faces";
+        PhotoFilenameText.Text = photo.FileName;
 
-        // Load face crop thumbnail
         FaceCropImage.Source = LoadImage(face.ThumbnailPath);
-
-        // Load photo thumbnail — use small thumbnail if available, otherwise null
         PhotoThumbImage.Source = !string.IsNullOrEmpty(photo.ThumbnailSmall)
             ? LoadImage(photo.ThumbnailSmall)
             : null;

@@ -59,6 +59,9 @@ public class UserPreferences
     /// <summary>Set to true after a one-time reset that re-queues photos processed under the buggy detection normalization.</summary>
     public bool FaceDetectionNormalizationFixed { get; set; } = false;
 
+    /// <summary>Set to true after a one-time sweep that deletes face thumbnail files not referenced by any Face DB row.</summary>
+    public bool OrphanedFaceThumbnailsCleanedUp { get; set; } = false;
+
     /// <summary>User-configured external editors shown in the Send To submenu.</summary>
     public List<ExternalEditorEntry> ExternalEditors { get; set; } = [];
 
