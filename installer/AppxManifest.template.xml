@@ -72,7 +72,7 @@
       <Extensions>
         <!-- File-type associations — allows double-clicking photos to open PhotoWell -->
         <uap:Extension Category="windows.fileTypeAssociation">
-          <uap:FileTypeAssociation Name="photoiqpro-image">
+          <uap:FileTypeAssociation Name="photowell-image">
             <uap:SupportedFileTypes>
               <uap:FileType>.jpg</uap:FileType>
               <uap:FileType>.jpeg</uap:FileType>

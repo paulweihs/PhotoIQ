@@ -28,11 +28,16 @@ $ErrorActionPreference = "Stop"
 
 Add-Type -AssemblyName System.Drawing
 
-$iconPath = Resolve-Path "$PSScriptRoot\..\src\PhotoWell.Desktop\icon.ico"
+# Prefer the high-res branding PNG over the ICO — System.Drawing's ICO loader
+# doesn't handle PNG-compressed icons reliably on all .NET versions.
+$brandingPng = "$PSScriptRoot\..\branding\icon-256.png"
+$iconPath    = if (Test-Path $brandingPng) { Resolve-Path $brandingPng }
+               else { Resolve-Path "$PSScriptRoot\..\src\PhotoWell.Desktop\icon.ico" }
+
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 
-Write-Host "Source icon: $iconPath"
-Write-Host "Output dir : $OutDir`n"
+Write-Host "Source    : $iconPath"
+Write-Host "Output dir: $OutDir`n"
 
 # MSIX required assets and their canvas sizes.
 # SplashScreen is shown by Windows during app launch — wider than tall.
@@ -48,16 +53,7 @@ $assets = @(
 # App background colour — Catppuccin Mocha Base (#1E1E2E)
 $bgColor = [System.Drawing.Color]::FromArgb(0x1E, 0x1E, 0x2E)
 
-# Load the ICO. System.Drawing.Icon picks the largest embedded size.
-$stream = [System.IO.File]::OpenRead($iconPath)
-$icon   = $null
-$source = $null
-try {
-    $icon   = New-Object System.Drawing.Icon($stream)
-    $source = $icon.ToBitmap()
-} finally {
-    $stream.Dispose()
-}
+$source = New-Object System.Drawing.Bitmap([string]$iconPath)
 
 try {
     foreach ($asset in $assets) {
@@ -93,7 +89,6 @@ try {
     }
 } finally {
     $source.Dispose()
-    $icon.Dispose()
 }
 
 Write-Host "`nDone. Assets written to: $OutDir"

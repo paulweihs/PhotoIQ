@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Installs or updates PhotoIQ Pro from an unsigned MSIX bundle (sideloading).
+    Installs or updates PhotoWell from an unsigned MSIX bundle (sideloading).
 
 .DESCRIPTION
     On Windows 11 22H2 (build 22621) and later, MSIX packages can be installed
@@ -45,7 +45,7 @@ Either:
     exit 1
 }
 
-Write-Host "`nPhotoIQ Pro Installer"
+Write-Host "`nPhotoWell Installer"
 Write-Host "  Package : $(Split-Path $Bundle -Leaf)"
 
 # ── Windows version gate ──────────────────────────────────────────────────────
@@ -65,7 +65,7 @@ Options:
   B) Sign the package with a self-signed certificate (developer / testing only):
        1. In PowerShell (run as Administrator):
             `$cert = New-SelfSignedCertificate -Type Custom -Subject "CN=Luminary Software" ``
-                     -KeyUsage DigitalSignature -FriendlyName "PhotoIQ Pro Dev" ``
+                     -KeyUsage DigitalSignature -FriendlyName "PhotoWell Dev" ``
                      -CertStoreLocation "Cert:\CurrentUser\My" ``
                      -TextExtension @("2.5.29.37={text}1.3.6.1.5.5.7.3.3","2.5.29.19={text}")
        2. Export and trust the cert:
@@ -85,7 +85,7 @@ if ($build -lt 22621) {
 # ── Install ───────────────────────────────────────────────────────────────────
 Write-Host "  Installing…"
 try {
-    # ForceApplicationShutdown closes any running PhotoIQ Pro instance before updating.
+    # ForceApplicationShutdown closes any running PhotoWell instance before updating.
     Add-AppxPackage -Path $Bundle -AllowUnsigned -ForceApplicationShutdown
 }
 catch {
@@ -102,6 +102,6 @@ If the error mentions "Deployment failed with HRESULT: 0x80073CF3" (package upda
 
 Write-Host @"
 
-  PhotoIQ Pro installed successfully.
-  Launch it from the Start menu — search for "PhotoIQ Pro".
+  PhotoWell installed successfully.
+  Launch it from the Start menu — search for "PhotoWell".
 "@

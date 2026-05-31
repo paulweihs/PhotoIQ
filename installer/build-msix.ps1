@@ -1,6 +1,6 @@
 <#
 .SYNOPSIS
-    Publishes PhotoIQ Pro for x64 and arm64, packages each into a signed or
+    Publishes PhotoWell for x64 and arm64, packages each into a signed or
     unsigned .msix, and bundles both into a single .msixbundle.
 
 .DESCRIPTION
@@ -82,7 +82,7 @@ if ($Version -notmatch '^\d+\.\d+\.\d+\.\d+$') {
 Write-Host @"
 
 ╔══════════════════════════════════════════════════════╗
-║  PhotoIQ Pro  MSIX Build  v$Version
+║  PhotoWell  MSIX Build  v$Version
 ╚══════════════════════════════════════════════════════╝
   Config    : $Configuration
   Signing   : $(if ($SignThumbprint) { "cert $SignThumbprint" } else { "UNSIGNED" })
@@ -228,7 +228,7 @@ Write-Host "└─ Bundle: $(Split-Path $bundleOut -Leaf)  ($bundleMb MB)"
 Write-Host @"
 
 ╔══════════════════════════════════════════════════════╗
-║  Build complete — PhotoIQ Pro $Version
+║  Build complete — PhotoWell $Version
 ╚══════════════════════════════════════════════════════╝
 "@
 Write-Host "  Bundle  : $bundleOut"
