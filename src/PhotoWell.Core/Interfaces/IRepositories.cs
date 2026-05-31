@@ -189,6 +189,9 @@ public interface IMediaFileRepository : IRepository<MediaFile>
     /// Used by the <c>imported:</c> search prefix.
     /// </summary>
     Task<IEnumerable<MediaFile>> GetByImportedDateRangeAsync(DateTime from, DateTime to);
+
+    /// <summary>Re-indexes a single photo in the FTS5 index — call after naming a face so the person is immediately searchable.</summary>
+    Task RefreshFtsForPhotoAsync(Guid photoId);
 }
 
 public enum DuplicateGroupType { ExactHash, RawJpegPair, PerceptualSimilar }

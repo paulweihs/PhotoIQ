@@ -48,6 +48,23 @@
             </Setter>
         </Style>
 
+        <!-- Person card border — merge-selection highlight via DataTrigger.
+             Defined here (not inline in DataTemplate) so {StaticResource SurfaceBrush}
+             is resolved against Window.Resources, not the DataTemplate's ambient context. -->
+        <Style x:Key="PersonCardBorder" TargetType="Border">
+            <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
+            <Style.Triggers>
+                <Trigger Property="IsMouseOver" Value="True">
+                    <Setter Property="Background" Value="{StaticResource Surface2Brush}"/>
+                </Trigger>
+                <DataTrigger Binding="{Binding IsSelected}" Value="True">
+                    <Setter Property="Background"   Value="#33EBA0AC"/>
+                    <Setter Property="BorderBrush"  Value="#FFEBA0AC"/>
+                    <Setter Property="BorderThickness" Value="2"/>
+                </DataTrigger>
+            </Style.Triggers>
+        </Style>
+
         <!-- Primary action button -->
         <Style x:Key="ActionBtn" TargetType="Button">
             <Setter Property="Background"      Value="{StaticResource Surface2Brush}"/>
@@ -180,19 +197,10 @@
                     </ItemsControl.ItemsPanel>
                     <ItemsControl.ItemTemplate>
                         <DataTemplate DataType="{x:Type vm:PersonCardViewModel}">
-                            <Border Width="150" Margin="8" CornerRadius="8">
-                                <Border.Style>
-                                    <Style TargetType="Border">
-                                        <Setter Property="Background" Value="{StaticResource SurfaceBrush}"/>
-                                        <Style.Triggers>
-                                            <DataTrigger Binding="{Binding IsSelected}" Value="True">
-                                                <Setter Property="Background" Value="#33FFEBA0AC"/>
-                                                <Setter Property="BorderBrush" Value="#FFEBA0AC"/>
-                                                <Setter Property="BorderThickness" Value="2"/>
-                                            </DataTrigger>
-                                        </Style.Triggers>
-                                    </Style>
-                                </Border.Style>
+                            <Border Width="150" Margin="8" CornerRadius="8"
+                                    Style="{StaticResource PersonCardBorder}"
+                                    Cursor="Hand"
+                                    MouseLeftButtonUp="PersonCard_Click">
 
                                 <StackPanel Margin="12,14,12,10">
 
@@ -200,14 +208,7 @@
                                     <Border Width="100" Height="100" CornerRadius="50"
                                             HorizontalAlignment="Center"
                                             Background="{StaticResource Surface2Brush}"
-                                            ClipToBounds="True" Margin="0,0,0,10"
-                                            Cursor="Hand">
-                                        <Border.InputBindings>
-                                            <MouseBinding MouseAction="LeftClick"
-                                                          Command="{Binding DataContext.SelectForMergeCommand,
-                                                              RelativeSource={RelativeSource AncestorType=Window}}"
-                                                          CommandParameter="{Binding}"/>
-                                        </Border.InputBindings>
+                                            ClipToBounds="True" Margin="0,0,0,10">
                                         <Grid>
                                             <!-- Default avatar emoji -->
                                             <TextBlock Text="👤" FontSize="44"
@@ -247,7 +248,7 @@
                                                FontSize="11" Margin="0,4,0,8"
                                                Foreground="{StaticResource SubtextBrush}">
                                         <Run Text="{Binding PhotoCount}"/>
-                                        <Run Text="photo(s)"/>
+                                        <Run Text="photos"/>
                                     </TextBlock>
 
                                     <!-- Action buttons row -->
@@ -273,13 +274,6 @@
                                                     RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"
                                                 Visibility="{Binding IsEditing, Converter={StaticResource BoolToVis}}"/>
-
-                                        <!-- View photos -->
-                                        <Button ToolTip="View photos"
-                                                Style="{StaticResource IconBtn}" Content="🖼"
-                                                Command="{Binding DataContext.ViewPhotosCommand,
-                                                    RelativeSource={RelativeSource AncestorType=Window}}"
-                                                CommandParameter="{Binding}"/>
 
                                         <!-- Hide cluster -->
                                         <Button ToolTip="Remove from People list"

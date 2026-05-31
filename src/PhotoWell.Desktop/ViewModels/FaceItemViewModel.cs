@@ -9,9 +9,11 @@ namespace PhotoWell.Desktop.ViewModels;
 /// </summary>
 public partial class FaceItemViewModel : ObservableObject
 {
-    public Guid    FaceId        { get; }
-    public Guid?   PersonId      { get; set; }
-    public string? ThumbnailPath { get; }
+    public Guid    FaceId          { get; }
+    public Guid?   PersonId        { get; set; }
+    public string? ThumbnailPath   { get; }
+    public byte[]? Embedding       { get; }
+    public bool    IsManualMention { get; }
 
     // Normalized coordinates (0–1) relative to the source image.
     // Used by PhotoViewerWindow to draw bounding boxes at the correct position.
@@ -30,9 +32,11 @@ public partial class FaceItemViewModel : ObservableObject
 
     public FaceItemViewModel(Face face, string? personName)
     {
-        FaceId        = face.Id;
-        PersonId      = face.PersonId;
-        ThumbnailPath = face.ThumbnailPath;
+        FaceId          = face.Id;
+        PersonId        = face.PersonId;
+        ThumbnailPath   = face.ThumbnailPath;
+        Embedding       = face.Embedding;
+        IsManualMention = face.IsManualMention;
         _matchedName  = personName;
         _nameInput    = personName ?? "";
         X             = face.X;

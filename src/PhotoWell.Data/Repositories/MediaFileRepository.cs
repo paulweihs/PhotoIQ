@@ -380,12 +380,13 @@ public class MediaFileRepository : IMediaFileRepository
 
     public async Task DeleteFacesForPhotoAsync(Guid mediaFileId)
     {
+        // Manual mentions are never auto-deleted — they survive re-detection.
         var thumbPaths = await _context.Faces
-            .Where(f => f.MediaFileId == mediaFileId)
+            .Where(f => f.MediaFileId == mediaFileId && !f.IsManualMention)
             .Select(f => f.ThumbnailPath)
             .ToListAsync();
         await _context.Faces
-            .Where(f => f.MediaFileId == mediaFileId)
+            .Where(f => f.MediaFileId == mediaFileId && !f.IsManualMention)
             .ExecuteDeleteAsync();
         DeleteFaceThumbnailFiles(thumbPaths);
     }
@@ -422,7 +423,7 @@ public class MediaFileRepository : IMediaFileRepository
         if (person?.SuppressPrompt == true) return [];
 
         var rows = await _context.Faces
-            .Where(f => f.PersonId == personId && !f.MediaFile!.FacesReviewed)
+            .Where(f => f.PersonId == personId && !f.IsUserConfirmed && !f.MediaFile!.FacesReviewed)
             .OrderByDescending(f => f.IdentificationConfidence)
             .Take(limit)
             .Include(f => f.MediaFile)
@@ -711,7 +712,14 @@ public class MediaFileRepository : IMediaFileRepository
                 .Where(t => t.MediaFiles.Any(mf => mf.Id == m.Id))
                 .ToListAsync();
 
-        var tagText     = string.Join(" ", tags.Select(t => t.Name));
+        // Also index named persons linked to this photo so searching by name finds their photos.
+        var personNames = await _context.Faces
+            .Where(f => f.MediaFileId == m.Id && f.Person!.Name != null)
+            .Select(f => f.Person!.Name!)
+            .Distinct()
+            .ToListAsync();
+
+        var tagText = string.Join(" ", tags.Select(t => t.Name).Concat(personNames));
         var filename    = Path.GetFileNameWithoutExtension(m.FileName);
         var camera      = $"{m.CameraMake ?? ""} {m.CameraModel ?? ""}".Trim();
         var dateText    = BuildDateText(m.DateTaken);
@@ -725,6 +733,15 @@ public class MediaFileRepository : IMediaFileRepository
         // folder names caused false-positive search matches (e.g. "Soccer" folder).
         // Users browse by folder via the sidebar tree, not free-text search.
         await FtsQueryHelper.UpsertAsync(_context.Database, m.Id, description, tagText, filename, camera, dateText, folder: "");
+    }
+
+    public async Task RefreshFtsForPhotoAsync(Guid photoId)
+    {
+        var m = await _context.MediaFiles
+            .Include(m => m.Tags)
+            .AsNoTracking()
+            .FirstOrDefaultAsync(m => m.Id == photoId);
+        if (m != null) await UpsertFtsAsync(m);
     }
 
     /// <summary>

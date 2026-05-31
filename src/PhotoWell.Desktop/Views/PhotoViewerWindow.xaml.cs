@@ -26,7 +26,9 @@ public partial class PhotoViewerWindow : Window
     private readonly SolidColorBrush _labelFgBrush     = new(Color.FromArgb(0xFF, 0xCD, 0xD6, 0xF4));
 
     private FaceItemViewModel? _pendingFace;
+    private bool _pendingMentionMode;
     private List<Person> _allNamedPersons = [];
+    private string? _aiSuggestedName;
 
     public PhotoViewerWindow(PhotoViewerViewModel vm)
     {
@@ -102,6 +104,8 @@ public partial class PhotoViewerWindow : Window
 
         foreach (var face in vm.Faces)
         {
+            if (face.IsManualMention) continue; // no bounding box to draw
+
             double left  = offsetX + face.X * rendW;
             double top   = offsetY + face.Y * rendH;
             double w     = face.FaceWidth  * rendW;
@@ -198,16 +202,64 @@ public partial class PhotoViewerWindow : Window
         e.Handled = true;
     }
 
-    private async Task OpenFacePopupAsync(FaceItemViewModel face, FrameworkElement anchor)
+    // ── Tag person by clicking empty image area ───────────────────────────────
+
+    private async void FaceOverlayCanvas_Click(object sender, MouseButtonEventArgs e)
     {
-        _pendingFace = face;
+        // Face rect clicks mark e.Handled = true, so this only fires for empty-area clicks.
+        // Mouse is captured by the pan handler when zoomed in, so this won't fire during panning.
+        var vm = (PhotoViewerViewModel)DataContext;
+        if (vm.Current == null) return;
+
+        var pos = e.GetPosition(FaceOverlayCanvas);
+        var screenPt = FaceOverlayCanvas.PointToScreen(pos);
+        await OpenMentionPopupAsync(screenPt);
+        e.Handled = true;
+    }
+
+    private async Task OpenMentionPopupAsync(Point screenPt)
+    {
+        _pendingFace         = null;
+        _pendingMentionMode  = true;
+        _aiSuggestedName     = null;
         var vm = (PhotoViewerViewModel)DataContext;
         _allNamedPersons = (await vm.GetAllNamedPersonsAsync()).ToList();
 
-        // Set Text before opening — TextChanged fires and populates the suggestion list
-        FacePopupTitle.Text         = face.IsNamed ? $"Rename \"{face.MatchedName}\"" : "Who is this?";
-        FaceNameBox.Text            = face.MatchedName ?? "";
+        FacePopupTitle.Text           = "Tag person in photo";
+        FaceNameBox.Text              = "";
+        FaceNameUnlinkBtn.Visibility  = Visibility.Collapsed;
+        AiSuggestionBorder.Visibility = Visibility.Collapsed;
+
+        FaceNamePopup.HorizontalOffset = screenPt.X;
+        FaceNamePopup.VerticalOffset   = screenPt.Y + 8;
+        FaceNamePopup.IsOpen           = true;
+        FaceNameBox.Focus();
+    }
+
+    private async Task OpenFacePopupAsync(FaceItemViewModel face, FrameworkElement anchor)
+    {
+        _pendingFace      = face;
+        _aiSuggestedName  = null;
+        var vm = (PhotoViewerViewModel)DataContext;
+        _allNamedPersons = (await vm.GetAllNamedPersonsAsync()).ToList();
+
+        FacePopupTitle.Text          = face.IsNamed ? $"Rename \"{face.MatchedName}\"" : "Who is this?";
+        FaceNameBox.Text             = face.MatchedName ?? "";
         FaceNameUnlinkBtn.Visibility = face.IsNamed ? Visibility.Visible : Visibility.Collapsed;
+
+        // AI suggestion — only for unnamed faces with a stored embedding
+        AiSuggestionBorder.Visibility = Visibility.Collapsed;
+        if (!face.IsNamed && face.Embedding != null)
+        {
+            var suggestion = await vm.GetAiSuggestionAsync(face.Embedding);
+            if (suggestion != null)
+            {
+                var pct = (int)(suggestion.Value.Confidence * 100);
+                AiSuggestionText.Text = $"{suggestion.Value.Name}  ({pct}% match)";
+                _aiSuggestedName      = suggestion.Value.Name;
+                AiSuggestionBorder.Visibility = Visibility.Visible;
+            }
+        }
 
         var screenPt = anchor.PointToScreen(new Point(0, anchor.ActualHeight + 4));
         FaceNamePopup.HorizontalOffset = screenPt.X;
@@ -215,6 +267,15 @@ public partial class PhotoViewerWindow : Window
         FaceNamePopup.IsOpen           = true;
         FaceNameBox.Focus();
         FaceNameBox.SelectAll();
+    }
+
+    // ── AI suggestion accept ───────────────────────────────────────────────────
+
+    private async void AiSuggestionAccept_Click(object sender, RoutedEventArgs e)
+    {
+        if (_aiSuggestedName == null) return;
+        FaceNameBox.Text = _aiSuggestedName;
+        await SaveFacePopupAsync();
     }
 
     // ── Type-ahead filtering ───────────────────────────────────────────────────
@@ -290,15 +351,25 @@ public partial class PhotoViewerWindow : Window
 
     private async Task SaveFacePopupAsync()
     {
-        if (_pendingFace == null) return;
         var name = FaceNameBox.Text.Trim();
+        var vm   = (PhotoViewerViewModel)DataContext;
+
+        if (_pendingMentionMode)
+        {
+            _pendingMentionMode  = false;
+            FaceNamePopup.IsOpen = false;
+            if (!string.IsNullOrWhiteSpace(name))
+                await vm.AddPersonMentionAsync(name);
+            return;
+        }
+
+        if (_pendingFace == null) return;
         var face = _pendingFace;
         _pendingFace = null;
         FaceNamePopup.IsOpen = false;
 
         if (!string.IsNullOrWhiteSpace(name))
         {
-            var vm = (PhotoViewerViewModel)DataContext;
             await vm.AssignFacePersonAsync(face, name);
             RedrawFaceOverlay();  // refresh box color + label
         }
@@ -320,7 +391,8 @@ public partial class PhotoViewerWindow : Window
     private void FaceNameCancel_Click(object sender, RoutedEventArgs e)
     {
         FaceNamePopup.IsOpen = false;
-        _pendingFace = null;
+        _pendingFace        = null;
+        _pendingMentionMode = false;
     }
 
     // ── Zoom ─────────────────────────────────────────────────────────────────

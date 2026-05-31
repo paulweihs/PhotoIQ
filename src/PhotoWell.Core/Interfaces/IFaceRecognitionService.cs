@@ -17,6 +17,21 @@ public interface IFaceRecognitionService
     /// reloads from the DB. Call after a user names or merges a person.
     /// </summary>
     Task InvalidateCacheAsync();
+
+    /// <summary>
+    /// Returns the best-matching named person for the given embedding (no threshold applied).
+    /// Only matches against persons with a non-null name — unnamed clusters are excluded.
+    /// Returns null when there are no named persons or the embedding is empty.
+    /// </summary>
+    Task<(Guid PersonId, string Name, float Confidence)?> GetTopNamedMatchAsync(byte[] embedding);
+
+    /// <summary>
+    /// Updates a named person's AverageEmbedding with a newly assigned face embedding and
+    /// invalidates the cache. Call whenever the user manually links a face to a named person
+    /// so that person becomes discoverable by GetTopNamedMatchAsync for future suggestions.
+    /// Degrades silently — never throws.
+    /// </summary>
+    Task TrackManualAssignmentAsync(Guid personId, byte[] faceEmbedding);
 }
 
 /// <summary>Classification of how confidently a face was matched to a person.</summary>

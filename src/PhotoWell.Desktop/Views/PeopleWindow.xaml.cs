@@ -52,4 +52,15 @@ public partial class PeopleWindow : Window
             e.Handled = true;
         }
     }
+
+    private void PersonCard_Click(object sender, MouseButtonEventArgs e)
+    {
+        if (sender is not FrameworkElement fe || fe.DataContext is not PersonCardViewModel card) return;
+        var vm = (PeopleViewModel)DataContext;
+        if (card.IsEditing) return;
+        if (vm.IsMergeMode)
+            vm.SelectForMergeCommand.Execute(card);
+        else
+            vm.ViewPhotosCommand.Execute(card);
+    }
 }

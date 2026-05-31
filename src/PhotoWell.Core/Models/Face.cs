@@ -59,4 +59,9 @@ public class Face
     /// <summary>True when the user has manually confirmed or assigned this face-to-person link.
     /// Confirmed faces are preserved (by bounding-box overlap) when faces are re-detected during re-analysis.</summary>
     public bool IsUserConfirmed { get; set; } = false;
+
+    /// <summary>True when this record is a manual person tag (user clicked empty image area) rather than an
+    /// AI-detected face. IsManualMention faces have no bounding box, embedding, or thumbnail and are
+    /// never deleted by re-detection — they are purely for indexing "person is in this photo".</summary>
+    public bool IsManualMention { get; set; } = false;
 }

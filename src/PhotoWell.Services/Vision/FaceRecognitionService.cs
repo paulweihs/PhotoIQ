@@ -92,6 +92,54 @@ public sealed class FaceRecognitionService : IFaceRecognitionService
         }
     }
 
+    public async Task<(Guid PersonId, string Name, float Confidence)?> GetTopNamedMatchAsync(byte[] embedding)
+    {
+        if (embedding == null || embedding.Length == 0) return null;
+
+        var faceEmb = BytesToFloats(embedding);
+
+        using var scope = _scopeFactory.CreateScope();
+        var personRepo = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
+
+        // Load named persons in one query, build an ID→name lookup.
+        // Then filter the embedding cache to only those IDs — all in memory, no per-person DB roundtrips.
+        var namedPersons = await personRepo.GetAllNamedAsync();
+        if (namedPersons.Count == 0) return null;
+        var namedNames = namedPersons.ToDictionary(p => p.Id, p => p.Name!);
+
+        var embeddings = await GetCachedEmbeddingsAsync(CancellationToken.None);
+
+        float bestSim = 0;
+        Guid? bestId  = null;
+
+        foreach (var (personId, emb) in embeddings)
+        {
+            if (!namedNames.ContainsKey(personId)) continue;
+            float sim = CosineSimilarity(faceEmb, emb);
+            if (sim > bestSim) { bestSim = sim; bestId = personId; }
+        }
+
+        if (!bestId.HasValue) return null;
+        return (bestId.Value, namedNames[bestId.Value], bestSim);
+    }
+
+    public async Task TrackManualAssignmentAsync(Guid personId, byte[] faceEmbedding)
+    {
+        if (faceEmbedding == null || faceEmbedding.Length == 0) return;
+        try
+        {
+            var floats = BytesToFloats(faceEmbedding);
+            using var scope = _scopeFactory.CreateScope();
+            var personRepo = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
+            await UpdateAverageEmbeddingAsync(personRepo, personId, floats);
+            await InvalidateCacheAsync();
+        }
+        catch (Exception ex)
+        {
+            AppLog.Error($"FaceRecognitionService.TrackManualAssignmentAsync failed for person {personId}: {ex.Message}");
+        }
+    }
+
     // ── Cache ─────────────────────────────────────────────────────────────────
 
     private async Task<IReadOnlyList<(Guid, float[])>> GetCachedEmbeddingsAsync(CancellationToken ct)

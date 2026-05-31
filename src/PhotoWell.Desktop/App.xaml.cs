@@ -66,7 +66,17 @@ public partial class App : Application
 
     private void OnDispatcherUnhandledException(object sender, System.Windows.Threading.DispatcherUnhandledExceptionEventArgs e)
     {
-        AppLog.Error($"Unhandled UI exception: {e.Exception.GetType().Name}: {e.Exception.Message}\n{e.Exception.StackTrace}");
+        var ex = e.Exception;
+        var sb = new System.Text.StringBuilder();
+        sb.AppendLine($"Unhandled UI exception: {ex.GetType().Name}: {ex.Message}");
+        var inner = ex.InnerException;
+        while (inner != null)
+        {
+            sb.AppendLine($"  Caused by: {inner.GetType().Name}: {inner.Message}");
+            inner = inner.InnerException;
+        }
+        sb.AppendLine(ex.StackTrace);
+        AppLog.Error(sb.ToString());
         System.Windows.MessageBox.Show(
             $"An unexpected error occurred:\n\n{e.Exception.Message}\n\nThe error has been logged. Please restart PhotoWell if the app is not responding.",
             "Unexpected Error",
@@ -391,6 +401,8 @@ public partial class App : Application
             AddColumn(db.Database, "ALTER TABLE Faces ADD COLUMN IsUserConfirmed INTEGER NOT NULL DEFAULT 0");
             // Prompt suppression — skip review dialog for this person when user opts out
             AddColumn(db.Database, "ALTER TABLE People ADD COLUMN SuppressPrompt INTEGER NOT NULL DEFAULT 0");
+            // Manual person mention — user-tagged person with no detected face (survives re-detection)
+            AddColumn(db.Database, "ALTER TABLE Faces ADD COLUMN IsManualMention INTEGER NOT NULL DEFAULT 0");
 
             // ── Performance indexes (idempotent — safe to run on existing DBs) ──────
             db.Database.ExecuteSqlRaw("CREATE INDEX IF NOT EXISTS IX_MediaFiles_AnalysisStatus ON MediaFiles (AnalysisStatus)");

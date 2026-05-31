@@ -265,10 +265,13 @@ public partial class PhotoViewerViewModel : ObservableObject
             var person = await _personRepo.FindOrCreateByNameAsync(name, normalized);
             await _personRepo.LinkFaceToPersonAsync(fi.FaceId, person.Id, 1.0);
             await _repo.ConfirmFaceAsync(fi.FaceId);
+            if (fi.Embedding != null)
+                await _faceRecognitionService.TrackManualAssignmentAsync(person.Id, fi.Embedding);
         }
 
         Current.FacesReviewed = true;
         await _repo.MarkFacesReviewedAsync(Current.Id);
+        await _repo.RefreshFtsForPhotoAsync(Current.Id);
     }
 
     // ── Public helpers for face tagging UI ────────────────────────────────────
@@ -276,6 +279,15 @@ public partial class PhotoViewerViewModel : ObservableObject
     /// <summary>Returns all named persons for the type-ahead dropdown in face assignment popup.</summary>
     public Task<IReadOnlyList<Person>> GetAllNamedPersonsAsync()
         => _personRepo.GetAllNamedAsync();
+
+    /// <summary>Returns the AI's best guess for an unidentified face, or null if no named persons exist.</summary>
+    public async Task<(string Name, float Confidence)?> GetAiSuggestionAsync(byte[]? embedding)
+    {
+        if (embedding == null || embedding.Length == 0) return null;
+        var match = await _faceRecognitionService.GetTopNamedMatchAsync(embedding);
+        if (match == null) return null;
+        return (match.Value.Name, match.Value.Confidence);
+    }
 
     /// <summary>Returns faces auto-linked to a person in unreviewed photos, ordered by confidence (highest first).</summary>
     public Task<IReadOnlyList<(Face Face, MediaFile Photo)>> GetUnconfirmedFacesForPersonAsync(Guid personId)
@@ -291,8 +303,43 @@ public partial class PhotoViewerViewModel : ObservableObject
         await _personRepo.LinkFaceToPersonAsync(face.FaceId, person.Id, 1.0);
         await _repo.ConfirmFaceAsync(face.FaceId);
         face.UpdateAssignment(person.Id, trimmed);
-        await _faceRecognitionService.InvalidateCacheAsync();
+        if (face.Embedding != null)
+            await _faceRecognitionService.TrackManualAssignmentAsync(person.Id, face.Embedding);
+        else
+            await _faceRecognitionService.InvalidateCacheAsync();
+        if (Current != null)
+            await _repo.RefreshFtsForPhotoAsync(Current.Id);
         RequestFaceReview?.Invoke((person.Id, trimmed));
+    }
+
+    /// <summary>
+    /// Creates a manual person mention for the current photo — no bounding box or embedding.
+    /// Survives re-detection. Used when the user tags someone whose face wasn't auto-detected.
+    /// </summary>
+    public async Task AddPersonMentionAsync(string name)
+    {
+        if (Current == null || string.IsNullOrWhiteSpace(name)) return;
+        var trimmed    = name.Trim();
+        var normalized = trimmed.ToLowerInvariant();
+        var person = await _personRepo.FindOrCreateByNameAsync(trimmed, normalized);
+
+        var face = new Face
+        {
+            MediaFileId     = Current.Id,
+            PersonId        = person.Id,
+            IsUserConfirmed = true,
+            IsManualMention = true,
+            DateDetected    = DateTime.UtcNow,
+        };
+        await _repo.AddFaceAsync(face);
+        face.Person = person;
+
+        Faces.Add(new FaceItemViewModel(face, person.Name));
+        OnPropertyChanged(nameof(HasFaces));
+
+        if (face.Embedding != null)
+            await _faceRecognitionService.TrackManualAssignmentAsync(person.Id, face.Embedding);
+        await _repo.RefreshFtsForPhotoAsync(Current.Id);
     }
 
     /// <summary>Unlinks a face from its auto-assigned person (used in review dialog "No" button and popup unlink).</summary>
