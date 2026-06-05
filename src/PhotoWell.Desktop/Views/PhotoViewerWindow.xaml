@@ -606,7 +606,7 @@
                                                                    Converter={StaticResource PathToBitmap}}"
                                                                Stretch="UniformToFill"/>
                                                     </Border>
-                                                    <!-- Editable name -->
+                                                    <!-- Editable name with autocomplete dropdown -->
                                                     <TextBox Text="{Binding NameInput, UpdateSourceTrigger=PropertyChanged}"
                                                              Background="#FF1E1E2E"
                                                              Foreground="#FFCDD6F4"
@@ -616,7 +616,11 @@
                                                              Padding="4,3"
                                                              Margin="0,4,0,0"
                                                              MaxLength="60"
-                                                             ToolTip="Type a name, or leave blank"/>
+                                                             ToolTip="Type a name, or leave blank"
+                                                             GotFocus="SidebarNameBox_GotFocus"
+                                                             LostFocus="SidebarNameBox_LostFocus"
+                                                             TextChanged="SidebarNameBox_TextChanged"
+                                                             PreviewKeyDown="SidebarNameBox_PreviewKeyDown"/>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
@@ -715,5 +719,52 @@
                 </Border>
             </Grid>
         </Border>
-    </Grid>
+
+        <!-- Shared autocomplete dropdown for sidebar face name TextBoxes.
+             PlacementTarget and IsOpen are set in code-behind. -->
+        <Popup x:Name="SidebarDropdown"
+           Placement="Bottom"
+           StaysOpen="True"
+           AllowsTransparency="True">
+        <Border Background="#FF313244"
+                BorderBrush="#FF45475A" BorderThickness="1,0,1,1"
+                MaxHeight="150">
+            <ListBox x:Name="SidebarNameList"
+                     Background="Transparent"
+                     BorderThickness="0"
+                     Foreground="#FFCDD6F4"
+                     IsTabStop="False"
+                     MinWidth="160"
+                     ScrollViewer.HorizontalScrollBarVisibility="Disabled"
+                     PreviewMouseLeftButtonUp="SidebarNameList_MouseUp"
+                     PreviewKeyDown="SidebarNameList_KeyDown">
+                <ListBox.ItemContainerStyle>
+                    <Style TargetType="ListBoxItem">
+                        <Setter Property="Foreground" Value="#FFCDD6F4"/>
+                        <Setter Property="Padding" Value="8,4"/>
+                        <Setter Property="Template">
+                            <Setter.Value>
+                                <ControlTemplate TargetType="ListBoxItem">
+                                    <Border x:Name="Bd" Background="Transparent"
+                                            Padding="{TemplateBinding Padding}">
+                                        <ContentPresenter/>
+                                    </Border>
+                                    <ControlTemplate.Triggers>
+                                        <Trigger Property="IsMouseOver" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#FF45475A"/>
+                                        </Trigger>
+                                        <Trigger Property="IsSelected" Value="True">
+                                            <Setter TargetName="Bd" Property="Background" Value="#FF89B4FA"/>
+                                            <Setter Property="Foreground" Value="#FF1E1E2E"/>
+                                        </Trigger>
+                                    </ControlTemplate.Triggers>
+                                </ControlTemplate>
+                            </Setter.Value>
+                        </Setter>
+                    </Style>
+                </ListBox.ItemContainerStyle>
+            </ListBox>
+        </Border>
+    </Popup>
+</Grid>
 </Window>

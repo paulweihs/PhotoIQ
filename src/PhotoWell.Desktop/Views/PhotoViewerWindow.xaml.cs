@@ -344,6 +344,136 @@ public partial class PhotoViewerWindow : Window
         FaceNameBox.Focus();
     }
 
+    // ── Sidebar face-name autocomplete ────────────────────────────────────────
+
+    private TextBox?           _sidebarBox    = null;
+    private FaceItemViewModel? _sidebarFace   = null;
+    private string?            _sidebarAiName = null;
+
+    private async void SidebarNameBox_GotFocus(object sender, RoutedEventArgs e)
+    {
+        if (sender is not TextBox tb) return;
+        _sidebarBox  = tb;
+        _sidebarFace = tb.DataContext as FaceItemViewModel;
+        _sidebarAiName = null;
+
+        var vm = (PhotoViewerViewModel)DataContext;
+        if (_allNamedPersons.Count == 0)
+            _allNamedPersons = (await vm.GetAllNamedPersonsAsync()).ToList();
+
+        PopulateSidebarDropdown(tb.Text);
+        SidebarDropdown.PlacementTarget = tb;
+        SidebarDropdown.IsOpen = SidebarNameList.Items.Count > 0;
+
+        // Async: load AI suggestion then push it to top of list
+        if (_sidebarFace?.Embedding != null)
+        {
+            var suggestion = await vm.GetAiSuggestionAsync(_sidebarFace.Embedding);
+            if (suggestion != null && _sidebarBox == tb) // still the same box
+            {
+                _sidebarAiName = suggestion.Value.Name;
+                PopulateSidebarDropdown(tb.Text);
+                SidebarDropdown.IsOpen = SidebarNameList.Items.Count > 0;
+            }
+        }
+    }
+
+    private void SidebarNameBox_LostFocus(object sender, RoutedEventArgs e)
+    {
+        // Delay so a click on SidebarNameList registers before we close.
+        Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Input, new Action(() =>
+        {
+            if (!SidebarNameList.IsKeyboardFocusWithin)
+                CloseSidebarDropdown();
+        }));
+    }
+
+    private void SidebarNameBox_TextChanged(object sender, TextChangedEventArgs e)
+    {
+        if (sender is not TextBox tb || tb != _sidebarBox) return;
+        PopulateSidebarDropdown(tb.Text);
+        SidebarDropdown.IsOpen = SidebarNameList.Items.Count > 0;
+    }
+
+    private void SidebarNameBox_PreviewKeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Escape) { CloseSidebarDropdown(); return; }
+        if (e.Key == Key.Down && SidebarDropdown.IsOpen && SidebarNameList.Items.Count > 0)
+        {
+            SidebarNameList.Focus();
+            SidebarNameList.SelectedIndex = 0;
+            e.Handled = true;
+        }
+    }
+
+    private void SidebarNameList_MouseUp(object sender, MouseButtonEventArgs e)
+    {
+        if (SidebarNameList.SelectedItem is string name)
+            ApplySidebarSuggestion(name);
+    }
+
+    private void SidebarNameList_KeyDown(object sender, KeyEventArgs e)
+    {
+        if (e.Key == Key.Enter && SidebarNameList.SelectedItem is string name)
+        {
+            ApplySidebarSuggestion(name);
+            e.Handled = true;
+        }
+        else if (e.Key == Key.Escape)
+        {
+            CloseSidebarDropdown();
+            _sidebarBox?.Focus();
+            e.Handled = true;
+        }
+    }
+
+    private void PopulateSidebarDropdown(string filter)
+    {
+        var allNames = _allNamedPersons
+            .Select(p => p.Name)
+            .Where(n => !string.IsNullOrEmpty(n))
+            .Cast<string>();
+
+        List<string> matches;
+        if (filter.Length == 0)
+        {
+            matches = allNames.OrderBy(n => n).ToList();
+        }
+        else
+        {
+            matches = allNames
+                .Where(n => n.Contains(filter, StringComparison.OrdinalIgnoreCase))
+                .OrderBy(n => n)
+                .ToList();
+        }
+
+        // AI suggestion goes first if it matches the current filter
+        if (_sidebarAiName != null &&
+            (filter.Length == 0 || _sidebarAiName.Contains(filter, StringComparison.OrdinalIgnoreCase)))
+        {
+            matches.Remove(_sidebarAiName);
+            matches.Insert(0, _sidebarAiName);
+        }
+
+        SidebarNameList.ItemsSource = matches.Count > 0 ? matches : null;
+    }
+
+    private void ApplySidebarSuggestion(string name)
+    {
+        if (_sidebarFace != null)
+            _sidebarFace.NameInput = name;
+        CloseSidebarDropdown();
+        _sidebarBox?.Focus();
+    }
+
+    private void CloseSidebarDropdown()
+    {
+        SidebarDropdown.IsOpen = false;
+        _sidebarBox   = null;
+        _sidebarFace  = null;
+        _sidebarAiName = null;
+    }
+
     // ── Save / Cancel ──────────────────────────────────────────────────────────
 
     private async void FaceNameSave_Click(object sender, RoutedEventArgs e)
