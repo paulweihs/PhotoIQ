@@ -108,6 +108,27 @@ public sealed class ChatAssistantService : IChatAssistantService
                 },
                 required = Array.Empty<string>()
             }),
+
+        Tool("email_photos",
+            "Open the user's default email client with photos attached as a new draft message. " +
+            "The user addresses and sends the email themselves. If person_name is given, attaches " +
+            "that person's photos; otherwise attaches the photos currently shown in the gallery. " +
+            "Limited to 20 attachments — suggest export_photos for larger sets.",
+            new {
+                type = "object",
+                properties = new {
+                    person_name = new {
+                        type = "string",
+                        description = "Attach only photos of this person (optional)"
+                    },
+                    confirmed_only = new {
+                        type = "boolean",
+                        description = "True (default) = only verified/confirmed face matches; " +
+                                      "false = also include high-confidence unconfirmed matches"
+                    }
+                },
+                required = Array.Empty<string>()
+            }),
     ];
 
     private static ChatToolDefinition Tool(string name, string description, object parameters) =>
@@ -116,10 +137,10 @@ public sealed class ChatAssistantService : IChatAssistantService
     private const string SystemPrompt = """
         You are the AI assistant built into PhotoWell, a local photo library app.
         You have DIRECT access to the user's photo library through your tools: you can
-        search it, filter it, open photos, show people, and export copies of photos to
-        a folder. Never tell the user you don't have access to their library, and never
-        ask them to call a function or show them function syntax — you call the tools
-        yourself and report what happened.
+        search it, filter it, open photos, show people, export copies of photos to a
+        folder, and attach photos to a new email. Never tell the user you don't have
+        access to their library, and never ask them to call a function or show them
+        function syntax — you call the tools yourself and report what happened.
 
         Your tools:
         - search_photos: full-text / semantic search
@@ -130,11 +151,12 @@ public sealed class ChatAssistantService : IChatAssistantService
         - open_photo: open a photo by filename in the viewer
         - show_people: open the People window
         - export_photos: copy photos (optionally of one person) to a folder the user picks in a dialog
+        - email_photos: open a draft email with photos attached (max 20); the user addresses and sends it
 
         Guidelines:
-        - When the user asks you to show, find, filter, open, or export photos — even when
-          phrased as "how do I…" or "can you show me how…" — call the matching tool and do
-          it, then summarise the outcome in 1-2 sentences.
+        - When the user asks you to show, find, filter, open, export, or email photos —
+          even when phrased as "how do I…" or "can you show me how…" — call the matching
+          tool and do it, then summarise the outcome in 1-2 sentences.
         - For person queries ("show me photos of Sarah"), use filter_by_person with
           include_unconfirmed=true. If the user says "verified" or "confirmed", use
           include_unconfirmed=false (or confirmed_only=true when exporting).
@@ -255,6 +277,9 @@ public sealed class ChatAssistantService : IChatAssistantService
                 "open_photo"      => await _actions.ChatOpenPhotoAsync(GetString(args, "filename")),
                 "show_people"     => await _actions.ChatShowPeopleAsync(),
                 "export_photos"   => await _actions.ChatExportPhotosAsync(
+                                        GetStringOpt(args, "person_name"),
+                                        GetBool(args, "confirmed_only", defaultValue: true)),
+                "email_photos"    => await _actions.ChatEmailPhotosAsync(
                                         GetStringOpt(args, "person_name"),
                                         GetBool(args, "confirmed_only", defaultValue: true)),
                 _                 => $"Unknown tool: {fn}"

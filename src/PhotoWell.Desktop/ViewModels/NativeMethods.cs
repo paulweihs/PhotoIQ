@@ -91,27 +91,41 @@ internal static class NativeMethods
 	private static extern int MAPISendMail(nint session, nint hwnd, ref MapiMessage message, int flags, int reserved);
 
 	internal static void MapiSendFile(string filePath, string subject)
+		=> MapiSendFiles(new[] { filePath }, subject);
+
+	/// <summary>
+	/// Opens the default mail client's compose window with the given files attached.
+	/// No recipient is pre-filled; the user addresses and sends the email themselves.
+	/// Blocks until the compose dialog is dismissed — call from a background thread.
+	/// </summary>
+	internal static void MapiSendFiles(IReadOnlyList<string> filePaths, string subject)
 	{
-		MapiFileDesc structure = new MapiFileDesc
-		{
-			Reserved = 0,
-			Flags = 0,
-			Position = -1,
-			Path = filePath,
-			FileName = Path.GetFileName(filePath),
-			FileType = IntPtr.Zero
-		};
-		nint num = Marshal.AllocHGlobal(Marshal.SizeOf<MapiFileDesc>());
+		int size = Marshal.SizeOf<MapiFileDesc>();
+		nint filesPtr = Marshal.AllocHGlobal(size * filePaths.Count);
+		int written = 0;
 		try
 		{
-			Marshal.StructureToPtr(structure, num, fDeleteOld: false);
+			for (int i = 0; i < filePaths.Count; i++)
+			{
+				MapiFileDesc structure = new MapiFileDesc
+				{
+					Reserved = 0,
+					Flags = 0,
+					Position = -1,
+					Path = filePaths[i],
+					FileName = Path.GetFileName(filePaths[i]),
+					FileType = IntPtr.Zero
+				};
+				Marshal.StructureToPtr(structure, filesPtr + i * size, fDeleteOld: false);
+				written++;
+			}
 			MapiMessage message = new MapiMessage
 			{
 				Subject = subject,
-				FileCount = 1,
-				Files = num
+				FileCount = filePaths.Count,
+				Files = filesPtr
 			};
-			int num2 = MAPISendMail(IntPtr.Zero, IntPtr.Zero, ref message, 9, 0);
+			int num2 = MAPISendMail(IntPtr.Zero, IntPtr.Zero, ref message, MAPI_LOGON_UI | MAPI_DIALOG, 0);
 			if (num2 > 1)
 			{
 				throw new InvalidOperationException($"MAPISendMail returned error code {num2}.");
@@ -119,7 +133,12 @@ internal static class NativeMethods
 		}
 		finally
 		{
-			Marshal.FreeHGlobal(num);
+			// StructureToPtr allocates unmanaged copies of the LPStr fields.
+			for (int i = 0; i < written; i++)
+			{
+				Marshal.DestroyStructure<MapiFileDesc>(filesPtr + i * size);
+			}
+			Marshal.FreeHGlobal(filesPtr);
 		}
 	}
 }

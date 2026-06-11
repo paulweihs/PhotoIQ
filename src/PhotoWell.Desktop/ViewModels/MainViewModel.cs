@@ -7289,7 +7289,13 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		return Task.FromResult("Opened the People window.");
 	}
 
-	public async Task<string> ChatExportPhotosAsync(string? personName, bool confirmedOnly)
+	/// <summary>
+	/// Resolves the photo set a chat tool operates on: a named person's photos
+	/// (face recognition) or, with no name, the photos currently shown in the gallery.
+	/// Photos whose files are missing on disk are dropped.
+	/// </summary>
+	private async Task<(List<MediaFile> Photos, string Label, string? Error)> ChatResolvePhotoSetAsync(
+		string? personName, bool confirmedOnly)
 	{
 		List<MediaFile> photos;
 		string label;
@@ -7297,7 +7303,7 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		{
 			var person = await ChatFindPersonAsync(personName);
 			if (person == null)
-				return $"No person named \"{personName}\" was found in the library.";
+				return ([], "", $"No person named \"{personName}\" was found in the library.");
 			photos = await ChatGetPersonPhotosAsync(person.Id, includeUnconfirmed: !confirmedOnly);
 			label = $"of {person.Name}";
 		}
@@ -7309,7 +7315,14 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 
 		photos = photos.Where(f => f.FilePath != null && File.Exists(f.FilePath)).ToList();
 		if (photos.Count == 0)
-			return $"There are no photos {label} with files available on disk to export.";
+			return (photos, label, $"There are no photos {label} with files available on disk.");
+		return (photos, label, null);
+	}
+
+	public async Task<string> ChatExportPhotosAsync(string? personName, bool confirmedOnly)
+	{
+		var (photos, label, error) = await ChatResolvePhotoSetAsync(personName, confirmedOnly);
+		if (error != null) return error;
 
 		// The user picks the destination in a dialog — the assistant never chooses
 		// filesystem paths itself. Copy only; originals are never moved or modified.
@@ -7343,6 +7356,39 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 			: $"Copied {copied} photo{(copied == 1 ? "" : "s")} {label} to {destFolder}.";
 		Application.Current.Dispatcher.Invoke(() => StatusText = summary);
 		return summary;
+	}
+
+	public async Task<string> ChatEmailPhotosAsync(string? personName, bool confirmedOnly)
+	{
+		// Mail providers reject large attachment sets; past this, exporting to a folder is the right tool.
+		const int MaxEmailAttachments = 20;
+
+		var (photos, label, error) = await ChatResolvePhotoSetAsync(personName, confirmedOnly);
+		if (error != null) return error;
+
+		if (photos.Count > MaxEmailAttachments)
+			return $"That's {photos.Count} photos {label} — too many to attach to one email " +
+			       $"(the limit is {MaxEmailAttachments}). Suggest exporting them to a folder instead, " +
+			       "or narrowing the request.";
+
+		var files = photos.Select(p => p.FilePath!).ToList();
+		var subject = string.IsNullOrWhiteSpace(personName)
+			? "Photos from PhotoWell"
+			: $"Photos {label}";
+
+		// MAPI blocks until the compose window closes, so run it in the background and
+		// report back as soon as it has had a chance to open (or fails fast).
+		var mapiTask = Task.Run(() => NativeMethods.MapiSendFiles(files, subject));
+		var finished = await Task.WhenAny(mapiTask, Task.Delay(TimeSpan.FromSeconds(3)));
+		if (finished == mapiTask && mapiTask.IsFaulted)
+		{
+			AppLog.Error($"ChatEmailPhotosAsync (MAPI) failed: {mapiTask.Exception?.GetBaseException().Message}");
+			return "Could not open the email client. Make sure a mail app (Outlook, Thunderbird, " +
+			       "Windows Mail, etc.) is installed and set as the default.";
+		}
+
+		return $"Opened a new email with {files.Count} photo{(files.Count == 1 ? "" : "s")} {label} attached. " +
+		       "The user just needs to add a recipient and press send.";
 	}
 
 	public string GetCurrentContext()
