@@ -88,16 +88,40 @@ public sealed class ChatAssistantService : IChatAssistantService
                 properties = new { },
                 required = Array.Empty<string>()
             }),
+
+        Tool("export_photos",
+            "Copy photos to a folder on disk. A folder-picker dialog opens so the user chooses the " +
+            "destination themselves. If person_name is given, exports that person's photos; otherwise " +
+            "exports the photos currently shown in the gallery. Originals are never moved or modified.",
+            new {
+                type = "object",
+                properties = new {
+                    person_name = new {
+                        type = "string",
+                        description = "Limit the export to photos of this person (optional)"
+                    },
+                    confirmed_only = new {
+                        type = "boolean",
+                        description = "True (default) = only verified/confirmed face matches; " +
+                                      "false = also include high-confidence unconfirmed matches"
+                    }
+                },
+                required = Array.Empty<string>()
+            }),
     ];
 
     private static ChatToolDefinition Tool(string name, string description, object parameters) =>
         new(name, description, parameters);
 
     private const string SystemPrompt = """
-        You are a helpful photo-library assistant built into PhotoWell.
-        You help users search, filter, and understand their photo collection.
+        You are the AI assistant built into PhotoWell, a local photo library app.
+        You have DIRECT access to the user's photo library through your tools: you can
+        search it, filter it, open photos, show people, and export copies of photos to
+        a folder. Never tell the user you don't have access to their library, and never
+        ask them to call a function or show them function syntax — you call the tools
+        yourself and report what happened.
 
-        You have access to the following actions:
+        Your tools:
         - search_photos: full-text / semantic search
         - filter_by_person: show photos of a named person (uses face recognition — not just text tags)
         - filter_by_date: filter by date range
@@ -105,12 +129,18 @@ public sealed class ChatAssistantService : IChatAssistantService
         - get_library_stats: counts, date range, people
         - open_photo: open a photo by filename in the viewer
         - show_people: open the People window
+        - export_photos: copy photos (optionally of one person) to a folder the user picks in a dialog
 
         Guidelines:
-        - When a user asks to "show" or "find" photos, call the appropriate filter/search tool first, then respond.
-        - For person queries ("show me photos of Sarah"), use filter_by_person with include_unconfirmed=true.
-        - After calling a tool, summarise the result in 1-2 sentences and ask if there's anything else.
-        - For how-to questions, answer directly without calling a tool.
+        - When the user asks you to show, find, filter, open, or export photos — even when
+          phrased as "how do I…" or "can you show me how…" — call the matching tool and do
+          it, then summarise the outcome in 1-2 sentences.
+        - For person queries ("show me photos of Sarah"), use filter_by_person with
+          include_unconfirmed=true. If the user says "verified" or "confirmed", use
+          include_unconfirmed=false (or confirmed_only=true when exporting).
+        - Only answer in prose when no tool covers the request; then briefly say what you
+          CAN do instead.
+        - Never mention tool or function names to the user — describe actions in plain words.
         - Be concise — users are looking at their photos, not reading an essay.
         - Never invent photo filenames or fabricate library data; only describe what the tools return.
         """;
@@ -216,6 +246,9 @@ public sealed class ChatAssistantService : IChatAssistantService
                 "get_library_stats" => await _actions.ChatGetLibraryStatsAsync(),
                 "open_photo"      => await _actions.ChatOpenPhotoAsync(GetString(args, "filename")),
                 "show_people"     => await _actions.ChatShowPeopleAsync(),
+                "export_photos"   => await _actions.ChatExportPhotosAsync(
+                                        GetStringOpt(args, "person_name"),
+                                        GetBool(args, "confirmed_only", defaultValue: true)),
                 _                 => $"Unknown tool: {fn}"
             };
         }

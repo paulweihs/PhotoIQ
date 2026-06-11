@@ -7150,37 +7150,40 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		return $"Showing {PhotoCount} photo{(PhotoCount == 1 ? "" : "s")} matching \"{query}\".";
 	}
 
-	public async Task<string> ChatFilterByPersonAsync(string name, bool includeUnconfirmed)
+	private async Task<Person?> ChatFindPersonAsync(string name)
 	{
 		using var scope = _scopeFactory.CreateScope();
 		var personRepo = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
 		var people = await personRepo.GetAllNamedAsync();
-		var person = people.FirstOrDefault(p =>
-			p.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true ||
-			p.NormalizedName?.Equals(name.ToLowerInvariant().Trim(), StringComparison.OrdinalIgnoreCase) == true);
-
-		if (person == null)
-		{
+		return people.FirstOrDefault(p =>
+				p.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true ||
+				p.NormalizedName?.Equals(name.ToLowerInvariant().Trim(), StringComparison.OrdinalIgnoreCase) == true)
 			// Fuzzy fallback: contains match
-			person = people.FirstOrDefault(p =>
-				p.Name?.Contains(name, StringComparison.OrdinalIgnoreCase) == true);
-		}
+			?? people.FirstOrDefault(p => p.Name?.Contains(name, StringComparison.OrdinalIgnoreCase) == true);
+	}
 
-		if (person == null)
-			return $"No person named \"{name}\" was found in the library.";
-
-		var confirmedIds = await WithRepo(r => r.GetFacePhotoIdsForPersonAsync(person.Id));
-		var photoIdSet = new HashSet<Guid>(confirmedIds);
+	private async Task<List<MediaFile>> ChatGetPersonPhotosAsync(Guid personId, bool includeUnconfirmed)
+	{
+		var photoIdSet = new HashSet<Guid>(await WithRepo(r => r.GetFacePhotoIdsForPersonAsync(personId)));
 
 		if (includeUnconfirmed)
 		{
-			var unconfirmed = await WithRepo(r => r.GetUnconfirmedFacesForPersonAsync(person.Id));
+			var unconfirmed = await WithRepo(r => r.GetUnconfirmedFacesForPersonAsync(personId));
 			foreach (var (face, _) in unconfirmed)
 				if (face.IdentificationConfidence >= 0.7)
 					photoIdSet.Add(face.MediaFileId);
 		}
 
-		var photos = await WithRepo(r => r.GetByIdsAsync(photoIdSet));
+		return (await WithRepo(r => r.GetByIdsAsync(photoIdSet))).ToList();
+	}
+
+	public async Task<string> ChatFilterByPersonAsync(string name, bool includeUnconfirmed)
+	{
+		var person = await ChatFindPersonAsync(name);
+		if (person == null)
+			return $"No person named \"{name}\" was found in the library.";
+
+		var photos = await ChatGetPersonPhotosAsync(person.Id, includeUnconfirmed);
 		await Application.Current.Dispatcher.InvokeAsync(() =>
 		{
 			_personFilterPhotoIds = photos.Select(p => p.Id).ToList();
@@ -7279,6 +7282,62 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 			win.Show();
 		});
 		return Task.FromResult("Opened the People window.");
+	}
+
+	public async Task<string> ChatExportPhotosAsync(string? personName, bool confirmedOnly)
+	{
+		List<MediaFile> photos;
+		string label;
+		if (!string.IsNullOrWhiteSpace(personName))
+		{
+			var person = await ChatFindPersonAsync(personName);
+			if (person == null)
+				return $"No person named \"{personName}\" was found in the library.";
+			photos = await ChatGetPersonPhotosAsync(person.Id, includeUnconfirmed: !confirmedOnly);
+			label = $"of {person.Name}";
+		}
+		else
+		{
+			photos = Application.Current.Dispatcher.Invoke(() => MediaFiles.ToList());
+			label = "from the current view";
+		}
+
+		photos = photos.Where(f => f.FilePath != null && File.Exists(f.FilePath)).ToList();
+		if (photos.Count == 0)
+			return $"There are no photos {label} with files available on disk to export.";
+
+		// The user picks the destination in a dialog — the assistant never chooses
+		// filesystem paths itself. Copy only; originals are never moved or modified.
+		var destFolder = await Application.Current.Dispatcher.InvokeAsync(() =>
+		{
+			var dlg = new OpenFolderDialog
+			{
+				Title = $"Export {photos.Count} photo{(photos.Count == 1 ? "" : "s")} {label} to folder…"
+			};
+			return dlg.ShowDialog() == true ? dlg.FolderName : null;
+		});
+
+		if (destFolder == null)
+			return "Export cancelled — the user closed the folder dialog without choosing a destination.";
+
+		int copied = 0, skipped = 0;
+		await Task.Run(() =>
+		{
+			foreach (var file in photos)
+			{
+				string dest = Path.Combine(destFolder, Path.GetFileName(file.FilePath));
+				if (string.Equals(file.FilePath, dest, StringComparison.OrdinalIgnoreCase)) continue;
+				if (File.Exists(dest)) { skipped++; continue; }
+				File.Copy(file.FilePath, dest);
+				copied++;
+			}
+		});
+
+		var summary = skipped > 0
+			? $"Copied {copied} photo{(copied == 1 ? "" : "s")} {label} to {destFolder} ({skipped} skipped — already in that folder)."
+			: $"Copied {copied} photo{(copied == 1 ? "" : "s")} {label} to {destFolder}.";
+		Application.Current.Dispatcher.Invoke(() => StatusText = summary);
+		return summary;
 	}
 
 	public string GetCurrentContext()

@@ -13,5 +13,6 @@ public interface IAssistantActions
     Task<string> ChatGetLibraryStatsAsync();
     Task<string> ChatOpenPhotoAsync(string filename);
     Task<string> ChatShowPeopleAsync();
+    Task<string> ChatExportPhotosAsync(string? personName, bool confirmedOnly);
     string GetCurrentContext();
 }
