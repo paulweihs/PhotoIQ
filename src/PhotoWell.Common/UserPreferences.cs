@@ -62,6 +62,13 @@ public class UserPreferences
     /// <summary>Set to true after a one-time sweep that deletes face thumbnail files not referenced by any Face DB row.</summary>
     public bool OrphanedFaceThumbnailsCleanedUp { get; set; } = false;
 
+    /// <summary>
+    /// Ollama model used for the AI chat assistant. Needs reliable tool-calling support.
+    /// Default llama3.1:8b gives the best accuracy; switch to llama3.2:3b for faster responses
+    /// on lower-end hardware.
+    /// </summary>
+    public string ChatModelName { get; set; } = "llama3.1:8b";
+
     /// <summary>User-configured external editors shown in the Send To submenu.</summary>
     public List<ExternalEditorEntry> ExternalEditors { get; set; } = [];
 

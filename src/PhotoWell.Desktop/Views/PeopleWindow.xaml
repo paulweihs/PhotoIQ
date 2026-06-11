@@ -253,7 +253,7 @@
 
                                     <!-- Action buttons row -->
                                     <StackPanel Orientation="Horizontal" HorizontalAlignment="Center">
-                                        <!-- Rename / confirm / cancel -->
+                                        <!-- Rename / confirm / cancel (hidden while editing) -->
                                         <Button ToolTip="Rename"
                                                 Style="{StaticResource IconBtn}" Content="✏"
                                                 Command="{Binding DataContext.BeginEditCommand,
@@ -275,11 +275,43 @@
                                                 CommandParameter="{Binding}"
                                                 Visibility="{Binding IsEditing, Converter={StaticResource BoolToVis}}"/>
 
-                                        <!-- Hide cluster -->
-                                        <Button ToolTip="Remove from People list"
+                                        <!-- Favorite star — filled when IsFavorite -->
+                                        <Button ToolTip="Pin to top of name suggestions"
+                                                Style="{StaticResource IconBtn}"
+                                                Visibility="{Binding IsEditing, Converter={StaticResource InverseBoolToVis}}"
+                                                Command="{Binding DataContext.ToggleFavoriteCommand,
+                                                    RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}">
+                                            <TextBlock>
+                                                <TextBlock.Style>
+                                                    <Style TargetType="TextBlock">
+                                                        <Setter Property="Text"       Value="☆"/>
+                                                        <Setter Property="Foreground" Value="{StaticResource SubtextBrush}"/>
+                                                        <Style.Triggers>
+                                                            <DataTrigger Binding="{Binding IsFavorite}" Value="True">
+                                                                <Setter Property="Text"       Value="★"/>
+                                                                <Setter Property="Foreground" Value="#FFFAB387"/>
+                                                            </DataTrigger>
+                                                        </Style.Triggers>
+                                                    </Style>
+                                                </TextBlock.Style>
+                                            </TextBlock>
+                                        </Button>
+
+                                        <!-- Hide (soft — stays in DB) -->
+                                        <Button ToolTip="Hide from People list"
+                                                Style="{StaticResource IconBtn}" Content="👁"
+                                                Visibility="{Binding IsEditing, Converter={StaticResource InverseBoolToVis}}"
+                                                Command="{Binding DataContext.HideCommand,
+                                                    RelativeSource={RelativeSource AncestorType=Window}}"
+                                                CommandParameter="{Binding}"/>
+
+                                        <!-- Delete (hard — removes person and unlinks faces) -->
+                                        <Button ToolTip="Delete person permanently"
                                                 Style="{StaticResource IconBtn}" Content="🗑"
                                                 Foreground="{StaticResource RedBrush}"
-                                                Command="{Binding DataContext.HideCommand,
+                                                Visibility="{Binding IsEditing, Converter={StaticResource InverseBoolToVis}}"
+                                                Command="{Binding DataContext.DeleteCommand,
                                                     RelativeSource={RelativeSource AncestorType=Window}}"
                                                 CommandParameter="{Binding}"/>
                                     </StackPanel>

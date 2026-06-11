@@ -18,6 +18,7 @@ using PhotoWell.Services.Vision;
 using PhotoWell.Services.Models;
 using PhotoWell.Services.Search;
 using PhotoWell.Desktop.Services;
+using PhotoWell.Services.Chat;
 
 namespace PhotoWell.Desktop;
 
@@ -190,6 +191,9 @@ public partial class App : Application
         services.AddSingleton<ImportProgressViewModel>();
         services.AddTransient<PhotoViewerViewModel>();
         services.AddTransient<BackupViewModel>();
+        services.AddSingleton<IChatAssistantService>(sp =>
+            new ChatAssistantService(sp.GetRequiredService<OllamaClient>()));
+        services.AddTransient<ChatViewModel>();
 
         // ── Views ─────────────────────────────────────────────────────────────
         services.AddTransient<SetupWindow>();
@@ -624,6 +628,10 @@ public partial class App : Application
         mainWindow.Show();
 
         var mainVm = (MainViewModel)mainWindow.DataContext;
+
+        // Wire chat assistant to MainViewModel so it can execute library actions
+        var chatService = Services.GetRequiredService<IChatAssistantService>();
+        chatService.SetActions(mainVm);
 
         // ── Onboarding / tip toast ─────────────────────────────────────────────
         var onboarding = Services.GetRequiredService<OnboardingService>();

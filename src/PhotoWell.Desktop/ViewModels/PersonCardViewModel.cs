@@ -16,6 +16,7 @@ public partial class PersonCardViewModel : ObservableObject
     [ObservableProperty] private bool    _isEditing;
     [ObservableProperty] private string  _editName;
     [ObservableProperty] private bool    _isSelected;   // used during merge selection
+    [ObservableProperty] private bool    _isFavorite;
 
     public bool IsNamed { get; private set; }
 
@@ -24,6 +25,7 @@ public partial class PersonCardViewModel : ObservableObject
         PersonId    = person.Id;
         KeyFacePath = keyFacePath;
         IsNamed     = person.IsNamed;
+        _isFavorite = person.IsFavorite;
         _photoCount = photoCount;
         _displayName = person.IsNamed && !string.IsNullOrWhiteSpace(person.Name)
             ? person.Name

@@ -232,6 +232,7 @@
     <Grid>
         <Grid.RowDefinitions>
             <RowDefinition Height="Auto"/>
+            <RowDefinition Height="Auto"/>
             <RowDefinition Height="*"/>
             <RowDefinition Height="Auto"/>
         </Grid.RowDefinitions>
@@ -439,6 +440,27 @@
 
                 <!-- Action buttons -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="16,0,0,0">
+                    <!-- Ask AI button — opens/toggles chat panel (hidden in Express mode) -->
+                    <Button x:Name="AskAiButton"
+                            Content="✨ Ask AI"
+                            Click="OnAskAiClick"
+                            Background="#5A2D7A"
+                            Padding="16,8" Margin="0,0,8,0"
+                            ToolTip="Ask the AI assistant — type a question in the search box then click here (Ctrl+Enter)">
+                        <Button.Style>
+                            <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
+                                <Setter Property="Background" Value="#5A2D7A"/>
+                                <Style.Triggers>
+                                    <Trigger Property="IsMouseOver" Value="True">
+                                        <Setter Property="Background" Value="#7A3DA0"/>
+                                    </Trigger>
+                                    <DataTrigger Binding="{Binding ShowExpressLimit}" Value="True">
+                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                    </DataTrigger>
+                                </Style.Triggers>
+                            </Style>
+                        </Button.Style>
+                    </Button>
                     <!-- Re-analyze selected — only shown when HasMultiSelection -->
                     <Button Content="{Binding ReanalyzeMultiSelectedLabel}"
                             Command="{Binding ReanalyzeMultiSelectedCommand}"
@@ -553,8 +575,12 @@
             </Grid>
         </Border>
 
+        <!-- ═══ AI Chat Panel ═══ -->
+        <controls:ChatPanel x:Name="ChatPanelControl"
+                            Grid.Row="1" Grid.ColumnSpan="4"/>
+
         <!-- ═══ Left Sidebar ═══ -->
-        <Border Grid.Row="1" Grid.Column="0" Background="{DynamicResource SidebarBrush}">
+        <Border Grid.Row="2" Grid.Column="0" Background="{DynamicResource SidebarBrush}">
             <StackPanel Margin="12">
                 <TextBlock Text="LIBRARY" FontSize="11" FontWeight="SemiBold"
                            Foreground="{DynamicResource SecondaryTextBrush}"
@@ -774,7 +800,7 @@
         </Border>
 
         <!-- ═══ Main Content ═══ -->
-        <Border Grid.Row="1" Grid.Column="1" Background="{DynamicResource ContentBrush}">
+        <Border Grid.Row="2" Grid.Column="1" Background="{DynamicResource ContentBrush}">
             <Grid>
                 <Grid.RowDefinitions>
                     <RowDefinition Height="Auto"/>
@@ -1676,7 +1702,7 @@
         </Border>
 
         <!-- Resizable splitter between thumbnail grid and detail panel -->
-        <GridSplitter Grid.Row="1" Grid.Column="2"
+        <GridSplitter Grid.Row="2" Grid.Column="2"
                       Width="5" HorizontalAlignment="Stretch"
                       Background="#FF313244"
                       ResizeBehavior="PreviousAndNext"
@@ -1684,7 +1710,7 @@
                       ToolTip="Drag to resize panels"/>
 
         <!-- ═══ Right Sidebar ═══ -->
-        <Border Grid.Row="1" Grid.Column="3" Background="{DynamicResource SidebarBrush}">
+        <Border Grid.Row="2" Grid.Column="3" Background="{DynamicResource SidebarBrush}">
             <ScrollViewer VerticalScrollBarVisibility="Auto"
                           Visibility="{Binding HasSelection, Converter={StaticResource BoolToVis}}">
                 <StackPanel Margin="16">
@@ -2276,7 +2302,7 @@
         </Border>
 
         <!-- ═══ Status Bar ═══ -->
-        <Border Grid.Row="2" Grid.ColumnSpan="4"
+        <Border Grid.Row="3" Grid.ColumnSpan="4"
                 Background="{DynamicResource StatusBarBrush}" Padding="12,4">
             <StackPanel>
 
@@ -2642,7 +2668,7 @@
         <!-- ── Tip toast overlay ── bottom-right corner ── -->
         <!-- Spans all rows and columns so it floats over the full window, not just the header cell -->
         <controls:TipToastControl x:Name="TipToast"
-                                   Grid.Row="0" Grid.RowSpan="3"
+                                   Grid.Row="0" Grid.RowSpan="4"
                                    Grid.Column="0" Grid.ColumnSpan="4"
                                    HorizontalAlignment="Center"
                                    VerticalAlignment="Center"

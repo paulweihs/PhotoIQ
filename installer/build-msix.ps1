@@ -5,19 +5,19 @@
 
 .DESCRIPTION
     Produces artifacts ready for:
-      • Microsoft Store upload  — upload the .msixbundle to Partner Center;
+      - Microsoft Store upload  -- upload the .msixbundle to Partner Center;
                                    they handle signing.
-      • Sideload (direct DL)   — use installer\install-sideload.ps1 on
+      - Sideload (direct DL)   -- use installer\install-sideload.ps1 on
                                    Windows 11 22H2+, or sign with a cert.
 
     Prerequisites:
-      • .NET 8 SDK
-      • Windows 10 SDK (makeappx.exe / makepri.exe) — installed via
-        VS Installer → Individual Components → "Windows 10 SDK (10.0.19041.0)"
+      - .NET 8 SDK
+      - Windows 10 SDK (makeappx.exe / makepri.exe) -- installed via
+        VS Installer -> Individual Components -> "Windows 10 SDK (10.0.19041.0)"
         or later.
 
 .PARAMETER Version
-    Package version — Major.Minor.Build.Revision (e.g. "1.2.0.0").
+    Package version -- Major.Minor.Build.Revision (e.g. "1.2.0.0").
     Default: "1.0.0.0".
 
 .PARAMETER Configuration
@@ -55,7 +55,7 @@ param(
 Set-StrictMode -Version Latest
 $ErrorActionPreference = "Stop"
 
-# ── Paths ─────────────────────────────────────────────────────────────────────
+# -- Paths ---------------------------------------------------------------------
 $RepoRoot     = (Resolve-Path "$PSScriptRoot\..")
 $SrcProject   = "$RepoRoot\src\PhotoWell.Desktop\PhotoWell.Desktop.csproj"
 $ManifestTpl  = "$PSScriptRoot\AppxManifest.template.xml"
@@ -65,31 +65,29 @@ if (-not $OutDir) { $OutDir = "$PSScriptRoot\output" }
 
 New-Item -ItemType Directory -Force -Path $OutDir | Out-Null
 
-# ── Optional clean ────────────────────────────────────────────────────────────
+# -- Optional clean ------------------------------------------------------------
 if ($Clean) {
-    Write-Host "`nCleaning previous publish/package/bundle artifacts…"
+    Write-Host "`nCleaning previous publish/package/bundle artifacts..."
     Remove-Item -Recurse -Force "$PSScriptRoot\publish" -ErrorAction SilentlyContinue
     Remove-Item -Recurse -Force "$PSScriptRoot\package" -ErrorAction SilentlyContinue
     Remove-Item -Recurse -Force "$PSScriptRoot\bundle"  -ErrorAction SilentlyContinue
     Write-Host "  Clean complete."
 }
 
-# ── Validate version ──────────────────────────────────────────────────────────
+# -- Validate version ----------------------------------------------------------
 if ($Version -notmatch '^\d+\.\d+\.\d+\.\d+$') {
     throw "Version must be in Major.Minor.Build.Revision format (e.g. 1.0.0.0). Got: '$Version'"
 }
 
-Write-Host @"
+Write-Host ""
+Write-Host "========================================================"
+Write-Host "  PhotoWell  MSIX Build  v$Version"
+Write-Host "========================================================"
+Write-Host "  Config  : $Configuration"
+Write-Host "  Signing : $(if ($SignThumbprint) { "cert $SignThumbprint" } else { "UNSIGNED" })"
+Write-Host "  Output  : $OutDir"
 
-╔══════════════════════════════════════════════════════╗
-║  PhotoWell  MSIX Build  v$Version
-╚══════════════════════════════════════════════════════╝
-  Config    : $Configuration
-  Signing   : $(if ($SignThumbprint) { "cert $SignThumbprint" } else { "UNSIGNED" })
-  Output    : $OutDir
-"@
-
-# ── Locate Windows SDK tools ──────────────────────────────────────────────────
+# -- Locate Windows SDK tools --------------------------------------------------
 function Find-SdkTool([string] $ToolName) {
     $roots = @(
         "${env:ProgramFiles(x86)}\Windows Kits\10\bin",
@@ -104,10 +102,7 @@ function Find-SdkTool([string] $ToolName) {
                Select-Object -First 1
         if ($hit) { return $hit.FullName }
     }
-    throw @"
-Could not find $ToolName.
-Install the Windows 10 SDK via VS Installer → Individual Components → "Windows 10 SDK".
-"@
+    throw "Could not find $ToolName. Install the Windows 10 SDK via VS Installer -> Individual Components -> 'Windows 10 SDK'."
 }
 
 $MakeAppx = Find-SdkTool "makeappx.exe"
@@ -117,42 +112,42 @@ $SignTool  = if ($SignThumbprint) { Find-SdkTool "signtool.exe" } else { $null }
 Write-Host "  makeappx : $MakeAppx"
 Write-Host "  makepri  : $MakePri"
 
-# ── Generate visual assets ────────────────────────────────────────────────────
+# -- Generate visual assets ----------------------------------------------------
 $requiredAssets = @("Square44x44Logo.png", "Square150x150Logo.png", "StoreLogo.png")
 $missingAssets  = $requiredAssets | Where-Object { -not (Test-Path "$AssetsDir\$_") }
 if ($missingAssets) {
     if (-not (Test-Path $AssetsScript)) {
         throw "Asset generator not found at '$AssetsScript'. Cannot generate: $($missingAssets -join ', ')"
     }
-    Write-Host "`nGenerating MSIX visual assets ($($missingAssets.Count) missing)…"
+    Write-Host "`nGenerating MSIX visual assets ($($missingAssets.Count) missing)..."
     & $AssetsScript -OutDir $AssetsDir
-    if ($LASTEXITCODE -ne 0) { throw "New-AppAssets.ps1 failed — check that icon.ico is present in the installer directory" }
+    if ($LASTEXITCODE -ne 0) { throw "New-AppAssets.ps1 failed -- check that icon.ico is present in the installer directory" }
 } else {
-    Write-Host "`nAssets already present — skipping generation."
+    Write-Host "`nAssets already present -- skipping generation."
 }
 
-# ── Helper: sign a file if thumbprint was provided ────────────────────────────
+# -- Helper: sign a file if thumbprint was provided ----------------------------
 function Invoke-Sign([string] $Path) {
     if (-not $SignThumbprint) { return }
-    Write-Host "  Signing $(Split-Path $Path -Leaf)…"
+    Write-Host "  Signing $(Split-Path $Path -Leaf)..."
     & $SignTool sign /sha1 $SignThumbprint /fd SHA256 `
         /tr http://timestamp.digicert.com /td SHA256 $Path
     if ($LASTEXITCODE -ne 0) { throw "signtool failed for: $Path" }
 }
 
-# ── Build each architecture ───────────────────────────────────────────────────
+# -- Build each architecture ---------------------------------------------------
 $Architectures = @("x64", "arm64")
 $PackageFiles  = [System.Collections.Generic.List[string]]::new()
 
 foreach ($arch in $Architectures) {
-    Write-Host "`n┌─ $arch ─────────────────────────────────────────────────────"
+    Write-Host "`n+-- $arch -----------------------------------------------------------"
 
     $publishDir = "$PSScriptRoot\publish\$arch"
     $pkgDir     = "$PSScriptRoot\package\$arch"
     $msixOut    = "$OutDir\PhotoWell_${Version}_${arch}.msix"
 
     # 1. Publish self-contained
-    Write-Host "│  Publishing…"
+    Write-Host "|  Publishing..."
     Remove-Item -Recurse -Force $publishDir -ErrorAction SilentlyContinue
     dotnet publish $SrcProject `
         --configuration $Configuration `
@@ -167,7 +162,7 @@ foreach ($arch in $Architectures) {
     if ($LASTEXITCODE -ne 0) { throw "dotnet publish failed ($arch)" }
 
     # 2. Assemble staging directory
-    Write-Host "│  Assembling package directory…"
+    Write-Host "|  Assembling package directory..."
     Remove-Item -Recurse -Force $pkgDir -ErrorAction SilentlyContinue
     Copy-Item -Recurse $publishDir $pkgDir
 
@@ -184,7 +179,7 @@ foreach ($arch in $Architectures) {
         [System.Text.Encoding]::UTF8)
 
     # 5. Generate Package Resource Index
-    Write-Host "│  Generating PRI resources…"
+    Write-Host "|  Generating PRI resources..."
     Push-Location $pkgDir
     try {
         & $MakePri createconfig /cf priconfig.xml /dq en-US /o 2>&1 | Out-Null
@@ -195,7 +190,7 @@ foreach ($arch in $Architectures) {
     }
 
     # 6. Pack
-    Write-Host "│  Packing MSIX…"
+    Write-Host "|  Packing MSIX..."
     & $MakeAppx pack /d $pkgDir /p $msixOut /o /nv
     if ($LASTEXITCODE -ne 0) { throw "makeappx pack failed ($arch)" }
 
@@ -203,12 +198,12 @@ foreach ($arch in $Architectures) {
     Invoke-Sign $msixOut
 
     $sizeMb = [Math]::Round((Get-Item $msixOut).Length / 1MB, 1)
-    Write-Host "└─ Done: $(Split-Path $msixOut -Leaf)  ($sizeMb MB)"
+    Write-Host "+-- Done: $(Split-Path $msixOut -Leaf)  ($sizeMb MB)"
     $PackageFiles.Add($msixOut)
 }
 
-# ── Bundle both architectures ─────────────────────────────────────────────────
-Write-Host "`n┌─ Bundle ────────────────────────────────────────────────────────"
+# -- Bundle both architectures -------------------------------------------------
+Write-Host "`n+-- Bundle ----------------------------------------------------------"
 $bundleStage = "$PSScriptRoot\bundle"
 $bundleOut   = "$OutDir\PhotoWell_${Version}.msixbundle"
 
@@ -222,31 +217,27 @@ if ($LASTEXITCODE -ne 0) { throw "makeappx bundle failed" }
 Invoke-Sign $bundleOut
 
 $bundleMb = [Math]::Round((Get-Item $bundleOut).Length / 1MB, 1)
-Write-Host "└─ Bundle: $(Split-Path $bundleOut -Leaf)  ($bundleMb MB)"
+Write-Host "+-- Bundle: $(Split-Path $bundleOut -Leaf)  ($bundleMb MB)"
 
-# ── Summary ───────────────────────────────────────────────────────────────────
-Write-Host @"
-
-╔══════════════════════════════════════════════════════╗
-║  Build complete — PhotoWell $Version
-╚══════════════════════════════════════════════════════╝
-"@
+# -- Summary -------------------------------------------------------------------
+Write-Host ""
+Write-Host "========================================================"
+Write-Host "  Build complete -- PhotoWell $Version"
+Write-Host "========================================================"
 Write-Host "  Bundle  : $bundleOut"
 foreach ($p in $PackageFiles) {
     Write-Host "  Package : $p"
 }
 
 if (-not $SignThumbprint) {
-    Write-Host @"
-
-  ⚠  Packages are UNSIGNED.
-
-  Microsoft Store:
-    Upload PhotoWell_${Version}.msixbundle to Partner Center.
-    They sign it — no cert needed from you.
-
-  Sideload (direct download):
-    Run installer\install-sideload.ps1  (Windows 11 22H2+)
-    Or sign: build-msix.ps1 -SignThumbprint <SHA1>
-"@
+    Write-Host ""
+    Write-Host "  (!) Packages are UNSIGNED."
+    Write-Host ""
+    Write-Host "  Microsoft Store:"
+    Write-Host "    Upload PhotoWell_${Version}.msixbundle to Partner Center."
+    Write-Host "    They sign it -- no cert needed from you."
+    Write-Host ""
+    Write-Host "  Sideload (direct download):"
+    Write-Host "    Run installer\install-sideload.ps1  (Windows 11 22H2+)"
+    Write-Host "    Or sign: build-msix.ps1 -SignThumbprint <SHA1>"
 }

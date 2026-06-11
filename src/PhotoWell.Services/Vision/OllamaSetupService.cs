@@ -138,6 +138,47 @@ public sealed class OllamaSetupService : IOllamaSetupService, IDisposable
         }
     }
 
+    // ── Chat model silent pull ────────────────────────────────────────────────
+
+    public async Task EnsureChatModelAsync(string modelName, CancellationToken ct = default)
+    {
+        try
+        {
+            if (await IsModelPresentAsync(modelName, ct)) return;
+
+            AppLog.Vision($"[OllamaSetup] Chat model '{modelName}' not found — pulling silently…");
+            using var pullClient = new HttpClient { Timeout = Timeout.InfiniteTimeSpan, BaseAddress = new Uri(_baseUrl) };
+            var body = JsonSerializer.Serialize(new { name = modelName, stream = true });
+            using var content = new StringContent(body, System.Text.Encoding.UTF8, "application/json");
+            using var response = await pullClient.PostAsync("/api/pull", content, ct);
+            if (!response.IsSuccessStatusCode) return;
+
+            await using var stream = await response.Content.ReadAsStreamAsync(ct);
+            using var reader = new System.IO.StreamReader(stream);
+            while (!reader.EndOfStream && !ct.IsCancellationRequested)
+            {
+                var line = await reader.ReadLineAsync(ct);
+                if (string.IsNullOrWhiteSpace(line)) continue;
+                var evt = JsonSerializer.Deserialize<PullEvent>(line, JsonOpts);
+                if (evt?.Status?.Equals("success", StringComparison.OrdinalIgnoreCase) == true)
+                {
+                    AppLog.Vision($"[OllamaSetup] Chat model '{modelName}' pull complete.");
+                    break;
+                }
+                if (evt?.Error != null)
+                {
+                    AppLog.Error($"[OllamaSetup] Chat model pull error: {evt.Error}");
+                    break;
+                }
+            }
+        }
+        catch (OperationCanceledException) { }
+        catch (Exception ex)
+        {
+            AppLog.Error($"[OllamaSetup] EnsureChatModelAsync failed: {ex.GetType().Name}: {ex.Message}");
+        }
+    }
+
     // ── Ollama download & install ─────────────────────────────────────────────
 
     /// <returns>True if install succeeded, false if an error was written.</returns>

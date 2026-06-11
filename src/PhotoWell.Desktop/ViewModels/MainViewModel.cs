@@ -36,7 +36,7 @@ using PhotoWell.Services.Search;
 
 namespace PhotoWell.Desktop.ViewModels;
 
-public class MainViewModel : ObservableObject, IDisposable
+public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 {
 	private sealed class LockReleaser(SemaphoreSlim semaphore, string caller) : IDisposable
 	{
@@ -3744,6 +3744,8 @@ public class MainViewModel : ObservableObject, IDisposable
 					IsAiSetupRunning = false;
 					IsAiSetupError = false;
 					AiSetupMessage = "";
+					// Silently pull the chat model now that Ollama is confirmed running.
+					_ = setupService.EnsureChatModelAsync(UserPreferences.Current.ChatModelName, ct);
 					return;
 				}
 				if ((int)item.Stage == 6)
@@ -7123,5 +7125,156 @@ public class MainViewModel : ObservableObject, IDisposable
 		{
 			TagSuggestions.Add(item);
 		}
+	}
+
+	// ── IAssistantActions implementation ─────────────────────────────────────
+
+	public async Task<string> ChatSearchAsync(string query)
+	{
+		await Application.Current.Dispatcher.InvokeAsync(async () =>
+		{
+			PendingSearchQuery = query;
+			SearchQuery = query;
+			await LoadAsync();
+		});
+		return $"Showing {PhotoCount} photo{(PhotoCount == 1 ? "" : "s")} matching \"{query}\".";
+	}
+
+	public async Task<string> ChatFilterByPersonAsync(string name, bool includeUnconfirmed)
+	{
+		using var scope = _scopeFactory.CreateScope();
+		var personRepo = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
+		var people = await personRepo.GetAllNamedAsync();
+		var person = people.FirstOrDefault(p =>
+			p.Name?.Equals(name, StringComparison.OrdinalIgnoreCase) == true ||
+			p.NormalizedName?.Equals(name.ToLowerInvariant().Trim(), StringComparison.OrdinalIgnoreCase) == true);
+
+		if (person == null)
+		{
+			// Fuzzy fallback: contains match
+			person = people.FirstOrDefault(p =>
+				p.Name?.Contains(name, StringComparison.OrdinalIgnoreCase) == true);
+		}
+
+		if (person == null)
+			return $"No person named \"{name}\" was found in the library.";
+
+		var confirmedIds = await WithRepo(r => r.GetFacePhotoIdsForPersonAsync(person.Id));
+		var photoIdSet = new HashSet<Guid>(confirmedIds);
+
+		if (includeUnconfirmed)
+		{
+			var unconfirmed = await WithRepo(r => r.GetUnconfirmedFacesForPersonAsync(person.Id));
+			foreach (var (face, _) in unconfirmed)
+				if (face.IdentificationConfidence >= 0.7)
+					photoIdSet.Add(face.MediaFileId);
+		}
+
+		var photos = await WithRepo(r => r.GetByIdsAsync(photoIdSet));
+		await Application.Current.Dispatcher.InvokeAsync(() =>
+		{
+			_personFilterPhotoIds = photos.Select(p => p.Id).ToList();
+			MediaFiles = new System.Collections.ObjectModel.ObservableCollection<MediaFile>(photos);
+			GalleryCollectionReplaced?.Invoke();
+			PhotoCount = photos.Count;
+			TotalLibraryCount = TotalLibraryCount; // no change
+			IsPersonFilterActive = true;
+			ActiveFilterLabel = $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} with {person.Name}";
+			StatusText = ActiveFilterLabel;
+			ActiveView = GalleryView.AllPhotos;
+		});
+
+		return $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} featuring {person.Name}" +
+		       (includeUnconfirmed ? " (including high-confidence unconfirmed matches)." : ".");
+	}
+
+	public async Task<string> ChatFilterByDateAsync(string? startDate, string? endDate)
+	{
+		DateTime? from = null, to = null;
+		if (!string.IsNullOrWhiteSpace(startDate) && DateTime.TryParse(startDate, out var s)) from = s;
+		if (!string.IsNullOrWhiteSpace(endDate)   && DateTime.TryParse(endDate,   out var e)) to   = e.Date.AddDays(1).AddTicks(-1);
+
+		if (from == null && to == null)
+			return "No valid dates provided. Please use ISO-8601 format, e.g. 2024-01-01.";
+
+		var photos = await WithRepo(r => r.GetByDateRangeAsync(
+			from ?? DateTime.MinValue,
+			to   ?? DateTime.MaxValue));
+
+		var list = photos.ToList();
+		await Application.Current.Dispatcher.InvokeAsync(() =>
+		{
+			MediaFiles = new System.Collections.ObjectModel.ObservableCollection<MediaFile>(list);
+			GalleryCollectionReplaced?.Invoke();
+			PhotoCount = list.Count;
+			ActiveFilterLabel = $"Date filter: {from?.ToShortDateString() ?? "any"} – {to?.ToShortDateString() ?? "any"}";
+			StatusText = $"{list.Count} photo{(list.Count == 1 ? "" : "s")} in date range";
+			ActiveView = GalleryView.AllPhotos;
+		});
+
+		return $"Showing {list.Count} photo{(list.Count == 1 ? "" : "s")} taken between " +
+		       $"{from?.ToShortDateString() ?? "the beginning"} and {to?.ToShortDateString() ?? "now"}.";
+	}
+
+	public async Task<string> ChatClearFiltersAsync()
+	{
+		await Application.Current.Dispatcher.InvokeAsync(async () =>
+		{
+			PendingSearchQuery = "";
+			SearchQuery = "";
+			_personFilterPhotoIds = Array.Empty<Guid>();
+			IsPersonFilterActive = false;
+			ActiveFilterLabel = "";
+			_similaritySourceId = null;
+			IsSimilaritySearch = false;
+			await LoadAsync();
+		});
+		return "All filters cleared. Showing the full library.";
+	}
+
+	public async Task<string> ChatGetLibraryStatsAsync()
+	{
+		int total = await WithRepo(r => ((PhotoWell.Core.Interfaces.IRepository<MediaFile>)(object)r).CountAsync());
+		using var scope = _scopeFactory.CreateScope();
+		var personRepo = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
+		var people = await personRepo.GetAllNamedAsync();
+		return $"Your library contains {total:N0} photo{(total == 1 ? "" : "s")} and " +
+		       $"{people.Count} named {(people.Count == 1 ? "person" : "people")}.";
+	}
+
+	public Task<string> ChatOpenPhotoAsync(string filename)
+	{
+		var photo = MediaFiles.FirstOrDefault(m =>
+			string.Equals(m.FileName, filename, StringComparison.OrdinalIgnoreCase) ||
+			string.Equals(Path.GetFileName(m.FilePath), filename, StringComparison.OrdinalIgnoreCase));
+
+		if (photo == null)
+			return Task.FromResult($"No photo named \"{filename}\" is visible in the current gallery view.");
+
+		Application.Current.Dispatcher.Invoke(() => SelectedMediaFile = photo);
+		return Task.FromResult($"Opened \"{filename}\".");
+	}
+
+	public Task<string> ChatShowPeopleAsync()
+	{
+		Application.Current.Dispatcher.Invoke(() =>
+		{
+			using var scope = _scopeFactory.CreateScope();
+			var win = scope.ServiceProvider.GetRequiredService<Views.PeopleWindow>();
+			win.Owner = Application.Current.MainWindow;
+			win.Show();
+		});
+		return Task.FromResult("Opened the People window.");
+	}
+
+	public string GetCurrentContext()
+	{
+		var sb = new System.Text.StringBuilder();
+		sb.AppendLine($"Current library: {TotalLibraryCount:N0} total photos, {PhotoCount:N0} shown.");
+		if (!string.IsNullOrWhiteSpace(SearchQuery))
+			sb.AppendLine($"Active search: \"{SearchQuery}\".");
+		if (IsPersonFilterActive && !string.IsNullOrWhiteSpace(ActiveFilterLabel))
+			sb.AppendLine($"Active person filter: {ActiveFilterLabel}.");
+		return sb.ToString().TrimEnd();
 	}
 }

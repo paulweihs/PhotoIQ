@@ -370,6 +370,22 @@
                             </StackPanel>
                         </Border>
 
+                        <!-- Chat assistant model -->
+                        <TextBlock Text="Chat Assistant Model" Style="{StaticResource FieldLabel}" Margin="0,0,0,2"/>
+                        <TextBlock Style="{StaticResource NoteText}" Margin="0,0,0,6">
+                            <Run>Default:</Run>
+                            <Run FontWeight="SemiBold">llama3.1:8b</Run>
+                            <Run>— best accuracy for tool calling. Switch to</Run>
+                            <Run FontWeight="SemiBold">llama3.2:3b</Run>
+                            <Run>for faster responses on lower-end hardware.</Run>
+                        </TextBlock>
+                        <ComboBox IsEditable="True"
+                                  Text="{Binding ChatModel, UpdateSourceTrigger=PropertyChanged}"
+                                  ItemsSource="{Binding AvailableModels}"
+                                  Style="{StaticResource DarkComboBox}"
+                                  Margin="0,0,0,16"
+                                  ToolTip="Ollama model used for the AI chat assistant. Must support tool calling (function calling). llama3.1:8b gives best accuracy; llama3.2:3b is faster on lower-end hardware."/>
+
                         <!-- Image search models path -->
                         <TextBlock Style="{StaticResource FieldLabel}"
                                    ToolTip="Folder containing the CLIP model files used for visual similarity search (Find Related Images)">

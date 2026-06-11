@@ -242,4 +242,31 @@ public class PersonRepository : IPersonRepository
             .Where(p => p.Id == personId)
             .ExecuteUpdateAsync(s => s.SetProperty(p => p.SuppressPrompt, true));
     }
+
+    public async Task DeleteAsync(Guid personId)
+    {
+        await using var tx = await _ctx.Database.BeginTransactionAsync();
+        try
+        {
+            await _ctx.Faces
+                .Where(f => f.PersonId == personId)
+                .ExecuteUpdateAsync(s => s.SetProperty(f => f.PersonId, (Guid?)null));
+            await _ctx.People.Where(p => p.Id == personId).ExecuteDeleteAsync();
+            await tx.CommitAsync();
+        }
+        catch
+        {
+            await tx.RollbackAsync();
+            throw;
+        }
+    }
+
+    public async Task ToggleFavoriteAsync(Guid personId)
+    {
+        var person = await _ctx.People.FirstOrDefaultAsync(p => p.Id == personId);
+        if (person == null) return;
+        person.IsFavorite   = !person.IsFavorite;
+        person.DateModified = DateTime.UtcNow;
+        await _ctx.SaveChangesAsync();
+    }
 }

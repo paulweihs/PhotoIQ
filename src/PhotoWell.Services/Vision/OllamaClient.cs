@@ -218,6 +218,45 @@ public sealed class OllamaClient : IDisposable
                ?? string.Empty;
     }
 
+    // ── Chat API (tool calling) ───────────────────────────────────────────────
+
+    /// <summary>
+    /// Sends a multi-turn chat request to /api/chat, optionally with tool definitions.
+    /// Returns the assistant's reply message (may contain tool_calls or plain content).
+    /// </summary>
+    public async Task<OllamaChatMessage> ChatAsync(
+        string model,
+        IReadOnlyList<OllamaChatMessage> messages,
+        IReadOnlyList<OllamaToolDefinition>? tools = null,
+        CancellationToken ct = default)
+    {
+        var body = JsonSerializer.Serialize(new
+        {
+            model,
+            messages,
+            tools,
+            stream     = false,
+            keep_alive = -1,
+            options    = new { num_predict = 512, temperature = 0.2, num_gpu = 99 }
+        }, JsonOpts);
+
+        using var content = new StringContent(body, Encoding.UTF8, "application/json");
+        using var resp = await _http.PostAsync($"{_baseUrl}/api/chat", content, ct);
+
+        if (!resp.IsSuccessStatusCode)
+        {
+            var err = await resp.Content.ReadAsStringAsync(ct);
+            AppLog.Error($"Ollama /api/chat HTTP {(int)resp.StatusCode}: {err}");
+            throw new InvalidOperationException($"Ollama chat failed: HTTP {(int)resp.StatusCode}");
+        }
+
+        var json = await resp.Content.ReadAsStringAsync(ct);
+        return JsonSerializer.Deserialize<OllamaChatResponse>(json, JsonOpts)?.Message
+               ?? new OllamaChatMessage("assistant", "");
+    }
+
+    private record OllamaChatResponse(OllamaChatMessage Message, bool Done);
+
     public void Dispose()
     {
         // Cancel any in-flight requests before disposal so the socket is released promptly.
@@ -243,3 +282,26 @@ public sealed class OllamaClient : IDisposable
         [property: JsonPropertyName("context")] int[] Context = null!);
     private record GenerateResponse(string Response, bool Done);
 }
+
+// ── Public DTO record types used by ChatAssistantService ─────────────────────
+
+public record OllamaChatMessage(
+    [property: JsonPropertyName("role")]       string            Role,
+    [property: JsonPropertyName("content")]    string?           Content,
+    [property: JsonPropertyName("tool_calls")] OllamaToolCall[]? ToolCalls = null);
+
+public record OllamaToolCall(
+    [property: JsonPropertyName("function")] OllamaToolCallFunction Function);
+
+public record OllamaToolCallFunction(
+    [property: JsonPropertyName("name")]      string                       Name,
+    [property: JsonPropertyName("arguments")] System.Text.Json.JsonElement Arguments);
+
+public record OllamaToolDefinition(
+    [property: JsonPropertyName("type")]     string             Type,
+    [property: JsonPropertyName("function")] OllamaToolFunction Function);
+
+public record OllamaToolFunction(
+    [property: JsonPropertyName("name")]        string Name,
+    [property: JsonPropertyName("description")] string Description,
+    [property: JsonPropertyName("parameters")]  object Parameters);

@@ -7,3 +7,7 @@ app.log
 .claude/
 SESSION_HANDOFF.md
 eval_sample.txt
+installer/bundle/
+installer/output/
+installer/package/
+installer/publish/

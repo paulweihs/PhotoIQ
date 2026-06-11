@@ -36,4 +36,11 @@ public interface IOllamaSetupService
     /// Yields progress events throughout; never throws — errors are reported as Error stage.
     /// </summary>
     IAsyncEnumerable<OllamaSetupProgress> EnsureReadyAsync(string modelName, CancellationToken ct = default);
+
+    /// <summary>
+    /// Silently ensures a chat/tool-calling model is present in Ollama.
+    /// Assumes Ollama is already running (call after EnsureReadyAsync succeeds).
+    /// Fire-and-forget safe — errors are logged but never thrown.
+    /// </summary>
+    Task EnsureChatModelAsync(string modelName, CancellationToken ct = default);
 }

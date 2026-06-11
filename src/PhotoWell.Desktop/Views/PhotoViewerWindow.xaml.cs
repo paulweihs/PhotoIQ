@@ -1,4 +1,5 @@
 using System.Collections.Specialized;
+using System.Runtime.InteropServices;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -211,13 +212,11 @@ public partial class PhotoViewerWindow : Window
         var vm = (PhotoViewerViewModel)DataContext;
         if (vm.Current == null) return;
 
-        var pos = e.GetPosition(FaceOverlayCanvas);
-        var screenPt = FaceOverlayCanvas.PointToScreen(pos);
-        await OpenMentionPopupAsync(screenPt);
+        await OpenMentionPopupAsync();
         e.Handled = true;
     }
 
-    private async Task OpenMentionPopupAsync(Point screenPt)
+    private async Task OpenMentionPopupAsync()
     {
         _pendingFace         = null;
         _pendingMentionMode  = true;
@@ -230,9 +229,7 @@ public partial class PhotoViewerWindow : Window
         FaceNameUnlinkBtn.Visibility  = Visibility.Collapsed;
         AiSuggestionBorder.Visibility = Visibility.Collapsed;
 
-        FaceNamePopup.HorizontalOffset = screenPt.X;
-        FaceNamePopup.VerticalOffset   = screenPt.Y + 8;
-        FaceNamePopup.IsOpen           = true;
+        FaceNamePopup.IsOpen = true;
         FaceNameBox.Focus();
     }
 
@@ -261,10 +258,7 @@ public partial class PhotoViewerWindow : Window
             }
         }
 
-        var screenPt = anchor.PointToScreen(new Point(0, anchor.ActualHeight + 4));
-        FaceNamePopup.HorizontalOffset = screenPt.X;
-        FaceNamePopup.VerticalOffset   = screenPt.Y;
-        FaceNamePopup.IsOpen           = true;
+        FaceNamePopup.IsOpen = true;
         FaceNameBox.Focus();
         FaceNameBox.SelectAll();
     }
@@ -284,15 +278,9 @@ public partial class PhotoViewerWindow : Window
     {
         if (_allNamedPersons.Count == 0) { SuggestionBorder.Visibility = Visibility.Collapsed; return; }
 
-        var text     = FaceNameBox.Text;
-        var allNames = _allNamedPersons.Select(p => p.Name).Where(n => n != null).Cast<string>();
-        // Empty text → show all names so the user can pick without typing
-        var filtered = text.Length == 0
-            ? allNames.ToList()
-            : allNames.Where(n => n.Contains(text, StringComparison.OrdinalIgnoreCase)).ToList();
-
-        SuggestionList.ItemsSource  = filtered.Count > 0 ? filtered : null;
-        SuggestionBorder.Visibility = filtered.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
+        var ranked = RankedNames(FaceNameBox.Text, _pendingFace?.Embedding).ToList();
+        SuggestionList.ItemsSource  = ranked.Count > 0 ? ranked : null;
+        SuggestionBorder.Visibility = ranked.Count > 0 ? Visibility.Visible : Visibility.Collapsed;
     }
 
     private void FaceNameBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -429,31 +417,11 @@ public partial class PhotoViewerWindow : Window
 
     private void PopulateSidebarDropdown(string filter)
     {
-        var allNames = _allNamedPersons
-            .Select(p => p.Name)
-            .Where(n => !string.IsNullOrEmpty(n))
-            .Cast<string>();
+        var matches = RankedNames(filter, _sidebarFace?.Embedding).ToList();
 
-        List<string> matches;
-        if (filter.Length == 0)
-        {
-            matches = allNames.OrderBy(n => n).ToList();
-        }
-        else
-        {
-            matches = allNames
-                .Where(n => n.Contains(filter, StringComparison.OrdinalIgnoreCase))
-                .OrderBy(n => n)
-                .ToList();
-        }
-
-        // AI suggestion goes first if it matches the current filter
-        if (_sidebarAiName != null &&
-            (filter.Length == 0 || _sidebarAiName.Contains(filter, StringComparison.OrdinalIgnoreCase)))
-        {
-            matches.Remove(_sidebarAiName);
+        // AI suggestion is already ranked by embedding; if it arrived async and is at position > 0, pin it first.
+        if (_sidebarAiName != null && matches.Remove(_sidebarAiName))
             matches.Insert(0, _sidebarAiName);
-        }
 
         SidebarNameList.ItemsSource = matches.Count > 0 ? matches : null;
     }
@@ -523,6 +491,49 @@ public partial class PhotoViewerWindow : Window
         FaceNamePopup.IsOpen = false;
         _pendingFace        = null;
         _pendingMentionMode = false;
+    }
+
+    // ── Name ranking ─────────────────────────────────────────────────────────
+
+    /// <summary>
+    /// Returns names from _allNamedPersons filtered by <paramref name="filter"/> and sorted by:
+    /// favorites first, then cosine similarity to <paramref name="faceEmbedding"/> if available,
+    /// then by FaceCount (most tagged) descending.
+    /// </summary>
+    private IEnumerable<string> RankedNames(string filter, byte[]? faceEmbedding)
+    {
+        var candidates = _allNamedPersons.Where(p => !string.IsNullOrEmpty(p.Name));
+
+        if (filter.Length > 0)
+            candidates = candidates.Where(p => p.Name!.Contains(filter, StringComparison.OrdinalIgnoreCase));
+
+        IOrderedEnumerable<Person> sorted;
+        if (faceEmbedding != null)
+        {
+            sorted = candidates
+                .OrderByDescending(p => p.IsFavorite)
+                .ThenByDescending(p => p.AverageEmbedding != null
+                    ? CosineSimilarity(faceEmbedding, p.AverageEmbedding)
+                    : -1f);
+        }
+        else
+        {
+            sorted = candidates
+                .OrderByDescending(p => p.IsFavorite)
+                .ThenByDescending(p => p.FaceCount);
+        }
+
+        return sorted.Select(p => p.Name!);
+    }
+
+    private static float CosineSimilarity(byte[] a, byte[] b)
+    {
+        var fa = MemoryMarshal.Cast<byte, float>(a);
+        var fb = MemoryMarshal.Cast<byte, float>(b);
+        var len = Math.Min(fa.Length, fb.Length);
+        float dot = 0f;
+        for (int i = 0; i < len; i++) dot += fa[i] * fb[i];
+        return dot; // embeddings are L2-normalized, so dot product == cosine similarity
     }
 
     // ── Zoom ─────────────────────────────────────────────────────────────────

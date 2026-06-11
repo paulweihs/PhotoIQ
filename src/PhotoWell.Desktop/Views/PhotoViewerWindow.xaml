@@ -249,7 +249,7 @@
             <Popup x:Name="FaceNamePopup"
                    StaysOpen="False"
                    AllowsTransparency="False"
-                   Placement="Absolute"
+                   Placement="MousePoint"
                    PopupAnimation="Slide">
                 <Border Background="#EE1E1E2E"
                         BorderBrush="#FF45475A" BorderThickness="1"

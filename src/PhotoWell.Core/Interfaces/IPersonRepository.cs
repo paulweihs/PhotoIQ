@@ -61,4 +61,13 @@ public interface IPersonRepository
 
     /// <summary>Suppresses the "Is this [name]?" review dialog for this person permanently.</summary>
     Task SuppressPromptAsync(Guid personId);
+
+    /// <summary>
+    /// Permanently deletes a person and unlinks all associated faces (sets PersonId = null on each face).
+    /// Use for removing a wrongly-created or typo duplicate identity. Irreversible.
+    /// </summary>
+    Task DeleteAsync(Guid personId);
+
+    /// <summary>Flips IsFavorite on the given person and persists.</summary>
+    Task ToggleFavoriteAsync(Guid personId);
 }

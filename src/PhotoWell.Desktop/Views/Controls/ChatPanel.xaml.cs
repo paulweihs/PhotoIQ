@@ -1,0 +1,39 @@
+using System.Collections.Specialized;
+using System.Windows;
+using System.Windows.Controls;
+using PhotoWell.Desktop.ViewModels;
+
+namespace PhotoWell.Desktop.Views.Controls;
+
+public partial class ChatPanel : UserControl
+{
+    public ChatPanel()
+    {
+        InitializeComponent();
+        DataContextChanged += OnDataContextChanged;
+    }
+
+    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    {
+        if (e.NewValue is ChatViewModel vm)
+            vm.Messages.CollectionChanged += Messages_CollectionChanged;
+    }
+
+    private void Messages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
+    {
+        // Auto-scroll to bottom when a new message arrives
+        Scroller.ScrollToBottom();
+    }
+}
+
+// DataTemplateSelector for user vs assistant messages
+public sealed class ChatMessageTemplateSelector : DataTemplateSelector
+{
+    public DataTemplate? UserTemplate      { get; set; }
+    public DataTemplate? AssistantTemplate { get; set; }
+
+    public override DataTemplate? SelectTemplate(object item, DependencyObject container) =>
+        item is ChatMessageViewModel m
+            ? (m.IsUser ? UserTemplate : AssistantTemplate)
+            : base.SelectTemplate(item, container);
+}

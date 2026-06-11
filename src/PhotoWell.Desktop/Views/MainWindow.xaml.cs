@@ -6,6 +6,7 @@ using Microsoft.Extensions.DependencyInjection;
 using PhotoWell.Core.Models;
 using PhotoWell.Desktop.ViewModels;
 using PhotoWell.Desktop.Views.Controls;
+using PhotoWell.Core.Interfaces;
 
 namespace PhotoWell.Desktop.Views;
 
@@ -32,6 +33,7 @@ public partial class MainWindow : Window
     private HwndSource? _hwndSource;
     private Action<MediaFile>? _scrollHandler;
     private System.ComponentModel.PropertyChangedEventHandler? _vmPropertyChangedHandler;
+    private ChatViewModel? _chatVm;
 
     private Point   _dragStartPoint;
     private bool    _isDragPending;
@@ -59,6 +61,10 @@ public partial class MainWindow : Window
         // Wire tip toast to its ViewModel
         var tipToastVm = App.Services.GetRequiredService<TipToastViewModel>();
         TipToast.DataContext = tipToastVm;
+
+        // Wire chat panel
+        _chatVm = App.Services.GetRequiredService<ChatViewModel>();
+        ChatPanelControl.DataContext = _chatVm;
 
         vm.ScrollIntoViewRequested += _scrollHandler;
         vm.GalleryCollectionReplaced += () =>
@@ -187,7 +193,15 @@ public partial class MainWindow : Window
         var vm = (MainViewModel)DataContext;
         if (e.Key == Key.Return || e.Key == Key.Enter)
         {
-            vm.ExecuteSearchCommand.Execute(null);
+            if ((Keyboard.Modifiers & ModifierKeys.Control) != 0)
+            {
+                // Ctrl+Enter — send to AI instead of normal search
+                OnAskAiClick(sender, e);
+            }
+            else
+            {
+                vm.ExecuteSearchCommand.Execute(null);
+            }
             e.Handled = true;
         }
         else if (e.Key == Key.Escape)
@@ -195,6 +209,15 @@ public partial class MainWindow : Window
             vm.ClearSearchCommand.Execute(null);
             e.Handled = true;
         }
+    }
+
+    private void OnAskAiClick(object sender, RoutedEventArgs e)
+    {
+        if (_chatVm == null) return;
+        var vm  = (MainViewModel)DataContext;
+        var query = vm.PendingSearchQuery?.Trim() ?? "";
+        if (string.IsNullOrEmpty(query)) query = "What can you tell me about my photo library?";
+        _chatVm.SubmitQuery(query);
     }
 
     private void OnWindowPreviewKeyDown(object sender, KeyEventArgs e)

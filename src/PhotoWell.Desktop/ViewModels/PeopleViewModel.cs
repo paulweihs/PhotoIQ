@@ -1,4 +1,5 @@
 using System.Collections.ObjectModel;
+using System.Windows;
 using CommunityToolkit.Mvvm.ComponentModel;
 using CommunityToolkit.Mvvm.Input;
 using PhotoWell.Core.Interfaces;
@@ -83,6 +84,30 @@ public partial class PeopleViewModel : ObservableObject
         People.Remove(card);
         await _recognition.InvalidateCacheAsync();
         UpdateStatus();
+    }
+
+    [RelayCommand]
+    private async Task Delete(PersonCardViewModel card)
+    {
+        var answer = MessageBox.Show(
+            $"Permanently delete \"{card.DisplayName}\" and remove all face assignments?\n\nThis cannot be undone.",
+            "Delete Person",
+            MessageBoxButton.YesNo,
+            MessageBoxImage.Warning,
+            MessageBoxResult.No);
+        if (answer != MessageBoxResult.Yes) return;
+
+        await _personRepo.DeleteAsync(card.PersonId);
+        await _recognition.InvalidateCacheAsync();
+        People.Remove(card);
+        UpdateStatus();
+    }
+
+    [RelayCommand]
+    private async Task ToggleFavorite(PersonCardViewModel card)
+    {
+        await _personRepo.ToggleFavoriteAsync(card.PersonId);
+        card.IsFavorite = !card.IsFavorite;
     }
 
     [RelayCommand]

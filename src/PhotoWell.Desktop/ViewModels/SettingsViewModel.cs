@@ -30,6 +30,9 @@ public partial class SettingsViewModel : ObservableObject
     [NotifyPropertyChangedFor(nameof(RequiresRestart))]
     private string _visionModel;
     [ObservableProperty]
+    [NotifyPropertyChangedFor(nameof(HasUnsavedChanges))]
+    private string _chatModel;
+    [ObservableProperty]
     [NotifyPropertyChangedFor(nameof(RequiresRestart))]
     private string _clipModelsPath;
     [ObservableProperty] private string _connectionStatus = "";
@@ -104,7 +107,8 @@ public partial class SettingsViewModel : ObservableObject
                    HighQualityThumbnails != p.HighQualityThumbnails                     ||
                    UseImperialUnits      != p.UseImperialUnits                          ||
                    EnableFaceDetection   != p.EnableFaceDetection                          ||
-                   VisionImageSize       != p.VisionImageSize;
+                   VisionImageSize       != p.VisionImageSize                             ||
+                   ChatModel.Trim()      != p.ChatModelName;
         }
     }
 
@@ -122,6 +126,7 @@ public partial class SettingsViewModel : ObservableObject
         var prefs = UserPreferences.Current;
         _ollamaUrl             = prefs.OllamaBaseUrl;
         _visionModel           = prefs.VisionModelName;
+        _chatModel             = prefs.ChatModelName;
         _clipModelsPath        = prefs.ClipModelsPath ?? AppSettings.ModelsPath;
         _isExpressMode         = prefs.IsExpressMode;
         _maxThreads            = prefs.MaxParallelThreads;
@@ -191,6 +196,7 @@ public partial class SettingsViewModel : ObservableObject
         prefs.UseImperialUnits      = UseImperialUnits;
         prefs.EnableFaceDetection   = EnableFaceDetection;
         prefs.VisionImageSize       = VisionImageSize;
+        prefs.ChatModelName         = ChatModel.Trim();
         prefs.ExternalEditors       = [..ExternalEditors];
         prefs.Save();
 
