@@ -42,15 +42,20 @@ public class ExifEditService : IExifEditService
         if (!IsAvailable)
             throw new InvalidOperationException("ExifTool is not available — call EnsureAvailableAsync first.");
 
-        var escaped = value.Replace("\"", "\\\"");
-        var psi = new ProcessStartInfo(
-            _exifToolPath,
-            $"-{tag}=\"{escaped}\" -overwrite_original_in_place \"{filePath}\"")
+        // ArgumentList performs proper per-argument quoting — string-built arguments
+        // are vulnerable to breakout when a value contains quotes or trailing backslashes.
+        var psi = new ProcessStartInfo(_exifToolPath)
         {
             RedirectStandardOutput = true,
             RedirectStandardError  = true,
             UseShellExecute        = false,
-            CreateNoWindow         = true
+            CreateNoWindow         = true,
+            ArgumentList =
+            {
+                $"-{tag}={value}",
+                "-overwrite_original_in_place",
+                filePath
+            }
         };
 
         using var proc = Process.Start(psi)

@@ -1,24 +1,23 @@
 using System.Text.Json;
 using PhotoWell.Common;
 using PhotoWell.Core.Interfaces;
-using PhotoWell.Services.Vision;
 
 namespace PhotoWell.Services.Chat;
 
 /// <summary>
-/// Local AI chat assistant backed by Ollama's /api/chat endpoint with tool calling.
+/// Local AI chat assistant backed by any IChatModelClient (Ollama today) with tool calling.
 /// Maintains multi-turn conversation history and dispatches tool calls to IAssistantActions.
 /// All inference is local — no data leaves the machine.
 /// </summary>
 public sealed class ChatAssistantService : IChatAssistantService
 {
-    private readonly OllamaClient _ollama;
-    private readonly List<OllamaChatMessage> _history = [];
+    private readonly IChatModelClient _chatClient;
+    private readonly List<ChatMessage> _history = [];
     private IAssistantActions? _actions;
 
     public bool IsAvailable => _actions != null;
 
-    private static readonly IReadOnlyList<OllamaToolDefinition> Tools =
+    private static readonly IReadOnlyList<ChatToolDefinition> Tools =
     [
         Tool("search_photos",
             "Search photos by natural-language query, tags, or keywords. Returns a summary of matching photos.",
@@ -91,8 +90,8 @@ public sealed class ChatAssistantService : IChatAssistantService
             }),
     ];
 
-    private static OllamaToolDefinition Tool(string name, string description, object parameters) =>
-        new("function", new OllamaToolFunction(name, description, parameters));
+    private static ChatToolDefinition Tool(string name, string description, object parameters) =>
+        new(name, description, parameters);
 
     private const string SystemPrompt = """
         You are a helpful photo-library assistant built into PhotoWell.
@@ -116,9 +115,9 @@ public sealed class ChatAssistantService : IChatAssistantService
         - Never invent photo filenames or fabricate library data; only describe what the tools return.
         """;
 
-    public ChatAssistantService(OllamaClient ollama)
+    public ChatAssistantService(IChatModelClient chatClient)
     {
-        _ollama = ollama;
+        _chatClient = chatClient;
     }
 
     public void SetActions(IAssistantActions actions) => _actions = actions;
@@ -136,16 +135,16 @@ public sealed class ChatAssistantService : IChatAssistantService
         var model = UserPreferences.Current.ChatModelName;
 
         // Build message list: system + history + new user message
-        var messages = new List<OllamaChatMessage>();
+        var messages = new List<ChatMessage>();
         if (_history.Count == 0)
-            messages.Add(new OllamaChatMessage("system", SystemPrompt + "\n\n" + _actions.GetCurrentContext()));
+            messages.Add(new ChatMessage("system", SystemPrompt + "\n\n" + _actions.GetCurrentContext()));
         else
-            messages.Add(new OllamaChatMessage("system", SystemPrompt));
+            messages.Add(new ChatMessage("system", SystemPrompt));
 
         messages.AddRange(_history);
-        messages.Add(new OllamaChatMessage("user", userMessage));
+        messages.Add(new ChatMessage("user", userMessage));
 
-        _history.Add(new OllamaChatMessage("user", userMessage));
+        _history.Add(new ChatMessage("user", userMessage));
 
         try
         {
@@ -155,9 +154,9 @@ public sealed class ChatAssistantService : IChatAssistantService
             {
                 onProgress?.Invoke(i == 0 ? "Thinking…" : "Working…");
 
-                var reply = await _ollama.ChatAsync(model, messages, Tools, ct);
+                var reply = await _chatClient.ChatAsync(model, messages, Tools, ct);
 
-                if (reply.ToolCalls is { Length: > 0 } toolCalls)
+                if (reply.ToolCalls is { Count: > 0 } toolCalls)
                 {
                     // Append assistant turn with tool calls to the running messages list
                     messages.Add(reply);
@@ -166,8 +165,8 @@ public sealed class ChatAssistantService : IChatAssistantService
                     foreach (var tc in toolCalls)
                     {
                         var result = await DispatchToolAsync(tc, ct);
-                        AppLog.Vision($"[ChatAssistant] Tool '{tc.Function.Name}' → {result[..Math.Min(120, result.Length)]}");
-                        messages.Add(new OllamaChatMessage("tool", result));
+                        AppLog.Vision($"[ChatAssistant] Tool '{tc.Name}' → {result[..Math.Min(120, result.Length)]}");
+                        messages.Add(new ChatMessage("tool", result));
                     }
                     // Loop: send results back so model can produce final text
                     continue;
@@ -195,12 +194,12 @@ public sealed class ChatAssistantService : IChatAssistantService
         }
     }
 
-    private async Task<string> DispatchToolAsync(OllamaToolCall tc, CancellationToken ct)
+    private async Task<string> DispatchToolAsync(ChatToolCall tc, CancellationToken ct)
     {
         if (_actions == null) return "Error: actions not wired up.";
 
-        var fn   = tc.Function.Name;
-        var args = tc.Function.Arguments;
+        var fn   = tc.Name;
+        var args = tc.Arguments;
 
         try
         {

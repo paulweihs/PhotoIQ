@@ -163,6 +163,7 @@ public partial class App : Application
         services.AddSingleton<IDriveService, DriveService>();
 
         services.AddSingleton<OllamaClient>(_ => new OllamaClient(prefs.OllamaBaseUrl));
+        services.AddSingleton<IChatModelClient>(sp => sp.GetRequiredService<OllamaClient>());
         services.AddSingleton<IImageUnderstandingService>(sp =>
             new OllamaVisionService(sp.GetRequiredService<OllamaClient>(), AppSettings.VisionModelName));
         services.AddSingleton<IOllamaSetupService>(sp =>
@@ -192,7 +193,7 @@ public partial class App : Application
         services.AddTransient<PhotoViewerViewModel>();
         services.AddTransient<BackupViewModel>();
         services.AddSingleton<IChatAssistantService>(sp =>
-            new ChatAssistantService(sp.GetRequiredService<OllamaClient>()));
+            new ChatAssistantService(sp.GetRequiredService<IChatModelClient>()));
         services.AddTransient<ChatViewModel>();
 
         // ── Views ─────────────────────────────────────────────────────────────

@@ -4390,10 +4390,12 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 				}
 				_healTimer = null;
 			}
-			_visionWorkerCts.Cancel();
-			_faceWorkerCts.Cancel();
-			_relatedRefreshCts.Cancel();
-			_loadCts.Cancel();
+			// _loadCts and _relatedRefreshCts are disposed-and-replaced during normal
+			// operation, so the field may point at an already-disposed instance here.
+			SafeCancel(_visionWorkerCts);
+			SafeCancel(_faceWorkerCts);
+			SafeCancel(_relatedRefreshCts);
+			SafeCancel(_loadCts);
 			Task.Delay(100).ContinueWith(delegate
 			{
 				try
@@ -4410,6 +4412,12 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		{
 			AppLog.Error($"Error during MainViewModel.Dispose: {value}");
 		}
+	}
+
+	private static void SafeCancel(CancellationTokenSource? cts)
+	{
+		try { cts?.Cancel(); }
+		catch (ObjectDisposedException) { }
 	}
 
 	private async Task HealUnanalyzedAsync()
@@ -7131,12 +7139,14 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 
 	public async Task<string> ChatSearchAsync(string query)
 	{
+		// InvokeAsync(Func<Task>) completes at the lambda's first await, not when the
+		// inner task finishes — Unwrap so PhotoCount is read after LoadAsync completes.
 		await Application.Current.Dispatcher.InvokeAsync(async () =>
 		{
 			PendingSearchQuery = query;
 			SearchQuery = query;
 			await LoadAsync();
-		});
+		}).Task.Unwrap();
 		return $"Showing {PhotoCount} photo{(PhotoCount == 1 ? "" : "s")} matching \"{query}\".";
 	}
 
@@ -7228,13 +7238,13 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 			_similaritySourceId = null;
 			IsSimilaritySearch = false;
 			await LoadAsync();
-		});
+		}).Task.Unwrap();
 		return "All filters cleared. Showing the full library.";
 	}
 
 	public async Task<string> ChatGetLibraryStatsAsync()
 	{
-		int total = await WithRepo(r => ((PhotoWell.Core.Interfaces.IRepository<MediaFile>)(object)r).CountAsync());
+		int total = await WithRepo(r => r.CountAsync());
 		using var scope = _scopeFactory.CreateScope();
 		var personRepo = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
 		var people = await personRepo.GetAllNamedAsync();
@@ -7251,8 +7261,12 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		if (photo == null)
 			return Task.FromResult($"No photo named \"{filename}\" is visible in the current gallery view.");
 
-		Application.Current.Dispatcher.Invoke(() => SelectedMediaFile = photo);
-		return Task.FromResult($"Opened \"{filename}\".");
+		Application.Current.Dispatcher.Invoke(() =>
+		{
+			SelectedMediaFile = photo;
+			OpenPhotoViewerCommand.Execute(null);
+		});
+		return Task.FromResult($"Opened \"{filename}\" in the photo viewer.");
 	}
 
 	public Task<string> ChatShowPeopleAsync()

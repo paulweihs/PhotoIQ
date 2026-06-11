@@ -16,12 +16,19 @@ public sealed class ChatMessageViewModel
 
 public sealed partial class ChatViewModel : ObservableObject
 {
+    private const string UpsellMessage =
+        "AI chat is a Standard feature. Upgrade to Standard to ask questions about your library, " +
+        "filter by person, and more.";
+
     private readonly IChatAssistantService _assistant;
 
     [ObservableProperty] private string  _inputText    = "";
-    [ObservableProperty] private bool    _isThinking   = false;
     [ObservableProperty] private string  _thinkingText = "Thinking…";
     [ObservableProperty] private bool    _isPanelOpen  = false;
+
+    [ObservableProperty]
+    [NotifyCanExecuteChangedFor(nameof(SendCommand))]
+    private bool _isThinking = false;
 
     public ObservableCollection<ChatMessageViewModel> Messages { get; } = [];
 
@@ -50,19 +57,35 @@ public sealed partial class ChatViewModel : ObservableObject
         IsPanelOpen = true;
         Messages.Add(new ChatMessageViewModel(text, isUser: true));
 
+        // Tier gate lives here so every input path (search bar, panel input box)
+        // is covered, not just SubmitQuery.
+        if (UserPreferences.Current.IsExpressMode)
+        {
+            Messages.Add(new ChatMessageViewModel(UpsellMessage, isUser: false));
+            return;
+        }
+
         IsThinking = true;
         ThinkingText = "Thinking…";
+        try
+        {
+            using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(120));
+            var reply = await _assistant.SendAsync(
+                text,
+                onProgress: p => Application.Current.Dispatcher.Invoke(() => ThinkingText = p),
+                ct: cts.Token);
 
-        using var cts = new CancellationTokenSource(TimeSpan.FromSeconds(120));
-        var reply = await _assistant.SendAsync(
-            text,
-            onProgress: p => Application.Current.Dispatcher.Invoke(() => ThinkingText = p),
-            ct: cts.Token);
-
-        IsThinking = false;
-
-        if (!string.IsNullOrWhiteSpace(reply))
-            Messages.Add(new ChatMessageViewModel(reply, isUser: false));
+            if (!string.IsNullOrWhiteSpace(reply))
+                Messages.Add(new ChatMessageViewModel(reply, isUser: false));
+            else if (cts.IsCancellationRequested)
+                Messages.Add(new ChatMessageViewModel(
+                    "That request timed out. Please try again, or ask something simpler.",
+                    isUser: false));
+        }
+        finally
+        {
+            IsThinking = false;
+        }
     }
 
     private bool CanSend() => !IsThinking;
@@ -70,16 +93,8 @@ public sealed partial class ChatViewModel : ObservableObject
     // Called from MainWindow when user presses Ctrl+Enter or clicks "Ask AI"
     public void SubmitQuery(string query)
     {
-        if (UserPreferences.Current.IsExpressMode)
-        {
-            IsPanelOpen = true;
-            Messages.Add(new ChatMessageViewModel(query, isUser: true));
-            Messages.Add(new ChatMessageViewModel(
-                "AI chat is a Standard feature. Upgrade to Standard to ask questions about your library, filter by person, and more.",
-                isUser: false));
-            return;
-        }
         InputText = query;
-        SendCommand.Execute(null);
+        if (SendCommand.CanExecute(null))
+            SendCommand.Execute(null);
     }
 }

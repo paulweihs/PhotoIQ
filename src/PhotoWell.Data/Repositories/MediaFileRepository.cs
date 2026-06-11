@@ -1153,7 +1153,7 @@ public class MediaFileRepository : IMediaFileRepository
     public async Task<IReadOnlyList<(Guid Id, ulong Hash, string? AiDescription, string? AiModelUsed, string? PromptVersion, string? PostProcessVersion, bool IsAnalyzed)>>
         GetPerceptualHashCandidatesAsync()
     {
-        return await _context.MediaFiles
+        var rows = await _context.MediaFiles
             .Where(m => m.PerceptualHash != null && !m.IsExcluded)
             .Select(m => new
             {
@@ -1166,10 +1166,11 @@ public class MediaFileRepository : IMediaFileRepository
                 m.IsAnalyzed
             })
             .AsNoTracking()
-            .ToListAsync()
-            .ContinueWith(t => (IReadOnlyList<(Guid, ulong, string?, string?, string?, string?, bool)>)
-                t.Result.Select(r => (r.Id, r.Hash, r.AiDescription, r.AiModelUsed, r.PromptVersion, r.PostProcessVersion, r.IsAnalyzed))
-                        .ToList());
+            .ToListAsync();
+
+        return rows
+            .Select(r => (r.Id, r.Hash, r.AiDescription, r.AiModelUsed, r.PromptVersion, r.PostProcessVersion, r.IsAnalyzed))
+            .ToList();
     }
 
     private static void DeleteFaceThumbnailFiles(IEnumerable<string?> paths)

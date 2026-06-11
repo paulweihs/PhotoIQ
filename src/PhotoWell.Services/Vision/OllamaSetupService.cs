@@ -229,6 +229,16 @@ public sealed class OllamaSetupService : IOllamaSetupService, IDisposable
             return false;
         }
 
+        // Verify the download is genuinely signed by Ollama before running it elevated.
+        if (!Security.AuthenticodeVerifier.IsSignedBy(installerPath, "Ollama"))
+        {
+            try { File.Delete(installerPath); } catch { }
+            await out_.WriteAsync(new(OllamaSetupStage.Error,
+                "The downloaded AI engine installer failed signature verification and was discarded.\n" +
+                "Please retry, or install Ollama manually from https://ollama.com."), ct);
+            return false;
+        }
+
         // Install silently.
         await out_.WriteAsync(new(OllamaSetupStage.InstallingOllama, "Installing AI engine…"), ct);
 

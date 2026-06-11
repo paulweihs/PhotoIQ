@@ -3,6 +3,7 @@ using System.Text;
 using System.Text.Json;
 using System.Text.Json.Serialization;
 using PhotoWell.Common;
+using PhotoWell.Core.Interfaces;
 
 namespace PhotoWell.Services.Vision;
 
@@ -10,7 +11,7 @@ namespace PhotoWell.Services.Vision;
 /// Thin HTTP client for the Ollama REST API (http://localhost:11434).
 /// All AI inference stays local — no data leaves the machine.
 /// </summary>
-public sealed class OllamaClient : IDisposable
+public sealed class OllamaClient : IDisposable, IChatModelClient
 {
     private readonly HttpClient _http;
     private readonly string _baseUrl;
@@ -218,23 +219,25 @@ public sealed class OllamaClient : IDisposable
                ?? string.Empty;
     }
 
-    // ── Chat API (tool calling) ───────────────────────────────────────────────
+    // ── Chat API (tool calling) — IChatModelClient ────────────────────────────
 
     /// <summary>
     /// Sends a multi-turn chat request to /api/chat, optionally with tool definitions.
-    /// Returns the assistant's reply message (may contain tool_calls or plain content).
+    /// Accepts and returns provider-neutral Core types (IChatModelClient); the
+    /// Ollama wire format stays private to this class.
     /// </summary>
-    public async Task<OllamaChatMessage> ChatAsync(
+    public async Task<ChatMessage> ChatAsync(
         string model,
-        IReadOnlyList<OllamaChatMessage> messages,
-        IReadOnlyList<OllamaToolDefinition>? tools = null,
+        IReadOnlyList<ChatMessage> messages,
+        IReadOnlyList<ChatToolDefinition>? tools = null,
         CancellationToken ct = default)
     {
         var body = JsonSerializer.Serialize(new
         {
             model,
-            messages,
-            tools,
+            messages   = messages.Select(ToWire),
+            tools      = tools?.Select(t => new OllamaToolDefinition(
+                             "function", new OllamaToolFunction(t.Name, t.Description, t.Parameters))),
             stream     = false,
             keep_alive = -1,
             options    = new { num_predict = 512, temperature = 0.2, num_gpu = 99 }
@@ -251,9 +254,18 @@ public sealed class OllamaClient : IDisposable
         }
 
         var json = await resp.Content.ReadAsStringAsync(ct);
-        return JsonSerializer.Deserialize<OllamaChatResponse>(json, JsonOpts)?.Message
-               ?? new OllamaChatMessage("assistant", "");
+        var reply = JsonSerializer.Deserialize<OllamaChatResponse>(json, JsonOpts)?.Message
+                    ?? new OllamaChatMessage("assistant", "");
+        return FromWire(reply);
     }
+
+    private static OllamaChatMessage ToWire(ChatMessage m) =>
+        new(m.Role, m.Content,
+            m.ToolCalls?.Select(tc => new OllamaToolCall(new OllamaToolCallFunction(tc.Name, tc.Arguments))).ToArray());
+
+    private static ChatMessage FromWire(OllamaChatMessage m) =>
+        new(m.Role, m.Content,
+            m.ToolCalls?.Select(tc => new ChatToolCall(tc.Function.Name, tc.Function.Arguments)).ToList());
 
     private record OllamaChatResponse(OllamaChatMessage Message, bool Done);
 
@@ -283,7 +295,7 @@ public sealed class OllamaClient : IDisposable
     private record GenerateResponse(string Response, bool Done);
 }
 
-// ── Public DTO record types used by ChatAssistantService ─────────────────────
+// ── Ollama wire-format DTOs (serialization shapes for /api/chat) ─────────────
 
 public record OllamaChatMessage(
     [property: JsonPropertyName("role")]       string            Role,

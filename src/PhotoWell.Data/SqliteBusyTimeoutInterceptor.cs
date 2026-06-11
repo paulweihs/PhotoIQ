@@ -22,6 +22,11 @@ public sealed class SqliteBusyTimeoutInterceptor : DbConnectionInterceptor
 {
     private readonly int _milliseconds;
 
+    // Per-connection open/close logging writes a line to app.log on every DB
+    // operation, which floods the log and adds file I/O on hot paths (imports,
+    // gallery loads). Off by default; enable when diagnosing connection leaks.
+    public static bool VerboseConnectionLogging { get; set; }
+
     // Tracks how many SQLite connections are open simultaneously.
     private static int _openCount;
     private static long _nextConnId;
@@ -72,7 +77,8 @@ public sealed class SqliteBusyTimeoutInterceptor : DbConnectionInterceptor
         ApplyPragmas(connection);
         var id    = GetConnId(connection);
         var count = System.Threading.Interlocked.Increment(ref _openCount);
-        AppLog.Info($"[DB] Connection #{id} opened (total open: {count}) thread={System.Threading.Thread.CurrentThread.ManagedThreadId}");
+        if (VerboseConnectionLogging)
+            AppLog.Info($"[DB] Connection #{id} opened (total open: {count}) thread={System.Threading.Thread.CurrentThread.ManagedThreadId}");
     }
 
     public override async Task ConnectionOpenedAsync(
@@ -83,21 +89,24 @@ public sealed class SqliteBusyTimeoutInterceptor : DbConnectionInterceptor
         await ApplyPragmasAsync(connection, cancellationToken);
         var id    = GetConnId(connection);
         var count = System.Threading.Interlocked.Increment(ref _openCount);
-        AppLog.Info($"[DB] Connection #{id} opened async (total open: {count}) thread={System.Threading.Thread.CurrentThread.ManagedThreadId}");
+        if (VerboseConnectionLogging)
+            AppLog.Info($"[DB] Connection #{id} opened async (total open: {count}) thread={System.Threading.Thread.CurrentThread.ManagedThreadId}");
     }
 
     public override void ConnectionClosed(DbConnection connection, ConnectionEndEventData eventData)
     {
         var id    = GetConnId(connection);
         var count = System.Threading.Interlocked.Decrement(ref _openCount);
-        AppLog.Info($"[DB] Connection #{id} closed (total open: {count}) thread={System.Threading.Thread.CurrentThread.ManagedThreadId}");
+        if (VerboseConnectionLogging)
+            AppLog.Info($"[DB] Connection #{id} closed (total open: {count}) thread={System.Threading.Thread.CurrentThread.ManagedThreadId}");
     }
 
     public override Task ConnectionClosedAsync(DbConnection connection, ConnectionEndEventData eventData)
     {
         var id    = GetConnId(connection);
         var count = System.Threading.Interlocked.Decrement(ref _openCount);
-        AppLog.Info($"[DB] Connection #{id} closed async (total open: {count}) thread={System.Threading.Thread.CurrentThread.ManagedThreadId}");
+        if (VerboseConnectionLogging)
+            AppLog.Info($"[DB] Connection #{id} closed async (total open: {count}) thread={System.Threading.Thread.CurrentThread.ManagedThreadId}");
         return Task.CompletedTask;
     }
 }

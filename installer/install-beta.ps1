@@ -29,7 +29,9 @@ Write-Host "Step 1/2  Trusting developer certificate..."
 Write-Host "           (Windows will ask for administrator permission)"
 Write-Host ""
 
-$importCmd = "Import-Certificate -FilePath '$Cert' -CertStoreLocation Cert:\LocalMachine\Root"
+# TrustedPeople is sufficient for MSIX sideloading. Never use Root — that would
+# make the dev certificate a trusted certificate authority for the whole machine.
+$importCmd = "Import-Certificate -FilePath '$Cert' -CertStoreLocation Cert:\LocalMachine\TrustedPeople"
 $result = Start-Process powershell.exe `
     -ArgumentList "-NoProfile -NonInteractive -Command $importCmd" `
     -Verb RunAs `

@@ -66,11 +66,13 @@
             AssistantTemplate="{StaticResource AssistantMessageTemplate}"/>
     </UserControl.Resources>
 
-    <Border Background="#1C1C2E" BorderBrush="#3A3A5C" BorderThickness="0,1,0,0">
+    <Border Background="#1C1C2E" BorderBrush="#3A3A5C" BorderThickness="0,1,0,0"
+            Visibility="{Binding IsPanelOpen, Converter={StaticResource BoolToVis}}">
         <Grid>
             <Grid.RowDefinitions>
                 <RowDefinition Height="Auto"/>
                 <RowDefinition Height="*" MinHeight="80" MaxHeight="300"/>
+                <RowDefinition Height="Auto"/>
             </Grid.RowDefinitions>
 
             <!-- Header bar -->
@@ -80,9 +82,11 @@
                 <StackPanel Orientation="Horizontal" HorizontalAlignment="Right" Margin="0,0,4,0">
                     <Button Content="Clear" Style="{StaticResource ChatHeaderButton}"
                             Command="{Binding ClearHistoryCommand}"
+                            AutomationProperties.Name="Clear conversation history"
                             ToolTip="Clear conversation history"/>
                     <Button Content="✕" Style="{StaticResource ChatHeaderButton}"
                             Command="{Binding TogglePanelCommand}"
+                            AutomationProperties.Name="Close chat panel"
                             ToolTip="Close chat panel"/>
                 </StackPanel>
             </Grid>
@@ -101,6 +105,25 @@
                     </Border>
                 </StackPanel>
             </ScrollViewer>
+
+            <!-- Follow-up input -->
+            <Grid Grid.Row="2" Margin="8,4,8,8">
+                <Grid.ColumnDefinitions>
+                    <ColumnDefinition Width="*"/>
+                    <ColumnDefinition Width="Auto"/>
+                </Grid.ColumnDefinitions>
+                <TextBox Grid.Column="0" x:Name="FollowUpBox"
+                         Text="{Binding InputText, UpdateSourceTrigger=PropertyChanged}"
+                         AutomationProperties.Name="Ask the AI assistant"
+                         Background="#252538" Foreground="#E0E0FF" BorderBrush="#3A3A5C"
+                         CaretBrush="#E0E0FF" Padding="8,5" FontSize="13"
+                         KeyDown="FollowUpBox_KeyDown"/>
+                <Button Grid.Column="1" Content="Send" Margin="6,0,0,0" Padding="14,5"
+                        Command="{Binding SendCommand}"
+                        AutomationProperties.Name="Send message"
+                        Background="#5A2D7A" Foreground="White" BorderThickness="0"
+                        Cursor="Hand"/>
+            </Grid>
         </Grid>
     </Border>
 </UserControl>
