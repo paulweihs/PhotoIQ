@@ -7281,6 +7281,23 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 				string.Equals(Path.GetFileNameWithoutExtension(m.FilePath), filename, StringComparison.OrdinalIgnoreCase));
 		});
 
+	/// <summary>
+	/// Resolves the photos a single-or-multi tool targets: a named file, or the
+	/// user's current selection (all multi-selected photos, not just the primary one).
+	/// </summary>
+	private List<MediaFile> ChatResolveTargetPhotos(string? filename)
+	{
+		if (!string.IsNullOrWhiteSpace(filename) && !ChatPlaceholderFilename.IsMatch(filename.Trim()))
+		{
+			var one = ChatFindPhoto(filename);
+			return one != null ? [one] : [];
+		}
+		return Application.Current.Dispatcher.Invoke(() =>
+			MultiSelectedItems.Count > 1 ? MultiSelectedItems.ToList()
+			: SelectedMediaFile != null ? new List<MediaFile> { SelectedMediaFile }
+			: []);
+	}
+
 	private static string ChatNoPhotoMessage(string? filename) =>
 		string.IsNullOrWhiteSpace(filename)
 			? "No photo is currently selected — ask the user to select a photo or give a filename."
@@ -7302,26 +7319,42 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 
 	public Task<string> ChatPrintPhotoAsync(string? filename)
 	{
-		var photo = ChatFindPhoto(filename);
-		if (photo?.FilePath == null || !File.Exists(photo.FilePath))
-			return Task.FromResult(ChatNoPhotoMessage(filename));
+		// Each file opens its own print dialog — cap so a large selection doesn't flood the screen.
+		const int MaxPrintJobs = 5;
 
-		try
+		var photos = ChatResolveTargetPhotos(filename)
+			.Where(p => p.FilePath != null && File.Exists(p.FilePath)).ToList();
+		if (photos.Count == 0)
+			return Task.FromResult(ChatNoPhotoMessage(filename));
+		if (photos.Count > MaxPrintJobs)
+			return Task.FromResult($"{photos.Count} photos are selected — printing opens a dialog per photo, " +
+				$"so the limit is {MaxPrintJobs} at a time. Ask the user to narrow the selection.");
+
+		int opened = 0;
+		foreach (var photo in photos)
 		{
-			Process.Start(new ProcessStartInfo
+			try
 			{
-				FileName = photo.FilePath,
-				Verb = "print",
-				UseShellExecute = true
-			});
-			return Task.FromResult($"Opened the print dialog for \"{photo.FileName}\".");
+				Process.Start(new ProcessStartInfo
+				{
+					FileName = photo.FilePath,
+					Verb = "print",
+					UseShellExecute = true
+				});
+				opened++;
+			}
+			catch (Exception ex)
+			{
+				AppLog.Error($"ChatPrintPhotoAsync failed for '{photo.FilePath}': {ex.GetType().Name}: {ex.Message}");
+			}
 		}
-		catch (Exception ex)
-		{
-			AppLog.Error($"ChatPrintPhotoAsync failed for '{photo.FilePath}': {ex.GetType().Name}: {ex.Message}");
+
+		if (opened == 0)
 			return Task.FromResult("Windows could not find a print handler for this file type. " +
 				"Suggest opening the photo in another app and printing from there.");
-		}
+		return Task.FromResult(opened == 1
+			? $"Opened the print dialog for \"{photos[0].FileName}\"."
+			: $"Opened print dialogs for {opened} selected photos.");
 	}
 
 	public Task<string> ChatSetWallpaperAsync(string? filename)
@@ -7360,18 +7393,26 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 			return Task.FromResult($"No editor matching \"{editorName}\" is configured. " +
 				$"Available editors: {string.Join(", ", editors.Select(e => e.Name))}.");
 
-		var photo = ChatFindPhoto(filename);
-		if (photo?.FilePath == null || !File.Exists(photo.FilePath))
+		const int MaxEditorFiles = 10;
+
+		var photos = ChatResolveTargetPhotos(filename)
+			.Where(p => p.FilePath != null && File.Exists(p.FilePath)).ToList();
+		if (photos.Count == 0)
 			return Task.FromResult(ChatNoPhotoMessage(filename));
+		if (photos.Count > MaxEditorFiles)
+			return Task.FromResult($"{photos.Count} photos are selected — the limit for opening in an " +
+				$"editor is {MaxEditorFiles} at a time. Ask the user to narrow the selection.");
 
 		try
 		{
 			Process.Start(new ProcessStartInfo(editor.ExePath)
 			{
-				Arguments = "\"" + photo.FilePath + "\"",
+				Arguments = string.Join(" ", photos.Select(p => "\"" + p.FilePath + "\"")),
 				UseShellExecute = true
 			});
-			return Task.FromResult($"Opened \"{photo.FileName}\" in {editor.Name}.");
+			return Task.FromResult(photos.Count == 1
+				? $"Opened \"{photos[0].FileName}\" in {editor.Name}."
+				: $"Opened {photos.Count} selected photos in {editor.Name}.");
 		}
 		catch (Exception ex)
 		{
@@ -7394,8 +7435,9 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 
 	/// <summary>
 	/// Resolves the photo set a chat tool operates on: a named person's photos
-	/// (face recognition) or, with no name, the photos currently shown in the gallery.
-	/// Photos whose files are missing on disk are dropped.
+	/// (face recognition) or, with no name, the user's multi-selected photos —
+	/// falling back to the photos currently shown in the gallery when fewer than
+	/// two are selected. Photos whose files are missing on disk are dropped.
 	/// </summary>
 	private async Task<(List<MediaFile> Photos, string Label, string? Error)> ChatResolvePhotoSetAsync(
 		string? personName, bool confirmedOnly)
@@ -7412,8 +7454,12 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		}
 		else
 		{
-			photos = Application.Current.Dispatcher.Invoke(() => MediaFiles.ToList());
-			label = "from the current view";
+			// A deliberate multi-selection wins; a single incidental click does not
+			// shrink "export everything shown" down to one photo.
+			var selected = Application.Current.Dispatcher.Invoke(() =>
+				MultiSelectedItems.Count > 1 ? MultiSelectedItems.ToList() : null);
+			photos = selected ?? Application.Current.Dispatcher.Invoke(() => MediaFiles.ToList());
+			label = selected != null ? "currently selected" : "from the current view";
 		}
 
 		photos = photos.Where(f => f.FilePath != null && File.Exists(f.FilePath)).ToList();
@@ -7461,13 +7507,27 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		return summary;
 	}
 
-	public async Task<string> ChatEmailPhotosAsync(string? personName, bool confirmedOnly)
+	public async Task<string> ChatEmailPhotosAsync(string? personName, bool confirmedOnly, string? filename)
 	{
 		// Mail providers reject large attachment sets; past this, exporting to a folder is the right tool.
 		const int MaxEmailAttachments = 20;
 
-		var (photos, label, error) = await ChatResolvePhotoSetAsync(personName, confirmedOnly);
-		if (error != null) return error;
+		List<MediaFile> photos;
+		string label;
+		if (!string.IsNullOrWhiteSpace(filename) && string.IsNullOrWhiteSpace(personName))
+		{
+			// "Email this photo" / "email IMG_1234" — a specific photo or the selection.
+			photos = ChatResolveTargetPhotos(filename)
+				.Where(p => p.FilePath != null && File.Exists(p.FilePath)).ToList();
+			if (photos.Count == 0)
+				return ChatNoPhotoMessage(filename);
+			label = photos.Count == 1 ? $"(\"{photos[0].FileName}\")" : "currently selected";
+		}
+		else
+		{
+			(photos, label, var error) = await ChatResolvePhotoSetAsync(personName, confirmedOnly);
+			if (error != null) return error;
+		}
 
 		if (photos.Count > MaxEmailAttachments)
 			return $"That's {photos.Count} photos {label} — too many to attach to one email " +

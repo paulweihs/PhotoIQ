@@ -14,7 +14,7 @@ public interface IAssistantActions
     Task<string> ChatOpenPhotoAsync(string filename);
     Task<string> ChatShowPeopleAsync();
     Task<string> ChatExportPhotosAsync(string? personName, bool confirmedOnly);
-    Task<string> ChatEmailPhotosAsync(string? personName, bool confirmedOnly);
+    Task<string> ChatEmailPhotosAsync(string? personName, bool confirmedOnly, string? filename);
     Task<string> ChatPrintPhotoAsync(string? filename);
     Task<string> ChatSetWallpaperAsync(string? filename);
     Task<string> ChatOpenInEditorAsync(string? editorName, string? filename);
