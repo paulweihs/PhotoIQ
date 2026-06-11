@@ -7260,21 +7260,124 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		       $"{people.Count} named {(people.Count == 1 ? "person" : "people")}.{dateText}";
 	}
 
+	// Models often pass a literal placeholder ("this photo") instead of omitting the
+	// filename argument as instructed; treat those as "use the current selection".
+	private static readonly System.Text.RegularExpressions.Regex ChatPlaceholderFilename = new(
+		@"^(this|that|the|current|currently selected|selected)?\s*(photo|picture|image|one)?$",
+		System.Text.RegularExpressions.RegexOptions.IgnoreCase);
+
+	/// <summary>
+	/// Finds a gallery photo by filename (with or without extension), or falls back
+	/// to the current selection when no filename or a placeholder is given.
+	/// </summary>
+	private MediaFile? ChatFindPhoto(string? filename) =>
+		Application.Current.Dispatcher.Invoke(() =>
+		{
+			if (string.IsNullOrWhiteSpace(filename) || ChatPlaceholderFilename.IsMatch(filename.Trim()))
+				return SelectedMediaFile;
+			return MediaFiles.FirstOrDefault(m =>
+				string.Equals(m.FileName, filename, StringComparison.OrdinalIgnoreCase) ||
+				string.Equals(Path.GetFileName(m.FilePath), filename, StringComparison.OrdinalIgnoreCase) ||
+				string.Equals(Path.GetFileNameWithoutExtension(m.FilePath), filename, StringComparison.OrdinalIgnoreCase));
+		});
+
+	private static string ChatNoPhotoMessage(string? filename) =>
+		string.IsNullOrWhiteSpace(filename)
+			? "No photo is currently selected — ask the user to select a photo or give a filename."
+			: $"No photo named \"{filename}\" is visible in the current gallery view.";
+
 	public Task<string> ChatOpenPhotoAsync(string filename)
 	{
-		var photo = MediaFiles.FirstOrDefault(m =>
-			string.Equals(m.FileName, filename, StringComparison.OrdinalIgnoreCase) ||
-			string.Equals(Path.GetFileName(m.FilePath), filename, StringComparison.OrdinalIgnoreCase));
-
+		var photo = ChatFindPhoto(filename);
 		if (photo == null)
-			return Task.FromResult($"No photo named \"{filename}\" is visible in the current gallery view.");
+			return Task.FromResult(ChatNoPhotoMessage(filename));
 
 		Application.Current.Dispatcher.Invoke(() =>
 		{
 			SelectedMediaFile = photo;
 			OpenPhotoViewerCommand.Execute(null);
 		});
-		return Task.FromResult($"Opened \"{filename}\" in the photo viewer.");
+		return Task.FromResult($"Opened \"{photo.FileName}\" in the photo viewer.");
+	}
+
+	public Task<string> ChatPrintPhotoAsync(string? filename)
+	{
+		var photo = ChatFindPhoto(filename);
+		if (photo?.FilePath == null || !File.Exists(photo.FilePath))
+			return Task.FromResult(ChatNoPhotoMessage(filename));
+
+		try
+		{
+			Process.Start(new ProcessStartInfo
+			{
+				FileName = photo.FilePath,
+				Verb = "print",
+				UseShellExecute = true
+			});
+			return Task.FromResult($"Opened the print dialog for \"{photo.FileName}\".");
+		}
+		catch (Exception ex)
+		{
+			AppLog.Error($"ChatPrintPhotoAsync failed for '{photo.FilePath}': {ex.GetType().Name}: {ex.Message}");
+			return Task.FromResult("Windows could not find a print handler for this file type. " +
+				"Suggest opening the photo in another app and printing from there.");
+		}
+	}
+
+	public Task<string> ChatSetWallpaperAsync(string? filename)
+	{
+		var photo = ChatFindPhoto(filename);
+		if (photo?.FilePath == null || !File.Exists(photo.FilePath))
+			return Task.FromResult(ChatNoPhotoMessage(filename));
+
+		// Same constraints as SetAsWallpaper(): Windows wants JPEG; fall back to the
+		// photo's JPEG thumbnail for RAW and other formats.
+		string path = photo.FilePath;
+		string ext = Path.GetExtension(path).TrimStart('.').ToLowerInvariant();
+		if (!SupportedFormats.JpegExtensions.Contains(ext))
+		{
+			string? thumb = photo.ThumbnailLarge ?? photo.ThumbnailMedium;
+			if (thumb == null || !File.Exists(thumb))
+				return Task.FromResult($"\"{photo.FileName}\" is not a JPEG and has no JPEG thumbnail yet. " +
+					"Suggest re-analyzing the photo first to generate one.");
+			path = thumb;
+		}
+
+		NativeMethods.SystemParametersInfo(20, 0, path, 3);
+		return Task.FromResult($"Set \"{photo.FileName}\" as the desktop wallpaper.");
+	}
+
+	public Task<string> ChatOpenInEditorAsync(string? editorName, string? filename)
+	{
+		var editors = UserPreferences.Current.ExternalEditors;
+		if (editors.Count == 0)
+			return Task.FromResult("No external editors are configured. The user can add one in Settings.");
+
+		var editor = string.IsNullOrWhiteSpace(editorName)
+			? (editors.Count == 1 ? editors[0] : null)
+			: editors.FirstOrDefault(e => e.Name.Contains(editorName, StringComparison.OrdinalIgnoreCase));
+		if (editor == null)
+			return Task.FromResult($"No editor matching \"{editorName}\" is configured. " +
+				$"Available editors: {string.Join(", ", editors.Select(e => e.Name))}.");
+
+		var photo = ChatFindPhoto(filename);
+		if (photo?.FilePath == null || !File.Exists(photo.FilePath))
+			return Task.FromResult(ChatNoPhotoMessage(filename));
+
+		try
+		{
+			Process.Start(new ProcessStartInfo(editor.ExePath)
+			{
+				Arguments = "\"" + photo.FilePath + "\"",
+				UseShellExecute = true
+			});
+			return Task.FromResult($"Opened \"{photo.FileName}\" in {editor.Name}.");
+		}
+		catch (Exception ex)
+		{
+			AppLog.Error($"ChatOpenInEditorAsync failed for '{editor.ExePath}': {ex.GetType().Name}: {ex.Message}");
+			return Task.FromResult($"Could not start {editor.Name} — its configured path may be wrong.");
+		}
 	}
 
 	public Task<string> ChatShowPeopleAsync()

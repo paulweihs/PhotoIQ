@@ -129,6 +129,43 @@ public sealed class ChatAssistantService : IChatAssistantService
                 },
                 required = Array.Empty<string>()
             }),
+
+        Tool("print_photo",
+            "Open the Windows print dialog for one photo. Uses the currently selected photo " +
+            "when filename is omitted.",
+            new {
+                type = "object",
+                properties = new {
+                    filename = new { type = "string", description = "The photo's filename (optional)" }
+                },
+                required = Array.Empty<string>()
+            }),
+
+        Tool("set_wallpaper",
+            "Set a photo as the Windows desktop wallpaper. Uses the currently selected photo " +
+            "when filename is omitted.",
+            new {
+                type = "object",
+                properties = new {
+                    filename = new { type = "string", description = "The photo's filename (optional)" }
+                },
+                required = Array.Empty<string>()
+            }),
+
+        Tool("open_in_editor",
+            "Open one photo in one of the user's configured external photo editors (e.g. Photoshop, " +
+            "GIMP). Uses the currently selected photo when filename is omitted.",
+            new {
+                type = "object",
+                properties = new {
+                    editor_name = new {
+                        type = "string",
+                        description = "Name of the configured editor (optional when only one is configured)"
+                    },
+                    filename = new { type = "string", description = "The photo's filename (optional)" }
+                },
+                required = Array.Empty<string>()
+            }),
     ];
 
     private static ChatToolDefinition Tool(string name, string description, object parameters) =>
@@ -138,7 +175,8 @@ public sealed class ChatAssistantService : IChatAssistantService
         You are the AI assistant built into PhotoWell, a local photo library app.
         You have DIRECT access to the user's photo library through your tools: you can
         search it, filter it, open photos, show people, export copies of photos to a
-        folder, and attach photos to a new email. Never tell the user you don't have
+        folder, attach photos to a new email, print, set the desktop wallpaper, and
+        open a photo in the user's external editor. Never tell the user you don't have
         access to their library, and never ask them to call a function or show them
         function syntax — you call the tools yourself and report what happened.
 
@@ -152,11 +190,16 @@ public sealed class ChatAssistantService : IChatAssistantService
         - show_people: open the People window
         - export_photos: copy photos (optionally of one person) to a folder the user picks in a dialog
         - email_photos: open a draft email with photos attached (max 20); the user addresses and sends it
+        - print_photo: open the print dialog for a photo (selected photo when no filename given)
+        - set_wallpaper: set a photo as the desktop wallpaper (selected photo when no filename given)
+        - open_in_editor: open a photo in a configured external editor like Photoshop
 
         Guidelines:
-        - When the user asks you to show, find, filter, open, export, or email photos —
-          even when phrased as "how do I…" or "can you show me how…" — call the matching
-          tool and do it, then summarise the outcome in 1-2 sentences.
+        - When the user asks you to show, find, filter, open, export, email, print, or
+          edit photos — even when phrased as "how do I…" or "can you show me how…" —
+          call the matching tool and do it, then summarise the outcome in 1-2 sentences.
+        - "This photo" or "the selected photo" means the user's current selection — call
+          the tool without a filename.
         - For person queries ("show me photos of Sarah"), use filter_by_person with
           include_unconfirmed=true. If the user says "verified" or "confirmed", use
           include_unconfirmed=false (or confirmed_only=true when exporting).
@@ -282,6 +325,11 @@ public sealed class ChatAssistantService : IChatAssistantService
                 "email_photos"    => await _actions.ChatEmailPhotosAsync(
                                         GetStringOpt(args, "person_name"),
                                         GetBool(args, "confirmed_only", defaultValue: true)),
+                "print_photo"     => await _actions.ChatPrintPhotoAsync(GetStringOpt(args, "filename")),
+                "set_wallpaper"   => await _actions.ChatSetWallpaperAsync(GetStringOpt(args, "filename")),
+                "open_in_editor"  => await _actions.ChatOpenInEditorAsync(
+                                        GetStringOpt(args, "editor_name"),
+                                        GetStringOpt(args, "filename")),
                 _                 => $"Unknown tool: {fn}"
             };
         }
