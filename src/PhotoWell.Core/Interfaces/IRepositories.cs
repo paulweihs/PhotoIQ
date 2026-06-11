@@ -184,6 +184,12 @@ public interface IMediaFileRepository : IRepository<MediaFile>
     Task<IEnumerable<MediaFile>> GetByDateRangeAsync(DateTime from, DateTime to);
 
     /// <summary>
+    /// Returns the earliest and latest DateTaken (falling back to DateImported) across
+    /// non-excluded photos, or (null, null) when the library is empty.
+    /// </summary>
+    Task<(DateTime? Earliest, DateTime? Latest)> GetDateRangeAsync();
+
+    /// <summary>
     /// Returns non-excluded photos whose <see cref="MediaFile.DateImported"/> falls
     /// within [<paramref name="from"/>, <paramref name="to"/>], ordered by import date ascending.
     /// Used by the <c>imported:</c> search prefix.

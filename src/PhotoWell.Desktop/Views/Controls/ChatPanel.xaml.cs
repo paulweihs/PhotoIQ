@@ -22,7 +22,7 @@ public partial class ChatPanel : UserControl
             vm.Messages.CollectionChanged += Messages_CollectionChanged;
     }
 
-    private void FollowUpBox_KeyDown(object sender, KeyEventArgs e)
+    private void FollowUpBox_PreviewKeyDown(object sender, KeyEventArgs e)
     {
         if (e.Key == Key.Enter && DataContext is ChatViewModel vm)
         {

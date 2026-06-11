@@ -7248,11 +7248,16 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 	public async Task<string> ChatGetLibraryStatsAsync()
 	{
 		int total = await WithRepo(r => r.CountAsync());
+		var (earliest, latest) = await WithRepo(r => r.GetDateRangeAsync());
 		using var scope = _scopeFactory.CreateScope();
 		var personRepo = scope.ServiceProvider.GetRequiredService<IPersonRepository>();
 		var people = await personRepo.GetAllNamedAsync();
+
+		var dateText = earliest != null && latest != null
+			? $" The photos span {earliest:MMMM yyyy} to {latest:MMMM yyyy}."
+			: "";
 		return $"Your library contains {total:N0} photo{(total == 1 ? "" : "s")} and " +
-		       $"{people.Count} named {(people.Count == 1 ? "person" : "people")}.";
+		       $"{people.Count} named {(people.Count == 1 ? "person" : "people")}.{dateText}";
 	}
 
 	public Task<string> ChatOpenPhotoAsync(string filename)

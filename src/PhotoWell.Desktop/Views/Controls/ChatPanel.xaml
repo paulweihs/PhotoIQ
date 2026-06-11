@@ -117,12 +117,22 @@
                          AutomationProperties.Name="Ask the AI assistant"
                          Background="#252538" Foreground="#E0E0FF" BorderBrush="#3A3A5C"
                          CaretBrush="#E0E0FF" Padding="8,5" FontSize="13"
-                         KeyDown="FollowUpBox_KeyDown"/>
+                         PreviewKeyDown="FollowUpBox_PreviewKeyDown"/>
                 <Button Grid.Column="1" Content="Send" Margin="6,0,0,0" Padding="14,5"
                         Command="{Binding SendCommand}"
                         AutomationProperties.Name="Send message"
                         Background="#5A2D7A" Foreground="White" BorderThickness="0"
-                        Cursor="Hand"/>
+                        Cursor="Hand">
+                    <Button.Style>
+                        <Style TargetType="Button">
+                            <Style.Triggers>
+                                <Trigger Property="IsEnabled" Value="False">
+                                    <Setter Property="Opacity" Value="0.4"/>
+                                </Trigger>
+                            </Style.Triggers>
+                        </Style>
+                    </Button.Style>
+                </Button>
             </Grid>
         </Grid>
     </Border>

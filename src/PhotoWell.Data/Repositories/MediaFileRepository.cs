@@ -489,6 +489,20 @@ public class MediaFileRepository : IMediaFileRepository
             .OrderBy(m => m.DateTaken ?? m.DateImported)
             .ToListAsync();
 
+    public async Task<(DateTime? Earliest, DateTime? Latest)> GetDateRangeAsync()
+    {
+        var range = await _context.MediaFiles
+            .Where(m => !m.IsExcluded)
+            .GroupBy(_ => 1)
+            .Select(g => new
+            {
+                Earliest = (DateTime?)g.Min(m => m.DateTaken ?? m.DateImported),
+                Latest   = (DateTime?)g.Max(m => m.DateTaken ?? m.DateImported)
+            })
+            .FirstOrDefaultAsync();
+        return (range?.Earliest, range?.Latest);
+    }
+
     public async Task<IEnumerable<MediaFile>> GetByImportedDateRangeAsync(DateTime from, DateTime to)
         => await _context.MediaFiles
             .Where(m => !m.IsExcluded && m.DateImported >= from && m.DateImported <= to)

@@ -231,6 +231,14 @@ public sealed class ChatAssistantService : IChatAssistantService
         var fn   = tc.Name;
         var args = tc.Arguments;
 
+        // Some models/Ollama versions deliver arguments as a JSON string rather
+        // than an object — unwrap it so the property getters work either way.
+        if (args.ValueKind == JsonValueKind.String)
+        {
+            try { args = JsonDocument.Parse(args.GetString() ?? "{}").RootElement.Clone(); }
+            catch (JsonException) { /* getters fall back to defaults below */ }
+        }
+
         try
         {
             return fn switch
@@ -258,12 +266,35 @@ public sealed class ChatAssistantService : IChatAssistantService
         }
     }
 
-    private static string GetString(JsonElement args, string key) =>
-        args.TryGetProperty(key, out var v) ? v.GetString() ?? "" : "";
+    // Small local models frequently get JSON types wrong (booleans as "true",
+    // numbers as strings) — be lenient instead of throwing back a tool error.
 
-    private static string? GetStringOpt(JsonElement args, string key) =>
-        args.TryGetProperty(key, out var v) ? v.GetString() : null;
+    internal static string GetString(JsonElement args, string key) =>
+        GetStringOpt(args, key) ?? "";
 
-    private static bool GetBool(JsonElement args, string key, bool defaultValue) =>
-        args.TryGetProperty(key, out var v) ? v.GetBoolean() : defaultValue;
+    internal static string? GetStringOpt(JsonElement args, string key)
+    {
+        if (args.ValueKind != JsonValueKind.Object || !args.TryGetProperty(key, out var v))
+            return null;
+        return v.ValueKind switch
+        {
+            JsonValueKind.String => v.GetString(),
+            JsonValueKind.Null   => null,
+            _                    => v.ToString()
+        };
+    }
+
+    internal static bool GetBool(JsonElement args, string key, bool defaultValue)
+    {
+        if (args.ValueKind != JsonValueKind.Object || !args.TryGetProperty(key, out var v))
+            return defaultValue;
+        return v.ValueKind switch
+        {
+            JsonValueKind.True   => true,
+            JsonValueKind.False  => false,
+            JsonValueKind.String => bool.TryParse(v.GetString(), out var b) ? b : defaultValue,
+            JsonValueKind.Number => v.TryGetDouble(out var d) ? d != 0 : defaultValue,
+            _                    => defaultValue
+        };
+    }
 }
