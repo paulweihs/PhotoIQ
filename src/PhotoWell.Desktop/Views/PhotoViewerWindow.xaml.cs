@@ -30,6 +30,7 @@ public partial class PhotoViewerWindow : Window
     private bool _pendingMentionMode;
     private List<Person> _allNamedPersons = [];
     private string? _aiSuggestedName;
+    private bool _canvasMouseDownReceived;
 
     public PhotoViewerWindow(PhotoViewerViewModel vm)
     {
@@ -205,8 +206,17 @@ public partial class PhotoViewerWindow : Window
 
     // ── Tag person by clicking empty image area ───────────────────────────────
 
+    private void FaceOverlayCanvas_MouseDown(object sender, MouseButtonEventArgs e)
+        => _canvasMouseDownReceived = true;
+
     private async void FaceOverlayCanvas_Click(object sender, MouseButtonEventArgs e)
     {
+        // Guard: only handle clicks where we also saw the MouseDown on this canvas.
+        // A spurious MouseLeftButtonUp arriving from a double-click that opened this window
+        // (e.g. double-clicking a gallery thumbnail) won't have a matching Down here.
+        if (!_canvasMouseDownReceived) return;
+        _canvasMouseDownReceived = false;
+
         // Face rect clicks mark e.Handled = true, so this only fires for empty-area clicks.
         // Mouse is captured by the pan handler when zoomed in, so this won't fire during panning.
         var vm = (PhotoViewerViewModel)DataContext;

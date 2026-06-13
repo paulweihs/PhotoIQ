@@ -235,6 +235,7 @@
                     Background="Transparent"
                     MouseEnter="FaceOverlay_MouseEnter"
                     MouseLeave="FaceOverlay_MouseLeave"
+                    MouseLeftButtonDown="FaceOverlayCanvas_MouseDown"
                     MouseLeftButtonUp="FaceOverlayCanvas_Click"
                     RenderTransformOrigin="0.5,0.5">
                 <Canvas.RenderTransform>
