@@ -274,7 +274,23 @@
                                  Tag="Search tags, descriptions, or describe a scene…"
                                  Padding="10,0,28,0"
                                  AutomationProperties.Name="Search photos"
-                                 PreviewKeyDown="OnSearchBoxPreviewKeyDown"/>
+                                 PreviewKeyDown="OnSearchBoxPreviewKeyDown">
+                            <TextBox.ToolTip>
+                                <ToolTip>
+                                    <StackPanel MaxWidth="280">
+                                        <TextBlock FontWeight="SemiBold" Margin="0,0,0,4" Text="Search your library"/>
+                                        <TextBlock TextWrapping="Wrap"
+                                                   Text="Search by tag, AI description, or filename. Press Enter or click Search."/>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#AAAAAA" FontSize="11"
+                                                   Text="Tip: press Ctrl+Enter to send your search as a question to the AI chat assistant."
+                                                   Visibility="{Binding ShowExpressLimit, Converter={StaticResource InverseBoolToVis}}"/>
+                                        <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#FFCC88" FontSize="11" FontStyle="Italic"
+                                                   Text="✦ Standard: natural language and describe-a-scene search. Express: tags and filenames only."
+                                                   Visibility="{Binding ShowExpressLimit, Converter={StaticResource BoolToVis}}"/>
+                                    </StackPanel>
+                                </ToolTip>
+                            </TextBox.ToolTip>
+                        </TextBox>
                         <!-- Clear (×) button — visible when there is pending or committed text -->
                         <Button Content="×" Command="{Binding ClearSearchCommand}"
                                 Click="OnClearSearchClick"
@@ -440,13 +456,31 @@
 
                 <!-- Action buttons -->
                 <StackPanel Grid.Column="2" Orientation="Horizontal" Margin="16,0,0,0">
-                    <!-- Ask AI button — opens/toggles chat panel (hidden in Express mode) -->
+                    <!-- Ask AI button — opens/toggles chat panel; shown in both tiers, dimmed in Express -->
                     <Button x:Name="AskAiButton"
                             Content="✨ Ask AI"
                             Click="OnAskAiClick"
                             Background="#5A2D7A"
-                            Padding="16,8" Margin="0,0,8,0"
-                            ToolTip="Ask the AI assistant — type a question in the search box then click here (Ctrl+Enter)">
+                            Padding="16,8" Margin="0,0,8,0">
+                        <Button.ToolTip>
+                            <ToolTip>
+                                <StackPanel MaxWidth="260">
+                                    <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                        <TextBlock Text="✨ Ask AI" FontWeight="SemiBold"/>
+                                        <TextBlock Text="  ·  Standard" FontWeight="SemiBold" Foreground="#FFCC88"
+                                                   Visibility="{Binding ShowExpressLimit, Converter={StaticResource BoolToVis}}"/>
+                                    </StackPanel>
+                                    <TextBlock TextWrapping="Wrap"
+                                               Text="Ask natural-language questions about your library, filter by person, find photos from a trip, and more."/>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#AAAAAA" FontSize="11"
+                                               Text="Type a question in the search box, then click here or press Ctrl+Enter."
+                                               Visibility="{Binding ShowExpressLimit, Converter={StaticResource InverseBoolToVis}}"/>
+                                    <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#FFCC88" FontSize="11" FontStyle="Italic"
+                                               Text="✦ Standard feature — upgrade to Standard to unlock AI chat."
+                                               Visibility="{Binding ShowExpressLimit, Converter={StaticResource BoolToVis}}"/>
+                                </StackPanel>
+                            </ToolTip>
+                        </Button.ToolTip>
                         <Button.Style>
                             <Style TargetType="Button" BasedOn="{StaticResource PrimaryButtonStyle}">
                                 <Setter Property="Background" Value="#5A2D7A"/>
@@ -455,7 +489,7 @@
                                         <Setter Property="Background" Value="#7A3DA0"/>
                                     </Trigger>
                                     <DataTrigger Binding="{Binding ShowExpressLimit}" Value="True">
-                                        <Setter Property="Visibility" Value="Collapsed"/>
+                                        <Setter Property="Opacity" Value="0.65"/>
                                     </DataTrigger>
                                 </Style.Triggers>
                             </Style>
@@ -734,8 +768,23 @@
                         Style="{DynamicResource NavButtonStyle}"
                         ToolTip="Browse all AI-generated tags (Ctrl+Shift+T)"/>
                 <Button Content="👤  People"
-                        Command="{Binding ShowPeopleCommand}"
-                        ToolTip="Browse detected people and name faces (Ctrl+Shift+P)">
+                        Command="{Binding ShowPeopleCommand}">
+                    <Button.ToolTip>
+                        <ToolTip>
+                            <StackPanel MaxWidth="240">
+                                <StackPanel Orientation="Horizontal" Margin="0,0,0,4">
+                                    <TextBlock Text="👤 People" FontWeight="SemiBold"/>
+                                    <TextBlock Text="  ·  Standard" FontWeight="SemiBold" Foreground="#FFCC88"
+                                               Visibility="{Binding ShowExpressLimit, Converter={StaticResource BoolToVis}}"/>
+                                </StackPanel>
+                                <TextBlock TextWrapping="Wrap"
+                                           Text="Browse detected people and name faces (Ctrl+Shift+P)."/>
+                                <TextBlock TextWrapping="Wrap" Margin="0,6,0,0" Foreground="#FFCC88" FontSize="11" FontStyle="Italic"
+                                           Text="✦ Standard feature — people detection requires AI analysis with the Standard tier."
+                                           Visibility="{Binding ShowExpressLimit, Converter={StaticResource BoolToVis}}"/>
+                            </StackPanel>
+                        </ToolTip>
+                    </Button.ToolTip>
                     <Button.Style>
                         <Style TargetType="Button" BasedOn="{StaticResource NavButtonStyle}">
                             <Style.Triggers>

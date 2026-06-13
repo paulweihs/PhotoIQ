@@ -64,6 +64,41 @@ PhotoWell.Desktop  →  PhotoWell.Common
 
 AI steps degrade silently — a tagging or vision failure never aborts an import.
 
+## AI Chat Assistant
+
+"✨ Ask AI" button in the toolbar (or Ctrl+Enter from the search box) opens a sliding `ChatPanel` below the top bar.
+
+**Architecture:**
+- `IChatAssistantService` / `ChatAssistantService` (Services layer) — multi-turn conversation via Ollama `/api/chat` with tool calling. Agentic loop: up to 6 iterations per user turn.
+- `IAssistantActions` (Core interface) — UI dispatch contract so Services layer can update the gallery without a circular dependency. `MainViewModel` implements it. Wired in `App.xaml.cs` via `chatService.SetActions(mainVm)` after `mainWindow.Show()`.
+- `ChatViewModel` (Desktop) — `ObservableCollection<ChatMessageViewModel>`, send/clear commands, 120 s timeout, thinking indicator.
+- `ChatPanel.xaml` / `ChatPanel.xaml.cs` — bubble chat UI (user right/purple, assistant left/dark). Auto-scrolls on new messages. `ChatMessageTemplateSelector` picks user vs assistant template.
+
+**7 tools the assistant can call:**
+
+| Tool | What it does |
+|---|---|
+| `search_photos` | Sets `SearchQuery` + runs `ExecuteSearchCommand` |
+| `filter_by_person` | Looks up `Person` by name, union of confirmed + high-confidence (≥0.7) faces, replaces `MediaFiles` |
+| `filter_by_date` | Filters gallery to a year or year+month range |
+| `clear_filters` | Resets person filter, search, restores full library |
+| `get_library_stats` | Returns total/analyzed/favorite counts from DB |
+| `open_photo` | Selects a photo by filename in the current gallery view |
+| `show_people` | Navigates to the People sidebar view |
+
+**Model:** `llama3.1:8b` default (configurable in Settings → AI Engine → Chat Assistant Model). `llama3.2:3b` is the lighter/faster alternative. Model is auto-pulled via `OllamaSetupService.EnsureChatModelAsync` as a fire-and-forget background task after the vision model reaches Ready — no separate install step required.
+
+**Tier gating:**
+- Express: "Ask AI" button shown at 65% opacity. Clicking opens the chat panel and shows an inline upsell message. The button is never hidden — the tooltip and click handler both communicate the Standard requirement.
+- Standard: full chat functionality.
+- `UserPreferences.Current.IsExpressMode` is the gate; checked in `ChatViewModel.SendAsync`.
+
+**Key files:**
+- `src/PhotoWell.Core/Interfaces/IChatAssistantService.cs` — interface + `IAssistantActions`
+- `src/PhotoWell.Services/Chat/ChatAssistantService.cs` — tool loop implementation
+- `src/PhotoWell.Desktop/ViewModels/ChatViewModel.cs`
+- `src/PhotoWell.Desktop/Views/Controls/ChatPanel.xaml[.cs]`
+
 ## Product Tiers
 
 | | Express | Standard |
@@ -71,6 +106,8 @@ AI steps degrade silently — a tagging or vision failure never aborts an import
 | AI engine | CLIP/ONNX (CPU only) | llama3.2-vision via Ollama (GPU) |
 | Library size | ~25,000 images | Unlimited |
 | Search | Tag-based | Full natural language |
+| AI Chat | — (upsell shown) | ✓ llama3.1:8b |
+| People detection | — | ✓ |
 | Price | ~$39 | ~$79 |
 
 Upgrade prompt appears **only** when a user hits an Express ceiling — never on startup or a timer.
