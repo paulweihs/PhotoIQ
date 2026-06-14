@@ -29,6 +29,17 @@ public partial class ChatPanel : UserControl
             if (vm.SendCommand.CanExecute(null))
                 vm.SendCommand.Execute(null);
             e.Handled = true;
+            return;
+        }
+
+        // Arrow / Page keys scroll the message history.
+        // The input box is single-line so these keys have no native action there.
+        switch (e.Key)
+        {
+            case Key.Up:       Scroller.LineUp();   e.Handled = true; break;
+            case Key.Down:     Scroller.LineDown();  e.Handled = true; break;
+            case Key.PageUp:   Scroller.PageUp();    e.Handled = true; break;
+            case Key.PageDown: Scroller.PageDown();  e.Handled = true; break;
         }
     }
 
