@@ -47,6 +47,7 @@ public partial class PhotoViewerViewModel : ObservableObject
     [ObservableProperty] private bool _showFacePrompt;
 
     public event Action?       RequestClose;
+    public event Action?       RequestRedrawFaceOverlay;
     public event Action<Guid>? RequestShowPerson;   // raised when user clicks a named face box
     public event Action<(Guid PersonId, string PersonName)>? RequestFaceReview;   // raised after inline face assignment to show bulk review dialog
 
@@ -205,6 +206,7 @@ public partial class PhotoViewerViewModel : ObservableObject
         if (string.IsNullOrEmpty(face.SuggestedName)) return;
         await AssignFacePersonAsync(face, face.SuggestedName);
         face.SuggestedName = null;
+        RequestRedrawFaceOverlay?.Invoke();
     }
 
     /// <summary>Dismiss the AI suggestion for a single face without assigning anyone.</summary>
@@ -251,6 +253,7 @@ public partial class PhotoViewerViewModel : ObservableObject
         Current.FacesReviewed = true;
         await _repo.MarkFacesReviewedAsync(Current.Id);
         await _repo.RefreshFtsForPhotoAsync(Current.Id);
+        RequestRedrawFaceOverlay?.Invoke();
     }
 
     /// <summary>Mark this photo's faces as reviewed so the prompt never appears again.</summary>
@@ -327,6 +330,7 @@ public partial class PhotoViewerViewModel : ObservableObject
         Current.FacesReviewed = true;
         await _repo.MarkFacesReviewedAsync(Current.Id);
         await _repo.RefreshFtsForPhotoAsync(Current.Id);
+        RequestRedrawFaceOverlay?.Invoke();
     }
 
     // ── Public helpers for face tagging UI ────────────────────────────────────

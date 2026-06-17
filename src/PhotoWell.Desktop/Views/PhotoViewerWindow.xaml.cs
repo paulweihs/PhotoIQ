@@ -37,6 +37,7 @@ public partial class PhotoViewerWindow : Window
         InitializeComponent();
         DataContext = vm;
         vm.RequestClose += Close;
+        vm.RequestRedrawFaceOverlay += RedrawFaceOverlay;
 
         // Reset zoom when the displayed photo changes.
         vm.PropertyChanged += (_, e) =>
