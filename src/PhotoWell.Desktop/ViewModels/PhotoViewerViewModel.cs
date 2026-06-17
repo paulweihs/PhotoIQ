@@ -198,6 +198,61 @@ public partial class PhotoViewerViewModel : ObservableObject
     [RelayCommand]
     private void SkipFacePromptOnce() => ShowFacePrompt = false;
 
+    /// <summary>Accept the AI suggestion for a single face — links and confirms it.</summary>
+    [RelayCommand]
+    private async Task AcceptSuggestion(FaceItemViewModel face)
+    {
+        if (string.IsNullOrEmpty(face.SuggestedName)) return;
+        await AssignFacePersonAsync(face, face.SuggestedName);
+        face.SuggestedName = null;
+    }
+
+    /// <summary>Dismiss the AI suggestion for a single face without assigning anyone.</summary>
+    [RelayCommand]
+    private void RejectSuggestion(FaceItemViewModel face)
+    {
+        face.SuggestedName = null;
+    }
+
+    /// <summary>
+    /// Confirms every face that already has a matched name, and accepts the AI suggestion
+    /// for unnamed faces that have one. Marks the photo as reviewed.
+    /// </summary>
+    [RelayCommand]
+    private async Task AcceptAllConfirmed()
+    {
+        if (Current == null) return;
+        ShowFacePrompt = false;
+
+        foreach (var fi in Faces.ToList())
+        {
+            if (!string.IsNullOrEmpty(fi.NameInput))
+            {
+                // User typed something — treat as manual entry
+                var name = fi.NameInput.Trim();
+                if (string.Equals(name, fi.MatchedName, StringComparison.OrdinalIgnoreCase))
+                    await _repo.ConfirmFaceAsync(fi.FaceId);
+                else
+                    await AssignFacePersonAsync(fi, name);
+            }
+            else if (!string.IsNullOrEmpty(fi.MatchedName))
+            {
+                // Already matched — just confirm
+                await _repo.ConfirmFaceAsync(fi.FaceId);
+            }
+            else if (!string.IsNullOrEmpty(fi.SuggestedName))
+            {
+                // Accept the AI suggestion
+                await AssignFacePersonAsync(fi, fi.SuggestedName);
+                fi.SuggestedName = null;
+            }
+        }
+
+        Current.FacesReviewed = true;
+        await _repo.MarkFacesReviewedAsync(Current.Id);
+        await _repo.RefreshFtsForPhotoAsync(Current.Id);
+    }
+
     /// <summary>Mark this photo's faces as reviewed so the prompt never appears again.</summary>
     [RelayCommand]
     private async Task SkipFacePromptAlways()
@@ -441,6 +496,24 @@ public partial class PhotoViewerViewModel : ObservableObject
                 // Show the prompt only on first view (FacesReviewed == false) and
                 // only if there is at least one face.
                 ShowFacePrompt = Faces.Count > 0 && !Current.FacesReviewed;
+
+                // Async: load AI suggestions for unnamed faces so they appear as ghost text.
+                if (ShowFacePrompt)
+                    _ = LoadSuggestionsAsync(ct);
+            }
+        }
+    }
+
+    private async Task LoadSuggestionsAsync(CancellationToken ct)
+    {
+        foreach (var face in Faces.Where(f => !f.IsNamed && string.IsNullOrEmpty(f.NameInput) && f.Embedding != null).ToList())
+        {
+            if (ct.IsCancellationRequested) return;
+            var suggestion = await GetAiSuggestionAsync(face.Embedding);
+            if (suggestion != null && !ct.IsCancellationRequested)
+            {
+                face.SuggestedName  = suggestion.Value.Name;
+                face.SuggestionPct  = (int)(suggestion.Value.Confidence * 100);
             }
         }
     }

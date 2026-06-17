@@ -607,46 +607,92 @@
                                                                    Converter={StaticResource PathToBitmap}}"
                                                                Stretch="UniformToFill"/>
                                                     </Border>
-                                                    <!-- Editable name with autocomplete dropdown -->
-                                                    <TextBox Text="{Binding NameInput, UpdateSourceTrigger=PropertyChanged}"
-                                                             Background="#FF1E1E2E"
-                                                             Foreground="#FFCDD6F4"
-                                                             BorderBrush="#FF45475A"
-                                                             BorderThickness="1"
-                                                             FontSize="11"
-                                                             Padding="4,3"
-                                                             Margin="0,4,0,0"
-                                                             MaxLength="60"
-                                                             ToolTip="Type a name, or leave blank"
-                                                             GotFocus="SidebarNameBox_GotFocus"
-                                                             LostFocus="SidebarNameBox_LostFocus"
-                                                             TextChanged="SidebarNameBox_TextChanged"
-                                                             PreviewKeyDown="SidebarNameBox_PreviewKeyDown"/>
+                                                    <!-- Name box with ghost suggestion overlay -->
+                                                    <Grid Margin="0,4,0,0">
+                                                        <TextBox Text="{Binding NameInput, UpdateSourceTrigger=PropertyChanged}"
+                                                                 Background="#FF1E1E2E"
+                                                                 Foreground="#FFCDD6F4"
+                                                                 BorderBrush="#FF45475A"
+                                                                 BorderThickness="1"
+                                                                 FontSize="11"
+                                                                 Padding="4,3"
+                                                                 MaxLength="60"
+                                                                 ToolTip="Type a name, or leave blank"
+                                                                 GotFocus="SidebarNameBox_GotFocus"
+                                                                 LostFocus="SidebarNameBox_LostFocus"
+                                                                 TextChanged="SidebarNameBox_TextChanged"
+                                                                 PreviewKeyDown="SidebarNameBox_PreviewKeyDown"/>
+                                                        <!-- Ghost suggestion text (shown when box is empty) -->
+                                                        <TextBlock Text="{Binding SuggestedName}"
+                                                                   Foreground="#60CDD6F4"
+                                                                   FontStyle="Italic"
+                                                                   FontSize="11"
+                                                                   Padding="5,3"
+                                                                   IsHitTestVisible="False"
+                                                                   VerticalAlignment="Center"
+                                                                   Visibility="{Binding HasSuggestion,
+                                                                       Converter={StaticResource BoolToVis}}"/>
+                                                    </Grid>
+                                                    <!-- Accept / reject suggestion buttons -->
+                                                    <StackPanel Orientation="Horizontal"
+                                                                HorizontalAlignment="Center"
+                                                                Margin="0,3,0,0"
+                                                                Visibility="{Binding HasSuggestion,
+                                                                    Converter={StaticResource BoolToVis}}">
+                                                        <Button Width="34" Height="17" Padding="0"
+                                                                FontSize="10" Content="✓"
+                                                                Foreground="#FF89DCEB"
+                                                                Style="{StaticResource ActionBtn}"
+                                                                ToolTip="{Binding SuggestedName,
+                                                                    StringFormat='Accept: {0}'}"
+                                                                Command="{Binding DataContext.AcceptSuggestionCommand,
+                                                                    RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandParameter="{Binding}"/>
+                                                        <Button Width="34" Height="17" Padding="0"
+                                                                FontSize="10" Content="✗"
+                                                                Foreground="#FFEBA0AC"
+                                                                Style="{StaticResource ActionBtn}"
+                                                                Margin="4,0,0,0"
+                                                                ToolTip="Not this person"
+                                                                Command="{Binding DataContext.RejectSuggestionCommand,
+                                                                    RelativeSource={RelativeSource AncestorType=Window}}"
+                                                                CommandParameter="{Binding}"/>
+                                                    </StackPanel>
                                                 </StackPanel>
                                             </DataTemplate>
                                         </ItemsControl.ItemTemplate>
                                     </ItemsControl>
 
                                     <!-- Action buttons -->
-                                    <StackPanel Orientation="Horizontal" Margin="0,6,0,0">
-                                        <Button Content="Save names"
-                                                Command="{Binding DataContext.SaveFaceNamesCommand,
+                                    <StackPanel Margin="0,6,0,0">
+                                        <Button Content="Accept all confirmed"
+                                                Command="{Binding DataContext.AcceptAllConfirmedCommand,
                                                     RelativeSource={RelativeSource AncestorType=Window}}"
                                                 Style="{StaticResource ActionBtn}"
                                                 Padding="12,6" FontSize="12"
-                                                Margin="0,0,6,0"/>
-                                        <Button Content="Skip"
-                                                Command="{Binding DataContext.SkipFacePromptOnceCommand,
-                                                    RelativeSource={RelativeSource AncestorType=Window}}"
-                                                Style="{StaticResource ActionBtn}"
-                                                Padding="12,6" FontSize="12"
-                                                Margin="0,0,6,0"/>
-                                        <Button Content="Never ask"
-                                                Command="{Binding DataContext.SkipFacePromptAlwaysCommand,
-                                                    RelativeSource={RelativeSource AncestorType=Window}}"
-                                                ToolTip="Don't ask for this photo again"
-                                                Style="{StaticResource ActionBtn}"
-                                                Padding="12,6" FontSize="12"/>
+                                                HorizontalAlignment="Stretch"
+                                                ToolTip="Confirm matched names and accept all AI suggestions"
+                                                Margin="0,0,0,4"/>
+                                        <StackPanel Orientation="Horizontal">
+                                            <Button Content="Save names"
+                                                    Command="{Binding DataContext.SaveFaceNamesCommand,
+                                                        RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    Style="{StaticResource ActionBtn}"
+                                                    Padding="12,6" FontSize="12"
+                                                    Margin="0,0,6,0"/>
+                                            <Button Content="Skip"
+                                                    Command="{Binding DataContext.SkipFacePromptOnceCommand,
+                                                        RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    Style="{StaticResource ActionBtn}"
+                                                    Padding="12,6" FontSize="12"
+                                                    Margin="0,0,6,0"/>
+                                            <Button Content="Never ask"
+                                                    Command="{Binding DataContext.SkipFacePromptAlwaysCommand,
+                                                        RelativeSource={RelativeSource AncestorType=Window}}"
+                                                    ToolTip="Don't ask for this photo again"
+                                                    Style="{StaticResource ActionBtn}"
+                                                    Padding="12,6" FontSize="12"/>
+                                        </StackPanel>
                                     </StackPanel>
                                 </StackPanel>
                             </Border>

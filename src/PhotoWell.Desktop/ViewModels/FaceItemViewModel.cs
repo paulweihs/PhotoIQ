@@ -28,6 +28,18 @@ public partial class FaceItemViewModel : ObservableObject
     /// <summary>Editable name — pre-filled with the matched name so users can correct it.</summary>
     [ObservableProperty] private string _nameInput;
 
+    /// <summary>AI's top-ranked suggestion for an unnamed face. Shown as ghost text in the name box.</summary>
+    [ObservableProperty] private string? _suggestedName;
+
+    /// <summary>Confidence percentage (0–100) for the AI suggestion.</summary>
+    [ObservableProperty] private int _suggestionPct;
+
+    /// <summary>True when there is a suggestion to display and the user hasn't typed anything yet.</summary>
+    public bool HasSuggestion => !string.IsNullOrEmpty(SuggestedName) && string.IsNullOrEmpty(NameInput);
+
+    partial void OnNameInputChanged(string value)     => OnPropertyChanged(nameof(HasSuggestion));
+    partial void OnSuggestedNameChanged(string? value) => OnPropertyChanged(nameof(HasSuggestion));
+
     public bool IsNamed => !string.IsNullOrWhiteSpace(MatchedName);
 
     public FaceItemViewModel(Face face, string? personName)
