@@ -7,7 +7,7 @@ namespace PhotoWell.Core.Interfaces;
 public interface IAssistantActions
 {
     Task<string> ChatSearchAsync(string query);
-    Task<string> ChatFilterByPersonAsync(string name, bool includeUnconfirmed);
+    Task<string> ChatFilterByPersonAsync(string name, bool includeUnconfirmed, string? query = null);
     Task<string> ChatFilterByDateAsync(string? startDate, string? endDate);
     Task<string> ChatClearFiltersAsync();
     Task<string> ChatGetLibraryStatsAsync();

@@ -31,6 +31,8 @@ public sealed class ChatAssistantService : IChatAssistantService
 
         Tool("filter_by_person",
             "Show photos containing a specific person (identified by face recognition). " +
+            "Optionally also filters by a content query (e.g. 'candle', 'beach', 'birthday cake') " +
+            "so you can find photos of a person in a specific scene or context. " +
             "Includes confirmed face tags and high-confidence (≥0.7) unconfirmed matches for a wider net.",
             new {
                 type = "object",
@@ -39,6 +41,11 @@ public sealed class ChatAssistantService : IChatAssistantService
                     include_unconfirmed = new {
                         type = "boolean",
                         description = "Whether to include high-confidence unconfirmed face matches (default true)"
+                    },
+                    query = new {
+                        type = "string",
+                        description = "Optional content/scene query to narrow results (e.g. 'candle', 'beach'). " +
+                                      "Use this instead of calling search_photos separately."
                     }
                 },
                 required = new[] { "name" }
@@ -208,6 +215,10 @@ public sealed class ChatAssistantService : IChatAssistantService
         - For person queries ("show me photos of Sarah"), use filter_by_person with
           include_unconfirmed=true. If the user says "verified" or "confirmed", use
           include_unconfirmed=false (or confirmed_only=true when exporting).
+        - For person + scene/content queries ("photos of Jacob with a candle",
+          "Sarah at the beach"), use filter_by_person with the query parameter set
+          to the scene/content part. Do NOT call search_photos separately — it would
+          replace the person filter.
         - Only answer in prose when no tool covers the request; then briefly say what you
           CAN do instead.
         - Never mention tool or function names to the user — describe actions in plain words.
@@ -316,7 +327,8 @@ public sealed class ChatAssistantService : IChatAssistantService
                 "search_photos"   => await _actions.ChatSearchAsync(GetString(args, "query")),
                 "filter_by_person" => await _actions.ChatFilterByPersonAsync(
                                         GetString(args, "name"),
-                                        GetBool(args, "include_unconfirmed", defaultValue: true)),
+                                        GetBool(args, "include_unconfirmed", defaultValue: true),
+                                        GetStringOpt(args, "query")),
                 "filter_by_date"  => await _actions.ChatFilterByDateAsync(
                                         GetStringOpt(args, "start_date"),
                                         GetStringOpt(args, "end_date")),

@@ -7177,13 +7177,22 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		return (await WithRepo(r => r.GetByIdsAsync(photoIdSet))).ToList();
 	}
 
-	public async Task<string> ChatFilterByPersonAsync(string name, bool includeUnconfirmed)
+	public async Task<string> ChatFilterByPersonAsync(string name, bool includeUnconfirmed, string? query = null)
 	{
 		var person = await ChatFindPersonAsync(name);
 		if (person == null)
 			return $"No person named \"{name}\" was found in the library.";
 
 		var photos = await ChatGetPersonPhotosAsync(person.Id, includeUnconfirmed);
+
+		// If a content query was also given, intersect person photos with FTS results.
+		if (!string.IsNullOrWhiteSpace(query))
+		{
+			var searchHits = await WithRepo(r => r.SearchAsync(query));
+			var searchIds  = searchHits.Select(m => m.Id).ToHashSet();
+			photos = photos.Where(p => searchIds.Contains(p.Id)).ToList();
+		}
+
 		await Application.Current.Dispatcher.InvokeAsync(() =>
 		{
 			_personFilterPhotoIds = photos.Select(p => p.Id).ToList();
@@ -7192,13 +7201,18 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 			PhotoCount = photos.Count;
 			TotalLibraryCount = TotalLibraryCount; // no change
 			IsPersonFilterActive = true;
-			ActiveFilterLabel = $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} with {person.Name}";
-			StatusText = ActiveFilterLabel;
+			var label = string.IsNullOrWhiteSpace(query)
+				? $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} with {person.Name}"
+				: $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} with {person.Name} matching \"{query}\"";
+			ActiveFilterLabel = label;
+			StatusText = label;
 			ActiveView = GalleryView.AllPhotos;
 		});
 
-		return $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} featuring {person.Name}" +
-		       (includeUnconfirmed ? " (including high-confidence unconfirmed matches)." : ".");
+		var suffix = includeUnconfirmed ? " (including high-confidence unconfirmed matches)." : ".";
+		return string.IsNullOrWhiteSpace(query)
+			? $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} featuring {person.Name}{suffix}"
+			: $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} featuring {person.Name} that match \"{query}\"{suffix}";
 	}
 
 	public async Task<string> ChatFilterByDateAsync(string? startDate, string? endDate)
