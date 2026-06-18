@@ -1,4 +1,3 @@
-using System.Collections.Specialized;
 using System.Windows;
 using System.Windows.Controls;
 using System.Windows.Input;
@@ -11,28 +10,16 @@ public partial class ChatPanel : UserControl
     public ChatPanel()
     {
         InitializeComponent();
-        DataContextChanged += OnDataContextChanged;
+        // ScrollChanged fires after layout has already updated the extent — the most
+        // reliable hook for auto-scroll.  ExtentHeightChange > 0 means new content
+        // was added; user-initiated scrolling has ExtentHeightChange == 0.
+        Scroller.ScrollChanged += OnScrollChanged;
     }
 
-    private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
+    private void OnScrollChanged(object sender, ScrollChangedEventArgs e)
     {
-        if (e.OldValue is ChatViewModel oldVm)
-        {
-            oldVm.Messages.CollectionChanged -= Messages_CollectionChanged;
-            oldVm.PropertyChanged            -= ViewModel_PropertyChanged;
-        }
-        if (e.NewValue is ChatViewModel vm)
-        {
-            vm.Messages.CollectionChanged += Messages_CollectionChanged;
-            vm.PropertyChanged            += ViewModel_PropertyChanged;
-        }
-    }
-
-    // Scroll when the thinking bubble appears or disappears.
-    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
-    {
-        if (e.PropertyName is nameof(ChatViewModel.IsThinking))
-            ScrollToBottomDeferred();
+        if (e.ExtentHeightChange > 0)
+            Scroller.ScrollToBottom();
     }
 
     private void FollowUpBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -56,15 +43,6 @@ public partial class ChatPanel : UserControl
         }
     }
 
-    private void Messages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
-    {
-        ScrollToBottomDeferred();
-    }
-
-    // Defer until after layout so the new item is measured before we scroll.
-    private void ScrollToBottomDeferred()
-        => Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
-               new Action(() => Scroller.ScrollToBottom()));
 }
 
 // DataTemplateSelector for user vs assistant messages
