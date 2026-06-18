@@ -17,9 +17,22 @@ public partial class ChatPanel : UserControl
     private void OnDataContextChanged(object sender, DependencyPropertyChangedEventArgs e)
     {
         if (e.OldValue is ChatViewModel oldVm)
+        {
             oldVm.Messages.CollectionChanged -= Messages_CollectionChanged;
+            oldVm.PropertyChanged            -= ViewModel_PropertyChanged;
+        }
         if (e.NewValue is ChatViewModel vm)
+        {
             vm.Messages.CollectionChanged += Messages_CollectionChanged;
+            vm.PropertyChanged            += ViewModel_PropertyChanged;
+        }
+    }
+
+    // Scroll when the thinking bubble appears or disappears.
+    private void ViewModel_PropertyChanged(object? sender, System.ComponentModel.PropertyChangedEventArgs e)
+    {
+        if (e.PropertyName is nameof(ChatViewModel.IsThinking))
+            ScrollToBottomDeferred();
     }
 
     private void FollowUpBox_PreviewKeyDown(object sender, KeyEventArgs e)
@@ -45,9 +58,13 @@ public partial class ChatPanel : UserControl
 
     private void Messages_CollectionChanged(object? sender, NotifyCollectionChangedEventArgs e)
     {
-        // Auto-scroll to bottom when a new message arrives
-        Scroller.ScrollToBottom();
+        ScrollToBottomDeferred();
     }
+
+    // Defer until after layout so the new item is measured before we scroll.
+    private void ScrollToBottomDeferred()
+        => Dispatcher.BeginInvoke(System.Windows.Threading.DispatcherPriority.Background,
+               new Action(() => Scroller.ScrollToBottom()));
 }
 
 // DataTemplateSelector for user vs assistant messages
