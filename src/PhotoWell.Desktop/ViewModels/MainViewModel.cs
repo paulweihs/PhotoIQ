@@ -7185,11 +7185,15 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 
 		var photos = await ChatGetPersonPhotosAsync(person.Id, includeUnconfirmed);
 
-		// If a content query was also given, intersect person photos with FTS results.
+		// If a content query was also given, intersect person photos with search results.
+		// Mirror LoadAsync: FTS first, semantic fallback if FTS finds nothing.
 		if (!string.IsNullOrWhiteSpace(query))
 		{
-			var searchHits = await WithRepo(r => r.SearchAsync(query));
-			var searchIds  = searchHits.Select(m => m.Id).ToHashSet();
+			var ftsHits = (await WithRepo(r => r.SearchAsync(query))).ToList();
+			IEnumerable<MediaFile> searchHits = ftsHits;
+			if (ftsHits.Count == 0 && _semanticSearch.IsModelAvailable)
+				searchHits = await _semanticSearch.SearchAsync(query, 500);
+			var searchIds = searchHits.Select(m => m.Id).ToHashSet();
 			photos = photos.Where(p => searchIds.Contains(p.Id)).ToList();
 		}
 

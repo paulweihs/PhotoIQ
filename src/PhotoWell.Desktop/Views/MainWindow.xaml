@@ -22,6 +22,7 @@
         <conv:InverseBoolConverter x:Key="InverseBool"/>
         <conv:InverseBoolToVisibilityConverter x:Key="InverseBoolToVis"/>
         <conv:AddConverter x:Key="Add8" Amount="8"/>
+        <conv:DoubleToSquareSizeConverter x:Key="DoubleToSquareSize"/>
         <conv:IsPositiveConverter x:Key="IsPositiveConverter"/>
 
         <!-- Active nav button: AccentBrush background, same hover -->
@@ -1515,7 +1516,12 @@
                          Tag="{Binding ThumbnailSize}">
                     <ListBox.ItemsPanel>
                         <ItemsPanelTemplate>
-                            <wpf:VirtualizingWrapPanel Margin="8"/>
+                            <!-- ItemSize tells the panel each cell is exactly ThumbnailSize+8 square,
+                                 preventing recycled containers from retaining stale measured sizes. -->
+                            <wpf:VirtualizingWrapPanel Margin="8"
+                                ItemSize="{Binding DataContext.ThumbnailSize,
+                                    RelativeSource={RelativeSource AncestorType=ListBox},
+                                    Converter={StaticResource DoubleToSquareSize}}"/>
                         </ItemsPanelTemplate>
                     </ListBox.ItemsPanel>
                     <ListBox.ItemTemplate>
