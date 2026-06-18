@@ -7186,37 +7186,43 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		var photos = await ChatGetPersonPhotosAsync(person.Id, includeUnconfirmed);
 
 		// If a content query was also given, intersect person photos with search results.
-		// Mirror LoadAsync: FTS first, semantic fallback if FTS finds nothing.
+		// Run FTS and semantic search in parallel and union results — FTS index may be
+		// partially built (amber banner still showing), so we can't rely on FTS alone.
 		if (!string.IsNullOrWhiteSpace(query))
 		{
-			var ftsHits = (await WithRepo(r => r.SearchAsync(query))).ToList();
-			IEnumerable<MediaFile> searchHits = ftsHits;
-			if (ftsHits.Count == 0 && _semanticSearch.IsModelAvailable)
-				searchHits = await _semanticSearch.SearchAsync(query, 500);
-			var searchIds = searchHits.Select(m => m.Id).ToHashSet();
+			var ftsTask = WithRepo(r => r.SearchAsync(query));
+			var semanticTask = _semanticSearch.IsModelAvailable
+				? _semanticSearch.SearchAsync(query, 500)
+				: Task.FromResult<IReadOnlyList<MediaFile>>(Array.Empty<MediaFile>());
+
+			await Task.WhenAll(ftsTask, semanticTask);
+
+			var searchIds = ftsTask.Result.Select(m => m.Id)
+				.Union(semanticTask.Result.Select(m => m.Id))
+				.ToHashSet();
 			photos = photos.Where(p => searchIds.Contains(p.Id)).ToList();
 		}
 
-		await Application.Current.Dispatcher.InvokeAsync(() =>
+		// Use async dispatch + explicit LoadAsync (same pattern as ChatSearchAsync) so the
+		// fire-and-forget LoadAsync triggered by ActiveView change is cancelled by our
+		// explicit call, guaranteeing a single clean load finishes before we return.
+		await Application.Current.Dispatcher.InvokeAsync(async () =>
 		{
 			_personFilterPhotoIds = photos.Select(p => p.Id).ToList();
-			IsPersonFilterActive = true;  // set before ActiveView so LoadAsync sees the filter
-			ActiveView = GalleryView.AllPhotos;  // navigate to gallery (no-op if already there)
-			MediaFiles = new System.Collections.ObjectModel.ObservableCollection<MediaFile>(photos);
-			GalleryCollectionReplaced?.Invoke();
-			PhotoCount = photos.Count;
-			TotalLibraryCount = TotalLibraryCount; // no change
+			IsPersonFilterActive = true;
+			ActiveView = GalleryView.AllPhotos;
+			await LoadAsync();   // cancels any fire-and-forget from ActiveView setter above
 			var label = string.IsNullOrWhiteSpace(query)
-				? $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} with {person.Name}"
-				: $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} with {person.Name} matching \"{query}\"";
+				? $"Showing {PhotoCount} photo{(PhotoCount == 1 ? "" : "s")} with {person.Name}"
+				: $"Showing {PhotoCount} photo{(PhotoCount == 1 ? "" : "s")} with {person.Name} matching \"{query}\"";
 			ActiveFilterLabel = label;
 			StatusText = label;
-		});
+		}).Task.Unwrap();
 
 		var suffix = includeUnconfirmed ? " (including high-confidence unconfirmed matches)." : ".";
 		return string.IsNullOrWhiteSpace(query)
-			? $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} featuring {person.Name}{suffix}"
-			: $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} featuring {person.Name} that match \"{query}\"{suffix}";
+			? $"Showing {PhotoCount} photo{(PhotoCount == 1 ? "" : "s")} featuring {person.Name}{suffix}"
+			: $"Showing {PhotoCount} photo{(PhotoCount == 1 ? "" : "s")} featuring {person.Name} that match \"{query}\"{suffix}";
 	}
 
 	public async Task<string> ChatFilterByDateAsync(string? startDate, string? endDate)
