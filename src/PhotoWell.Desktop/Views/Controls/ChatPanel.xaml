@@ -91,9 +91,10 @@
                 </StackPanel>
             </Grid>
 
-            <!-- Message list -->
+            <!-- Message list — MaxHeight here (not on the row) so the ScrollViewer
+                 is constrained even when the outer container gives Auto/infinite height. -->
             <ScrollViewer Grid.Row="1" VerticalScrollBarVisibility="Auto"
-                          x:Name="Scroller" Padding="0,4">
+                          MaxHeight="300" x:Name="Scroller" Padding="0,4">
                 <StackPanel>
                     <ItemsControl ItemsSource="{Binding Messages}"
                                   ItemTemplateSelector="{StaticResource MessageSelector}"/>
