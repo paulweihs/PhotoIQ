@@ -4588,7 +4588,7 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 			{
 				source = source.Where((MediaFile m) => _relatedPhotoIds.Contains(m.Id));
 			}
-			if (IsPersonFilterActive && _personFilterPhotoIds.Count > 0)
+			if (IsPersonFilterActive)
 			{
 				HashSet<Guid> personIdSet = _personFilterPhotoIds.ToHashSet();
 				source = source.Where((MediaFile m) => personIdSet.Contains(m.Id));
@@ -7196,17 +7196,17 @@ public class MainViewModel : ObservableObject, IDisposable, IAssistantActions
 		await Application.Current.Dispatcher.InvokeAsync(() =>
 		{
 			_personFilterPhotoIds = photos.Select(p => p.Id).ToList();
+			IsPersonFilterActive = true;  // set before ActiveView so LoadAsync sees the filter
+			ActiveView = GalleryView.AllPhotos;  // navigate to gallery (no-op if already there)
 			MediaFiles = new System.Collections.ObjectModel.ObservableCollection<MediaFile>(photos);
 			GalleryCollectionReplaced?.Invoke();
 			PhotoCount = photos.Count;
 			TotalLibraryCount = TotalLibraryCount; // no change
-			IsPersonFilterActive = true;
 			var label = string.IsNullOrWhiteSpace(query)
 				? $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} with {person.Name}"
 				: $"Showing {photos.Count} photo{(photos.Count == 1 ? "" : "s")} with {person.Name} matching \"{query}\"";
 			ActiveFilterLabel = label;
 			StatusText = label;
-			ActiveView = GalleryView.AllPhotos;
 		});
 
 		var suffix = includeUnconfirmed ? " (including high-confidence unconfirmed matches)." : ".";
