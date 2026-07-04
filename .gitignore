@@ -4,7 +4,8 @@ obj/
 *.user
 *.db
 app.log
-.claude/
+.claude/*
+!.claude/settings.json
 SESSION_HANDOFF.md
 eval_sample.txt
 installer/bundle/
