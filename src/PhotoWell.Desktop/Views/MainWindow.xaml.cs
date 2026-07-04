@@ -589,6 +589,81 @@ public partial class MainWindow : Window
     public void RemoveFolderFromShell(string folderPath, bool recursive)
         => ((MainViewModel)DataContext).RemoveFolderFromShellCommand.Execute((folderPath, recursive));
 
+    private void OnProgressAreaMouseDown(object sender, MouseButtonEventArgs e)
+    {
+        if (e.ClickCount != 2 || e.ChangedButton != MouseButton.Left) return;
+
+        // Don't open dialog when the double-click originates from the checkbox
+        var source = e.OriginalSource as System.Windows.DependencyObject;
+        while (source != null)
+        {
+            if (source is System.Windows.Controls.CheckBox) return;
+            source = System.Windows.Media.VisualTreeHelper.GetParent(source);
+        }
+
+        var vm = (MainViewModel)DataContext;
+        ShowImportPhotoDetail(vm.Progress.CurrentFilePath);
+        e.Handled = true;
+    }
+
+    private void ShowImportPhotoDetail(string filePath)
+    {
+        if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath)) return;
+
+        System.Windows.Media.Imaging.BitmapImage? bmp = null;
+        try
+        {
+            using var ms = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(filePath));
+            bmp = new System.Windows.Media.Imaging.BitmapImage();
+            bmp.BeginInit();
+            bmp.StreamSource = ms;
+            bmp.DecodePixelWidth = 400;
+            bmp.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
+            bmp.EndInit();
+            bmp.Freeze();
+        }
+        catch { return; }
+
+        var img = new System.Windows.Controls.Image
+        {
+            Source = bmp,
+            MaxWidth = 400,
+            MaxHeight = 400,
+            Stretch = System.Windows.Media.Stretch.Uniform
+        };
+
+        var label = new System.Windows.Controls.TextBlock
+        {
+            Text = System.IO.Path.GetFileName(filePath),
+            Foreground = System.Windows.Media.Brushes.White,
+            FontSize = 12,
+            Margin = new Thickness(0, 8, 0, 0),
+            HorizontalAlignment = HorizontalAlignment.Center,
+            TextWrapping = TextWrapping.Wrap
+        };
+
+        var panel = new System.Windows.Controls.StackPanel { Margin = new Thickness(16) };
+        panel.Children.Add(img);
+        panel.Children.Add(label);
+
+        var dlg = new Window
+        {
+            Title = System.IO.Path.GetFileName(filePath),
+            SizeToContent = SizeToContent.WidthAndHeight,
+            MaxWidth  = 448,
+            MaxHeight = 560,
+            MinWidth  = 200,
+            WindowStartupLocation = WindowStartupLocation.CenterOwner,
+            Owner = this,
+            Background = new System.Windows.Media.SolidColorBrush(
+                System.Windows.Media.Color.FromRgb(0x1E, 0x1E, 0x2E)),
+            ResizeMode  = ResizeMode.NoResize,
+            WindowStyle = WindowStyle.ToolWindow,
+            Content     = panel
+        };
+        dlg.ShowDialog();
+    }
+
     private static T? FindVisualChild<T>(System.Windows.DependencyObject parent) where T : System.Windows.DependencyObject
     {
         for (int i = 0; i < System.Windows.Media.VisualTreeHelper.GetChildrenCount(parent); i++)

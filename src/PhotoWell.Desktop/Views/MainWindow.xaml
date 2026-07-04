@@ -2465,18 +2465,35 @@
                         <ColumnDefinition Width="Auto"/>
                     </Grid.ColumnDefinitions>
 
-                    <!-- Heading + current file -->
-                    <StackPanel Grid.Column="0" Orientation="Vertical" VerticalAlignment="Center"
-                                Margin="0,0,12,0" MinWidth="160" MaxWidth="220">
-                        <TextBlock Text="{Binding Progress.Heading}"
-                                   FontSize="11" FontWeight="SemiBold"
-                                   Foreground="{DynamicResource ForegroundBrush}"
-                                   TextTrimming="CharacterEllipsis"/>
-                        <TextBlock Text="{Binding Progress.CurrentFile}"
-                                   FontSize="10"
-                                   Foreground="{DynamicResource SecondaryTextBrush}"
-                                   TextTrimming="CharacterEllipsis"/>
-                    </StackPanel>
+                    <!-- Thumbnail + heading + file + toggle (double-click to view details) -->
+                    <Border Grid.Column="0" Background="Transparent" Cursor="Hand"
+                            ToolTip="Double-click for details"
+                            MouseDown="OnProgressAreaMouseDown"
+                            Margin="0,0,12,0">
+                        <StackPanel Orientation="Horizontal" VerticalAlignment="Center">
+                            <Image Source="{Binding Progress.CurrentThumbnail}"
+                                   Width="40" Height="40" Stretch="Uniform"
+                                   Margin="0,0,8,0"
+                                   RenderOptions.BitmapScalingMode="HighQuality"
+                                   Visibility="{Binding Progress.HasCurrentThumbnail, Converter={StaticResource BoolToVis}}"/>
+                            <StackPanel Orientation="Vertical" VerticalAlignment="Center"
+                                        MinWidth="160" MaxWidth="220">
+                                <TextBlock Text="{Binding Progress.Heading}"
+                                           FontSize="11" FontWeight="SemiBold"
+                                           Foreground="{DynamicResource ForegroundBrush}"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <TextBlock Text="{Binding Progress.CurrentFile}"
+                                           FontSize="10"
+                                           Foreground="{DynamicResource SecondaryTextBrush}"
+                                           TextTrimming="CharacterEllipsis"/>
+                                <CheckBox Content="Always show thumbnail"
+                                          IsChecked="{Binding Progress.AlwaysShowThumbnail}"
+                                          FontSize="9" Margin="0,2,0,0"
+                                          Foreground="{DynamicResource SecondaryTextBrush}"
+                                          ToolTip="Always wait to decode the thumbnail — may slow import on large files or slow drives."/>
+                            </StackPanel>
+                        </StackPanel>
+                    </Border>
 
                     <!-- Progress bar -->
                     <ProgressBar Grid.Column="1"
