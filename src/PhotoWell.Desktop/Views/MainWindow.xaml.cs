@@ -40,6 +40,7 @@ public partial class MainWindow : Window
     private const string DragFormat = "PhotoWell.PhotoIds";
 
     private System.Windows.Threading.DispatcherTimer? _resizeScrollTimer;
+    private ImportDetailWindow? _importDetailWindow;
 
     public MainWindow()
     {
@@ -593,7 +594,6 @@ public partial class MainWindow : Window
     {
         if (e.ClickCount != 2 || e.ChangedButton != MouseButton.Left) return;
 
-        // Don't open dialog when the double-click originates from the checkbox
         var source = e.OriginalSource as System.Windows.DependencyObject;
         while (source != null)
         {
@@ -602,66 +602,25 @@ public partial class MainWindow : Window
         }
 
         var vm = (MainViewModel)DataContext;
-        ShowImportPhotoDetail(vm.Progress.CurrentFilePath);
+        OpenOrActivateImportDetail(vm.Progress);
         e.Handled = true;
     }
 
-    private void ShowImportPhotoDetail(string filePath)
+    private void OpenOrActivateImportDetail(ViewModels.ImportProgressViewModel progressVm)
     {
-        if (string.IsNullOrEmpty(filePath) || !System.IO.File.Exists(filePath)) return;
-
-        System.Windows.Media.Imaging.BitmapImage? bmp = null;
-        try
+        if (_importDetailWindow != null && _importDetailWindow.IsLoaded)
         {
-            using var ms = new System.IO.MemoryStream(System.IO.File.ReadAllBytes(filePath));
-            bmp = new System.Windows.Media.Imaging.BitmapImage();
-            bmp.BeginInit();
-            bmp.StreamSource = ms;
-            bmp.DecodePixelWidth = 400;
-            bmp.CacheOption = System.Windows.Media.Imaging.BitmapCacheOption.OnLoad;
-            bmp.EndInit();
-            bmp.Freeze();
+            _importDetailWindow.Activate();
+            return;
         }
-        catch { return; }
 
-        var img = new System.Windows.Controls.Image
+        _importDetailWindow = new ImportDetailWindow
         {
-            Source = bmp,
-            MaxWidth = 400,
-            MaxHeight = 400,
-            Stretch = System.Windows.Media.Stretch.Uniform
+            Owner       = this,
+            DataContext = progressVm
         };
-
-        var label = new System.Windows.Controls.TextBlock
-        {
-            Text = System.IO.Path.GetFileName(filePath),
-            Foreground = System.Windows.Media.Brushes.White,
-            FontSize = 12,
-            Margin = new Thickness(0, 8, 0, 0),
-            HorizontalAlignment = HorizontalAlignment.Center,
-            TextWrapping = TextWrapping.Wrap
-        };
-
-        var panel = new System.Windows.Controls.StackPanel { Margin = new Thickness(16) };
-        panel.Children.Add(img);
-        panel.Children.Add(label);
-
-        var dlg = new Window
-        {
-            Title = System.IO.Path.GetFileName(filePath),
-            SizeToContent = SizeToContent.WidthAndHeight,
-            MaxWidth  = 448,
-            MaxHeight = 560,
-            MinWidth  = 200,
-            WindowStartupLocation = WindowStartupLocation.CenterOwner,
-            Owner = this,
-            Background = new System.Windows.Media.SolidColorBrush(
-                System.Windows.Media.Color.FromRgb(0x1E, 0x1E, 0x2E)),
-            ResizeMode  = ResizeMode.NoResize,
-            WindowStyle = WindowStyle.ToolWindow,
-            Content     = panel
-        };
-        dlg.ShowDialog();
+        _importDetailWindow.Closed += (_, _) => _importDetailWindow = null;
+        _importDetailWindow.Show();
     }
 
     private static T? FindVisualChild<T>(System.Windows.DependencyObject parent) where T : System.Windows.DependencyObject

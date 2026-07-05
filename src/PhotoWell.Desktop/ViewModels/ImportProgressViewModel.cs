@@ -47,6 +47,22 @@ public partial class ImportProgressViewModel : ObservableObject
     private string _currentFilePath = "";
     public string CurrentFilePath => _currentFilePath;
 
+    public string CurrentDirDisplay =>
+        string.IsNullOrEmpty(_currentFilePath) ? ""
+        : (System.IO.Path.GetDirectoryName(_currentFilePath) ?? "");
+
+    public string CurrentFileNameDisplay =>
+        string.IsNullOrEmpty(_currentFilePath) ? ""
+        : ("\\" + System.IO.Path.GetFileName(_currentFilePath));
+
+    private void SetCurrentFilePath(string value)
+    {
+        _currentFilePath = value;
+        OnPropertyChanged(nameof(CurrentFilePath));
+        OnPropertyChanged(nameof(CurrentDirDisplay));
+        OnPropertyChanged(nameof(CurrentFileNameDisplay));
+    }
+
     private int _thumbGen;
 
     [ObservableProperty] private bool   _isComplete;
@@ -321,7 +337,7 @@ public partial class ImportProgressViewModel : ObservableObject
                     Failed         = totalFailed   + p.Failed;
                     GrandProcessed = grandProcessedOffset + p.Processed;
                     GrandExcluded  = grandExcludedOffset  + p.Excluded;
-                    _currentFilePath = p.CurrentFile;
+                    SetCurrentFilePath(p.CurrentFile);
                     CurrentFile    = Path.GetFileName(p.CurrentFile);
                     _ = LoadThumbnailAsync(p.CurrentFile, ++_thumbGen);
                     OnPropertyChanged(nameof(ProgressPercent));
@@ -411,7 +427,7 @@ public partial class ImportProgressViewModel : ObservableObject
                 AppLog.Info($"[QUEUE] RunFromQueueAsync: finished (generation={myGen}) — superseded by generation {_runGeneration}, IsRunning left as-is");
             }
             CurrentFile = "";
-            _currentFilePath = "";
+            SetCurrentFilePath("");
             CurrentThumbnail = null;
             OnPropertyChanged(nameof(StatusLine));
         }
@@ -585,7 +601,7 @@ public partial class ImportProgressViewModel : ObservableObject
         _batchTimer    = null;
         while (_batchPriorityQueue.TryDequeue(out _)) { } // clear leftover priorities from previous run
         CurrentThumbnail = null;
-        _currentFilePath = "";
+        SetCurrentFilePath("");
         _thumbGen++;
         if (IsPaused) { IsPaused = false; _pauseGate.Release(); }
         OnPropertyChanged(nameof(ProgressPercent));
@@ -611,7 +627,7 @@ public partial class ImportProgressViewModel : ObservableObject
             Imported    = p.Imported;
             Skipped     = p.Skipped;
             Failed      = p.Failed;
-            _currentFilePath = p.CurrentFile;
+            SetCurrentFilePath(p.CurrentFile);
             CurrentFile = Path.GetFileName(p.CurrentFile);
             _ = LoadThumbnailAsync(p.CurrentFile, ++_thumbGen);
             OnPropertyChanged(nameof(ProgressPercent));
@@ -634,7 +650,7 @@ public partial class ImportProgressViewModel : ObservableObject
             AppLog.Error($"[OP] RunReanalyzeAsync EXCEPTION: {chain}\n{ex.StackTrace}");
             ResultMessage = $"Error: {chain}";
         }
-        finally { IsComplete = true; IsRunning = false; CurrentFile = ""; _currentFilePath = ""; CurrentThumbnail = null; OnPropertyChanged(nameof(StatusLine)); }
+        finally { IsComplete = true; IsRunning = false; CurrentFile = ""; SetCurrentFilePath(""); CurrentThumbnail = null; OnPropertyChanged(nameof(StatusLine)); }
     }
 
     public async Task RunReanalyzeOutdatedAsync(bool skipUserModified = false)
@@ -655,7 +671,7 @@ public partial class ImportProgressViewModel : ObservableObject
             Imported    = p.Imported;
             Skipped     = p.Skipped;
             Failed      = p.Failed;
-            _currentFilePath = p.CurrentFile;
+            SetCurrentFilePath(p.CurrentFile);
             CurrentFile = Path.GetFileName(p.CurrentFile);
             _ = LoadThumbnailAsync(p.CurrentFile, ++_thumbGen);
             OnPropertyChanged(nameof(ProgressPercent));
@@ -721,7 +737,7 @@ public partial class ImportProgressViewModel : ObservableObject
         }
         catch (OperationCanceledException) { ResultMessage = "Cancelled."; }
         catch (Exception ex)               { ResultMessage = $"Error: {ex.Message}"; }
-        finally { IsComplete = true; IsRunning = false; CurrentFile = ""; _currentFilePath = ""; CurrentThumbnail = null; OnPropertyChanged(nameof(StatusLine)); }
+        finally { IsComplete = true; IsRunning = false; CurrentFile = ""; SetCurrentFilePath(""); CurrentThumbnail = null; OnPropertyChanged(nameof(StatusLine)); }
     }
 
     public async Task RunReanalyzeSelectedAsync(IReadOnlyList<MediaFile> files)
@@ -739,7 +755,7 @@ public partial class ImportProgressViewModel : ObservableObject
         for (int i = 0; i < files.Count; i++)
         {
             if (_cts.IsCancellationRequested) break;
-            _currentFilePath = files[i].FilePath;
+            SetCurrentFilePath(files[i].FilePath);
             CurrentFile = files[i].FileName;
             _ = LoadThumbnailAsync(files[i].FilePath, ++_thumbGen);
             try
@@ -764,7 +780,7 @@ public partial class ImportProgressViewModel : ObservableObject
         IsComplete       = true;
         IsRunning        = false;
         CurrentFile      = "";
-        _currentFilePath = "";
+        SetCurrentFilePath("");
         CurrentThumbnail = null;
         OnPropertyChanged(nameof(StatusLine));
     }
@@ -785,7 +801,7 @@ public partial class ImportProgressViewModel : ObservableObject
             Imported    = p.Imported;
             Skipped     = p.Skipped;
             Failed      = p.Failed;
-            _currentFilePath = p.CurrentFile;
+            SetCurrentFilePath(p.CurrentFile);
             CurrentFile = Path.GetFileName(p.CurrentFile);
             _ = LoadThumbnailAsync(p.CurrentFile, ++_thumbGen);
             OnPropertyChanged(nameof(ProgressPercent));
@@ -809,7 +825,7 @@ public partial class ImportProgressViewModel : ObservableObject
         }
         catch (OperationCanceledException) { ResultMessage = $"Cancelled — {Imported} updated before stopping."; }
         catch (Exception ex)               { ResultMessage = $"Error: {ex.Message}"; }
-        finally { IsComplete = true; IsRunning = false; CurrentFile = ""; _currentFilePath = ""; CurrentThumbnail = null; OnPropertyChanged(nameof(StatusLine)); }
+        finally { IsComplete = true; IsRunning = false; CurrentFile = ""; SetCurrentFilePath(""); CurrentThumbnail = null; OnPropertyChanged(nameof(StatusLine)); }
     }
 
 
@@ -855,7 +871,7 @@ public partial class ImportProgressViewModel : ObservableObject
                 for (int i = 0; i < files.Count; i++)
                 {
                     if (_cts.IsCancellationRequested) break;
-                    _currentFilePath = files[i];
+                    SetCurrentFilePath(files[i]);
                     CurrentFile = Path.GetFileName(files[i]);
                     _ = LoadThumbnailAsync(files[i], ++_thumbGen);
                     try
@@ -876,7 +892,7 @@ public partial class ImportProgressViewModel : ObservableObject
             }
             catch (OperationCanceledException) { ResultMessage = $"Cancelled — {imported} imported before stopping."; }
             catch (Exception ex)               { ResultMessage = $"Error: {ex.Message}"; }
-            finally { IsComplete = true; IsRunning = false; CurrentFile = ""; _currentFilePath = ""; CurrentThumbnail = null; OnPropertyChanged(nameof(StatusLine)); }
+            finally { IsComplete = true; IsRunning = false; CurrentFile = ""; SetCurrentFilePath(""); CurrentThumbnail = null; OnPropertyChanged(nameof(StatusLine)); }
         }
 
         // Now drain the folder queue (no-op if already running from a concurrent import).
